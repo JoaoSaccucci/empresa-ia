@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-labelledby="t">
+  <title id="t">Unidade de IA Mentor de carreira</title>
+  <defs>
+    <radialGradient id="g" cx="50%" cy="40%" r="60%">
+      <stop offset="0" stop-color="#5B9BFF" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#5B9BFF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- brilho de fundo -->
+  <circle cx="60" cy="60" r="56" fill="url(#g)"/>
+  <!-- marcas da bússola: norte (triângulo), leste, sul e oeste -->
+  <polygon points="60,3 66,13 54,13" fill="#5B9BFF"/>
+  <line x1="106" y1="62" x2="113" y2="62" stroke="#5B9BFF" stroke-width="3" stroke-linecap="round"/>
+  <line x1="60" y1="108" x2="60" y2="115" stroke="#5B9BFF" stroke-width="3" stroke-linecap="round"/>
+  <line x1="7" y1="62" x2="14" y2="62" stroke="#5B9BFF" stroke-width="3" stroke-linecap="round"/>
+  <!-- corpo circular (mostrador da bússola) -->
+  <circle cx="60" cy="62" r="46" fill="#0B1020" stroke="#5B9BFF" stroke-width="3"/>
+  <!-- visor -->
+  <rect x="32" y="36" width="56" height="16" rx="8" fill="#5B9BFF" fill-opacity=".15" stroke="#5B9BFF" stroke-width="2"/>
+  <circle cx="47" cy="44" r="3.5" fill="#5B9BFF"/>
+  <circle cx="73" cy="44" r="3.5" fill="#5B9BFF"/>
+  <!-- símbolo: agulha da bússola apontando para frente (o caminho) -->
+  <circle cx="60" cy="82" r="18" fill="none" stroke="#5B9BFF" stroke-width="1.5" stroke-dasharray="2 4" stroke-opacity=".6"/>
+  <g transform="rotate(35 60 82)">
+    <polygon points="60,66 66,82 54,82" fill="#5B9BFF"/>
+    <polygon points="60,98 66,82 54,82" fill="none" stroke="#5B9BFF" stroke-width="2" stroke-linejoin="round"/>
+  </g>
+  <circle cx="60" cy="82" r="2.5" fill="#0B1020" stroke="#5B9BFF" stroke-width="1.5"/>
+</svg>

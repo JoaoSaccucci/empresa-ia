@@ -41,6 +41,11 @@
       <h1>Equipe</h1>
     </div>
 
+    <!-- Título só para leitores de tela (.sr-only): os títulos não podem
+         pular nível (h1 → h3). Este h2 liga o h1 "Equipe" aos nomes dos
+         agentes (h3) sem mudar nada no visual. -->
+    <h2 class="sr-only">Agentes</h2>
+
     <!-- Os perfis são criados pelo js/equipe.js a partir de data/agentes.json -->
     <div id="lista-equipe" aria-live="polite">
       <p class="mensagem">Carregando equipe...</p>

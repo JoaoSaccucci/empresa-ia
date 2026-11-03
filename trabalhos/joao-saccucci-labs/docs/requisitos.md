@@ -393,21 +393,21 @@ Como João, quero aulas curtas sobre um conceito por vez, cobrindo o que foi fei
 
 **US25: Cartão do Sobre com o que estou estudando**
 Como recrutador, quero ver o que o João está estudando agora, para entender o momento dele e em quais linguagens ele está investindo.
-- [ ] No cartão de identidade de `sobre.html`, o campo "Acesso: Nível máximo" é removido.
-- [ ] No lugar dele (primeiro item da ficha), aparece o campo "Estudando agora" com o valor "JavaScript e Java", com o mesmo estilo dos campos "Base" e "Foco".
-- [ ] O texto fica escrito direto no HTML, como o resto do cartão (sem JSON e sem JS).
-- [ ] O campo continua dentro da lista `dl`/`dt`/`dd`, então o leitor de tela lê "Estudando agora: JavaScript e Java".
-- [ ] A 360px, o valor pode quebrar linha, sem rolagem horizontal e sem desalinhar os outros campos.
-- [ ] O bloco "Unidades sob comando" passa a mostrar os 6 agentes (os 4 atuais, o testador e o mentor, com avatar e cor de cada um) e o título muda para "Chefe de 6 unidades de IA". *(Ver pergunta 1 na seção 6.)*
+- [x] No cartão de identidade de `sobre.html`, o campo "Acesso: Nível máximo" é removido.
+- [x] No lugar dele (primeiro item da ficha), aparece o campo "Estudando agora" com o valor "JavaScript e Java", com o mesmo estilo dos campos "Base" e "Foco".
+- [x] O texto fica escrito direto no HTML, como o resto do cartão (sem JSON e sem JS).
+- [x] O campo continua dentro da lista `dl`/`dt`/`dd`, então o leitor de tela lê "Estudando agora: JavaScript e Java".
+- [x] A 360px, o valor pode quebrar linha, sem rolagem horizontal e sem desalinhar os outros campos.
+- [x] O bloco "Unidades sob comando" passa a mostrar os 6 agentes (os 4 atuais, o testador e o mentor, com avatar e cor de cada um) e o título muda para "Chefe de 6 unidades de IA". *(Ver pergunta 1 na seção 6.)*
 
 **US26: Testador na equipe e no fluxo**
 Como visitante, quero ver que existe um agente que testa o site antes de cada entrega, para confiar na qualidade do que foi construído.
-- [ ] `data/agentes.json` tem o agente `testador`, com nome, papel (sugestão: "Garante a qualidade (QA): testa celular, teclado, acessibilidade, contraste e erros antes de cada entrega."), cor e avatar, seguindo o modelo da seção 3.
-- [ ] O testador tem avatar SVG próprio em `img/agentes/testador.svg` e cor própria, diferente das cores dos outros agentes e com contraste AA sobre o fundo escuro (tarefa do artista).
-- [ ] O fluxo de `index.html` mostra 5 etapas na ordem Product Owner → Artista → Dev → Testador → Professor, com o avatar e a cor do testador (mesma cor de `agentes.json`).
-- [ ] A 360px, o fluxo com 5 etapas não causa rolagem horizontal (pode quebrar em linhas ou ficar na vertical, a critério do artista).
-- [ ] A página Equipe mostra o card do testador igual aos outros agentes do fluxo, com a lista de projetos calculada a partir de `projetos.json`.
-- [ ] O detalhe do projeto e a linha do tempo mostram o testador com o nome e a cor dele, sem mudar o JS (eles já leem `agentes.json`).
+- [x] `data/agentes.json` tem o agente `testador`, com nome, papel (sugestão: "Garante a qualidade (QA): testa celular, teclado, acessibilidade, contraste e erros antes de cada entrega."), cor e avatar, seguindo o modelo da seção 3.
+- [x] O testador tem avatar SVG próprio em `img/agentes/testador.svg` e cor própria, diferente das cores dos outros agentes e com contraste AA sobre o fundo escuro (tarefa do artista).
+- [x] O fluxo de `index.html` mostra 5 etapas na ordem Product Owner → Artista → Dev → Testador → Professor, com o avatar e a cor do testador (mesma cor de `agentes.json`).
+- [x] A 360px, o fluxo com 5 etapas não causa rolagem horizontal (pode quebrar em linhas ou ficar na vertical, a critério do artista).
+- [x] A página Equipe mostra o card do testador igual aos outros agentes do fluxo, com a lista de projetos calculada a partir de `projetos.json`.
+- [x] O detalhe do projeto e a linha do tempo mostram o testador com o nome e a cor dele, sem mudar o JS (eles já leem `agentes.json`).
 
 **US27: Relatório de teste em cada entrega** (tarefa do testador)
 Como João, quero um relatório de teste antes de cada entrega, para saber o que foi conferido e o que ainda falta corrigir.
@@ -422,29 +422,29 @@ Como João, quero um relatório de teste antes de cada entrega, para saber o que
 
 **US28: Mentor de carreira na Equipe como agente de apoio**
 Como visitante, quero conhecer o mentor de carreira na página Equipe, para entender que o João também planeja os estudos e a carreira com a ajuda da equipe.
-- [ ] `data/agentes.json` tem o agente `mentor-carreira`, com nome "Mentor de carreira", papel "Ajuda o João a planejar os estudos e a carreira.", cor, avatar e `"apoio": true` (ver seção 3).
-- [ ] O mentor tem avatar SVG próprio em `img/agentes/mentor-carreira.svg` e cor própria, diferente das cores dos outros agentes e com contraste AA sobre o fundo escuro (tarefa do artista).
-- [ ] Na página Equipe, o card de um agente com `"apoio": true` tem um selo visível com o texto "Apoio" (não só cor ou ícone).
-- [ ] No lugar do bloco "Projetos", o card de apoio mostra o título "Atuação" e o texto "Agente de apoio: trabalha direto com o João, fora dos projetos." Ele **nunca** mostra "Nenhum projeto ainda" nem uma lista vazia.
-- [ ] Mesmo que, por engano, exista um trabalho do mentor em `projetos.json`, o card de apoio continua mostrando o texto de apoio (o campo `apoio` manda).
-- [ ] Os cards dos agentes do fluxo continuam como antes. Agente sem o campo `apoio` é tratado como agente do fluxo.
-- [ ] Os cards aparecem na ordem de `agentes.json`, com o mentor por último. Os cards continuam alinhados entre si (como na Etapa 1, com subgrid), mesmo com o bloco "Atuação" diferente.
-- [ ] O site não mostra nem tem links para nada do trabalho do mentor (currículo, LinkedIn revisado, entrevistas etc.).
+- [x] `data/agentes.json` tem o agente `mentor-carreira`, com nome "Mentor de carreira", papel "Ajuda o João a planejar os estudos e a carreira.", cor, avatar e `"apoio": true` (ver seção 3).
+- [x] O mentor tem avatar SVG próprio em `img/agentes/mentor-carreira.svg` e cor própria, diferente das cores dos outros agentes e com contraste AA sobre o fundo escuro (tarefa do artista).
+- [x] Na página Equipe, o card de um agente com `"apoio": true` tem um selo visível com o texto "Apoio" (não só cor ou ícone).
+- [x] No lugar do bloco "Projetos", o card de apoio mostra o título "Atuação" e o texto "Agente de apoio: trabalha direto com o João, fora dos projetos." Ele **nunca** mostra "Nenhum projeto ainda" nem uma lista vazia.
+- [x] Mesmo que, por engano, exista um trabalho do mentor em `projetos.json`, o card de apoio continua mostrando o texto de apoio (o campo `apoio` manda).
+- [x] Os cards dos agentes do fluxo continuam como antes. Agente sem o campo `apoio` é tratado como agente do fluxo.
+- [x] Os cards aparecem na ordem de `agentes.json`, com o mentor por último. Os cards continuam alinhados entre si (como na Etapa 1, com subgrid), mesmo com o bloco "Atuação" diferente.
+- [x] O site não mostra nem tem links para nada do trabalho do mentor (currículo, LinkedIn revisado, entrevistas etc.).
 
 **US29: Mentor fora do fluxo na página inicial**
 Como visitante, quero ver na página inicial que o mentor apoia o João sem fazer parte do fluxo dos projetos, para entender o papel de cada agente.
-- [ ] Logo abaixo do fluxo, `index.html` mostra um bloco separado com título em texto (sugestão: "Fora do fluxo: apoio ao chefe"), com o avatar, o nome e a descrição neutra do mentor, na cor dele.
-- [ ] O bloco fica visualmente separado do fluxo, sem seta ou linha ligando o mentor às etapas, e com o selo "Apoio" em texto.
-- [ ] O bloco fica escrito direto no HTML, como o fluxo, com a mesma cor de `agentes.json`.
-- [ ] O avatar tem texto `alt` (ex.: "Avatar do Mentor de carreira").
-- [ ] A 360px não há rolagem horizontal, e a animação de entrada respeita `prefers-reduced-motion`.
+- [x] Logo abaixo do fluxo, `index.html` mostra um bloco separado com título em texto (sugestão: "Fora do fluxo: apoio ao chefe"), com o avatar, o nome e a descrição neutra do mentor, na cor dele.
+- [x] O bloco fica visualmente separado do fluxo, sem seta ou linha ligando o mentor às etapas, e com o selo "Apoio" em texto.
+- [x] O bloco fica escrito direto no HTML, como o fluxo, com a mesma cor de `agentes.json`.
+- [x] O avatar tem texto `alt` (ex.: "Avatar do Mentor de carreira").
+- [x] A 360px não há rolagem horizontal, e a animação de entrada respeita `prefers-reduced-motion`.
 
 **Requisitos gerais da Etapa 5**
-- [ ] Nenhuma biblioteca nova. As mudanças são em HTML, CSS, JS puro e JSON.
-- [ ] Tudo funciona a 360px sem rolagem horizontal, por teclado (foco visível), com contraste AA e respeitando `prefers-reduced-motion`.
-- [ ] Os avatares novos têm texto `alt` em todas as páginas em que aparecem.
-- [ ] Nada do trabalho do mentor (pasta `C:\Projetos\claude\carreira\`) entra no repositório.
-- [ ] O `README.md` do site é atualizado com a equipe de 6 agentes e o novo fluxo.
+- [x] Nenhuma biblioteca nova. As mudanças são em HTML, CSS, JS puro e JSON.
+- [x] Tudo funciona a 360px sem rolagem horizontal, por teclado (foco visível), com contraste AA e respeitando `prefers-reduced-motion`.
+- [x] Os avatares novos têm texto `alt` em todas as páginas em que aparecem.
+- [x] Nada do trabalho do mentor (pasta `C:\Projetos\claude\carreira\`) entra no repositório.
+- [x] O `README.md` do site é atualizado com a equipe de 6 agentes e o novo fluxo.
 - [ ] Funciona publicado no GitHub Pages, com caminhos relativos.
 
 **Nota: tarefa fora do site** (feita com o João, sem user story)

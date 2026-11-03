@@ -17,21 +17,26 @@ O primeiro projeto da empresa é o próprio site, que mostra os projetos, o que 
 | <img src="trabalhos/joao-saccucci-labs/img/agentes/product-owner.svg" width="40" alt=""> | **Product Owner** | Me entrevista com perguntas curtas e escreve as user stories com critérios de aceite. |
 | <img src="trabalhos/joao-saccucci-labs/img/agentes/artista.svg" width="40" alt=""> | **Artista** | Define cores, tipografia e layout, e escreve o CSS e os ícones em SVG. |
 | <img src="trabalhos/joao-saccucci-labs/img/agentes/dev.svg" width="40" alt=""> | **Dev** | Implementa o que foi definido e testa no computador e no celular. |
+| <img src="trabalhos/joao-saccucci-labs/img/agentes/testador.svg" width="40" alt=""> | **Testador** | Garante a qualidade (QA): testa celular, teclado, acessibilidade e contraste e escreve um relatório de teste. |
 | <img src="trabalhos/joao-saccucci-labs/img/agentes/professor.svg" width="40" alt=""> | **Professor** | Explica o código em aulas, com exercícios e frases para entrevista. |
+| <img src="trabalhos/joao-saccucci-labs/img/agentes/mentor-carreira.svg" width="40" alt=""> | **Mentor de carreira** | Agente de apoio, fora do fluxo dos projetos: me ajuda a planejar os estudos e a carreira. |
 
 Os agentes rodam no [Claude Code](https://claude.com/claude-code). As regras da empresa estão em [`CLAUDE.md`](CLAUDE.md) e a descrição de cada agente em [`.claude/agents/`](.claude/agents/).
 
 ## Como o trabalho acontece
 
 ```text
-Ideia do chefe → Product Owner → Artista → Dev → Professor
-                 (requisitos)    (visual)   (código)  (aula + exercício)
+Ideia do chefe → Product Owner → Artista → Dev → Testador → Professor
+                 (requisitos)    (visual)   (código)  (relatório)  (aula + exercício)
 ```
 
 1. O **product-owner** levanta os requisitos comigo, uma pergunta por vez, e escreve as user stories.
 2. O **artista** define o visual a partir dos requisitos.
 3. O **dev** implementa e testa.
-4. O **professor** escreve uma aula sobre o código entregue, e eu faço o exercício.
+4. O **testador** confere a entrega contra os critérios de aceite e escreve um relatório. Se algo falhar, volta para o dev.
+5. O **professor** escreve uma aula sobre o código entregue, e eu faço o exercício.
+
+O **mentor de carreira** trabalha fora desse fluxo. O trabalho dele (LinkedIn, currículo, entrevistas simuladas) fica fora deste repositório.
 
 Cada entrega vira um commit, e o site no GitHub Pages se atualiza sozinho.
 

@@ -15,7 +15,10 @@ Esta pasta é o escritório de uma empresa onde os funcionários são agentes de
 1. product-owner: entende a ideia, escreve as user stories e os critérios de aceite.
 2. artista: define o visual (cores, tipografia, layout).
 3. dev: implementa o que foi definido.
-4. professor: explica o código que foi escrito e propõe um pequeno exercício.
+4. testador: testa a entrega contra os critérios de aceite e escreve o relatório em docs/testes/etapa-<N>.md. Se reprovar, volta para o dev.
+5. professor: explica o código que foi escrito e propõe um pequeno exercício.
+
+Fora do fluxo: o mentor-carreira me ajuda com LinkedIn, currículo, entrevistas simuladas e plano de estudos. O trabalho dele fica em C:\Projetos\claude\carreira\, nunca dentro deste repositório.
 
 ## Git e GitHub
 - A empresa inteira é um repositório público: github.com/JoaoSaccucci/empresa-ia. O site é publicado no GitHub Pages a cada push.

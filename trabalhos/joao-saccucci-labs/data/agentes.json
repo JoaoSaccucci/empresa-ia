@@ -21,10 +21,25 @@
     "avatar": "img/agentes/dev.svg"
   },
   {
+    "id": "testador",
+    "nome": "Testador",
+    "papel": "Garante a qualidade (QA): testa celular, teclado, acessibilidade, contraste e erros antes de cada entrega.",
+    "cor": "#FF9E4A",
+    "avatar": "img/agentes/testador.svg"
+  },
+  {
     "id": "professor",
     "nome": "Professor",
     "papel": "Explica o código e propõe exercícios.",
     "cor": "#7CFFB2",
     "avatar": "img/agentes/professor.svg"
+  },
+  {
+    "id": "mentor-carreira",
+    "nome": "Mentor de carreira",
+    "papel": "Ajuda o João a planejar os estudos e a carreira.",
+    "cor": "#5B9BFF",
+    "avatar": "img/agentes/mentor-carreira.svg",
+    "apoio": true
   }
 ]

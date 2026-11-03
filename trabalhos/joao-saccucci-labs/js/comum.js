@@ -24,6 +24,18 @@ function iniciarMenu() {
     const aberto = menu.classList.toggle("is-open");
     botao.setAttribute("aria-expanded", String(aberto));
   });
+
+  // Tecla Esc fecha o menu (quem usa teclado espera que "Esc fecha
+  // o que abriu"). Ouvimos no document porque, com o menu aberto,
+  // o foco pode estar no botão ou em um dos links do menu.
+  document.addEventListener("keydown", function (evento) {
+    // Só age se a tecla for Esc E o menu estiver aberto
+    if (evento.key !== "Escape" || !menu.classList.contains("is-open")) return;
+
+    menu.classList.remove("is-open");
+    botao.setAttribute("aria-expanded", "false");
+    botao.focus(); // devolve o foco ao botão, para a pessoa não se perder na página
+  });
 }
 
 iniciarMenu();

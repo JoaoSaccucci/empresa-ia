@@ -28,6 +28,11 @@
   --cor-verde: #7CFFB2;
   --cor-erro: #FF6B81;
 
+  /* Cores dos agentes da Etapa 5 (fora do gradiente da marca).
+     Ficam aqui só para documentar: os componentes usam --agente-cor. */
+  --cor-laranja: #FF9E4A;        /* Testador */
+  --cor-azul: #5B9BFF;           /* Mentor de carreira */
+
   /* Gradiente principal (ciano -> roxo -> magenta) */
   --gradiente: linear-gradient(90deg, var(--cor-ciano), var(--cor-roxo) 55%, var(--cor-magenta));
 
@@ -501,7 +506,7 @@ p {
 
 
 /* ---------------------------------------------------------
-   8. FLUXO DE TRABALHO (PO -> artista -> dev -> professor)
+   8. FLUXO DE TRABALHO (PO -> artista -> dev -> testador -> professor)
    Lista ordenada <ol class="fluxo"> com um <li class="fluxo-etapa">
    por agente. Cada etapa recebe style="--agente-cor: ...".
    --------------------------------------------------------- */
@@ -538,9 +543,50 @@ p {
   height: 40px;
 }
 
+/* Celular (lista vertical): traço vertical no vão entre uma etapa e a
+   próxima, embaixo do número. É decorativo (pseudo-elemento), então o
+   leitor de tela não lê. O último item não tem traço (:not(:last-child)). */
+@media (max-width: 767.98px) {
+  .fluxo-etapa:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: calc(var(--esp-4) + 6px);
+    width: 2px;
+    height: var(--esp-4);
+    background: linear-gradient(180deg, var(--cor-ciano), var(--cor-magenta));
+    opacity: 0.6;
+  }
+}
+
 @media (min-width: 768px) {
+  /* 5 colunas. minmax(0, 1fr) deixa a coluna encolher sem vazar
+     (só 1fr não deixa a coluna ficar menor que a palavra mais longa). */
   .fluxo {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  /* Etapa "em pé": número, avatar e nome empilhados.
+     A cor do agente sai da esquerda e vai para a borda de cima. */
+  .fluxo-etapa {
+    flex-direction: column;
+    justify-content: flex-start;
+    text-align: center;
+    gap: var(--esp-2);
+    padding: var(--esp-4) var(--esp-3);
+    border-left: 1px solid var(--cor-borda);
+    border-top: 3px solid var(--agente-cor);
+  }
+
+  .fluxo-etapa img {
+    width: 48px;
+    height: 48px;
+  }
+
+  /* "Product Owner" pode quebrar em 2 linhas, sempre entre palavras */
+  .fluxo-etapa span {
+    font-size: var(--fs-sm);
+    overflow-wrap: break-word;
   }
 
   /* Setinha ligando uma etapa à próxima */
@@ -552,6 +598,12 @@ p {
     width: var(--esp-4);
     height: 2px;
     background: var(--gradiente);
+  }
+}
+
+@media (min-width: 1024px) {
+  .fluxo-etapa span {
+    font-size: var(--fs-base);
   }
 }
 
@@ -717,7 +769,7 @@ p {
    12. CARD DE AGENTE (página Equipe)
    <article class="card agente-card" style="--agente-cor: #00E5FF">
    --------------------------------------------------------- */
-/* Grade da equipe: 4 agentes = 1, 2 ou 4 colunas (nunca 3+1) */
+/* Grade da equipe: 6 agentes = 1, 2 ou 3 colunas (nunca 4 + 2) */
 .grade-equipe {
   display: grid;
   grid-template-columns: 1fr;
@@ -729,7 +781,7 @@ p {
 }
 
 @media (min-width: 1024px) {
-  .grade-equipe { grid-template-columns: repeat(4, 1fr); }
+  .grade-equipe { grid-template-columns: repeat(3, 1fr); }
 }
 
 .agente-card {
@@ -1365,6 +1417,8 @@ p {
 /* Mini avatares sobrepostos (cada <li> recebe --agente-cor) */
 .mini-avatares {
   display: flex;
+  flex-wrap: wrap;          /* segurança: abaixo de 360px, desce de linha em vez de vazar */
+  row-gap: var(--esp-3);
   padding-left: 4px;        /* espaço para o anel do primeiro */
   margin-block: var(--esp-2);
 }
@@ -3793,4 +3847,119 @@ body.sumario-aberto {
   .modulo-barra-preenchida {
     transition: none;
   }
+}
+
+
+/* =========================================================
+   ETAPA 5 - EQUIPE NOVA
+   Seção 39: bloco do mentor fora do fluxo (index.html),
+   selo "Apoio" e card de apoio na Equipe. As decisões estão
+   no docs/design.md, seção 13. As mudanças em regras antigas
+   (fluxo com 5 etapas, equipe em 3 colunas, mini avatares)
+   foram feitas no próprio lugar, nas seções 8, 12 e 16.
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   39. AGENTES DE APOIO (mentor de carreira)
+   --------------------------------------------------------- */
+
+/* --- 39.1 Bloco "Fora do fluxo" (index.html) ---
+   Fica embaixo do fluxo, separado só pelo espaço vazio.
+   Não tem ::before nem ::after: nenhuma linha liga o mentor
+   às etapas. A borda tracejada é o sinal visual de "apoio". */
+.fluxo-apoio {
+  margin-top: var(--esp-7);
+  max-width: 36rem;
+  padding: var(--esp-4);
+  background: var(--cor-vidro);
+  /* 70% da cor do agente: com menos que isso a borda ficaria
+     abaixo do contraste mínimo de 3:1 para elementos que não são texto */
+  border: 1px dashed color-mix(in srgb, var(--agente-cor) 70%, transparent);
+  border-radius: var(--raio-md);
+}
+
+@media (min-width: 768px) {
+  .fluxo-apoio {
+    padding: var(--esp-4) var(--esp-5);
+  }
+}
+
+/* "Fora do fluxo: apoio ao chefe" em maiúsculas só pelo CSS
+   (no HTML o texto continua normal, bom para o leitor de tela) */
+.fluxo-apoio-titulo {
+  margin-bottom: var(--esp-3);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--cor-texto-suave);
+}
+
+/* Avatar à esquerda (48px) e texto à direita.
+   minmax(0, 1fr) deixa o texto quebrar linha em vez de vazar. */
+.fluxo-apoio-corpo {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: var(--esp-3);
+  align-items: start;
+}
+
+.fluxo-apoio-corpo img {
+  width: 48px;
+  height: 48px;
+}
+
+/* Nome + selo na mesma linha; no celular o selo desce se não couber */
+.fluxo-apoio-nome {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--esp-1) var(--esp-2);
+  font-weight: 600;
+  color: var(--agente-cor);
+}
+
+.fluxo-apoio-papel {
+  margin-top: var(--esp-1);
+  font-size: var(--fs-sm);
+  color: var(--cor-texto-suave);
+}
+
+
+/* --- 39.2 Selo "Apoio" (Início e Equipe) ---
+   Herda tudo do .badge (seção 11). O texto "Apoio" é o que
+   informa; a cor e a bolinha são só complemento. */
+.badge--apoio {
+  color: var(--agente-cor);
+  background: color-mix(in srgb, var(--agente-cor) 10%, transparent);
+}
+
+/* Bolinha VAZADA (os selos de status usam bolinha cheia).
+   inset = a sombra fica do lado de dentro, desenhando um anel.
+   Sem animação: apoio não é "em andamento". */
+.badge--apoio::before {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px currentColor;
+}
+
+
+/* --- 39.3 Card de apoio na Equipe ---
+   O card usa subgrid (seção 22) com 5 linhas: avatar, id, nome,
+   papel e projetos. Se o selo fosse mais uma linha, o card do
+   mentor teria 6 e sairia desalinhado dos vizinhos. Com
+   position: absolute o selo sai da grade e não ocupa linha.
+   (O .card já tem position: relative, então o selo se posiciona
+   em relação ao card.) */
+.agente-card--apoio .badge--apoio {
+  position: absolute;
+  top: var(--esp-5);
+  right: var(--esp-5);
+}
+
+/* Texto de "Atuação": cor normal e sem itálico
+   (não é um estado vazio como o "Nenhum projeto ainda") */
+.agente-atuacao p {
+  font-size: var(--fs-sm);
+  color: var(--cor-texto);
 }

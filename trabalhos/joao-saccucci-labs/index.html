@@ -54,7 +54,8 @@
       </div>
     </section>
 
-    <!-- Fluxo de trabalho: a ordem é fixa, por isso fica direto no HTML.
+    <!-- Fluxo de trabalho: PO -> artista -> dev -> testador -> professor.
+         A ordem é fixa, por isso fica direto no HTML.
          As cores são as mesmas de data/agentes.json. -->
     <section class="secao container" aria-labelledby="titulo-fluxo">
       <span class="rotulo">// Como trabalhamos</span>
@@ -72,11 +73,32 @@
           <img src="img/agentes/dev.svg" alt="Avatar do Dev">
           <span>Dev</span>
         </li>
-        <li class="fluxo-etapa surgir" style="--agente-cor: #7CFFB2; --atraso: 300ms">
+        <li class="fluxo-etapa surgir" style="--agente-cor: #FF9E4A; --atraso: 300ms">
+          <img src="img/agentes/testador.svg" alt="Avatar do Testador">
+          <span>Testador</span>
+        </li>
+        <li class="fluxo-etapa surgir" style="--agente-cor: #7CFFB2; --atraso: 400ms">
           <img src="img/agentes/professor.svg" alt="Avatar do Professor">
           <span>Professor</span>
         </li>
       </ol>
+
+      <!-- Agente de apoio: fica FORA do <ol>, para o leitor de tela
+           não contar o mentor como a "etapa 6" do fluxo.
+           Não tem seta nem linha ligando ao fluxo: só o espaço vazio separa. -->
+      <div class="fluxo-apoio surgir" style="--agente-cor: #5B9BFF; --atraso: 500ms">
+        <h3 class="fluxo-apoio-titulo">Fora do fluxo: apoio ao chefe</h3>
+        <div class="fluxo-apoio-corpo">
+          <img src="img/agentes/mentor-carreira.svg" alt="Avatar do Mentor de carreira" width="48" height="48">
+          <div>
+            <p class="fluxo-apoio-nome">
+              <span>Mentor de carreira</span>
+              <span class="badge badge--apoio">Apoio</span>
+            </p>
+            <p class="fluxo-apoio-papel">Ajuda o João a planejar os estudos e a carreira.</p>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 

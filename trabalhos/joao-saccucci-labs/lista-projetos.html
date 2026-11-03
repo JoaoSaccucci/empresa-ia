@@ -41,6 +41,11 @@
       <h1>Projetos</h1>
     </div>
 
+    <!-- Título só para leitores de tela (.sr-only): os títulos não podem
+         pular nível (h1 → h3). Este h2 liga o h1 "Projetos" aos nomes dos
+         projetos (h3) sem mudar nada no visual. -->
+    <h2 class="sr-only">Lista de projetos</h2>
+
     <!-- Os cards são criados pelo js/lista-projetos.js a partir de data/projetos.json -->
     <div id="lista-projetos" aria-live="polite">
       <p class="mensagem">Carregando projetos...</p>

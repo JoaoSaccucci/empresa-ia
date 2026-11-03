@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-labelledby="t">
+  <title id="t">Unidade de IA Testador</title>
+  <defs>
+    <radialGradient id="g" cx="50%" cy="40%" r="60%">
+      <stop offset="0" stop-color="#FF9E4A" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#FF9E4A" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- brilho de fundo -->
+  <circle cx="60" cy="60" r="56" fill="url(#g)"/>
+  <!-- corpo em escudo (protege a qualidade) -->
+  <path d="M60 8 L102 22 L102 60 Q102 94 60 112 Q18 94 18 60 L18 22 Z" fill="#0B1020" stroke="#FF9E4A" stroke-width="3" stroke-linejoin="round"/>
+  <!-- visor -->
+  <rect x="32" y="34" width="56" height="16" rx="8" fill="#FF9E4A" fill-opacity=".15" stroke="#FF9E4A" stroke-width="2"/>
+  <circle cx="47" cy="42" r="3.5" fill="#FF9E4A"/>
+  <circle cx="73" cy="42" r="3.5" fill="#FF9E4A"/>
+  <!-- símbolo: lupa com um check dentro (conferido) -->
+  <circle cx="56" cy="74" r="13" fill="none" stroke="#FF9E4A" stroke-width="2.5"/>
+  <path d="M50 74 L54.5 78.5 L62 70" fill="none" stroke="#FF9E4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="65.5" y1="83.5" x2="74" y2="92" stroke="#FF9E4A" stroke-width="3.5" stroke-linecap="round"/>
+</svg>

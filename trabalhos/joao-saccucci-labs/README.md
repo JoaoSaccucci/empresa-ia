@@ -17,14 +17,14 @@ No GitHub Pages funciona sem nada disso, porque todos os caminhos são relativos
 ## Estrutura
 
 ```
-index.html             Início: apresentação e fluxo de trabalho
+index.html             Início: apresentação, fluxo de trabalho (5 etapas) e o agente de apoio
 lista-projetos.html    Lista de projetos (gerada a partir do JSON)
 detalhe-projeto.html   Detalhe de um projeto (com linha do tempo): detalhe-projeto.html?id=<id-do-projeto>
-equipe.html            Perfis dos agentes e projetos de cada um
+equipe.html            Perfis dos 6 agentes e projetos de cada um (o de apoio mostra "Atuação")
 sobre.html             Sobre mim: cartão do João (conteúdo fixo, sem JSON)
 aulas.html             Lista de aulas agrupada por módulo (gerada a partir do JSON), com ✓ nas concluídas
 aula.html              Tela de leitura de uma aula: aula.html?id=<id-da-aula>
-css/style.css          Visual do site (feito pelo artista; ajustes do dev nas seções 22 e 37; seção 38 = Etapa 4)
+css/style.css          Visual do site (feito pelo artista; ajustes do dev nas seções 22 e 37; seção 38 = Etapa 4; seção 39 = Etapa 5)
 js/comum.js            Menu do celular, leitura dos JSON, funções auxiliares e progresso salvo (localStorage)
 js/lista-projetos.js   Monta a lista de projetos
 js/detalhe-projeto.js  Monta o detalhe do projeto
@@ -34,7 +34,7 @@ js/aulas.js            Monta a lista de aulas
 js/aula.js             Tela de leitura: Markdown -> HTML, caixas, glossário, checklist, código, sumário, letra, tema
 js/aula-codigo.js      Exemplos das aulas: linhas numeradas, Linha por linha, Rodar (iframe isolado), Console, Editar e Restaurar
 js/aula-quiz.js        Quiz das aulas (bloco ```quiz), com a resposta salva no navegador
-data/agentes.json      Os 4 agentes (nome, papel, cor, avatar)
+data/agentes.json      Os 6 agentes (nome, papel, cor, avatar e, no de apoio, "apoio": true)
 data/projetos.json     Os projetos, os trabalhos de cada agente e a linha do tempo
 data/aulas.json        Os módulos e as aulas (título, módulo, número, arquivo .md, tempo de leitura, resumo)
 data/glossario.json    Palavras em inglês usadas nas aulas, com tradução e explicação
@@ -45,7 +45,29 @@ img/icones/            Ícones SVG, colados inline no HTML/JS (contato no sobre.
 README.md              Este arquivo
 docs/requisitos.md     Requisitos (product-owner)
 docs/design.md         Decisões de visual (artista)
+docs/testes/           Relatórios de teste do testador, um por etapa: etapa-<N>.md (a partir da Etapa 5)
 ```
+
+## A equipe
+
+São 6 agentes de IA. Cinco trabalham no fluxo de cada projeto, nesta ordem:
+
+**Product Owner → Artista → Dev → Testador → Professor**
+
+| Agente | O que faz |
+|---|---|
+| Product Owner | Levanta requisitos, escreve user stories e prioriza o MVP. |
+| Artista | Define cores, tipografia e layout. |
+| Dev | Implementa o que foi definido. |
+| Testador | Garante a qualidade (QA): testa celular, teclado, acessibilidade, contraste e erros antes de cada entrega. |
+| Professor | Explica o código e propõe exercícios. |
+| Mentor de carreira | Agente de **apoio**: ajuda o João a planejar os estudos e a carreira. Fica fora do fluxo dos projetos. |
+
+Se o testador achar um problema que quebra um critério de aceite, o trabalho volta para o dev antes da entrega. Os relatórios de teste ficam em `docs/testes/etapa-<N>.md` (a partir da Etapa 5).
+
+No `data/agentes.json`, o campo opcional `"apoio": true` marca um agente de apoio: a página Equipe mostra o selo "Apoio" e o bloco "Atuação" no lugar da lista de projetos. Sem o campo, o agente é do fluxo. A ordem do arquivo é a ordem dos cards (agentes de apoio no fim).
+
+O fluxo do Início e os mini avatares do Sobre são escritos à mão no HTML: se um agente entrar ou mudar de cor, atualize também o `index.html` e o `sobre.html` (e o SVG do avatar, que tem a cor escrita dentro).
 
 ## Como adicionar um projeto
 

@@ -155,6 +155,44 @@
           { "titulo": "Glossário", "url": "data/glossario.json" }
         ],
         "imagens": []
+      },
+      {
+        "agente": "product-owner",
+        "resumo": "Etapa 5: levantou com o João a chegada de dois agentes (testador no fluxo e mentor de carreira como apoio, com o trabalho privado fora do repositório) e o ajuste no cartão do Sobre, em 5 user stories.",
+        "entregaveis": [
+          { "titulo": "Requisitos (Etapa 5)", "url": "docs/requisitos.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "artista",
+        "resumo": "Etapa 5: escolheu laranja para o testador e azul para o mentor, desenhou os 2 avatares, o fluxo com 5 etapas, o bloco de apoio fora do fluxo e o card de apoio na Equipe.",
+        "entregaveis": [
+          { "titulo": "Design (seção 13)", "url": "docs/design.md" },
+          { "titulo": "Avatar Testador", "url": "img/agentes/testador.svg" },
+          { "titulo": "Avatar Mentor de carreira", "url": "img/agentes/mentor-carreira.svg" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "dev",
+        "resumo": "Implementou a Etapa 5: os 2 agentes novos no agentes.json, o fluxo com 5 etapas e o bloco do mentor no Início, o card de apoio na Equipe e o \"Estudando agora\" no Sobre.",
+        "entregaveis": [
+          { "titulo": "Início", "url": "index.html" },
+          { "titulo": "Equipe (JS)", "url": "js/equipe.js" },
+          { "titulo": "Sobre", "url": "sobre.html" },
+          { "titulo": "Dados dos agentes", "url": "data/agentes.json" },
+          { "titulo": "README", "url": "README.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "testador",
+        "resumo": "Etapa 5: testou o Início, a Equipe e o Sobre a 360, 768, 1024 e 1280px, com teclado, leitor de tela, contraste AA, movimento reduzido e JSON com erro. Escreveu o primeiro relatório de teste da empresa e retestou as 4 correções: resultado Aprovado.",
+        "entregaveis": [
+          { "titulo": "Relatório de teste — Etapa 5", "url": "docs/testes/etapa-5.md" }
+        ],
+        "imagens": []
       }
     ],
     "linhaDoTempo": [
@@ -176,7 +214,11 @@
       { "data": "2026-11-03", "agente": "product-owner", "descricao": "Requisitos da Etapa 4 \"Aulas 2.0\": aulas curtas, um conceito por aula, exemplo executável e quiz." },
       { "data": "2026-11-03", "agente": "artista", "descricao": "Design da Etapa 4: exemplo executável, Linha por linha, Console, Em resumo, quiz e módulos." },
       { "data": "2026-11-03", "agente": "dev", "descricao": "Implementação da Etapa 4: módulos, botão Rodar com Console, Editar/Restaurar e quiz." },
-      { "data": "2026-11-03", "agente": "professor", "descricao": "15 aulas curtas em 3 módulos substituem as 3 aulas antigas." }
+      { "data": "2026-11-03", "agente": "professor", "descricao": "15 aulas curtas em 3 módulos substituem as 3 aulas antigas." },
+      { "data": "2026-11-03", "agente": "product-owner", "descricao": "Requisitos da Etapa 5: testador, mentor de carreira e ajuste no Sobre." },
+      { "data": "2026-11-03", "agente": "artista", "descricao": "Design da Etapa 5: cores e avatares do testador e do mentor, fluxo com 5 etapas." },
+      { "data": "2026-11-03", "agente": "dev", "descricao": "Implementação da Etapa 5: equipe com 6 agentes, fluxo novo e Estudando agora no Sobre." },
+      { "data": "2026-11-03", "agente": "testador", "descricao": "Primeiro relatório de teste: Etapa 5 (equipe nova e ajuste no Sobre)." }
     ]
   }
 ]

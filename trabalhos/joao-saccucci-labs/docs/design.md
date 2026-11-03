@@ -2,7 +2,7 @@
 
 Conceito: **"centro de comando de IA"**. Fundo espacial escuro, grade e partículas sutis, painéis de vidro e brilhos neon. Cada agente é uma "unidade de IA" com cor e avatar geométrico próprios. O neon fica em detalhes (bordas, rótulos, botões); o texto é sempre claro sobre escuro, para continuar legível e profissional.
 
-Arquivos: `css/style.css` (tudo pronto, com variáveis em `:root`), `img/agentes/*.svg` e `img/icones/*.svg` (Etapa 2). A Etapa 2 está na seção 10, a Etapa 3 (aulas) na seção 11 e a Etapa 4 (Aulas 2.0) na seção 12.
+Arquivos: `css/style.css` (tudo pronto, com variáveis em `:root`), `img/agentes/*.svg` e `img/icones/*.svg` (Etapa 2). A Etapa 2 está na seção 10, a Etapa 3 (aulas) na seção 11, a Etapa 4 (Aulas 2.0) na seção 12 e a Etapa 5 (equipe nova) na seção 13.
 
 ---
 
@@ -214,6 +214,8 @@ Robôs geométricos de 120×120 com visor e "olhos", corpo vazado escuro e traç
 - `artista.svg`: losango com três pontos de cor (paleta).
 - `dev.svg`: quadrado chanfrado com conectores e `</>`.
 - `professor.svg`: círculo com capelo de formatura e livro aberto.
+- `testador.svg` (Etapa 5): escudo com lupa e check (ver 13.2).
+- `mentor-carreira.svg` (Etapa 5): mostrador de bússola com agulha (ver 13.2).
 
 Usar sempre via `<img>` (não colar o SVG no HTML, porque os quatro usam o mesmo id interno de gradiente).
 
@@ -1449,3 +1451,343 @@ Calculado com a fórmula do WCAG. Fundos das misturas de 8% (aproximados): caixa
 - "Linha por linha": rótulo em cima do texto abaixo de 480px.
 - Quiz: alternativas na largura toda; "Tentar de novo" desce de linha se precisar.
 - Alto contraste do Windows (`forced-colors`): as marcas "Certa!/Errada" e os prefixos "Aviso:/Erro:" são texto, então a informação continua lá mesmo sem as cores.
+
+---
+
+## 13. Etapa 5: equipe nova (US25 a US29)
+
+O CSS desta etapa é escrito pelo dev. **Mudanças em regras que já existem** (fluxo, grade da equipe, mini avatares) são feitas **no próprio lugar** (seções 8, 12 e 16 do `css/style.css`), para não criar regras que brigam entre si. **Classes novas** ficam numa seção nova no fim do arquivo ("ETAPA 5 - EQUIPE NOVA"). Os 2 avatares já estão prontos em `img/agentes/`.
+
+### 13.0 Conceito e decisões
+
+- **Duas cores fora do gradiente da marca.** Ciano, roxo e magenta formam o gradiente; o verde é a cor da aula. As cores novas ocupam os dois "buracos" que sobravam no círculo de cores: **laranja** (entre o vermelho do erro e o verde) e **azul** (entre o ciano e o roxo).
+- **Testador = laranja `#FF9E4A`.** Laranja é a cor de "atenção, inspeção" (cone, fita de obra) sem ser o vermelho de erro. Avatar: **escudo** (protege a qualidade) com uma **lupa com check** (conferido).
+- **Mentor de carreira = azul `#5B9BFF`.** Azul é "norte, direção, confiança". Avatar: **mostrador de bússola** com a agulha apontando para a frente e as marcas norte/leste/sul/oeste para fora do corpo.
+- **"Apoio" é uma ideia visual só:** o mentor nunca está ligado a nada (sem seta, sem linha), usa **borda tracejada** no bloco do Início e o selo **"Apoio"** em texto, com uma bolinha **vazada** (os selos de status usam bolinha cheia).
+- **Fluxo com 5 etapas:** abaixo de 768px continua a lista vertical; a partir de 768px viram 5 colunas, e cada etapa passa a ser "em pé" (número, avatar e nome empilhados), porque "Product Owner" deitado não cabe em 128px.
+- **Equipe com 6 cards:** 1, 2 ou **3** colunas (nunca 4 + 2). Com 3 colunas, o fluxo fica PO, Artista, Dev em cima e Testador, Professor, Mentor embaixo.
+
+### 13.1 Cores novas e contraste
+
+| id | Cor | Token (opcional, `:root`) | Matiz | Contraste sobre `#05060F` (fundo) | sobre `#0C1021` (vidro do card) | sobre `#0B1020` (fundo-2) |
+|---|---|---|---|---|---|---|
+| testador | **`#FF9E4A`** | `--cor-laranja` | 28° | **9.9:1** | **9.2:1** | 9.2:1 |
+| mentor-carreira | **`#5B9BFF`** | `--cor-azul` | 217° | **7.3:1** | **6.8:1** | 6.8:1 |
+
+Os dois passam AA como **texto** (mín. 4.5:1, inclusive o texto pequeno de 12px dos rótulos `UNIDADE://`) e como **borda/ícone** (mín. 3:1) em todos os fundos do site.
+
+**Como foi calculado (fórmula do WCAG).** Luminância relativa L = 0.2126·R + 0.7152·G + 0.0722·B, com cada canal convertido para linear (`c ≤ 0.04045 ? c/12.92 : ((c+0.055)/1.055)^2.4`). Razão = (L mais clara + 0.05) / (L mais escura + 0.05).
+- Fundo `#05060F`: L ≈ 0.0020. Vidro do card (`rgba(18,24,48,.55)` sobre o fundo ≈ `#0C1021`): L ≈ 0.0056.
+- `#FF9E4A`: R = 1.000, G = 0.342, B = 0.068 → L ≈ 0.462 → (0.512) / (0.052) ≈ **9.9:1**; sobre o vidro (0.512) / (0.0556) ≈ **9.2:1**.
+- `#5B9BFF`: R = 0.105, G = 0.328, B = 1.000 → L ≈ 0.329 → (0.379) / (0.052) ≈ **7.3:1**; sobre o vidro (0.379) / (0.0556) ≈ **6.8:1**.
+
+**Diferença entre as 6 cores (matiz no círculo de cores, 0° a 360°):**
+
+| Agente | Cor | Matiz | Vizinho mais próximo |
+|---|---|---|---|
+| Product Owner | `#00E5FF` | 186° | Mentor, 31° (mas o ciano é bem mais claro: L 0.63 contra 0.33) |
+| Artista | `#B45CFF` | 272° | Magenta, 40° |
+| Dev | `#FF2BD6` | 312° | Artista, 40° |
+| **Testador** | **`#FF9E4A`** | **28°** | Magenta, 76° (o vermelho de erro `#FF6B81`, que não é agente, fica a 37° e é rosado) |
+| Professor | `#7CFFB2` | 145° | Ciano, 41° |
+| **Mentor** | **`#5B9BFF`** | **217°** | Ciano, 31° (diferença grande de brilho) e roxo, 55° |
+
+Daltonismo: azul do mentor e roxo do artista podem ficar parecidos para quem não distingue vermelho/verde. Isso é aceito porque **o nome do agente sempre aparece escrito** ao lado da cor (regra do site desde a Etapa 1) e os dois nunca ficam lado a lado (artista é o 2º, mentor o 6º).
+
+**Valores finais para `data/agentes.json` (campo `cor`):** `testador` = `#FF9E4A`, `mentor-carreira` = `#5B9BFF`. As mesmas cores vão escritas à mão no `index.html` e no `sobre.html` (`style="--agente-cor: ..."`).
+
+### 13.2 Avatares (`img/agentes/testador.svg` e `mentor-carreira.svg`)
+
+Prontos. Mesmo padrão dos 4 atuais: `viewBox="0 0 120 120"`, brilho radial (`id="g"`, 35% → 0%), corpo vazado `#0B1020` com traço de 3px na cor do agente, visor de 56×16 com dois "olhos" de 3.5px, símbolo com traço de 2.5px, `<title id="t">Unidade de IA ...</title>`.
+
+| Arquivo | Corpo | Símbolo | Detalhe que diferencia |
+|---|---|---|---|
+| `testador.svg` | escudo (topo reto, ponta embaixo) | lupa com um check dentro | é o único corpo com ponta para baixo |
+| `mentor-carreira.svg` | círculo (mostrador) | agulha de bússola inclinada 35° (metade cheia, metade vazada) sobre um anel tracejado | triângulo "norte" no topo e 3 marcas (leste, sul, oeste) para fora do corpo; o professor também é círculo, mas tem o capelo no topo |
+
+**Sobre a cor dentro do SVG:** os 4 avatares atuais usam a cor **escrita direto no arquivo** (hex), e os novos seguem o mesmo jeito. `currentColor` e `var(--agente-cor)` **não funcionam** dentro de um SVG aberto por `<img>` (a imagem não herda o CSS da página), e os avatares são sempre usados por `<img>` (seção 9). Se um dia a cor do agente mudar no JSON, o SVG precisa ser editado junto.
+
+Texto `alt` em cada página:
+
+| Onde | Testador | Mentor |
+|---|---|---|
+| Fluxo do Início, card da Equipe | `Avatar do Testador` | `Avatar do Mentor de carreira` |
+| Mini avatares do Sobre | `Testador` | `Mentor de carreira` |
+| Timeline e trabalho no detalhe | `alt=""` (o nome já está escrito ao lado; regra da 10.1) | não aparece (apoio não tem trabalhos) |
+
+### 13.3 Início: fluxo com 5 etapas e bloco do mentor (US26, US29)
+
+**Desktop (1024px ou mais; colunas de ~180 a 198px)**
+```
+// COMO TRABALHAMOS
+h2 Fluxo de trabalho
++---------+   +---------+   +---------+   +---------+   +---------+
+|   01    |---|   02    |---|   03    |---|   04    |---|   05    |   borda de cima 3px
+|  (PO)   |   |  (ART)  |   |  (DEV)  |   | (TEST)  |   | (PROF)  |   na cor do agente;
+| Product |   | Artista |   |   Dev   |   |Testador |   |Professor|   avatar 48px
+|  Owner  |   |         |   |         |   |         |   |         |
++---------+   +---------+   +---------+   +---------+   +---------+
+                         (48px de espaço, SEM linha nem seta)
++ - - - - - - - - - - - - - - - - - - - - - - - - - +   .fluxo-apoio
+' FORA DO FLUXO: APOIO AO CHEFE                     '   h3, mono 12px, cor suave
+' (MENTOR)  Mentor de carreira  [o APOIO]            '   nome na cor do mentor + selo
+'  48px     Ajuda o João a planejar os estudos e a  '   papel em cor suave
+'           carreira.                                '
++ - - - - - - - - - - - - - - - - - - - - - - - - - +   borda tracejada azul, até 36rem
+```
+
+**Tablet (768 a 1023px):** o mesmo desenho do desktop. Conferido a 768px: 704px úteis − 4 vãos de 16px = **128px por etapa**; tirando o padding (2 × 12px) e as bordas, sobram ~102px de texto. Nomes em 14px: "Professor" ~69px e "Testador" ~62px cabem numa linha; "Product Owner" quebra em 2 linhas ("Product" ~55px). Os cards da mesma linha ficam com a mesma altura (`align-items: stretch`, padrão do grid), então a quebra não desalinha nada.
+
+**Celular (abaixo de 768px, testado a 360px = 328px úteis)**
+```
+// COMO TRABALHAMOS
+h2 Fluxo de
+   trabalho
++------------------------------+
+|01 (PO)  Product Owner         |   lista vertical, como hoje
++-|----------------------------+
+  |                                 traço vertical de 2px no vão (16px),
++-|----------------------------+    embaixo do número: liga as etapas
+|02 (ART) Artista               |
++------------------------------+
+  ...                               03 Dev, 04 Testador, 05 Professor
++------------------------------+    (o último não tem traço)
+
++ - - - - - - - - - - - - - - -+   .fluxo-apoio: 48px abaixo, sem traço
+' FORA DO FLUXO: APOIO AO      '
+' CHEFE                        '   (o título quebra, sem problema)
+' (MEN)  Mentor de carreira    '
+'  48px  [o APOIO]             '   o selo desce de linha se não couber
+'        Ajuda o João a...     '
++ - - - - - - - - - - - - - - -+
+```
+Conferido a 360px: etapa com 328px (16 + "05" ~17 + 12 + avatar 40 + 12 + nome); bloco do mentor com 328 − 2 × 16 de padding = 296px; avatar 48 + vão 12 deixa **236px** para o texto. "Mentor de carreira" (~150px) + selo (~70px) quase cabem: o `flex-wrap` deixa o selo descer sem vazar.
+
+**HTML** (`index.html`; o `<ol class="fluxo">` ganha o testador e o bloco do mentor entra logo depois dele, **dentro** da mesma `section`):
+
+```html
+<ol class="fluxo">
+  <li class="fluxo-etapa surgir" style="--agente-cor: #00E5FF; --atraso: 0ms">...Product Owner...</li>
+  <li class="fluxo-etapa surgir" style="--agente-cor: #B45CFF; --atraso: 100ms">...Artista...</li>
+  <li class="fluxo-etapa surgir" style="--agente-cor: #FF2BD6; --atraso: 200ms">...Dev...</li>
+  <li class="fluxo-etapa surgir" style="--agente-cor: #FF9E4A; --atraso: 300ms">
+    <img src="img/agentes/testador.svg" alt="Avatar do Testador">
+    <span>Testador</span>
+  </li>
+  <li class="fluxo-etapa surgir" style="--agente-cor: #7CFFB2; --atraso: 400ms">...Professor...</li>
+</ol>
+
+<div class="fluxo-apoio surgir" style="--agente-cor: #5B9BFF; --atraso: 500ms">
+  <h3 class="fluxo-apoio-titulo">Fora do fluxo: apoio ao chefe</h3>
+  <div class="fluxo-apoio-corpo">
+    <img src="img/agentes/mentor-carreira.svg" alt="Avatar do Mentor de carreira" width="48" height="48">
+    <div>
+      <p class="fluxo-apoio-nome">
+        <span>Mentor de carreira</span>
+        <span class="badge badge--apoio">Apoio</span>
+      </p>
+      <p class="fluxo-apoio-papel">Ajuda o João a planejar os estudos e a carreira.</p>
+    </div>
+  </div>
+</div>
+```
+- O mentor fica **fora** do `<ol>`: para o leitor de tela, o fluxo continua sendo uma lista de 5 itens, e o mentor não é o "item 6".
+- `h3` porque fica abaixo do `h2` "Fluxo de trabalho". O "Fora do fluxo" aparece em maiúsculas só pelo CSS.
+- O comentário do HTML e o título da seção 8 do CSS mudam para "PO -> artista -> dev -> testador -> professor".
+
+**Medidas: fluxo (mudanças na seção 8 do CSS)**
+
+| Regra | Valores |
+|---|---|
+| `.fluxo` (≥768px) | `grid-template-columns: repeat(5, minmax(0, 1fr))` (era 4). O `minmax(0, …)` deixa a coluna encolher sem vazar |
+| `.fluxo-etapa` (≥768px) | `flex-direction: column; justify-content: flex-start; text-align: center`; `gap: var(--esp-2)`; `padding: var(--esp-4) var(--esp-3)`; a cor sai da esquerda e vai para cima: `border-left: 1px solid var(--cor-borda); border-top: 3px solid var(--agente-cor)` |
+| `.fluxo-etapa img` (≥768px) | `width/height: 48px` (no celular continua 40px) |
+| `.fluxo-etapa span` (≥768px) | `font-size: var(--fs-sm)` até 1023px e `var(--fs-base)` a partir de 1024px; `overflow-wrap: break-word` (quebra entre palavras, nunca no meio de "Professor") |
+| `.fluxo-etapa:not(:last-child)::after` (≥768px) | igual a hoje: traço horizontal de 2px com o gradiente, `top: 50%`, no vão de 16px. O número "05" já sai sozinho do `counter` |
+| `.fluxo-etapa:not(:last-child)::after` (**<768px, novo**) | traço vertical: `content: ""; position: absolute; top: 100%; left: calc(var(--esp-4) + 6px); width: 2px; height: var(--esp-4)`; `background: linear-gradient(180deg, var(--cor-ciano), var(--cor-magenta))`; `opacity: 0.6`. Decorativo (pseudo-elemento, o leitor de tela não lê) |
+
+**Medidas: bloco do mentor (classes novas)**
+
+| Classe | Valores |
+|---|---|
+| `.fluxo-apoio` | `margin-top: var(--esp-7)` (48px: o espaço vazio é o que separa); `max-width: 36rem`; `padding: var(--esp-4)` (a partir de 768px: `var(--esp-4) var(--esp-5)`); fundo `var(--cor-vidro)`; `border: 1px dashed color-mix(in srgb, var(--agente-cor) 70%, transparent)`; `border-radius: var(--raio-md)`. **Sem** `::before`/`::after` (nenhuma linha ligando ao fluxo) |
+| `.fluxo-apoio-titulo` | `margin-bottom: var(--esp-3)`; mono `var(--fs-xs)`, 400, `text-transform: uppercase`, `letter-spacing: 0.12em`, cor `var(--cor-texto-suave)` |
+| `.fluxo-apoio-corpo` | `display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: var(--esp-3); align-items: start` |
+| `.fluxo-apoio-corpo img` | `width/height: 48px` |
+| `.fluxo-apoio-nome` | `display: flex; flex-wrap: wrap; align-items: center; gap: var(--esp-1) var(--esp-2)`; 600; cor `var(--agente-cor)` |
+| `.fluxo-apoio-papel` | `margin-top: var(--esp-1)`; `var(--fs-sm)`; cor `var(--cor-texto-suave)` |
+
+**Selo "Apoio" (classe nova, usada no Início e na Equipe)**
+
+| Classe | Valores |
+|---|---|
+| `.badge--apoio` | herda tudo do `.badge` (mono 12px, maiúsculo, pílula, borda 1px `currentColor`); `color: var(--agente-cor)`; `background: color-mix(in srgb, var(--agente-cor) 10%, transparent)` |
+| `.badge--apoio::before` | bolinha **vazada**: `background: transparent; box-shadow: inset 0 0 0 1.5px currentColor`. Sem animação (não é "em andamento") |
+
+O texto "Apoio" é o que informa; cor e bolinha são complemento.
+
+### 13.4 Equipe: 6 cards e o card de apoio (US26, US28)
+
+**Desktop (1024px ou mais): 3 colunas**
+```
+// UNIDADES DE IA
+h1 Equipe
++-----------------+ +-----------------+ +-----------------+
+| (PO)            | | (ART)           | | (DEV)           |
+| UNIDADE://PRO.. | | UNIDADE://ART.. | | UNIDADE://DEV   |
+| Product Owner   | | Artista         | | Dev             |
+| papel...        | | papel...        | | papel...        |
+|-----------------| |-----------------| |-----------------|   <- mesma altura (subgrid)
+| PROJETOS        | | PROJETOS        | | PROJETOS        |
+| João Saccucci.. | | João Saccucci.. | | João Saccucci.. |
++-----------------+ +-----------------+ +-----------------+
++-----------------+ +-----------------+ +-----------------+
+| (TEST)          | | (PROF)          | | (MEN)  [o APOIO]|   <- selo no canto de cima
+| UNIDADE://TEST..| | UNIDADE://PROF..| | UNIDADE://MENT..|
+| Testador        | | Professor       | | Mentor de       |
+| Garante a       | | papel...        | |   carreira      |
+| qualidade (QA)..| |                 | | papel...        |
+|-----------------| |-----------------| |-----------------|   <- mesma altura (subgrid)
+| PROJETOS        | | PROJETOS        | | ATUAÇÃO         |
+| João Saccucci.. | | João Saccucci.. | | Agente de apoio:|
+|                 | |                 | | trabalha direto |
+|                 | |                 | | com o João...   |
++-----------------+ +-----------------+ +-----------------+
+```
+**Tablet (640 a 1023px):** 2 colunas, 3 linhas (PO + Artista, Dev + Testador, Professor + Mentor). **Celular (abaixo de 640px):** 1 coluna, na ordem do JSON, mentor por último.
+
+Conferido: a 1024px, 960px úteis − 2 vãos de 24px = **304px por card** (256px por dentro). A 640px, (608 − 24) / 2 = **292px** (244px por dentro). A 360px, **328px** (280px por dentro). Em todos, o avatar (88px) e o selo (~70px) cabem lado a lado na primeira linha do card, e `UNIDADE://MENTOR-CARREIRA` (~210px em mono 12px) cabe numa linha.
+
+**HTML do card de apoio** (gerado pelo `equipe.js` quando `agente.apoio === true`; os cards do fluxo não mudam):
+
+```html
+<article class="card agente-card agente-card--apoio surgir" style="--agente-cor: #5B9BFF; --atraso: 500ms">
+  <img class="agente-avatar" src="img/agentes/mentor-carreira.svg" alt="Avatar do Mentor de carreira">
+  <span class="agente-id">UNIDADE://mentor-carreira</span>
+  <h3>Mentor de carreira</h3>
+  <span class="badge badge--apoio">Apoio</span>
+  <p class="agente-papel">Ajuda o João a planejar os estudos e a carreira.</p>
+  <div class="agente-projetos agente-atuacao">
+    <h4>Atuação</h4>
+    <p>Agente de apoio: trabalha direto com o João, fora dos projetos.</p>
+  </div>
+</article>
+```
+
+**Por que o selo fica com `position: absolute` (e não como mais uma linha do card):** o subgrid da seção 22 conta **5 linhas** por card (avatar, id, nome, papel, projetos). Se o selo virasse uma 6ª linha, o card do mentor ficaria com uma linha a mais que os vizinhos e as divisórias "Projetos/Atuação" sairiam da mesma altura. Um elemento com `position: absolute` sai da grade e não ocupa linha. Ele vem **depois do `h3`** no HTML, então o leitor de tela lê "Mentor de carreira, Apoio" na ordem certa; na tela, ele aparece no canto de cima, ao lado do avatar.
+
+O bloco "Atuação" reaproveita a classe `.agente-projetos` (mesma divisória, mesmo título em mono e mesma 5ª linha do subgrid). Por isso fica alinhado com o "Projetos" dos outros cards sem nenhum ajuste.
+
+**Medidas**
+
+| Regra | Valores |
+|---|---|
+| `.grade-equipe` (≥1024px, **mudança na seção 12**) | `grid-template-columns: repeat(3, 1fr)` (era 4). Atualizar o comentário: "6 agentes = 1, 2 ou 3 colunas (nunca 4 + 2)" |
+| `.agente-card--apoio .badge--apoio` (novo) | `position: absolute; top: var(--esp-5); right: var(--esp-5)` (alinhado com o topo do avatar, dentro do padding do card) |
+| `.agente-atuacao p` (novo) | `font-size: var(--fs-sm)`; cor `var(--cor-texto)`; **sem** itálico (não é estado vazio como o `.vazio`) |
+| `.agente-card--apoio` | só serve de "gancho" para o selo; o resto do card (borda de cima 3px na cor, hover com brilho, avatar flutuando) é igual aos outros |
+
+**Regras para o `equipe.js` (para o visual bater com a US28):**
+- `apoio === true` → classe `agente-card--apoio`, selo depois do `h3` e bloco "Atuação". **Não** chamar `projetosDoAgente` para esse card (assim ele nunca mostra "Nenhum projeto ainda", mesmo com trabalho por engano no `projetos.json`).
+- Sem `apoio` ou `apoio === false` → card igual a hoje.
+- `--atraso` continua `posicao × 100ms` (o 6º card entra em 500ms).
+
+### 13.5 Sobre: "Estudando agora" e 6 unidades (US25)
+
+**Cartão (`dl.id-dados`):** só troca o primeiro par. Nenhum CSS novo.
+```html
+<dl class="id-dados">
+  <div><dt>Estudando agora</dt><dd>JavaScript e Java</dd></div>
+  <div><dt>Base</dt><dd>São Caetano do Sul, SP</dd></div>
+  <div><dt>Foco</dt><dd>Desenvolvimento de Software</dd></div>
+</dl>
+```
+Conferido: a grade é `auto-fit` com mínimo de 150px. "ESTUDANDO AGORA" em mono 12px com `letter-spacing .1em` tem ~126px, cabe no mínimo. No desktop (~690px de `.id-info`) ficam 3 colunas de ~215px; a 360px (280px úteis) fica 1 coluna, e "JavaScript e Java" (~120px) cabe numa linha. Se quebrar em telas menores, quebra entre palavras sem desalinhar (cada par é um `div` próprio).
+
+**Bloco "Unidades sob comando":**
+```
++-- Minha equipe ---------------------------+
+| // UNIDADES SOB COMANDO                   |
+| h2 Chefe de 6 unidades de IA              |
+| (PO)(ART)(DEV)(TEST)(PROF)(MEN)           |   6 mini avatares de 48px, sobrepostos 8px
+| Eu decido o que construir. A equipe...    |
+| [Conhecer a equipe ->]                    |
++-------------------------------------------+
+```
+```html
+<h2 id="titulo-minha-equipe">Chefe de 6 unidades de IA</h2>
+<ul class="mini-avatares" aria-label="Unidades de IA">
+  <li style="--agente-cor: #00E5FF"><img src="img/agentes/product-owner.svg" alt="Product Owner" width="48" height="48"></li>
+  <li style="--agente-cor: #B45CFF"><img src="img/agentes/artista.svg" alt="Artista" width="48" height="48"></li>
+  <li style="--agente-cor: #FF2BD6"><img src="img/agentes/dev.svg" alt="Dev" width="48" height="48"></li>
+  <li style="--agente-cor: #FF9E4A"><img src="img/agentes/testador.svg" alt="Testador" width="48" height="48"></li>
+  <li style="--agente-cor: #7CFFB2"><img src="img/agentes/professor.svg" alt="Professor" width="48" height="48"></li>
+  <li style="--agente-cor: #5B9BFF"><img src="img/agentes/mentor-carreira.svg" alt="Mentor de carreira" width="48" height="48"></li>
+</ul>
+<p class="texto-suave">Eu decido o que construir. A equipe levanta os requisitos, desenha, programa, testa e me explica cada linha. O mentor me ajuda a planejar os estudos e a carreira.</p>
+```
+(O texto do parágrafo é sugestão: o João pode trocar.)
+
+**Os 6 cabem?** Largura da fileira = 6 × 48 − 5 × 8 (sobreposição) + 4 (recuo do primeiro) + 4 (anel do último) = **256px**.
+
+| Tela | Largura útil do bloco | Cabe? |
+|---|---|---|
+| 360px (1 coluna) | 328 − 2 × 24 = **280px** | sim, sobram 24px |
+| 768px (2 colunas) | (704 − 24) / 2 − 48 = **292px** | sim |
+| desktop (máx. 880px) | (880 − 24) / 2 − 48 = **380px** | sim |
+
+Por segurança (telas abaixo de 360px, fora do requisito), `.mini-avatares` ganha `flex-wrap: wrap` e `row-gap: var(--esp-3)` (**mudança na seção 16**). A 360px ou mais, nada muda na tela. Atualizar também o comentário do HTML ("são só 4") para "são 6".
+
+### 13.6 Classes e tokens (resumo para o dev)
+
+**Tokens novos** (opcionais, no `:root` da seção 1; servem para documentar as cores, já que os componentes usam `--agente-cor`):
+
+| Token | Valor | Uso |
+|---|---|---|
+| `--cor-laranja` | `#FF9E4A` | Testador |
+| `--cor-azul` | `#5B9BFF` | Mentor de carreira |
+
+O `--gradiente` da marca **não muda** (continua ciano → roxo → magenta).
+
+**Classes novas**
+
+| Classe | Onde | Seção |
+|---|---|---|
+| `.fluxo-apoio`, `.fluxo-apoio-titulo`, `.fluxo-apoio-corpo`, `.fluxo-apoio-nome`, `.fluxo-apoio-papel` | `index.html` | 13.3 |
+| `.badge--apoio` | `index.html` e cards da Equipe | 13.3 |
+| `.agente-card--apoio` | card com `"apoio": true` | 13.4 |
+| `.agente-atuacao` (junto com `.agente-projetos`) | card com `"apoio": true` | 13.4 |
+
+**Regras modificadas**
+
+| Regra | Mudança | Seção do CSS |
+|---|---|---|
+| `.fluxo` (≥768px) | 4 → 5 colunas, `minmax(0, 1fr)` | 8 |
+| `.fluxo-etapa`, `img`, `span` (≥768px) | etapa "em pé", borda colorida em cima, avatar 48px | 8 |
+| `.fluxo-etapa::after` (<768px) | traço vertical novo entre as etapas | 8 |
+| `.grade-equipe` (≥1024px) | 4 → 3 colunas | 12 |
+| `.mini-avatares` | `flex-wrap: wrap; row-gap` | 16 |
+
+**Tabela de contraste AA (tudo novo desta etapa)**
+
+| Elemento | Cor / fundo | Razão | Mínimo |
+|---|---|---|---|
+| Número "04", nome na timeline, `UNIDADE://testador` | `#FF9E4A` / `#0C1021` (vidro) | 9.2:1 | 4.5:1 |
+| Mesmo texto sobre o fundo da página | `#FF9E4A` / `#05060F` | 9.9:1 | 4.5:1 |
+| `UNIDADE://mentor-carreira`, nome no bloco do Início | `#5B9BFF` / `#0C1021` | 6.8:1 | 4.5:1 |
+| Mesmo texto sobre o fundo da página | `#5B9BFF` / `#05060F` | 7.3:1 | 4.5:1 |
+| Selo "APOIO" (12px) | `#5B9BFF` / azul 10% sobre o vidro (≈ `#141E37`) | 6.0:1 | 4.5:1 |
+| Testador sobre laranja 10% (caso apareça em algum selo) | `#FF9E4A` / ≈ `#241E25` | 8.0:1 | 4.5:1 |
+| "FORA DO FLUXO: APOIO AO CHEFE", papel do mentor | `#9AA3BF` / `#0C1021` | ~7.4:1 | 4.5:1 |
+| Texto de "Atuação" | `#E8ECF8` / `#0C1021` | ~15.6:1 | 4.5:1 |
+| Borda tracejada do `.fluxo-apoio` (não-texto) | azul 70% (≈ `#4371BC`) / `#0C1021` | 3.9:1 | 3:1 |
+| Borda de cima dos cards, anel dos mini avatares, traço dos avatares (não-texto) | `#FF9E4A` e `#5B9BFF` / `#0B1020` | 9.2:1 e 6.8:1 | 3:1 |
+
+Atenção: a borda tracejada **com 55%** de mistura daria só ~2.9:1. Usar **70%** (ou mais).
+
+### 13.7 Teclado, movimento reduzido e 360px
+
+- **Teclado:** nada novo é clicável. O selo e o bloco do mentor são só texto; os links continuam os de sempre ("Conhecer a equipe", projetos nos cards), com o foco ciano global.
+- **Movimento reduzido:** o bloco do mentor usa `.surgir` e os avatares novos usam `flutuar` (Equipe) e o hover dos mini avatares (Sobre). Tudo isso já é desligado pela regra geral da seção 21. Nenhuma regra nova.
+- **360px (sem rolagem horizontal):** fluxo em lista vertical de 328px; bloco do mentor com 296px por dentro e selo que desce de linha; cards da Equipe com 280px por dentro (avatar + selo cabem); 6 mini avatares com 256px dentro de 280px; "Estudando agora" em 1 coluna.
+- **Alto contraste do Windows (`forced-colors`):** as cores somem, mas "Apoio", "Atuação", "Fora do fluxo" e os nomes são texto, então nada se perde.
