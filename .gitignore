@@ -1,0 +1,14 @@
+# Arquivos que o Git deve ignorar (não vão para o GitHub)
+
+# Lixo do sistema operacional
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Configurações pessoais de editor e do Claude Code
+.vscode/
+.claude/settings.local.json
+
+# Dependências e registros (caso algum projeto futuro use)
+node_modules/
+*.log

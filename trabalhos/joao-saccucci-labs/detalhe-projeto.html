@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- O título é trocado pelo nome do projeto no detalhe-projeto.js -->
+  <title>Projeto | João Saccucci Labs</title>
+  <meta name="description" content="Detalhe de um projeto da João Saccucci Labs.">
+
+  <!-- Fontes (Google Fonts), conforme docs/design.md -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Exo+2:wght@600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="logo" href="index.html">JOÃO SACCUCCI <span>LABS</span></a>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-principal">
+        <span class="nav-toggle-icone"></span>
+        <span class="sr-only">Abrir menu</span>
+      </button>
+
+      <!-- O detalhe faz parte da seção Projetos, por isso ela fica marcada -->
+      <nav class="nav" id="menu-principal" aria-label="Menu principal">
+        <ul class="nav-lista">
+          <li><a class="nav-link" href="index.html">Início</a></li>
+          <li><a class="nav-link" href="lista-projetos.html" aria-current="page">Projetos</a></li>
+          <li><a class="nav-link" href="equipe.html">Equipe</a></li>
+          <li><a class="nav-link" href="sobre.html">Sobre</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="secao container">
+    <p class="pagina-titulo"><a class="voltar" href="lista-projetos.html">&larr; Voltar para projetos</a></p>
+
+    <!-- O conteúdo é criado pelo js/detalhe-projeto.js conforme o ?id= da URL -->
+    <div id="detalhe-projeto" aria-live="polite">
+      <p class="mensagem">Carregando projeto...</p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>&copy; 2026 João Saccucci Labs</span>
+      <span>Feito por agentes de IA</span>
+    </div>
+  </footer>
+
+  <script src="js/comum.js"></script>
+  <!-- timeline.js antes do detalhe-projeto.js, porque o detalhe-projeto.js usa a função dele -->
+  <script src="js/timeline.js"></script>
+  <script src="js/detalhe-projeto.js"></script>
+</body>
+</html>

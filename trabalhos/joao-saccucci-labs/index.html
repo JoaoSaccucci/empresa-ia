@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>João Saccucci Labs</title>
+  <meta name="description" content="João Saccucci Labs: uma empresa de agentes de IA chefiada pelo João.">
+
+  <!-- Fontes (Google Fonts), conforme docs/design.md -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Exo+2:wght@600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Cabeçalho igual em todas as páginas.
+       aria-current="page" marca a página atual (o CSS pinta de ciano). -->
+  <header class="site-header">
+    <div class="container">
+      <a class="logo" href="index.html">JOÃO SACCUCCI <span>LABS</span></a>
+
+      <!-- Botão do menu no celular. O comum.js alterna aria-expanded. -->
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-principal">
+        <span class="nav-toggle-icone"></span>
+        <span class="sr-only">Abrir menu</span>
+      </button>
+
+      <nav class="nav" id="menu-principal" aria-label="Menu principal">
+        <ul class="nav-lista">
+          <li><a class="nav-link" href="index.html" aria-current="page">Início</a></li>
+          <li><a class="nav-link" href="lista-projetos.html">Projetos</a></li>
+          <li><a class="nav-link" href="equipe.html">Equipe</a></li>
+          <li><a class="nav-link" href="sobre.html">Sobre</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Apresentação da empresa -->
+    <section class="hero container surgir">
+      <span class="rotulo">// Empresa de agentes de IA</span>
+      <h1>João Saccucci <span class="texto-gradiente">Labs</span></h1>
+      <p class="hero-texto">
+        Uma empresa em que os funcionários são agentes de IA e o João é o chefe.
+        Cada agente cuida de uma parte do trabalho, dos requisitos à explicação do código.
+        Aqui ficam os projetos construídos e quem fez cada parte.
+      </p>
+      <div class="hero-acoes">
+        <a class="btn btn-primario" href="lista-projetos.html">Ver projetos</a>
+        <a class="btn btn-secundario" href="equipe.html">Conhecer a equipe</a>
+      </div>
+    </section>
+
+    <!-- Fluxo de trabalho: a ordem é fixa, por isso fica direto no HTML.
+         As cores são as mesmas de data/agentes.json. -->
+    <section class="secao container" aria-labelledby="titulo-fluxo">
+      <span class="rotulo">// Como trabalhamos</span>
+      <h2 id="titulo-fluxo">Fluxo de trabalho</h2>
+      <ol class="fluxo">
+        <li class="fluxo-etapa surgir" style="--agente-cor: #00E5FF; --atraso: 0ms">
+          <img src="img/agentes/product-owner.svg" alt="Avatar do Product Owner">
+          <span>Product Owner</span>
+        </li>
+        <li class="fluxo-etapa surgir" style="--agente-cor: #B45CFF; --atraso: 100ms">
+          <img src="img/agentes/artista.svg" alt="Avatar do Artista">
+          <span>Artista</span>
+        </li>
+        <li class="fluxo-etapa surgir" style="--agente-cor: #FF2BD6; --atraso: 200ms">
+          <img src="img/agentes/dev.svg" alt="Avatar do Dev">
+          <span>Dev</span>
+        </li>
+        <li class="fluxo-etapa surgir" style="--agente-cor: #7CFFB2; --atraso: 300ms">
+          <img src="img/agentes/professor.svg" alt="Avatar do Professor">
+          <span>Professor</span>
+        </li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>&copy; 2026 João Saccucci Labs</span>
+      <span>Feito por agentes de IA</span>
+    </div>
+  </footer>
+
+  <!-- Esta página não lê JSON, só precisa do menu -->
+  <script src="js/comum.js"></script>
+</body>
+</html>

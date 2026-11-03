@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-labelledby="t">
+  <title id="t">Unidade de IA Product Owner</title>
+  <defs>
+    <radialGradient id="g" cx="50%" cy="40%" r="60%">
+      <stop offset="0" stop-color="#00E5FF" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#00E5FF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- brilho de fundo -->
+  <circle cx="60" cy="60" r="56" fill="url(#g)"/>
+  <!-- corpo hexagonal -->
+  <polygon points="60,10 103,35 103,85 60,110 17,85 17,35" fill="#0B1020" stroke="#00E5FF" stroke-width="3" stroke-linejoin="round"/>
+  <!-- antena -->
+  <line x1="60" y1="10" x2="60" y2="2" stroke="#00E5FF" stroke-width="3" stroke-linecap="round"/>
+  <!-- visor -->
+  <rect x="32" y="38" width="56" height="16" rx="8" fill="#00E5FF" fill-opacity=".15" stroke="#00E5FF" stroke-width="2"/>
+  <circle cx="47" cy="46" r="3.5" fill="#00E5FF"/>
+  <circle cx="73" cy="46" r="3.5" fill="#00E5FF"/>
+  <!-- símbolo: alvo (requisitos e prioridades) -->
+  <circle cx="60" cy="80" r="14" fill="none" stroke="#00E5FF" stroke-width="2.5"/>
+  <circle cx="60" cy="80" r="7" fill="none" stroke="#00E5FF" stroke-width="2.5"/>
+  <circle cx="60" cy="80" r="2.5" fill="#00E5FF"/>
+</svg>

@@ -1,0 +1,1551 @@
+/* =========================================================
+   João Saccucci Labs - folha de estilo principal
+   Leia o docs/design.md para entender as decisões.
+   As fontes são carregadas no <head> do HTML (ver docs/design.md).
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   1. VARIÁVEIS (tokens de design)
+   Tudo que se repete fica aqui. Mudou a cor? Muda só aqui.
+   --------------------------------------------------------- */
+:root {
+  /* Fundos */
+  --cor-fundo: #05060F;          /* fundo da página, quase preto azulado */
+  --cor-fundo-2: #0B1020;        /* fundo de áreas elevadas sem vidro */
+  --cor-vidro: rgba(18, 24, 48, 0.55);   /* fundo dos cards "de vidro" */
+  --cor-borda: rgba(148, 163, 255, 0.16);/* borda fina dos cards */
+  --cor-borda-forte: rgba(148, 163, 255, 0.32);
+
+  /* Texto */
+  --cor-texto: #E8ECF8;          /* texto principal (contraste ~17:1) */
+  --cor-texto-suave: #9AA3BF;    /* texto secundário (contraste ~7.8:1) */
+
+  /* Neon da marca */
+  --cor-ciano: #00E5FF;
+  --cor-roxo: #B45CFF;
+  --cor-magenta: #FF2BD6;
+  --cor-verde: #7CFFB2;
+  --cor-erro: #FF6B81;
+
+  /* Gradiente principal (ciano -> roxo -> magenta) */
+  --gradiente: linear-gradient(90deg, var(--cor-ciano), var(--cor-roxo) 55%, var(--cor-magenta));
+
+  /* Cor do agente: o JS troca este valor em cada card com
+     style="--agente-cor: #00E5FF" (vindo do agentes.json) */
+  --agente-cor: var(--cor-ciano);
+
+  /* Tipografia */
+  --fonte-display: "Exo 2", "Space Grotesk", system-ui, sans-serif;
+  --fonte-texto: "Space Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --fonte-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+
+  /* Tamanhos de fonte fluidos: clamp(mínimo, ideal, máximo) */
+  --fs-xs: 0.75rem;                              /* 12px */
+  --fs-sm: 0.875rem;                             /* 14px */
+  --fs-base: 1rem;                               /* 16px */
+  --fs-lg: 1.25rem;                              /* 20px */
+  --fs-xl: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);  /* 24 a 32px */
+  --fs-2xl: clamp(2rem, 1.4rem + 3vw, 3.5rem);   /* 32 a 56px */
+
+  /* Espaçamentos (escala de 4px) */
+  --esp-1: 0.25rem;  /* 4px  */
+  --esp-2: 0.5rem;   /* 8px  */
+  --esp-3: 0.75rem;  /* 12px */
+  --esp-4: 1rem;     /* 16px */
+  --esp-5: 1.5rem;   /* 24px */
+  --esp-6: 2rem;     /* 32px */
+  --esp-7: 3rem;     /* 48px */
+  --esp-8: 4rem;     /* 64px */
+
+  /* Raios de borda */
+  --raio-sm: 6px;
+  --raio-md: 12px;
+  --raio-lg: 20px;
+  --raio-pill: 999px;
+
+  /* Sombras e brilhos */
+  --sombra: 0 8px 32px rgba(0, 0, 0, 0.45);
+  --brilho-ciano: 0 0 24px rgba(0, 229, 255, 0.35);
+  --brilho-magenta: 0 0 24px rgba(255, 43, 214, 0.35);
+
+  /* Layout */
+  --largura-max: 1120px;
+  --altura-header: 64px;
+
+  /* Animação */
+  --transicao: 200ms ease;
+}
+
+
+/* ---------------------------------------------------------
+   2. RESET BÁSICO
+   Tira margens padrão do navegador e deixa as medidas previsíveis.
+   --------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box; /* padding e borda entram na largura */
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%; /* imagem nunca passa da largura da tela */
+  height: auto;
+}
+
+a {
+  color: var(--cor-ciano);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--cor-texto);
+}
+
+/* Foco visível para quem navega pelo teclado (acessibilidade) */
+:focus-visible {
+  outline: 2px solid var(--cor-ciano);
+  outline-offset: 3px;
+  border-radius: var(--raio-sm);
+}
+
+ul[class],
+ol[class] {
+  list-style: none;
+  padding: 0;
+}
+
+
+/* ---------------------------------------------------------
+   3. BASE DA PÁGINA E FUNDO FUTURISTA
+   Fundo escuro + manchas de luz + grade sutil + partículas.
+   Tudo feito com gradientes, sem imagens.
+   --------------------------------------------------------- */
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--fonte-texto);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  color: var(--cor-texto);
+  background-color: var(--cor-fundo);
+  /* manchas de luz coloridas nos cantos */
+  background-image:
+    radial-gradient(ellipse 60% 40% at 15% 0%, rgba(0, 229, 255, 0.10), transparent 70%),
+    radial-gradient(ellipse 50% 40% at 90% 10%, rgba(180, 92, 255, 0.12), transparent 70%),
+    radial-gradient(ellipse 60% 50% at 50% 100%, rgba(255, 43, 214, 0.08), transparent 70%);
+  background-attachment: fixed;
+  overflow-x: hidden; /* garante que nada cause rolagem horizontal */
+}
+
+/* Grade de linhas finas (fica atrás de tudo) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(148, 163, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 255, 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+  /* a grade some suavemente em direção à parte de baixo */
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 85%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 85%);
+}
+
+/* Partículas: pontinhos de luz que sobem devagar */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1.5px 1.5px at 20% 30%, rgba(0, 229, 255, 0.7), transparent),
+    radial-gradient(1.5px 1.5px at 70% 60%, rgba(180, 92, 255, 0.7), transparent),
+    radial-gradient(1px 1px at 40% 80%, rgba(255, 43, 214, 0.7), transparent),
+    radial-gradient(1px 1px at 85% 20%, rgba(232, 236, 248, 0.6), transparent),
+    radial-gradient(1px 1px at 10% 70%, rgba(232, 236, 248, 0.5), transparent);
+  background-size: 400px 400px;
+  opacity: 0.6;
+  animation: particulas 60s linear infinite;
+}
+
+@keyframes particulas {
+  from { background-position: 0 0; }
+  to   { background-position: 0 -400px; }
+}
+
+/* Conteúdo principal ocupa o espaço que sobra (footer fica no fim) */
+main {
+  flex: 1;
+}
+
+/* Container centralizado com margem lateral */
+.container {
+  width: 100%;
+  max-width: var(--largura-max);
+  margin-inline: auto;
+  padding-inline: var(--esp-4);
+}
+
+.secao {
+  padding-block: var(--esp-7);
+}
+
+
+/* ---------------------------------------------------------
+   4. TIPOGRAFIA
+   --------------------------------------------------------- */
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  font-family: var(--fonte-display);
+  font-size: var(--fs-2xl);
+  letter-spacing: 0.02em;
+}
+
+h2 {
+  font-size: var(--fs-xl);
+  margin-bottom: var(--esp-5);
+}
+
+h3 {
+  font-size: var(--fs-lg);
+}
+
+p {
+  max-width: 65ch; /* linhas não muito longas = leitura mais fácil */
+}
+
+/* Texto com gradiente neon (use em palavras de destaque) */
+.texto-gradiente {
+  background: var(--gradiente);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Rótulo pequeno em fonte mono, ex.: "// PROJETOS" */
+.rotulo {
+  display: inline-block;
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--cor-ciano);
+  margin-bottom: var(--esp-2);
+}
+
+.texto-suave {
+  color: var(--cor-texto-suave);
+}
+
+/* Texto só para leitores de tela (some da tela, mas é lido) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0); margin: -1px; padding: 0; border: 0; /* receita padrão completa */
+  white-space: nowrap;
+}
+
+
+/* ---------------------------------------------------------
+   5. HEADER E NAVEGAÇÃO
+   No celular o menu fica escondido e abre pelo botão
+   .nav-toggle. O JS só precisa alternar a classe .is-open
+   no .nav e o aria-expanded do botão.
+   --------------------------------------------------------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  height: var(--altura-header);
+  background: rgba(5, 6, 15, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.site-header .container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-4);
+}
+
+/* Logo: "JSL" em Exo 2 com gradiente */
+.logo {
+  font-family: var(--fonte-display);
+  font-weight: 700;
+  font-size: var(--fs-base);
+  letter-spacing: 0.08em;
+  color: var(--cor-texto);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.logo span {
+  background: var(--gradiente);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Botão hambúrguer (só aparece no celular) */
+.nav-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;   /* 44px = área mínima de toque recomendada */
+  height: 44px;
+  background: transparent;
+  border: 1px solid var(--cor-borda-forte);
+  border-radius: var(--raio-md);
+  color: var(--cor-texto);
+  cursor: pointer;
+}
+
+/* As três linhas do hambúrguer feitas com um span e sombras */
+.nav-toggle-icone,
+.nav-toggle-icone::before,
+.nav-toggle-icone::after {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 2px;
+  transition: transform var(--transicao), opacity var(--transicao);
+}
+
+.nav-toggle-icone {
+  position: relative;
+}
+
+.nav-toggle-icone::before,
+.nav-toggle-icone::after {
+  content: "";
+  position: absolute;
+  left: 0;
+}
+
+.nav-toggle-icone::before { top: -6px; }
+.nav-toggle-icone::after  { top: 6px; }
+
+/* Quando aberto, o hambúrguer vira um X */
+.nav-toggle[aria-expanded="true"] .nav-toggle-icone { background: transparent; }
+.nav-toggle[aria-expanded="true"] .nav-toggle-icone::before { transform: translateY(6px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] .nav-toggle-icone::after  { transform: translateY(-6px) rotate(-45deg); }
+
+/* Menu no celular: painel que desce abaixo do header */
+.nav {
+  display: none;
+  position: absolute;
+  top: var(--altura-header);
+  left: 0;
+  right: 0;
+  padding: var(--esp-4);
+  background: rgba(5, 6, 15, 0.95);
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.nav.is-open {
+  display: block;
+}
+
+.nav-lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-1);
+}
+
+.nav-link {
+  display: block;
+  padding: var(--esp-3) var(--esp-4);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-sm);
+  color: var(--cor-texto-suave);
+  text-decoration: none;
+  border-radius: var(--raio-md);
+  transition: color var(--transicao), background var(--transicao);
+}
+
+.nav-link:hover {
+  color: var(--cor-texto);
+  background: rgba(148, 163, 255, 0.08);
+}
+
+/* Link da página atual: use aria-current="page" no HTML */
+.nav-link[aria-current="page"] {
+  color: var(--cor-ciano);
+  background: rgba(0, 229, 255, 0.08);
+}
+
+/* A partir de 768px o menu fica sempre visível, na horizontal */
+@media (min-width: 768px) {
+  .nav-toggle {
+    display: none;
+  }
+
+  .nav {
+    display: block;
+    position: static;
+    padding: 0;
+    background: none;
+    border: 0;
+  }
+
+  .nav-lista {
+    flex-direction: row;
+  }
+
+  .nav-link {
+    padding: var(--esp-2) var(--esp-3);
+  }
+}
+
+
+/* ---------------------------------------------------------
+   6. BOTÕES
+   --------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--esp-2);
+  min-height: 44px;
+  padding: var(--esp-3) var(--esp-5);
+  font-family: var(--fonte-texto);
+  font-size: var(--fs-base);
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: var(--raio-pill);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform var(--transicao), box-shadow var(--transicao), background var(--transicao);
+}
+
+/* Principal: fundo com gradiente e texto escuro (contraste > 5:1) */
+.btn-primario {
+  background: var(--gradiente);
+  color: var(--cor-fundo);
+}
+
+.btn-primario:hover {
+  color: var(--cor-fundo);
+  transform: translateY(-2px);
+  box-shadow: var(--brilho-ciano), var(--brilho-magenta);
+}
+
+/* Secundário: vidro com borda */
+.btn-secundario {
+  background: var(--cor-vidro);
+  color: var(--cor-texto);
+  border-color: var(--cor-borda-forte);
+}
+
+.btn-secundario:hover {
+  color: var(--cor-texto);
+  border-color: var(--cor-ciano);
+  box-shadow: var(--brilho-ciano);
+}
+
+
+/* ---------------------------------------------------------
+   7. HERO (topo da página Início)
+   --------------------------------------------------------- */
+.hero {
+  padding-block: var(--esp-8) var(--esp-7);
+  text-align: center;
+}
+
+.hero h1 {
+  margin-bottom: var(--esp-4);
+}
+
+.hero-texto {
+  margin-inline: auto;
+  margin-bottom: var(--esp-6);
+  font-size: var(--fs-lg);
+  color: var(--cor-texto-suave);
+}
+
+.hero-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--esp-3);
+}
+
+
+/* ---------------------------------------------------------
+   8. FLUXO DE TRABALHO (PO -> artista -> dev -> professor)
+   Lista ordenada <ol class="fluxo"> com um <li class="fluxo-etapa">
+   por agente. Cada etapa recebe style="--agente-cor: ...".
+   --------------------------------------------------------- */
+.fluxo {
+  display: grid;
+  grid-template-columns: 1fr;          /* celular: um embaixo do outro */
+  gap: var(--esp-4);
+  counter-reset: etapa;
+}
+
+.fluxo-etapa {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--esp-3);
+  padding: var(--esp-4);
+  background: var(--cor-vidro);
+  border: 1px solid var(--cor-borda);
+  border-left: 3px solid var(--agente-cor);
+  border-radius: var(--raio-md);
+  counter-increment: etapa;
+}
+
+/* Número da etapa: 01, 02... */
+.fluxo-etapa::before {
+  content: "0" counter(etapa);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-sm);
+  color: var(--agente-cor);
+}
+
+.fluxo-etapa img {
+  width: 40px;
+  height: 40px;
+}
+
+@media (min-width: 768px) {
+  .fluxo {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* Setinha ligando uma etapa à próxima */
+  .fluxo-etapa:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: calc(-1 * var(--esp-4));
+    width: var(--esp-4);
+    height: 2px;
+    background: var(--gradiente);
+  }
+}
+
+
+/* ---------------------------------------------------------
+   9. CARD BASE (vidro / glassmorphism)
+   Use .card em qualquer caixa. As outras variações herdam dele.
+   --------------------------------------------------------- */
+.card {
+  position: relative;
+  padding: var(--esp-5);
+  background: var(--cor-vidro);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-lg);
+  box-shadow: var(--sombra);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* Grade de cards que se adapta sozinha à largura da tela */
+.grade-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: var(--esp-5);
+}
+
+
+/* ---------------------------------------------------------
+   10. CARD DE PROJETO (lista de projetos)
+   O card inteiro é um link <a class="card projeto-card">.
+   --------------------------------------------------------- */
+.projeto-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-3);
+  color: var(--cor-texto);
+  text-decoration: none;
+  transition: transform var(--transicao), border-color var(--transicao), box-shadow var(--transicao);
+}
+
+/* Linha de gradiente no topo do card */
+.projeto-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: var(--esp-5);
+  right: var(--esp-5);
+  height: 2px;
+  background: var(--gradiente);
+  border-radius: 2px;
+  opacity: 0.7;
+}
+
+.projeto-card:hover {
+  color: var(--cor-texto);
+  transform: translateY(-4px);
+  border-color: var(--cor-borda-forte);
+  box-shadow: var(--sombra), var(--brilho-ciano);
+}
+
+.projeto-card-topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-2);
+}
+
+.projeto-card-descricao {
+  color: var(--cor-texto-suave);
+}
+
+/* Data em fonte mono: "início 2026-11-02" */
+.data {
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-sm);
+  color: var(--cor-texto-suave);
+}
+
+/* "Ver detalhes ->" no fim do card */
+.projeto-card-link {
+  margin-top: auto;
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-sm);
+  color: var(--cor-ciano);
+}
+
+
+/* ---------------------------------------------------------
+   11. BADGE DE STATUS
+   O JS converte o status do JSON em classe:
+   "planejado"    -> .badge--planejado
+   "em andamento" -> .badge--andamento
+   "concluído"    -> .badge--concluido
+   --------------------------------------------------------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--esp-2);
+  padding: var(--esp-1) var(--esp-3);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-radius: var(--raio-pill);
+  border: 1px solid currentColor;
+  white-space: nowrap;
+}
+
+/* Bolinha antes do texto */
+.badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.badge--planejado {
+  color: var(--cor-roxo);
+  background: rgba(180, 92, 255, 0.10);
+}
+
+.badge--andamento {
+  color: var(--cor-ciano);
+  background: rgba(0, 229, 255, 0.10);
+}
+
+/* Bolinha pulsando = "está acontecendo agora" */
+.badge--andamento::before {
+  animation: pulso 1.6s ease-in-out infinite;
+}
+
+.badge--concluido {
+  color: var(--cor-verde);
+  background: rgba(124, 255, 178, 0.10);
+}
+
+@keyframes pulso {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 currentColor; }
+  50%      { opacity: 0.5; box-shadow: 0 0 6px 2px currentColor; }
+}
+
+/* Etiqueta de tecnologia (HTML, CSS, JavaScript) */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+}
+
+.tag {
+  padding: var(--esp-1) var(--esp-3);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  color: var(--cor-texto);
+  background: rgba(148, 163, 255, 0.08);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-sm);
+}
+
+
+/* ---------------------------------------------------------
+   12. CARD DE AGENTE (página Equipe)
+   <article class="card agente-card" style="--agente-cor: #00E5FF">
+   --------------------------------------------------------- */
+/* Grade da equipe: 4 agentes = 1, 2 ou 4 colunas (nunca 3+1) */
+.grade-equipe {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--esp-5);
+}
+
+@media (min-width: 640px) {
+  .grade-equipe { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+  .grade-equipe { grid-template-columns: repeat(4, 1fr); }
+}
+
+.agente-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-3);
+  border-top: 3px solid var(--agente-cor);
+  transition: transform var(--transicao), box-shadow var(--transicao);
+}
+
+.agente-card:hover {
+  transform: translateY(-4px);
+  /* brilho na cor do próprio agente */
+  box-shadow: var(--sombra), 0 0 28px color-mix(in srgb, var(--agente-cor) 35%, transparent);
+}
+
+.agente-avatar {
+  width: 88px;
+  height: 88px;
+  /* sobe e desce devagar, como se estivesse "flutuando" */
+  animation: flutuar 5s ease-in-out infinite;
+}
+
+@keyframes flutuar {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+/* ID da unidade em fonte mono: "UNIDADE://product-owner" */
+.agente-id {
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--agente-cor);
+}
+
+.agente-papel {
+  color: var(--cor-texto-suave);
+}
+
+/* Lista de projetos do agente */
+.agente-projetos {
+  margin-top: auto;
+  padding-top: var(--esp-3);
+  border-top: 1px solid var(--cor-borda);
+}
+
+.agente-projetos h4 {
+  margin-bottom: var(--esp-2);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--cor-texto-suave);
+}
+
+.agente-projetos li + li {
+  margin-top: var(--esp-1);
+}
+
+
+/* ---------------------------------------------------------
+   13. DETALHE DO PROJETO
+   --------------------------------------------------------- */
+.projeto-cabecalho {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-4);
+  margin-bottom: var(--esp-7);
+}
+
+/* Linha com datas e status */
+.projeto-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--esp-3) var(--esp-5);
+}
+
+/* Link "<- Voltar para projetos" */
+.voltar {
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-sm);
+  text-decoration: none;
+}
+
+
+/* ---------------------------------------------------------
+   14. BLOCO DE TRABALHO DO AGENTE (dentro do detalhe)
+   <article class="card trabalho" style="--agente-cor: ...">
+   --------------------------------------------------------- */
+.trabalhos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-5);
+}
+
+.trabalho {
+  border-left: 3px solid var(--agente-cor);
+}
+
+/* Avatar + nome do agente lado a lado */
+.trabalho-cabecalho {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-3);
+  margin-bottom: var(--esp-4);
+}
+
+.trabalho-cabecalho img {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.trabalho-cabecalho h3 {
+  color: var(--agente-cor);
+}
+
+.trabalho-resumo {
+  margin-bottom: var(--esp-5);
+}
+
+/* Título pequeno das subseções: "Entregáveis", "Imagens" */
+.trabalho-subtitulo {
+  margin-bottom: var(--esp-2);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--cor-texto-suave);
+}
+
+.entregaveis {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+  margin-bottom: var(--esp-5);
+}
+
+/* Cada entregável é um "chip" clicável */
+.entregavel {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--esp-2);
+  min-height: 40px;
+  padding: var(--esp-2) var(--esp-4);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-sm);
+  color: var(--cor-texto);
+  text-decoration: none;
+  background: rgba(148, 163, 255, 0.06);
+  border: 1px solid var(--cor-borda-forte);
+  border-radius: var(--raio-md);
+  transition: border-color var(--transicao), color var(--transicao);
+}
+
+.entregavel::before {
+  content: "\2197"; /* seta diagonal ↗ */
+  color: var(--agente-cor);
+}
+
+.entregavel:hover {
+  color: var(--cor-texto);
+  border-color: var(--agente-cor);
+}
+
+/* Galeria de prints */
+.galeria {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+  gap: var(--esp-3);
+}
+
+.galeria img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: var(--raio-md);
+  border: 1px solid var(--cor-borda);
+}
+
+/* "Sem itens ainda" */
+.vazio {
+  font-size: var(--fs-sm);
+  font-style: italic;
+  color: var(--cor-texto-suave);
+}
+
+
+/* ---------------------------------------------------------
+   15. LINHA DO TEMPO (Etapa 2)
+   Os eventos são AGRUPADOS POR DATA: a data aparece uma vez
+   (como um "marco" na linha) e os eventos daquele dia vêm
+   embaixo. Assim, 6 eventos no mesmo dia não repetem a data
+   6 vezes.
+
+   <section class="timeline-secao">
+     <ol class="timeline">
+       <li class="timeline-dia">
+         <h3 class="timeline-dia-data"><time>...</time></h3>
+         <ol class="timeline-eventos">
+           <li class="timeline-item" style="--agente-cor: ...">
+             <img class="timeline-avatar"> + <div class="timeline-conteudo">
+
+   O mini avatar do agente fica EM CIMA da linha vertical,
+   no lugar da bolinha. É vertical em todas as telas.
+   Medidas: avatar de 32px, então o centro da linha fica em 16px.
+   --------------------------------------------------------- */
+.timeline-secao {
+  margin-top: var(--esp-7);
+}
+
+.timeline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-6);       /* espaço entre um dia e outro */
+}
+
+/* A linha vertical com o gradiente da marca (de cima para baixo) */
+.timeline::before {
+  content: "";
+  position: absolute;
+  top: var(--esp-3);
+  bottom: var(--esp-3);
+  left: 15px;              /* 15px + 2px de largura = centro em 16px */
+  width: 2px;
+  background: linear-gradient(180deg, var(--cor-ciano), var(--cor-roxo), var(--cor-magenta));
+  opacity: 0.5;
+}
+
+.timeline-dia {
+  position: relative;
+}
+
+/* Data do grupo: "2026-11-02" em mono, com um losango na linha */
+.timeline-dia-data {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+  padding-left: calc(32px + var(--esp-4));  /* alinha com o texto dos eventos */
+  margin-bottom: var(--esp-4);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--cor-texto);
+}
+
+/* Losango (quadrado girado) marcando o dia na linha */
+.timeline-dia-data::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 10px;              /* 12px de largura: centro em 16px */
+  width: 12px;
+  height: 12px;
+  background: var(--cor-fundo);
+  border: 2px solid var(--cor-ciano);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.timeline-eventos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-4);       /* espaço entre eventos do mesmo dia */
+}
+
+/* Um evento: avatar (coluna de 32px) + caixa de texto */
+.timeline-item {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: var(--esp-4);
+  align-items: start;
+}
+
+/* Mini avatar redondo, "furando" a linha */
+.timeline-avatar {
+  position: relative;      /* fica por cima da linha */
+  width: 32px;
+  height: 32px;
+  margin-top: var(--esp-2);
+  border-radius: 50%;
+  background: var(--cor-fundo-2);
+  /* anel escuro (esconde a linha atrás) + anel na cor do agente */
+  box-shadow:
+    0 0 0 3px var(--cor-fundo),
+    0 0 0 4px var(--agente-cor),
+    0 0 14px color-mix(in srgb, var(--agente-cor) 45%, transparent);
+}
+
+/* Se o agente não existir no agentes.json: bolinha no lugar do avatar */
+.timeline-avatar--vazio {
+  display: block;
+  width: 14px;
+  height: 14px;
+  margin: var(--esp-3) auto 0;
+  border: 3px solid var(--agente-cor);
+  box-shadow: 0 0 0 3px var(--cor-fundo);
+}
+
+/* Caixa de vidro com a borda esquerda na cor do agente */
+.timeline-conteudo {
+  padding: var(--esp-3) var(--esp-4);
+  background: var(--cor-vidro);
+  border: 1px solid var(--cor-borda);
+  border-left: 3px solid var(--agente-cor);
+  border-radius: var(--raio-md);
+  transition: border-color var(--transicao);
+}
+
+.timeline-item:hover .timeline-conteudo {
+  border-color: var(--cor-borda-forte);
+  border-left-color: var(--agente-cor);
+}
+
+/* Nome do agente: mono, maiúsculo, na cor dele (AA em todos os 4) */
+.timeline-agente {
+  display: block;
+  margin-bottom: var(--esp-1);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--agente-cor);
+}
+
+.timeline-descricao {
+  overflow-wrap: anywhere; /* nomes de arquivo longos quebram no celular */
+}
+
+
+/* ---------------------------------------------------------
+   16. SOBRE MIM (Etapa 2)
+   Página sobre.html com um "cartão de identidade do chefe":
+   rótulo CHEFE://JOAO-SACCUCCI, monograma "JS" no lugar
+   da foto, dados em formato de ficha e botões de contato.
+   Abaixo, dois blocos: "O que estudo" e "Minha equipe".
+   --------------------------------------------------------- */
+.sobre {
+  max-width: 880px;
+  margin-inline: auto;
+}
+
+/* ---- 16.1 Cartão de identidade ---- */
+.id-cartao {
+  display: grid;
+  gap: var(--esp-5);
+  overflow: hidden;
+  /* Borda com gradiente: o fundo escuro pinta só a área interna
+     (padding-box) e o gradiente aparece na borda (border-box) */
+  border: 1px solid transparent;
+  background:
+    linear-gradient(rgba(11, 16, 32, 0.88), rgba(11, 16, 32, 0.88)) padding-box,
+    var(--gradiente) border-box;
+  box-shadow: var(--sombra), 0 0 40px rgba(180, 92, 255, 0.15);
+}
+
+/* Cantoneiras de "mira" (estilo painel de comando) */
+.id-cartao::before,
+.id-cartao::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--cor-ciano);
+  pointer-events: none;
+}
+
+.id-cartao::before {
+  top: 8px;
+  left: 8px;
+  border-right: 0;
+  border-bottom: 0;
+}
+
+.id-cartao::after {
+  right: 8px;
+  bottom: 8px;
+  border-left: 0;
+  border-top: 0;
+  border-color: var(--cor-magenta);
+}
+
+/* Faixa de cima: rótulo à esquerda, status à direita */
+.id-topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-2) var(--esp-4);
+  padding-bottom: var(--esp-4);
+  border-bottom: 1px dashed var(--cor-borda-forte);
+}
+
+.id-rotulo {
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--cor-ciano);
+  overflow-wrap: anywhere;
+}
+
+/* Miolo: monograma + informações (empilhado no celular) */
+.id-corpo {
+  display: grid;
+  gap: var(--esp-5);
+  align-items: center;
+}
+
+@media (min-width: 640px) {
+  .id-corpo {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--esp-6);
+  }
+}
+
+/* Monograma "JS": quadrado com anel de gradiente girando devagar */
+.id-monograma {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 112px;
+  height: 112px;
+  border-radius: var(--raio-lg);
+  overflow: hidden;
+  isolation: isolate;       /* os ::before/::after ficam atrás só aqui dentro */
+  box-shadow: var(--brilho-ciano);
+}
+
+/* Camada 1: gradiente cônico que gira (vira o "anel") */
+.id-monograma::before {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  z-index: -2;
+  background: conic-gradient(var(--cor-ciano), var(--cor-roxo), var(--cor-magenta), var(--cor-ciano));
+  animation: girar 8s linear infinite;
+}
+
+/* Camada 2: miolo escuro, deixando 3px do anel aparecendo */
+.id-monograma::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  z-index: -1;
+  border-radius: calc(var(--raio-lg) - 3px);
+  background: var(--cor-fundo-2);
+}
+
+/* As letras "JS" com gradiente */
+.id-monograma span {
+  font-family: var(--fonte-display);
+  font-size: 2.75rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  background: var(--gradiente);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@keyframes girar {
+  to { transform: rotate(1turn); }
+}
+
+.id-info h1 {
+  margin-bottom: var(--esp-2);
+  overflow-wrap: anywhere;
+}
+
+.id-cargo {
+  color: var(--cor-texto-suave);
+}
+
+/* Ficha de dados: <dl> com pares "rótulo / valor" */
+.id-dados {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  gap: var(--esp-3) var(--esp-5);
+  margin-top: var(--esp-4);
+}
+
+.id-dados dt {
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
+}
+
+.id-dados dd {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+}
+
+/* Frase de apresentação com barrinha de gradiente à esquerda */
+.id-frase {
+  position: relative;
+  padding-left: var(--esp-5);
+  font-size: var(--fs-lg);
+  line-height: 1.5;
+}
+
+.id-frase::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 3px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, var(--cor-ciano), var(--cor-magenta));
+}
+
+/* Botões de contato (GitHub, LinkedIn, E-mail) */
+.contatos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-3);
+}
+
+/* No celular os botões crescem e preenchem a linha */
+.contatos .btn {
+  flex: 1 1 auto;
+}
+
+@media (min-width: 640px) {
+  .contatos .btn {
+    flex: 0 0 auto;
+  }
+}
+
+/* Ícone SVG inline: herda a cor do texto (currentColor) */
+.icone {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  transition: color var(--transicao);
+}
+
+.contato:hover .icone {
+  color: var(--cor-ciano);
+}
+
+/* Faixa de baixo: número do cartão + "código de barras" decorativo */
+.id-rodape {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-3);
+  padding-top: var(--esp-4);
+  border-top: 1px dashed var(--cor-borda-forte);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.1em;
+  color: var(--cor-texto-suave);
+}
+
+.id-barras {
+  width: 120px;
+  height: 24px;
+  opacity: 0.5;
+  /* listras de larguras diferentes, só com gradiente */
+  background: repeating-linear-gradient(90deg,
+    var(--cor-texto-suave) 0 2px, transparent 2px 4px,
+    var(--cor-texto-suave) 4px 5px, transparent 5px 8px,
+    var(--cor-texto-suave) 8px 11px, transparent 11px 13px);
+}
+
+/* ---- 16.2 Blocos "O que estudo" e "Minha equipe" ---- */
+.sobre-grade {
+  display: grid;
+  gap: var(--esp-5);
+  margin-top: var(--esp-5);
+}
+
+@media (min-width: 768px) {
+  .sobre-grade {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.sobre-bloco {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-3);
+}
+
+.sobre-bloco h2 {
+  margin-bottom: 0;
+  font-size: var(--fs-lg);
+}
+
+.sobre-bloco .rotulo {
+  margin-bottom: 0;
+}
+
+/* Lista "O que estudo" com cara de terminal: "> item" */
+.estudos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-2);
+}
+
+.estudos li {
+  display: flex;
+  gap: var(--esp-2);
+  padding: var(--esp-2) var(--esp-3);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-sm);
+  background: rgba(148, 163, 255, 0.06);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-sm);
+  overflow-wrap: anywhere;
+}
+
+.estudos li::before {
+  content: ">";
+  color: var(--cor-ciano);
+}
+
+/* Mini avatares sobrepostos (cada <li> recebe --agente-cor) */
+.mini-avatares {
+  display: flex;
+  padding-left: 4px;        /* espaço para o anel do primeiro */
+  margin-block: var(--esp-2);
+}
+
+.mini-avatares li + li {
+  margin-left: -8px;        /* um avatar encosta no outro */
+}
+
+.mini-avatares img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--cor-fundo-2);
+  box-shadow:
+    0 0 0 2px var(--cor-fundo),
+    0 0 0 4px var(--agente-cor);
+  transition: transform var(--transicao);
+}
+
+.mini-avatares li:hover img {
+  transform: translateY(-4px);
+}
+
+/* O botão "Conhecer a equipe" fica no fim do bloco, alinhado à esquerda */
+.sobre-bloco .btn {
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+/* Movimento reduzido: o anel do monograma fica parado */
+@media (prefers-reduced-motion: reduce) {
+  .id-monograma::before {
+    animation: none;
+  }
+}
+
+
+/* ---------------------------------------------------------
+   17. MENSAGENS DE ESTADO (carregando / erro / não encontrado)
+   --------------------------------------------------------- */
+.mensagem {
+  padding: var(--esp-5);
+  text-align: center;
+  border-radius: var(--raio-lg);
+  border: 1px dashed var(--cor-borda-forte);
+  color: var(--cor-texto-suave);
+}
+
+.mensagem--erro {
+  color: var(--cor-erro);
+  border-color: var(--cor-erro);
+  background: rgba(255, 107, 129, 0.06);
+}
+
+.mensagem a {
+  display: inline-block;
+  margin-top: var(--esp-3);
+}
+
+
+/* ---------------------------------------------------------
+   18. FOOTER
+   --------------------------------------------------------- */
+.site-footer {
+  margin-top: var(--esp-8);
+  padding-block: var(--esp-6);
+  border-top: 1px solid var(--cor-borda);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  color: var(--cor-texto-suave);
+}
+
+.site-footer .container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--esp-3);
+}
+
+
+/* ---------------------------------------------------------
+   19. ANIMAÇÃO DE ENTRADA
+   Coloque .surgir em um elemento para ele aparecer subindo.
+   Para escalonar, o JS pode pôr style="--atraso: 100ms".
+   --------------------------------------------------------- */
+.surgir {
+  animation: surgir 600ms ease-out both;
+  animation-delay: var(--atraso, 0ms);
+}
+
+@keyframes surgir {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ---------------------------------------------------------
+   20. TELAS MAIORES
+   --------------------------------------------------------- */
+@media (min-width: 768px) {
+  .container {
+    padding-inline: var(--esp-6);
+  }
+
+  .secao {
+    padding-block: var(--esp-8);
+  }
+}
+
+
+/* ---------------------------------------------------------
+   21. MOVIMENTO REDUZIDO (acessibilidade)
+   Se a pessoa pediu ao sistema "menos animação", desligamos
+   tudo que se mexe. Isso é obrigatório pelos requisitos.
+   --------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  body::after {
+    animation: none;
+  }
+}
+
+
+/* ---------------------------------------------------------
+   22. AJUSTES DO DEV (Etapa 1)
+   Pequenos complementos que faltavam para o conteúdo gerado
+   pelo JavaScript ficar alinhado com o design.
+   --------------------------------------------------------- */
+
+/* Lista de projetos do agente sem bolinhas e sem recuo */
+.agente-projetos ul {
+  list-style: none;
+  padding: 0;
+}
+
+/* O último bloco dentro do card de trabalho não precisa de margem
+   embaixo (evita espaço sobrando quando "Imagens" está escondido) */
+.trabalho > :last-child {
+  margin-bottom: 0;
+}
+
+/* Parágrafos dentro das mensagens ficam centralizados
+   (o max-width de 65ch do <p> deixava o bloco encostado à esquerda) */
+.mensagem p {
+  margin-inline: auto;
+}
+
+/* Cabeçalho das páginas de lista (rótulo + h1) */
+.pagina-titulo {
+  margin-bottom: var(--esp-6);
+}
+
+/* Cards da Equipe alinhados entre si (subgrid)
+   Cada card tem 5 partes: avatar, id, nome, papel e projetos.
+   Com "subgrid", os cards de uma mesma linha da grade compartilham
+   as mesmas 5 linhas de altura. Assim, se o papel de um agente ocupa
+   3 linhas de texto, os outros cards reservam o mesmo espaço e as
+   divisórias de "Projetos" ficam todas na mesma altura.
+   @supports: só aplica em navegadores que entendem subgrid;
+   nos antigos, o card continua funcionando como antes (flex). */
+@supports (grid-template-rows: subgrid) {
+  .agente-card {
+    display: grid;
+    grid-row: span 5;              /* o card ocupa 5 linhas da grade pai */
+    grid-template-rows: subgrid;   /* ...e usa essas linhas por dentro */
+    gap: var(--esp-3);             /* espaço entre as partes do card */
+    align-content: start;
+  }
+
+  .agente-projetos {
+    margin-top: 0;                 /* não precisa mais empurrar para baixo */
+  }
+}

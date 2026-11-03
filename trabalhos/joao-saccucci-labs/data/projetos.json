@@ -1,0 +1,102 @@
+[
+  {
+    "id": "joao-saccucci-labs",
+    "nome": "João Saccucci Labs",
+    "descricao": "Site da própria empresa: painel de projetos e futuro portfólio.",
+    "status": "em andamento",
+    "dataInicio": "2026-11-02",
+    "dataFim": null,
+    "tecnologias": ["HTML", "CSS", "JavaScript"],
+    "trabalhos": [
+      {
+        "agente": "product-owner",
+        "resumo": "Fez 8 perguntas ao João (público, forma de atualizar os dados, seções, detalhe por agente, nome, primeiro projeto, estilo visual e Sobre mim) e escreveu os requisitos com 6 user stories.",
+        "entregaveis": [
+          { "titulo": "Requisitos", "url": "docs/requisitos.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "artista",
+        "resumo": "Definiu o conceito visual \"centro de comando de IA\": fundo escuro com grade e partículas, glassmorphism, neon ciano/roxo/magenta/verde e as fontes Exo 2, Space Grotesk e JetBrains Mono. Também criou os 4 avatares SVG dos agentes.",
+        "entregaveis": [
+          { "titulo": "Design", "url": "docs/design.md" },
+          { "titulo": "Folha de estilo", "url": "css/style.css" },
+          { "titulo": "Avatar Product Owner", "url": "img/agentes/product-owner.svg" },
+          { "titulo": "Avatar Artista", "url": "img/agentes/artista.svg" },
+          { "titulo": "Avatar Dev", "url": "img/agentes/dev.svg" },
+          { "titulo": "Avatar Professor", "url": "img/agentes/professor.svg" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "dev",
+        "resumo": "Implementou a Etapa 1: páginas Início, Projetos, Detalhe do projeto e Equipe, que montam o conteúdo a partir dos arquivos JSON com fetch, com menu para celular e mensagens de erro amigáveis.",
+        "entregaveis": [
+          { "titulo": "Início", "url": "index.html" },
+          { "titulo": "Projetos", "url": "lista-projetos.html" },
+          { "titulo": "Detalhe do projeto", "url": "detalhe-projeto.html?id=joao-saccucci-labs" },
+          { "titulo": "Equipe", "url": "equipe.html" },
+          { "titulo": "JavaScript comum", "url": "js/comum.js" },
+          { "titulo": "Dados dos projetos", "url": "data/projetos.json" },
+          { "titulo": "Dados dos agentes", "url": "data/agentes.json" },
+          { "titulo": "LEIAME", "url": "LEIAME.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "professor",
+        "resumo": "Escreveu a Aula 01: como HTML, JS, fetch, JSON, DOM e CSS se conectam, os 5 conceitos principais do código, por que usar o Live Server, um exercício prático e frases para entrevista de estágio.",
+        "entregaveis": [
+          { "titulo": "Aula 01", "url": "aulas/aula-01.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "artista",
+        "resumo": "Etapa 2: desenhou a linha do tempo agrupada por data, com o mini avatar de cada agente na linha, e a página Sobre como um \"cartão de identidade do chefe\", com monograma JS e ícones de contato em SVG.",
+        "entregaveis": [
+          { "titulo": "Design (seção 10)", "url": "docs/design.md" },
+          { "titulo": "Folha de estilo (seções 15 e 16)", "url": "css/style.css" },
+          { "titulo": "Ícone GitHub", "url": "img/icones/github.svg" },
+          { "titulo": "Ícone LinkedIn", "url": "img/icones/linkedin.svg" },
+          { "titulo": "Ícone E-mail", "url": "img/icones/email.svg" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "dev",
+        "resumo": "Implementou a Etapa 2: a linha do tempo no detalhe do projeto, montada a partir do campo linhaDoTempo, e a página Sobre com placeholders para o João preencher. O menu ganhou o item Sobre.",
+        "entregaveis": [
+          { "titulo": "Sobre", "url": "sobre.html" },
+          { "titulo": "Linha do tempo (JS)", "url": "js/timeline.js" },
+          { "titulo": "Detalhe do projeto (JS)", "url": "js/detalhe-projeto.js" },
+          { "titulo": "LEIAME", "url": "LEIAME.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "professor",
+        "resumo": "Escreveu a Aula 02: ordenar com sort + localeCompare, agrupar eventos por data, fallback de agente, ordem dos scripts, HTML semântico e acessível no Sobre, subgrid com @supports. Exercício: preencher o Sobre e criar um evento novo na linha do tempo.",
+        "entregaveis": [
+          { "titulo": "Aula 02", "url": "aulas/aula-02.md" }
+        ],
+        "imagens": []
+      }
+    ],
+    "linhaDoTempo": [
+      { "data": "2026-11-02", "agente": "product-owner", "descricao": "Entrevista com o João (8 perguntas)." },
+      { "data": "2026-11-02", "agente": "product-owner", "descricao": "Requisitos documentados em docs/requisitos.md, com 6 user stories." },
+      { "data": "2026-11-02", "agente": "artista", "descricao": "Conceito visual \"centro de comando de IA\" definido em docs/design.md e css/style.css." },
+      { "data": "2026-11-02", "agente": "artista", "descricao": "Criação dos 4 avatares SVG dos agentes." },
+      { "data": "2026-11-02", "agente": "dev", "descricao": "Implementação da Etapa 1: Início, Projetos, Detalhe do projeto e Equipe." },
+      { "data": "2026-11-02", "agente": "professor", "descricao": "Aula 01 sobre o código da Etapa 1, com exercício prático." },
+      { "data": "2026-11-02", "agente": "dev", "descricao": "Ajuste de acento: fonte display trocada de Orbitron para Exo 2." },
+      { "data": "2026-11-02", "agente": "dev", "descricao": "Cards da Equipe alinhados entre si com subgrid." },
+      { "data": "2026-11-02", "agente": "artista", "descricao": "Design da Etapa 2: linha do tempo e página Sobre (cartão de identidade do chefe)." },
+      { "data": "2026-11-02", "agente": "dev", "descricao": "Implementação da Etapa 2: linha do tempo no detalhe do projeto e página Sobre." },
+      { "data": "2026-11-02", "agente": "professor", "descricao": "Aula 02 sobre a linha do tempo, a página Sobre e o subgrid, com exercício prático." },
+      { "data": "2026-11-03", "agente": "dev", "descricao": "Página Sobre preenchida com os dados do João (formação, cidade, foco, frase, contatos e estudos)." }
+    ]
+  }
+]

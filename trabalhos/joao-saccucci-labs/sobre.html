@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sobre | João Saccucci Labs</title>
+  <meta name="description" content="Quem é o João Saccucci, chefe da João Saccucci Labs, e como entrar em contato.">
+
+  <!-- Fontes (Google Fonts), conforme docs/design.md -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Exo+2:wght@600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="logo" href="index.html">JOÃO SACCUCCI <span>LABS</span></a>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-principal">
+        <span class="nav-toggle-icone"></span>
+        <span class="sr-only">Abrir menu</span>
+      </button>
+
+      <nav class="nav" id="menu-principal" aria-label="Menu principal">
+        <ul class="nav-lista">
+          <li><a class="nav-link" href="index.html">Início</a></li>
+          <li><a class="nav-link" href="lista-projetos.html">Projetos</a></li>
+          <li><a class="nav-link" href="equipe.html">Equipe</a></li>
+          <li><a class="nav-link" href="sobre.html" aria-current="page">Sobre</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!--
+    Página estática: o conteúdo é fixo, então fica escrito direto
+    no HTML (não precisa de JSON nem de JS, só o comum.js do menu).
+    Dados do João preenchidos em 2026-11-03 (para mudar, edite aqui mesmo).
+    Visual: css/style.css, seção 16. Estrutura: docs/design.md, 10.2.
+  -->
+  <main class="secao container">
+    <div class="sobre">
+      <p class="rotulo">// O chefe</p>
+
+      <!-- Cartão de identidade do chefe (crachá do centro de comando) -->
+      <article class="card id-cartao surgir" aria-labelledby="titulo-sobre">
+        <div class="id-topo">
+          <span class="id-rotulo">CHEFE://JOAO-SACCUCCI</span>
+          <!-- Pode trocar o texto ou apagar esta linha -->
+          <span class="badge badge--andamento">Buscando estágio</span>
+        </div>
+
+        <div class="id-corpo">
+          <!-- Monograma no lugar da foto (decorativo, por isso aria-hidden) -->
+          <div class="id-monograma" aria-hidden="true"><span>JS</span></div>
+          <div class="id-info">
+            <h1 id="titulo-sobre">João Saccucci</h1>
+            <p class="id-cargo">Chefe da João Saccucci Labs · Estudante de Análise e Desenvolvimento de Sistemas</p>
+            <!-- dl = lista de "termo" (dt) e "descrição" (dd), como uma ficha -->
+            <dl class="id-dados">
+              <div><dt>Acesso</dt><dd>Nível máximo</dd></div>
+              <div><dt>Base</dt><dd>São Caetano do Sul, SP</dd></div>
+              <div><dt>Foco</dt><dd>Desenvolvimento de Software</dd></div>
+            </dl>
+          </div>
+        </div>
+
+        <p class="id-frase">Estudante de ADS que aprende construindo: este site foi feito com uma equipe de agentes de IA que eu coordeno.</p>
+
+        <!--
+          Contatos (para trocar, edite os href abaixo):
+          - GitHub:   github.com/JoaoSaccucci
+          - LinkedIn: o "%C3%A3" no link é o "ã" de João codificado para URL
+          - E-mail:   mailto: + endereço
+          target="_blank" abre em nova aba; rel="noopener noreferrer" impede
+          que a página nova tenha acesso a esta (boa prática de segurança).
+          Os ícones <svg> foram copiados de img/icones/ e colados aqui
+          ("inline") para usarem currentColor: assim mudam de cor junto
+          com o texto no hover.
+        -->
+        <div class="contatos">
+          <a class="btn btn-secundario contato" href="https://github.com/JoaoSaccucci" target="_blank" rel="noopener noreferrer">
+            <svg class="icone" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <path d="M5 9.5V4l4 2.5a9 9 0 0 1 6 0L19 4v5.5c1.3 1.3 1.8 3 1.4 4.8C19.7 17.7 16.5 20 12 20s-7.7-2.3-8.4-5.7C3.2 12.5 3.7 10.8 5 9.5z"/>
+              <path d="M9 13.5v.5M15 13.5v.5"/>
+            </svg>
+            <span>GitHub</span><span class="sr-only">(abre em nova aba)</span>
+          </a>
+          <a class="btn btn-secundario contato" href="https://www.linkedin.com/in/jo%C3%A3o-lucas-lemes-saccucci/" target="_blank" rel="noopener noreferrer">
+            <svg class="icone" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <rect x="3" y="3" width="18" height="18" rx="4"/>
+              <path d="M8 11v6M8 7.5v.01M12 17v-6M12 13.5c0-1.6 1-2.5 2.4-2.5S17 11.9 17 13.5V17"/>
+            </svg>
+            <span>LinkedIn</span><span class="sr-only">(abre em nova aba)</span>
+          </a>
+          <!-- mailto: abre o programa de e-mail de quem clicou -->
+          <a class="btn btn-secundario contato" href="mailto:jllsaccucci@gmail.com">
+            <svg class="icone" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <rect x="3" y="5" width="18" height="14" rx="2"/>
+              <path d="M3.5 6.5 12 13l8.5-6.5"/>
+            </svg>
+            <span>E-mail</span>
+          </a>
+        </div>
+
+        <div class="id-rodape">
+          <span>ID JSL-0001</span>
+          <!-- "Código de barras" feito só com gradiente no CSS (decorativo) -->
+          <span class="id-barras" aria-hidden="true"></span>
+        </div>
+      </article>
+
+      <div class="sobre-grade">
+        <section class="card sobre-bloco surgir" style="--atraso: 100ms" aria-labelledby="titulo-estudos">
+          <span class="rotulo">// Formação</span>
+          <h2 id="titulo-estudos">O que estudo</h2>
+          <p class="texto-suave">Análise e Desenvolvimento de Sistemas na USCS, 4º semestre.</p>
+          <ul class="estudos">
+            <li>HTML, CSS e JavaScript</li>
+            <li>Git e GitHub</li>
+            <li>Lógica de programação</li>
+            <li>Java</li>
+          </ul>
+        </section>
+
+        <!-- Mini avatares escritos à mão: são só 4 e não mudam.
+             As cores são as mesmas de data/agentes.json. -->
+        <section class="card sobre-bloco surgir" style="--atraso: 200ms" aria-labelledby="titulo-minha-equipe">
+          <span class="rotulo">// Unidades sob comando</span>
+          <h2 id="titulo-minha-equipe">Chefe de 4 unidades de IA</h2>
+          <ul class="mini-avatares" aria-label="Unidades de IA">
+            <li style="--agente-cor: #00E5FF"><img src="img/agentes/product-owner.svg" alt="Product Owner" width="48" height="48"></li>
+            <li style="--agente-cor: #B45CFF"><img src="img/agentes/artista.svg" alt="Artista" width="48" height="48"></li>
+            <li style="--agente-cor: #FF2BD6"><img src="img/agentes/dev.svg" alt="Dev" width="48" height="48"></li>
+            <li style="--agente-cor: #7CFFB2"><img src="img/agentes/professor.svg" alt="Professor" width="48" height="48"></li>
+          </ul>
+          <p class="texto-suave">Eu decido o que construir. A equipe levanta os requisitos, desenha, programa e me explica cada linha.</p>
+          <a class="btn btn-secundario" href="equipe.html">Conhecer a equipe &rarr;</a>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>&copy; 2026 João Saccucci Labs</span>
+      <span>Feito por agentes de IA</span>
+    </div>
+  </footer>
+
+  <script src="js/comum.js"></script>
+</body>
+</html>

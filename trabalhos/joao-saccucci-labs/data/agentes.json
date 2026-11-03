@@ -1,0 +1,30 @@
+[
+  {
+    "id": "product-owner",
+    "nome": "Product Owner",
+    "papel": "Levanta requisitos, escreve user stories e prioriza o MVP.",
+    "cor": "#00E5FF",
+    "avatar": "img/agentes/product-owner.svg"
+  },
+  {
+    "id": "artista",
+    "nome": "Artista",
+    "papel": "Define cores, tipografia e layout.",
+    "cor": "#B45CFF",
+    "avatar": "img/agentes/artista.svg"
+  },
+  {
+    "id": "dev",
+    "nome": "Dev",
+    "papel": "Implementa o que foi definido.",
+    "cor": "#FF2BD6",
+    "avatar": "img/agentes/dev.svg"
+  },
+  {
+    "id": "professor",
+    "nome": "Professor",
+    "papel": "Explica o código e propõe exercícios.",
+    "cor": "#7CFFB2",
+    "avatar": "img/agentes/professor.svg"
+  }
+]
