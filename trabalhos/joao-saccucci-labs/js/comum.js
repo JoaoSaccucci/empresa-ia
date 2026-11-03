@@ -1,7 +1,7 @@
 /* =========================================================
    comum.js - código usado por TODAS as páginas.
    Precisa ser carregado antes do script da página
-   (lista-projetos.js, detalhe-projeto.js ou equipe.js).
+   (lista-projetos.js, detalhe-projeto.js, equipe.js, aulas.js ou aula.js).
    ========================================================= */
 
 
@@ -100,4 +100,45 @@ function classeDoStatus(status) {
 // para a informação não depender só da cor.
 function htmlBadge(status) {
   return `<span class="badge ${classeDoStatus(status)}">${escapar(status)}</span>`;
+}
+
+
+/* ---------------------------------------------------------
+   5. PROGRESSO SALVO NO NAVEGADOR (localStorage) - Etapa 3
+   O localStorage guarda textos no navegador de quem lê, mesmo
+   depois de fechar a aba. Guardamos tudo como JSON (para poder
+   salvar listas e números, não só textos).
+
+   Todas as chaves começam com "jsl:" (João Saccucci Labs) para
+   não misturar com dados de outros sites no mesmo endereço.
+
+   O try/catch é obrigatório: em modo anônimo restrito, com o
+   armazenamento bloqueado ou cheio, o localStorage dá erro.
+   Nesse caso o site continua funcionando, só não salva.
+   --------------------------------------------------------- */
+const PREFIXO_PROGRESSO = "jsl:";
+
+// Lê um valor salvo. Se não existir (ou der erro), devolve o "padrao".
+function lerProgresso(chave, padrao) {
+  try {
+    const texto = localStorage.getItem(PREFIXO_PROGRESSO + chave);
+    return texto === null ? padrao : JSON.parse(texto);
+  } catch (erro) {
+    return padrao;
+  }
+}
+
+// Salva um valor. Se o navegador não deixar, apenas ignora.
+function salvarProgresso(chave, valor) {
+  try {
+    localStorage.setItem(PREFIXO_PROGRESSO + chave, JSON.stringify(valor));
+  } catch (erro) {
+    // Sem armazenamento: a página funciona, só não lembra depois.
+  }
+}
+
+// Lista de ids das aulas concluídas (usada em aulas.js e aula.js)
+function lerAulasConcluidas() {
+  const lista = lerProgresso("aulas-concluidas", []);
+  return Array.isArray(lista) ? lista : []; // proteção se o valor salvo vier estranho
 }

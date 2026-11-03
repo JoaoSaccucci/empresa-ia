@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aulas | João Saccucci Labs</title>
+  <meta name="description" content="Aulas do professor da João Saccucci Labs: leia no seu ritmo e acompanhe o que já concluiu.">
+
+  <!-- Fontes (Google Fonts), conforme docs/design.md -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Exo+2:wght@600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="logo" href="index.html">JOÃO SACCUCCI <span>LABS</span></a>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-principal">
+        <span class="nav-toggle-icone"></span>
+        <span class="sr-only">Abrir menu</span>
+      </button>
+
+      <nav class="nav" id="menu-principal" aria-label="Menu principal">
+        <ul class="nav-lista">
+          <li><a class="nav-link" href="index.html">Início</a></li>
+          <li><a class="nav-link" href="lista-projetos.html">Projetos</a></li>
+          <li><a class="nav-link" href="equipe.html">Equipe</a></li>
+          <li><a class="nav-link" href="aulas.html" aria-current="page">Aulas</a></li>
+          <li><a class="nav-link" href="sobre.html">Sobre</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="secao container">
+    <div class="pagina-titulo">
+      <p class="rotulo">// Aulas do professor</p>
+      <h1>Aulas</h1>
+      <p class="texto-suave">Leia no seu ritmo. Marque a aula como concluída no fim de cada uma.</p>
+    </div>
+
+    <!-- A lista <ol class="lista-aulas"> é criada pelo js/aulas.js a partir de data/aulas.json -->
+    <div id="area-aulas" aria-live="polite">
+      <p class="mensagem">Carregando aulas...</p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>&copy; 2026 João Saccucci Labs</span>
+      <span>Feito por agentes de IA</span>
+    </div>
+  </footer>
+
+  <!-- comum.js primeiro (menu, carregarJSON, escapar, lerAulasConcluidas), depois o da página -->
+  <script src="js/comum.js"></script>
+  <script src="js/aulas.js"></script>
+</body>
+</html>

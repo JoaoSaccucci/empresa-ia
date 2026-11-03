@@ -1549,3 +1549,1556 @@ p {
     margin-top: 0;                 /* não precisa mais empurrar para baixo */
   }
 }
+
+
+/* =========================================================
+   ETAPA 3 - AULAS
+   Seções 23 a 36: lista de aulas (aulas.html) e tela de
+   leitura (aula.html). As decisões estão no docs/design.md,
+   seção 11.
+   Nada daqui muda as outras páginas: as regras só valem com
+   as classes novas (.modo-foco, .aula-*, .aviso, ...) ou com
+   o atributo data-tema, que só a aula.html usa.
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   23. TOKENS DA TELA DE LEITURA (tema escuro, o padrão)
+   O <body> da aula.html recebe class="modo-foco".
+   Muitas variáveis daqui apontam para as do :root (seção 1).
+   Quando o tema papel troca as do :root (seção 24), estas
+   mudam junto, sem precisar repetir tudo.
+   --------------------------------------------------------- */
+html[data-tema] {
+  color-scheme: dark; /* barras de rolagem e controles nativos escuros */
+}
+
+.modo-foco {
+  /* Superfícies */
+  --leitura-fundo: #070A14;        /* fundo calmo, sem grade e sem partículas */
+  --leitura-superficie: #0E1324;   /* caixas, botões, sumário no celular */
+  --leitura-codigo-fundo: #0A0E1C; /* fundo dos blocos de código */
+  --leitura-borda: var(--cor-borda);
+  --leitura-borda-forte: var(--cor-borda-forte);
+
+  /* Texto e destaque (o verde do professor) */
+  --leitura-texto: var(--cor-texto);              /* ~16:1 */
+  --leitura-texto-suave: var(--cor-texto-suave);  /* ~7.9:1 */
+  --leitura-destaque: var(--cor-verde);           /* ~15.8:1 */
+  --leitura-link: var(--cor-ciano);               /* ~12.8:1 */
+  --leitura-sobre-destaque: #070A14;  /* texto escrito EM CIMA do verde */
+
+  /* Balão do glossário */
+  --balao-fundo: #141A30;
+  --balao-texto: var(--cor-texto);
+
+  /* Caixas de destaque (alertas do GitHub) */
+  --aviso-dica: var(--cor-verde);      /* TIP */
+  --aviso-erro: var(--cor-erro);       /* CAUTION */
+  --aviso-entrevista: #C792FF;         /* IMPORTANT (roxo mais claro = mais contraste) */
+  --aviso-palavra: var(--cor-ciano);   /* NOTE */
+
+  /* Cores do código (nosso tema próprio para o highlight.js).
+     Todas passam de 4.5:1 sobre --leitura-codigo-fundo. */
+  --hl-texto: #E8ECF8;
+  --hl-comentario: #8B93AD;  /* ~6.2:1 */
+  --hl-palavra: #FF7AD9;     /* const, function, return, if  ~8:1 */
+  --hl-string: #7CFFB2;      /* "textos"                     ~15:1 */
+  --hl-numero: #FFB86B;      /* 42, true, false, null        ~11:1 */
+  --hl-funcao: #67E8F9;      /* nomes de função e de classe */
+  --hl-tag: #67E8F9;         /* <div> no HTML, seletor no CSS */
+  --hl-atributo: #C9A2FF;    /* class=, href=, chaves do JSON ~9:1 */
+  --hl-embutido: #FFD580;    /* console, document, fetch */
+  --hl-pontuacao: #9AA3BF;   /* ( ) { } ; < > */
+
+  /* "Certo" do checkbox. Um SVG dentro de url() não aceita var(),
+     por isso existe uma versão com a cor de cada tema. */
+  --check-icone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%23070A14' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* Tamanho da letra da aula.
+     --leitura-base: 17px no celular até 19px no desktop.
+     --leitura-escala: vem do atributo data-fonte no <html>
+     (5 níveis, ver logo abaixo). Sem atributo = nível 3 = 1. */
+  --leitura-base: clamp(1.0625rem, 1rem + 0.35vw, 1.1875rem);
+  --leitura-fs: calc(var(--leitura-base) * var(--leitura-escala, 1));
+  --leitura-entrelinha: 1.75;
+  /* 64ch dá cerca de 68 a 72 letras por linha nesta fonte
+     (o "ch" mede o zero, que é mais largo que a letra média) */
+  --leitura-coluna: 64ch;
+  /* Altura da barra de ferramentas grudada no topo (44px dos
+     botões + 16px de respiro + 1px da borda). Usada para os
+     títulos não ficarem escondidos atrás dela ao pular. */
+  --altura-ferramentas: 61px;
+}
+
+/* Os 5 tamanhos de letra (botões A- e A+).
+   O JS troca data-fonte="1" ... "5" no <html>. */
+html[data-fonte="1"] { --leitura-escala: 0.88; } /* ~15 a 17px */
+html[data-fonte="2"] { --leitura-escala: 0.94; } /* ~16 a 18px */
+html[data-fonte="3"] { --leitura-escala: 1;    } /* ~17 a 19px (padrão) */
+html[data-fonte="4"] { --leitura-escala: 1.12; } /* ~19 a 21px */
+html[data-fonte="5"] { --leitura-escala: 1.25; } /* ~21 a 24px */
+
+
+/* ---------------------------------------------------------
+   24. TEMA "PAPEL" (claro, só na aula.html)
+   O JS coloca data-tema="papel" no <html>. Trocamos as
+   variáveis do :root por versões escuras/sóbrias que
+   funcionam sobre o creme. Contrastes medidos sobre #F7F1E3.
+   --------------------------------------------------------- */
+html[data-tema="papel"] {
+  color-scheme: light;
+
+  --cor-fundo: #F7F1E3;            /* creme */
+  --cor-fundo-2: #EFE6D2;
+  --cor-vidro: rgba(255, 251, 240, 0.75);
+  --cor-borda: rgba(74, 58, 32, 0.18);
+  --cor-borda-forte: rgba(74, 58, 32, 0.34);
+
+  --cor-texto: #1F1A14;            /* ~15.3:1 */
+  --cor-texto-suave: #5C5346;      /* ~6.7:1  */
+
+  /* As cores neon viram "tinta": mesma família, bem mais escuras */
+  --cor-ciano: #005F8F;            /* ~6.1:1 */
+  --cor-roxo: #6B2FB3;             /* ~7:1   */
+  --cor-magenta: #A3127A;          /* ~6.4:1 */
+  --cor-verde: #0A6B3C;            /* ~5.9:1 */
+  --cor-erro: #B3261E;             /* ~5.8:1 */
+
+  --gradiente: linear-gradient(90deg, #005F8F, #6B2FB3 55%, #A3127A);
+  --sombra: 0 6px 24px rgba(74, 58, 32, 0.12);
+  --brilho-ciano: 0 0 0 3px rgba(0, 95, 143, 0.15);
+  --brilho-magenta: 0 0 0 3px rgba(163, 18, 122, 0.12);
+}
+
+/* Valores que eram "fixos" no tema escuro e precisam de versão clara */
+html[data-tema="papel"] .modo-foco {
+  --leitura-fundo: #F7F1E3;
+  --leitura-superficie: #EFE6D2;
+  --leitura-codigo-fundo: #EFE6D2;
+  --leitura-sobre-destaque: #FFFDF7;  /* creme claro sobre o verde escuro, ~5.9:1 */
+
+  --balao-fundo: #FFFDF7;
+  --balao-texto: #1F1A14;
+
+  --aviso-entrevista: #6B2FB3;
+
+  /* Código no papel: todas passam de 4.5:1 sobre #EFE6D2 */
+  --hl-texto: #1F1A14;
+  --hl-comentario: #6A6152;  /* ~4.9:1 */
+  --hl-palavra: #A3127A;     /* ~5.8:1 */
+  --hl-string: #0A6B3C;      /* ~5.3:1 */
+  --hl-numero: #9A4A00;      /* ~5.1:1 */
+  --hl-funcao: #1D4FA8;      /* ~6:1   */
+  --hl-tag: #005F8F;         /* ~5.6:1 */
+  --hl-atributo: #6B2FB3;    /* ~6:1   */
+  --hl-embutido: #7A4F00;    /* ~5.8:1 */
+  --hl-pontuacao: #5C5346;   /* ~6:1   */
+
+  --check-icone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%23FFFDF7' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* O header tinha um fundo escuro "fixo" (rgba). No papel, fica creme. */
+html[data-tema="papel"] .site-header {
+  background: rgba(247, 241, 227, 0.88);
+}
+
+html[data-tema="papel"] .nav-link:hover {
+  background: rgba(74, 58, 32, 0.06);
+}
+
+html[data-tema="papel"] .nav-link[aria-current="page"] {
+  background: rgba(0, 95, 143, 0.08);
+}
+
+/* Painel do menu no celular (só abaixo de 768px) */
+@media (max-width: 767.98px) {
+  html[data-tema="papel"] .nav {
+    background: rgba(247, 241, 227, 0.97);
+  }
+}
+
+
+/* ---------------------------------------------------------
+   25. MODO FOCO: FUNDO CALMO + BARRA DE PROGRESSO
+   --------------------------------------------------------- */
+body.modo-foco {
+  background-color: var(--leitura-fundo);
+  /* Só um brilho verde bem fraco no topo, parado */
+  background-image: radial-gradient(ellipse 70% 320px at 50% 0%,
+    color-mix(in srgb, var(--leitura-destaque) 7%, transparent), transparent 70%);
+  background-attachment: scroll;
+  transition: background-color var(--transicao), color var(--transicao);
+}
+
+/* Desliga a grade (::before) e as partículas (::after) da seção 3 */
+body.modo-foco::before,
+body.modo-foco::after {
+  content: none;
+  animation: none;
+}
+
+/* Cor da seleção de texto, no tom do professor */
+.modo-foco ::selection {
+  background: color-mix(in srgb, var(--leitura-destaque) 30%, transparent);
+}
+
+/* Barra de progresso de leitura, fixa no topo da tela.
+   HTML: <div class="leitura-progresso" aria-hidden="true">
+           <div class="leitura-progresso-barra"></div></div>
+   O JS só troca style="--progresso: 0.42" (de 0 a 1) na .leitura-progresso. */
+.leitura-progresso {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;              /* acima do header (10) e do sumário (30) */
+  height: 3px;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--leitura-texto) 8%, transparent);
+}
+
+.leitura-progresso-barra {
+  height: 100%;
+  background: linear-gradient(90deg, var(--leitura-destaque), var(--cor-ciano));
+  box-shadow: 0 0 8px color-mix(in srgb, var(--leitura-destaque) 60%, transparent);
+  transform-origin: left;
+  transform: scaleX(var(--progresso, 0)); /* 0 = vazia, 1 = cheia */
+}
+
+
+/* ---------------------------------------------------------
+   26. LAYOUT DA AULA + CABEÇALHO
+   <main class="container aula-layout">
+     <aside class="aula-sumario">  (seção 28)
+     <article class="aula">        (cabeçalho, ferramentas, conteúdo...)
+   Celular/tablet: só a coluna do texto (o sumário vira gaveta).
+   A partir de 1024px: sumário à esquerda + texto.
+   --------------------------------------------------------- */
+.aula-layout {
+  padding-block: var(--esp-5) var(--esp-7);
+}
+
+@media (min-width: 1024px) {
+  .aula-layout {
+    display: grid;
+    grid-template-columns: 15rem minmax(0, 1fr);
+    gap: var(--esp-7);
+    align-items: start;
+  }
+}
+
+/* A coluna de leitura: letra da aula + largura confortável */
+.aula {
+  min-width: 0;                      /* deixa a coluna encolher na grade */
+  width: 100%;
+  max-width: min(var(--leitura-coluna), 100%);
+  margin-inline: auto;
+  font-size: var(--leitura-fs);
+  color: var(--leitura-texto);
+}
+
+/* O "Voltar para as aulas" usa a classe .voltar (seção 13) */
+.aula > .voltar {
+  display: inline-block;
+  font-size: var(--fs-sm);           /* não cresce com A+ */
+}
+
+.aula-cabecalho {
+  margin-block: var(--esp-4) var(--esp-5);
+  padding-bottom: var(--esp-5);
+  border-bottom: 1px solid var(--leitura-borda);
+}
+
+/* Linha de cima: [AULA 01] JOÃO SACCUCCI LABS */
+.aula-sobretitulo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--esp-2) var(--esp-3);
+  max-width: none;
+  margin-bottom: var(--esp-3);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--leitura-texto-suave);
+}
+
+/* "Aula 01" numa pílula verde */
+.aula-numero {
+  padding: 2px var(--esp-3);
+  font-weight: 600;
+  color: var(--leitura-destaque);
+  border: 1px solid currentColor;
+  border-radius: var(--raio-pill);
+  background: color-mix(in srgb, var(--leitura-destaque) 10%, transparent);
+}
+
+.aula-titulo {
+  margin-bottom: var(--esp-3);
+  font-size: clamp(1.75rem, 1.3rem + 2vw, 2.5rem); /* 28 a 40px */
+  line-height: 1.2;
+  overflow-wrap: break-word;
+}
+
+/* "15 min de leitura" com o ícone de relógio */
+.aula-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--esp-2);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-sm);
+  color: var(--leitura-texto-suave);
+}
+
+.aula-meta .icone {
+  width: 16px;
+  height: 16px;
+  color: var(--leitura-destaque);
+}
+
+
+/* ---------------------------------------------------------
+   27. BARRA DE FERRAMENTAS (Sumário, A-, A+, tema, concluir)
+   Fica grudada logo abaixo do header enquanto a página rola.
+   Os botões NÃO crescem com A+ (usam rem, não em).
+   --------------------------------------------------------- */
+.aula-ferramentas {
+  --ferramentas-fundo: color-mix(in srgb, var(--leitura-fundo) 92%, transparent);
+  position: sticky;
+  top: var(--altura-header);
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--esp-2);
+  margin-bottom: var(--esp-6);
+  padding-block: var(--esp-2);
+  font-size: var(--fs-sm);
+  background: var(--ferramentas-fundo);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--leitura-borda);
+}
+
+/* Sem sumário lateral, o fundo da barra vai de ponta a ponta
+   da tela (truque: sombra gigante + recorte só nas laterais).
+   Sombra não cria rolagem horizontal. */
+@media (max-width: 1023.98px) {
+  .aula-ferramentas {
+    box-shadow: 0 0 0 100vmax var(--ferramentas-fundo);
+    clip-path: inset(0 -100vmax);
+  }
+}
+
+/* Botão padrão da barra */
+.ferramenta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 var(--esp-3);
+  font-family: var(--fonte-texto);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--leitura-texto);
+  background: var(--leitura-superficie);
+  border: 1px solid var(--leitura-borda-forte);
+  border-radius: var(--raio-md);
+  cursor: pointer;
+  transition: border-color var(--transicao), color var(--transicao), background var(--transicao);
+}
+
+.ferramenta:hover:not(:disabled) {
+  border-color: var(--leitura-destaque);
+}
+
+/* A- no nível 1 e A+ no nível 5 ficam desativados */
+.ferramenta:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Botão "ligado" (tema papel ativo, aula concluída) */
+.ferramenta[aria-pressed="true"] {
+  color: var(--leitura-destaque);
+  border-color: currentColor;
+  background: color-mix(in srgb, var(--leitura-destaque) 12%, var(--leitura-superficie));
+}
+
+.ferramenta .icone {
+  width: 18px;
+  height: 18px;
+}
+
+/* A- e A+ grudados, como um botão só dividido ao meio */
+.ferramenta-grupo {
+  display: inline-flex;
+}
+
+.ferramenta-grupo .ferramenta:first-child {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.ferramenta-grupo .ferramenta + .ferramenta {
+  margin-left: -1px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+/* As letras "A-" e "A+" em mono, um pouco maiores */
+.ferramenta-letra {
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-base);
+}
+
+/* Empurra o que vem depois para a direita */
+.ferramenta-espaco {
+  flex: 1 1 0;
+}
+
+/* No celular, os textos "Tema papel" e "Concluída" somem da tela
+   (só o ícone fica), mas continuam sendo lidos pelo leitor de tela. */
+@media (max-width: 639.98px) {
+  .ferramenta-texto {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+/* O botão "Sumário" só existe abaixo de 1024px */
+@media (min-width: 1024px) {
+  .aula-sumario-botao {
+    display: none;
+  }
+}
+
+
+/* ---------------------------------------------------------
+   28. SUMÁRIO
+   Celular/tablet: gaveta que entra pela esquerda. O JS coloca
+   a classe "sumario-aberto" no <body> (e aria-expanded="true"
+   no botão "Sumário"). Um fundo escuro (.aula-sumario-fundo)
+   cobre o texto atrás; tocar nele fecha a gaveta.
+   Desktop (1024px+): coluna fixa à esquerda que acompanha a
+   rolagem. Item ativo: aria-current="true" no link.
+   --------------------------------------------------------- */
+.aula-sumario {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  width: min(20rem, 86vw);
+  padding: var(--esp-5) var(--esp-4);
+  background: var(--leitura-superficie);
+  border-right: 1px solid var(--leitura-borda-forte);
+  box-shadow: var(--sombra);
+  overflow-y: auto;
+  overscroll-behavior: contain;   /* rolar a gaveta não rola a página */
+  /* Fechada: fora da tela e invisível (o Tab não entra nela) */
+  transform: translateX(-100%);
+  visibility: hidden;
+  transition: transform 250ms ease, visibility 0s linear 250ms;
+}
+
+.sumario-aberto .aula-sumario {
+  transform: none;
+  visibility: visible;
+  transition: transform 250ms ease, visibility 0s;
+}
+
+/* Fundo escuro atrás da gaveta */
+.aula-sumario-fundo {
+  position: fixed;
+  inset: 0;
+  z-index: 29;
+  background: rgba(5, 6, 15, 0.6);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 250ms ease, visibility 0s linear 250ms;
+}
+
+.sumario-aberto .aula-sumario-fundo {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 250ms ease, visibility 0s;
+}
+
+/* Com a gaveta aberta, a página atrás não rola */
+body.sumario-aberto {
+  overflow: hidden;
+}
+
+/* Topo da gaveta: "SUMÁRIO" + botão X */
+.aula-sumario-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-3);
+  margin-bottom: var(--esp-3);
+}
+
+.aula-sumario-titulo {
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--leitura-texto-suave);
+}
+
+.aula-sumario-fechar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--leitura-texto);
+  background: transparent;
+  border: 1px solid var(--leitura-borda-forte);
+  border-radius: var(--raio-md);
+  cursor: pointer;
+}
+
+/* A lista: uma linha fina à esquerda, como um "trilho" */
+.sumario-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-left: 1px solid var(--leitura-borda-forte);
+}
+
+.sumario-link {
+  display: flex;
+  align-items: center;
+  min-height: 44px;                 /* alvo de toque no celular */
+  padding: var(--esp-2) var(--esp-3);
+  margin-left: -1px;                /* a barra do item ativo cobre o trilho */
+  font-size: var(--fs-sm);
+  line-height: 1.4;
+  color: var(--leitura-texto-suave);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  border-radius: 0 var(--raio-sm) var(--raio-sm) 0;
+  transition: color var(--transicao), background var(--transicao), border-color var(--transicao);
+}
+
+.sumario-link:hover {
+  color: var(--leitura-texto);
+  background: color-mix(in srgb, var(--leitura-texto) 6%, transparent);
+}
+
+/* Seção que está sendo lida: barra verde + texto verde em negrito
+   (não depende só da cor: tem a barra e o peso da letra) */
+.sumario-link[aria-current="true"] {
+  font-weight: 600;
+  color: var(--leitura-destaque);
+  border-left-color: var(--leitura-destaque);
+  background: color-mix(in srgb, var(--leitura-destaque) 10%, transparent);
+}
+
+/* Títulos ### aparecem recuados */
+.sumario-item--sub .sumario-link {
+  padding-left: calc(var(--esp-3) + var(--esp-4));
+}
+
+/* Desktop: vira coluna lateral normal, grudada no topo */
+@media (min-width: 1024px) {
+  .aula-sumario {
+    position: sticky;
+    top: calc(var(--altura-header) + var(--esp-5));
+    bottom: auto;
+    left: auto;
+    z-index: auto;
+    width: auto;
+    max-height: calc(100vh - var(--altura-header) - var(--esp-7));
+    padding: var(--esp-6) 0 0;     /* alinha mais ou menos com o título da aula */
+    background: none;
+    border: 0;
+    box-shadow: none;
+    transform: none;
+    visibility: visible;
+    transition: none;
+  }
+
+  .aula-sumario-fundo,
+  .aula-sumario-fechar {
+    display: none;
+  }
+
+  .sumario-link {
+    min-height: 36px;              /* com mouse, pode ser mais compacto */
+  }
+
+  body.sumario-aberto {
+    overflow: auto;                /* segurança: no desktop nunca trava */
+  }
+}
+
+/* Quando a aula não existe, o JS esconde o sumário e a barra
+   com o atributo hidden (o display:flex daqui venceria sem isto) */
+.aula-sumario[hidden],
+.aula-ferramentas[hidden],
+.aula-sumario-fundo[hidden] {
+  display: none;
+}
+
+
+/* ---------------------------------------------------------
+   29. CONTEÚDO DA AULA (o HTML que o marked gera)
+   Tudo dentro de <div class="aula-conteudo">. Os tamanhos
+   usam "em", então crescem junto com A+.
+   --------------------------------------------------------- */
+.aula-conteudo {
+  line-height: var(--leitura-entrelinha);
+  overflow-wrap: break-word;       /* palavras gigantes quebram no celular */
+}
+
+/* Espaço entre um bloco e o próximo (parágrafo, lista, código...) */
+.aula-conteudo > * + * {
+  margin-top: 1.1em;
+}
+
+/* A coluna já limita a largura; o limite de 65ch do <p> não precisa */
+.aula-conteudo p {
+  max-width: none;
+}
+
+/* O título "# Aula 01 ..." do .md repete o cabeçalho: escondemos */
+.aula-conteudo > h1:first-child {
+  display: none;
+}
+
+.aula-conteudo h1,
+.aula-conteudo h2,
+.aula-conteudo h3,
+.aula-conteudo h4 {
+  font-family: var(--fonte-texto);
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  color: var(--leitura-texto);
+  /* ao pular pelo sumário, o título não fica atrás do header + barra */
+  scroll-margin-top: calc(var(--altura-header) + var(--altura-ferramentas) + var(--esp-4));
+}
+
+/* h2: abre uma parte nova da aula, com um tracinho verde em cima */
+.aula-conteudo h1,
+.aula-conteudo h2 {
+  margin-top: 2.2em;
+  margin-bottom: 0;
+  font-size: 1.5em;
+}
+
+.aula-conteudo h2::before {
+  content: "";
+  display: block;
+  width: 2.5rem;
+  height: 3px;
+  margin-bottom: 0.6em;
+  border-radius: 3px;
+  background: var(--leitura-destaque);
+}
+
+.aula-conteudo h3 {
+  margin-top: 1.8em;
+  font-size: 1.2em;
+}
+
+.aula-conteudo h4 {
+  margin-top: 1.5em;
+  font-size: 1.05em;
+}
+
+/* Logo depois de um título, o texto fica mais perto dele */
+.aula-conteudo :is(h1, h2, h3, h4) + * {
+  margin-top: 0.6em;
+}
+
+.aula-conteudo a {
+  color: var(--leitura-link);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.aula-conteudo a:hover {
+  color: var(--leitura-link);
+  text-decoration-thickness: 2px;
+}
+
+.aula-conteudo strong {
+  font-weight: 700;
+}
+
+/* Listas comuns */
+.aula-conteudo ul,
+.aula-conteudo ol {
+  padding-left: 1.5em;
+}
+
+.aula-conteudo li + li,
+.aula-conteudo li > ul,
+.aula-conteudo li > ol {
+  margin-top: 0.4em;
+}
+
+.aula-conteudo li::marker {
+  color: var(--leitura-destaque);
+}
+
+/* Linha divisória (---) */
+.aula-conteudo hr {
+  height: 1px;
+  margin-block: 2.5em;
+  border: 0;
+  background: var(--leitura-borda-forte);
+}
+
+.aula-conteudo img {
+  border: 1px solid var(--leitura-borda);
+  border-radius: var(--raio-md);
+}
+
+/* Citação comum (blockquote SEM [!TIP] etc.) */
+.aula-conteudo blockquote {
+  padding: 0.2em 0 0.2em 1.1em;
+  font-style: italic;
+  color: var(--leitura-texto-suave);
+  border-left: 3px solid var(--leitura-borda-forte);
+}
+
+.aula-conteudo blockquote > * + * {
+  margin-top: 0.6em;
+}
+
+/* Código no meio da frase: `assim` */
+.aula-conteudo :not(pre) > code,
+.aula-conteudo kbd {
+  padding: 0.12em 0.4em;
+  font-family: var(--fonte-mono);
+  font-size: 0.86em;
+  color: var(--leitura-texto);
+  background: var(--leitura-superficie);
+  border: 1px solid var(--leitura-borda);
+  border-radius: var(--raio-sm);
+  overflow-wrap: anywhere;         /* nome de arquivo longo quebra */
+}
+
+.aula-conteudo kbd {
+  border-bottom-width: 2px;        /* tecla com "profundidade" */
+}
+
+/* Tabelas: o JS embrulha cada <table> em
+   <div class="tabela-rolagem" tabindex="0" role="region" aria-label="Tabela">
+   A tabela larga rola DENTRO desse div; a página não. */
+.tabela-rolagem {
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--leitura-borda);
+  border-radius: var(--raio-md);
+}
+
+.aula-conteudo table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+
+/* Se o JS não embrulhar, a própria tabela rola (plano B) */
+.aula-conteudo > table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.aula-conteudo th,
+.aula-conteudo td {
+  padding: 0.6em 0.9em;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--leitura-borda);
+  min-width: 8ch;                  /* colunas não ficam espremidas */
+}
+
+.aula-conteudo th {
+  font-weight: 600;
+  white-space: nowrap;
+  background: var(--leitura-superficie);
+}
+
+.aula-conteudo tr:last-child td {
+  border-bottom: 0;
+}
+
+/* Linhas "zebradas" para o olho não se perder */
+.aula-conteudo tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--leitura-texto) 3%, transparent);
+}
+
+
+/* ---------------------------------------------------------
+   30. BLOCOS DE CÓDIGO + TEMA DO HIGHLIGHT.JS
+   O JS embrulha cada <pre> assim:
+   <div class="codigo">
+     <div class="codigo-topo">
+       <span class="codigo-linguagem">js</span>
+       <button class="codigo-copiar" type="button">Copiar</button>
+       <span class="sr-only" role="status"></span>
+     </div>
+     <pre tabindex="0"><code class="hljs language-js">...</code></pre>
+   </div>
+   Estados do botão: data-estado="copiado" ou data-estado="erro".
+   NÃO importamos CSS de tema do CDN: as cores ficam aqui.
+   --------------------------------------------------------- */
+.codigo {
+  border: 1px solid var(--leitura-borda);
+  border-radius: var(--raio-md);
+  background: var(--leitura-codigo-fundo);
+  overflow: hidden;                /* cantos arredondados no topo */
+}
+
+.codigo-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-3);
+  padding: var(--esp-1) var(--esp-1) var(--esp-1) var(--esp-4);
+  background: var(--leitura-superficie);
+  border-bottom: 1px solid var(--leitura-borda);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+}
+
+.codigo-linguagem {
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--leitura-texto-suave);
+}
+
+.codigo-copiar {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 var(--esp-3);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  color: var(--leitura-texto);
+  background: transparent;
+  border: 1px solid var(--leitura-borda-forte);
+  border-radius: var(--raio-sm);
+  cursor: pointer;
+  transition: color var(--transicao), border-color var(--transicao);
+}
+
+/* Em tela de toque, o botão fica com 44px de altura */
+@media (pointer: coarse) {
+  .codigo-copiar {
+    min-height: 44px;
+  }
+}
+
+.codigo-copiar:hover {
+  border-color: var(--leitura-destaque);
+}
+
+.codigo-copiar .icone {
+  width: 14px;
+  height: 14px;
+}
+
+/* "Copiado!" (verde) e "Não foi possível copiar" (vermelho).
+   O texto do botão muda, então não depende só da cor. */
+.codigo-copiar[data-estado="copiado"] {
+  color: var(--leitura-destaque);
+  border-color: currentColor;
+}
+
+.codigo-copiar[data-estado="erro"] {
+  color: var(--cor-erro);
+  border-color: currentColor;
+}
+
+/* O bloco de código em si (com ou sem o .codigo em volta) */
+.aula-conteudo pre {
+  margin: 0;
+  padding: 1em 1.1em;
+  overflow-x: auto;                /* linha longa rola AQUI dentro */
+  font-family: var(--fonte-mono);
+  font-size: 0.84em;
+  line-height: 1.6;
+  tab-size: 2;
+  color: var(--hl-texto);
+  background: var(--leitura-codigo-fundo);
+}
+
+/* <pre> sem o embrulho (se o JS falhar): ganha borda própria */
+.aula-conteudo > pre {
+  border: 1px solid var(--leitura-borda);
+  border-radius: var(--raio-md);
+}
+
+.aula-conteudo pre code {
+  display: block;
+  padding: 0;
+  font: inherit;
+  white-space: pre;
+  color: inherit;
+  background: none;
+  border: 0;
+}
+
+/* --- Tema de cores (classes que o highlight.js coloca) --- */
+.hljs {
+  color: var(--hl-texto);
+  background: transparent;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: var(--hl-comentario);
+  font-style: italic;              /* comentário: cor E itálico */
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-variable.language_,
+.hljs-doctag {
+  color: var(--hl-palavra);
+}
+
+.hljs-string,
+.hljs-regexp,
+.hljs-template-tag,
+.hljs-addition {
+  color: var(--hl-string);
+}
+
+.hljs-number,
+.hljs-literal,
+.hljs-symbol,
+.hljs-bullet {
+  color: var(--hl-numero);
+}
+
+.hljs-title,
+.hljs-title.function_,
+.hljs-title.class_,
+.hljs-section {
+  color: var(--hl-funcao);
+}
+
+.hljs-name,
+.hljs-selector-class,
+.hljs-selector-id,
+.hljs-selector-pseudo,
+.hljs-selector-attr {
+  color: var(--hl-tag);
+}
+
+.hljs-attr,
+.hljs-attribute,
+.hljs-property,
+.hljs-params {
+  color: var(--hl-atributo);
+}
+
+.hljs-built_in,
+.hljs-type,
+.hljs-variable {
+  color: var(--hl-embutido);
+}
+
+.hljs-tag,
+.hljs-punctuation,
+.hljs-operator,
+.hljs-meta,
+.hljs-subst {
+  color: var(--hl-pontuacao);
+}
+
+/* Dentro de <...> o nome da tag continua com a cor de tag */
+.hljs-tag .hljs-name {
+  color: var(--hl-tag);
+}
+
+.hljs-tag .hljs-attr {
+  color: var(--hl-atributo);
+}
+
+.hljs-deletion {
+  color: var(--cor-erro);
+}
+
+.hljs-emphasis { font-style: italic; }
+.hljs-strong   { font-weight: 700; }
+
+
+/* ---------------------------------------------------------
+   31. CAIXAS DE DESTAQUE (alertas do GitHub)
+   > [!TIP]       -> .aviso--dica        💡 Dica
+   > [!CAUTION]   -> .aviso--erro        ⚠️ Erro comum
+   > [!IMPORTANT] -> .aviso--entrevista  🎤 Em entrevista
+   > [!NOTE]      -> .aviso--palavra     📖 Palavra nova
+   Cada tipo tem cor, ícone E título escrito (não só cor).
+   --------------------------------------------------------- */
+.aviso {
+  --aviso-cor: var(--leitura-destaque);
+  padding: 0.9em 1.1em;
+  background: color-mix(in srgb, var(--aviso-cor) 8%, var(--leitura-fundo));
+  border: 1px solid color-mix(in srgb, var(--aviso-cor) 40%, transparent);
+  border-left: 4px solid var(--aviso-cor);
+  border-radius: var(--raio-md);
+}
+
+.aviso > * + * {
+  margin-top: 0.6em;
+}
+
+/* Título: ícone + nome do tipo, em mono e na cor da caixa */
+.aviso-titulo {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-family: var(--fonte-mono);
+  font-size: 0.8em;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--aviso-cor);
+}
+
+.aviso-icone {
+  font-size: 1.3em;                /* o emoji um pouco maior */
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.aviso--dica       { --aviso-cor: var(--aviso-dica); }
+.aviso--erro       { --aviso-cor: var(--aviso-erro); }
+.aviso--entrevista { --aviso-cor: var(--aviso-entrevista); }
+.aviso--palavra    { --aviso-cor: var(--aviso-palavra); }
+
+
+/* ---------------------------------------------------------
+   32. TERMO DO GLOSSÁRIO ([[fetch]])
+   <span class="glossario">
+     <button class="glossario-termo" type="button"
+             aria-expanded="false" aria-describedby="glossario-1">fetch</button>
+     <span class="glossario-balao" id="glossario-1" role="tooltip">
+       <span class="glossario-traducao">buscar</span>
+       <span class="glossario-explicacao">Função do JavaScript...</span>
+     </span>
+   </span>
+   O balão só aparece com a classe .is-aberto no .glossario.
+   O JS abre com mouse, foco (Tab) e toque; fecha com Esc,
+   saindo com o mouse/foco ou tocando fora. Um por vez.
+   --------------------------------------------------------- */
+.glossario {
+  position: relative;
+}
+
+/* A palavra: parece texto, com sublinhado pontilhado verde */
+.glossario-termo {
+  padding: 0 0.1em;
+  margin: 0 -0.1em;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-radius: 3px;
+  cursor: help;
+  text-decoration: underline dotted;
+  text-decoration-color: var(--leitura-destaque);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.22em;
+}
+
+.glossario-termo:hover,
+.glossario.is-aberto .glossario-termo {
+  background: color-mix(in srgb, var(--leitura-destaque) 14%, transparent);
+}
+
+/* O balão (desktop: logo abaixo da palavra) */
+.glossario-balao {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 6;
+  display: none;
+  width: max-content;
+  max-width: min(18rem, 80vw);
+  padding: 0.7em 0.9em;
+  font-family: var(--fonte-texto);
+  font-size: var(--fs-sm);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: left;
+  color: var(--balao-texto);
+  background: var(--balao-fundo);
+  border: 1px solid var(--leitura-destaque);
+  border-radius: var(--raio-md);
+  box-shadow: var(--sombra);
+}
+
+.glossario.is-aberto .glossario-balao {
+  display: block;
+}
+
+/* "Ponte" invisível entre a palavra e o balão: o mouse pode
+   ir até o balão sem ele fechar no caminho */
+.glossario-balao::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  height: 10px;
+}
+
+.glossario-traducao {
+  display: block;
+  font-weight: 700;
+  color: var(--leitura-destaque);
+}
+
+.glossario-explicacao {
+  display: block;
+  margin-top: 0.25em;
+}
+
+/* Celular: o balão vira uma faixa fixa no pé da tela, para
+   nunca sair pela lateral (e não criar rolagem horizontal) */
+@media (max-width: 639.98px) {
+  .glossario-balao {
+    position: fixed;
+    top: auto;
+    left: var(--esp-4);
+    right: var(--esp-4);
+    bottom: var(--esp-4);
+    z-index: 35;
+    width: auto;
+    max-width: none;
+    padding: var(--esp-4);
+    font-size: var(--fs-base);
+  }
+
+  .glossario-balao::before {
+    content: none;
+  }
+}
+
+
+/* ---------------------------------------------------------
+   33. CHECKLIST DO EXERCÍCIO (- [ ] no .md)
+   <ul class="checklist">
+     <li class="checklist-item">
+       <label class="checklist-rotulo">
+         <input class="checklist-caixa" type="checkbox">
+         <span class="checklist-texto">Criar o arquivo...</span>
+       </label>
+     </li>
+   </ul>
+   <button class="btn btn-secundario checklist-limpar" type="button">Limpar exercício</button>
+   Cada linha inteira é clicável (o <label> envolve tudo).
+   --------------------------------------------------------- */
+.aula-conteudo .checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  padding: 0;
+  list-style: none;
+}
+
+.aula-conteudo .checklist li + li {
+  margin-top: 0;                   /* o gap já faz o espaço */
+}
+
+.checklist-rotulo {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75em;
+  min-height: 44px;
+  padding: 0.6em 0.8em;
+  background: var(--leitura-superficie);
+  border: 1px solid var(--leitura-borda);
+  border-radius: var(--raio-md);
+  cursor: pointer;
+  transition: border-color var(--transicao), background var(--transicao);
+}
+
+.checklist-rotulo:hover {
+  border-color: color-mix(in srgb, var(--leitura-destaque) 55%, transparent);
+}
+
+/* Foco do teclado aparece na linha inteira */
+.checklist-rotulo:has(.checklist-caixa:focus-visible) {
+  outline: 2px solid var(--cor-ciano);
+  outline-offset: 2px;
+}
+
+/* A caixinha desenhada por nós (grande: ~24px) */
+.checklist-caixa {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 0 0 auto;
+  width: 1.35em;
+  height: 1.35em;
+  min-width: 22px;
+  min-height: 22px;
+  margin: 0.1em 0 0;
+  background: transparent center / 75% no-repeat;
+  border: 2px solid var(--leitura-destaque);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color var(--transicao);
+}
+
+.checklist-caixa:checked {
+  background-color: var(--leitura-destaque);
+  background-image: var(--check-icone);
+}
+
+/* O foco já aparece na linha (acima); aqui só tiramos o duplicado */
+.checklist-caixa:focus-visible {
+  outline: none;
+}
+
+/* Item feito: riscado e esmaecido (cor suave, ainda com contraste AA) */
+.checklist-caixa:checked + .checklist-texto {
+  color: var(--leitura-texto-suave);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.checklist-item:has(.checklist-caixa:checked) .checklist-rotulo {
+  background: transparent;
+  border-style: dashed;
+}
+
+.checklist-limpar {
+  font-size: var(--fs-sm);
+}
+
+/* Modo de alto contraste do Windows: volta o checkbox nativo */
+@media (forced-colors: active) {
+  .checklist-caixa {
+    appearance: auto;
+    -webkit-appearance: auto;
+  }
+}
+
+
+/* ---------------------------------------------------------
+   34. FIM DA AULA: CONCLUIR + AULA ANTERIOR/PRÓXIMA + MENSAGENS
+   --------------------------------------------------------- */
+.aula-fim {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--esp-3);
+  margin-top: var(--esp-7);
+  padding: var(--esp-5);
+  font-size: var(--fs-base);       /* não cresce com A+ */
+  background: var(--leitura-superficie);
+  border: 1px solid var(--leitura-borda);
+  border-radius: var(--raio-lg);
+}
+
+.aula-fim-texto {
+  color: var(--leitura-texto-suave);
+}
+
+/* Botão "Marcar aula como concluída" (usa também .btn) */
+.aula-concluir {
+  color: var(--leitura-sobre-destaque);
+  background: var(--leitura-destaque);
+}
+
+.aula-concluir:hover {
+  color: var(--leitura-sobre-destaque);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--leitura-destaque) 40%, transparent);
+}
+
+.aula-concluir .icone {
+  width: 20px;
+  height: 20px;
+}
+
+/* Já concluída: vira contorno verde ("Aula concluída ✓ · Desmarcar") */
+.aula-concluir[aria-pressed="true"] {
+  color: var(--leitura-destaque);
+  background: color-mix(in srgb, var(--leitura-destaque) 10%, transparent);
+  border-color: currentColor;
+}
+
+.aula-concluir[aria-pressed="true"]:hover {
+  color: var(--leitura-destaque);
+}
+
+/* O "Desmarcar" dentro do botão concluído, mais discreto */
+.aula-concluir-desfazer {
+  padding-left: var(--esp-2);
+  font-size: var(--fs-sm);
+  font-weight: 400;
+  color: var(--leitura-texto-suave);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  border-left: 1px solid var(--leitura-borda-forte);
+}
+
+/* Aula anterior / próxima */
+.aula-navegacao {
+  display: grid;
+  gap: var(--esp-3);
+  margin-top: var(--esp-6);
+  font-size: var(--fs-base);
+}
+
+@media (min-width: 640px) {
+  .aula-navegacao {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* Se só existir a próxima, ela fica na coluna da direita */
+  .aula-nav--proxima {
+    grid-column: 2;
+    align-items: flex-end;
+    text-align: right;
+  }
+}
+
+.aula-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-1);
+  padding: var(--esp-4) var(--esp-5);
+  color: var(--leitura-texto);
+  text-decoration: none;
+  background: var(--leitura-superficie);
+  border: 1px solid var(--leitura-borda);
+  border-radius: var(--raio-lg);
+  transition: border-color var(--transicao);
+}
+
+.aula-nav:hover {
+  color: var(--leitura-texto);
+  border-color: var(--leitura-destaque);
+}
+
+.aula-nav-rotulo {
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--leitura-destaque);
+}
+
+.aula-nav-titulo {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+/* Mensagens dentro da aula (carregando, erro, não encontrada).
+   Usa .mensagem e .mensagem--erro da seção 17. */
+.aula-mensagem {
+  margin-top: var(--esp-6);
+  font-size: var(--fs-base);
+}
+
+
+/* ---------------------------------------------------------
+   35. LISTA DE AULAS (aulas.html)
+   Página normal do site (com grade e partículas, sempre escura).
+   <ol class="lista-aulas">
+     <li class="surgir">
+       <a class="card aula-card [aula-card--concluida]" href="aula.html?id=...">
+         <span class="aula-card-numero" aria-hidden="true">01</span>
+         <div class="aula-card-corpo"> topo + h2 + resumo + rodapé </div>
+   --------------------------------------------------------- */
+.lista-aulas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-4);
+  max-width: 880px;
+}
+
+.aula-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--esp-4);
+  align-items: start;
+  color: var(--cor-texto);
+  text-decoration: none;
+  border-left: 3px solid color-mix(in srgb, var(--cor-verde) 45%, transparent);
+  transition: transform var(--transicao), border-color var(--transicao), box-shadow var(--transicao);
+}
+
+.aula-card:hover {
+  color: var(--cor-texto);
+  transform: translateY(-2px);
+  border-color: var(--cor-borda-forte);
+  border-left-color: var(--cor-verde);
+  box-shadow: var(--sombra), 0 0 24px rgba(124, 255, 178, 0.18);
+}
+
+/* Número grande "01" em Exo 2, dentro de um quadrado verde */
+.aula-card-numero {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  font-family: var(--fonte-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--cor-verde);
+  background: rgba(124, 255, 178, 0.06);
+  border: 1px solid rgba(124, 255, 178, 0.4);
+  border-radius: var(--raio-md);
+}
+
+@media (min-width: 640px) {
+  .aula-card {
+    gap: var(--esp-5);
+  }
+
+  .aula-card-numero {
+    width: 64px;
+    height: 64px;
+    font-size: 2rem;
+  }
+}
+
+/* Concluída: quadrado preenchido de verde + borda verde inteira */
+.aula-card--concluida {
+  border-left-color: var(--cor-verde);
+}
+
+.aula-card--concluida .aula-card-numero {
+  color: var(--cor-fundo);          /* escuro sobre verde, ~16:1 */
+  background: var(--cor-verde);
+  border-color: var(--cor-verde);
+}
+
+.aula-card-topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--esp-2) var(--esp-3);
+  margin-bottom: var(--esp-2);
+}
+
+.aula-card-projeto {
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
+}
+
+/* "✓ Concluída": texto + ícone (não só cor) */
+.aula-card-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--esp-1);
+  padding: 2px var(--esp-3);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cor-verde);
+  background: rgba(124, 255, 178, 0.10);
+  border: 1px solid currentColor;
+  border-radius: var(--raio-pill);
+  white-space: nowrap;
+}
+
+.aula-card-titulo {
+  margin-bottom: var(--esp-2);
+  font-size: var(--fs-lg);
+  overflow-wrap: break-word;
+}
+
+.aula-card-resumo {
+  margin-bottom: var(--esp-3);
+  color: var(--cor-texto-suave);
+}
+
+/* Rodapé do card: tempo de leitura à esquerda, "Ler aula ->" à direita */
+.aula-card-rodape {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-2) var(--esp-4);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-sm);
+  color: var(--cor-texto-suave);
+}
+
+.aula-card-tempo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--esp-2);
+}
+
+.aula-card-tempo .icone {
+  width: 16px;
+  height: 16px;
+  color: var(--cor-verde);
+}
+
+.aula-card-ler {
+  color: var(--cor-verde);
+}
+
+
+/* ---------------------------------------------------------
+   36. MOVIMENTO REDUZIDO (Etapa 3)
+   A seção 21 já zera animações e transições. Aqui garantimos
+   que a gaveta do sumário e a troca de tema não deslizem.
+   (A rolagem até a seção: o JS usa behavior "auto" quando
+   prefers-reduced-motion estiver ligado.)
+   --------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .aula-sumario,
+  .sumario-aberto .aula-sumario,
+  .aula-sumario-fundo,
+  .sumario-aberto .aula-sumario-fundo,
+  body.modo-foco {
+    transition: none;
+  }
+
+  .aula-card:hover {
+    transform: none;
+  }
+}
+
+
+/* ---------------------------------------------------------
+   37. AJUSTES DO DEV (Etapa 3)
+   Na aula.html, o JS esconde partes com o atributo hidden
+   (cabeçalho e fim antes de a aula carregar, botão Sumário
+   numa aula sem títulos...). Algumas dessas classes têm
+   display: flex/grid, que venceria o hidden. Esta regra
+   garante que "hidden" sempre esconda.
+   --------------------------------------------------------- */
+.modo-foco [hidden] {
+  display: none !important;
+}

@@ -95,89 +95,89 @@ Exemplo de caixa:
 
 **US07: Item "Aulas" no menu e lista de aulas**
 Como João (aluno), quero uma página com todas as aulas, para encontrar rápido o que estudar e ver o que já terminei.
-- [ ] O menu de **todas** as páginas tem o item "Aulas", que leva para `aulas.html`. Nas páginas `aulas.html` e `aula.html`, o item "Aulas" aparece como ativo.
-- [ ] A lista é gerada a partir de `data/aulas.json`. Nenhuma aula fica escrita direto no HTML.
-- [ ] Mostra as aulas de todos os projetos, ordenadas por projeto e depois por `numero`. Cada item mostra número, título, nome do projeto, tempo de leitura e resumo.
-- [ ] Aulas marcadas como concluídas (US15) mostram um ✓ e o texto "Concluída" (não só a cor ou o ícone, para leitores de tela).
-- [ ] Clicar em uma aula abre `aula.html?id=<id>`.
-- [ ] Uma aula nova adicionada ao JSON aparece na lista sem mudar HTML ou JS.
-- [ ] Se o JSON não carregar, aparece uma mensagem de erro amigável.
+- [x] O menu de **todas** as páginas tem o item "Aulas", que leva para `aulas.html`. Nas páginas `aulas.html` e `aula.html`, o item "Aulas" aparece como ativo.
+- [x] A lista é gerada a partir de `data/aulas.json`. Nenhuma aula fica escrita direto no HTML.
+- [x] Mostra as aulas de todos os projetos, ordenadas por projeto e depois por `numero`. Cada item mostra número, título, nome do projeto, tempo de leitura e resumo.
+- [x] Aulas marcadas como concluídas (US15) mostram um ✓ e o texto "Concluída" (não só a cor ou o ícone, para leitores de tela).
+- [x] Clicar em uma aula abre `aula.html?id=<id>`.
+- [x] Uma aula nova adicionada ao JSON aparece na lista sem mudar HTML ou JS.
+- [x] Se o JSON não carregar, aparece uma mensagem de erro amigável.
 
 **US08: Abrir a aula pelo detalhe do projeto**
 Como visitante, quero que o link de uma aula no detalhe do projeto abra a tela de leitura, para não cair no arquivo `.md` cru.
-- [ ] Os entregáveis do professor em `data/projetos.json` passam a apontar para `aula.html?id=<id>` (e não mais para `aulas/aula-NN.md`).
-- [ ] Clicar em "Aula 01" ou "Aula 02" no detalhe do projeto abre a tela de leitura da aula certa.
-- [ ] `aula.html` com `id` inexistente ou sem `id` mostra "Aula não encontrada" com um link para `aulas.html`.
+- [x] Os entregáveis do professor em `data/projetos.json` passam a apontar para `aula.html?id=<id>` (e não mais para `aulas/aula-NN.md`).
+- [x] Clicar em "Aula 01" ou "Aula 02" no detalhe do projeto abre a tela de leitura da aula certa.
+- [x] `aula.html` com `id` inexistente ou sem `id` mostra "Aula não encontrada" com um link para `aulas.html`.
 
 **US09: Tela de leitura em "modo foco"**
 Como João, quero ler a aula em uma tela calma e confortável, para me concentrar no conteúdo.
-- [ ] A tela busca o arquivo `.md` indicado em `aulas.json` e mostra o conteúdo convertido em HTML com `marked`.
-- [ ] O topo mostra título, número da aula, projeto e tempo de leitura, vindos de `aulas.json`.
-- [ ] Visual "modo foco": mesma identidade do site (tema escuro, cores dos agentes, fontes), mas **sem partículas e sem grade** no fundo, com uma coluna de texto de largura confortável (cerca de 65 a 75 caracteres por linha) e letra maior que nas outras páginas.
-- [ ] Tabelas largas e blocos de código longos rolam na horizontal **dentro do próprio bloco**; a página inteira nunca rola na horizontal a 360px.
-- [ ] Links relativos dentro da aula (ex.: `css/style.css`) funcionam a partir de `aula.html`.
-- [ ] Se o `.md` não carregar, aparece uma mensagem de erro amigável.
-- [ ] Se a biblioteca `marked` não carregar (CDN fora do ar), aparece uma mensagem amigável com um link para o arquivo `.md` original.
-- [ ] Há um link "Voltar para as aulas" e, quando existirem, links para a aula anterior e a próxima do mesmo projeto.
+- [x] A tela busca o arquivo `.md` indicado em `aulas.json` e mostra o conteúdo convertido em HTML com `marked`.
+- [x] O topo mostra título, número da aula, projeto e tempo de leitura, vindos de `aulas.json`.
+- [x] Visual "modo foco": mesma identidade do site (tema escuro, cores dos agentes, fontes), mas **sem partículas e sem grade** no fundo, com uma coluna de texto de largura confortável (cerca de 65 a 75 caracteres por linha) e letra maior que nas outras páginas.
+- [x] Tabelas largas e blocos de código longos rolam na horizontal **dentro do próprio bloco**; a página inteira nunca rola na horizontal a 360px.
+- [x] Links relativos dentro da aula (ex.: `css/style.css`) funcionam a partir de `aula.html`.
+- [x] Se o `.md` não carregar, aparece uma mensagem de erro amigável.
+- [x] Se a biblioteca `marked` não carregar (CDN fora do ar), aparece uma mensagem amigável com um link para o arquivo `.md` original.
+- [x] Há um link "Voltar para as aulas" e, quando existirem, links para a aula anterior e a próxima do mesmo projeto.
 
 **US10: Sumário e barra de progresso**
 Como João, quero ver as seções da aula e quanto já li, para me localizar e pular direto para o que preciso.
-- [ ] O sumário é gerado automaticamente a partir dos títulos `##` e `###` da aula (os `###` aparecem recuados).
-- [ ] Cada título da aula ganha um `id`, e clicar no item do sumário rola até a seção e atualiza o `#` da URL. Abrir a URL com `#` já leva para a seção.
-- [ ] O item da seção que está sendo lida fica destacado e muda conforme a rolagem.
-- [ ] No desktop, o sumário fica na lateral e acompanha a rolagem. No celular, fica escondido atrás de um botão "Sumário"; tocar em um item fecha o sumário, e a tecla Esc também fecha.
-- [ ] Uma barra fina no topo mostra o progresso de leitura (0% no início do texto, 100% no fim) e acompanha a rolagem.
-- [ ] Com `prefers-reduced-motion`, a rolagem até a seção é instantânea (sem animação).
+- [x] O sumário é gerado automaticamente a partir dos títulos `##` e `###` da aula (os `###` aparecem recuados).
+- [x] Cada título da aula ganha um `id`, e clicar no item do sumário rola até a seção e atualiza o `#` da URL. Abrir a URL com `#` já leva para a seção.
+- [x] O item da seção que está sendo lida fica destacado e muda conforme a rolagem.
+- [x] No desktop, o sumário fica na lateral e acompanha a rolagem. No celular, fica escondido atrás de um botão "Sumário"; tocar em um item fecha o sumário, e a tecla Esc também fecha.
+- [x] Uma barra fina no topo mostra o progresso de leitura (0% no início do texto, 100% no fim) e acompanha a rolagem.
+- [x] Com `prefers-reduced-motion`, a rolagem até a seção é instantânea (sem animação).
 
 **US11: Código colorido e botão Copiar**
 Como João, quero o código com cores e um botão para copiar, para entender melhor e testar no VS Code.
-- [ ] Blocos de código com linguagem (` ```js `, ` ```html `, ` ```css `, ` ```json `) aparecem coloridos com `highlight.js`. Blocos sem linguagem aparecem sem cor, com a mesma fonte mono.
-- [ ] Cada bloco tem um botão "Copiar" que copia o código exato (sem o texto do botão).
-- [ ] Depois de copiar, o botão mostra "Copiado!" por cerca de 2 segundos e o aviso também é lido por leitores de tela.
-- [ ] Se a cópia falhar (navegador sem permissão), o botão mostra "Não foi possível copiar" em vez de fingir sucesso.
-- [ ] Se `highlight.js` não carregar, o código continua aparecendo, só que sem cores.
-- [ ] As cores do código têm contraste AA nos dois temas (escuro e papel).
+- [x] Blocos de código com linguagem (` ```js `, ` ```html `, ` ```css `, ` ```json `) aparecem coloridos com `highlight.js`. Blocos sem linguagem aparecem sem cor, com a mesma fonte mono.
+- [x] Cada bloco tem um botão "Copiar" que copia o código exato (sem o texto do botão).
+- [x] Depois de copiar, o botão mostra "Copiado!" por cerca de 2 segundos e o aviso também é lido por leitores de tela.
+- [x] Se a cópia falhar (navegador sem permissão), o botão mostra "Não foi possível copiar" em vez de fingir sucesso.
+- [x] Se `highlight.js` não carregar, o código continua aparecendo, só que sem cores.
+- [x] As cores do código têm contraste AA nos dois temas (escuro e papel).
 
 **US12: Caixas de destaque**
 Como João, quero dicas, erros comuns, perguntas de entrevista e palavras novas destacadas, para achar rápido o que é mais importante.
-- [ ] As 4 caixas da tabela de sintaxe aparecem com cor, ícone e título próprios: Dica, Erro comum, Em entrevista, Palavra nova.
-- [ ] O tipo da caixa é indicado também pelo título em texto (não só pela cor ou ícone). O ícone é decorativo para leitores de tela.
-- [ ] Um blockquote comum (sem `[!...]`) continua aparecendo como citação normal.
+- [x] As 4 caixas da tabela de sintaxe aparecem com cor, ícone e título próprios: Dica, Erro comum, Em entrevista, Palavra nova.
+- [x] O tipo da caixa é indicado também pelo título em texto (não só pela cor ou ícone). O ícone é decorativo para leitores de tela.
+- [x] Um blockquote comum (sem `[!...]`) continua aparecendo como citação normal.
 - [ ] O mesmo `.md` aparece como caixa de alerta quando aberto no GitHub.
 
 **US13: Glossário de palavras em inglês**
 Como João, quero ver a tradução de palavras em inglês do código, para aprender o vocabulário sem sair da aula.
-- [ ] As traduções ficam em `data/glossario.json`, um arquivo só, reutilizado por todas as aulas.
-- [ ] Um termo escrito como `[[fetch]]` no `.md` aparece no site como `fetch`, com um estilo de "palavra marcada" (por exemplo, sublinhado pontilhado).
-- [ ] Ao passar o mouse, focar com Tab ou tocar na palavra, aparece um balão com a tradução e a explicação curta. Esc ou tocar fora fecha o balão. Só um balão fica aberto por vez.
-- [ ] A busca do termo ignora maiúsculas e minúsculas.
-- [ ] `[[...]]` dentro de código (`` `assim` `` ou em bloco) **não** é convertido.
-- [ ] Termo que não existe no glossário aparece como texto normal, sem balão e sem quebrar a página.
-- [ ] Se `glossario.json` não carregar, a aula aparece normalmente, com os termos como texto simples.
+- [x] As traduções ficam em `data/glossario.json`, um arquivo só, reutilizado por todas as aulas.
+- [x] Um termo escrito como `[[fetch]]` no `.md` aparece no site como `fetch`, com um estilo de "palavra marcada" (por exemplo, sublinhado pontilhado).
+- [x] Ao passar o mouse, focar com Tab ou tocar na palavra, aparece um balão com a tradução e a explicação curta. Esc ou tocar fora fecha o balão. Só um balão fica aberto por vez.
+- [x] A busca do termo ignora maiúsculas e minúsculas.
+- [x] `[[...]]` dentro de código (`` `assim` `` ou em bloco) **não** é convertido.
+- [x] Termo que não existe no glossário aparece como texto normal, sem balão e sem quebrar a página.
+- [x] Se `glossario.json` não carregar, a aula aparece normalmente, com os termos como texto simples.
 
 **US14: Exercício com checklist salvo**
 Como João, quero marcar os passos do exercício que já fiz, para continuar de onde parei depois.
-- [ ] Os itens `- [ ]` da aula viram checkboxes que podem ser marcados com mouse, toque e teclado (cada um com o texto do item como rótulo).
-- [ ] O estado de cada checkbox fica salvo por aula e continua igual depois de recarregar a página ou fechar o navegador.
-- [ ] Itens escritos como `- [x]` no `.md` começam marcados só se o João nunca tiver mexido nesse checklist.
-- [ ] Há um botão "Limpar exercício" que desmarca todos os itens daquela aula.
+- [x] Os itens `- [ ]` da aula viram checkboxes que podem ser marcados com mouse, toque e teclado (cada um com o texto do item como rótulo).
+- [x] O estado de cada checkbox fica salvo por aula e continua igual depois de recarregar a página ou fechar o navegador.
+- [x] Itens escritos como `- [x]` no `.md` começam marcados só se o João nunca tiver mexido nesse checklist.
+- [x] Há um botão "Limpar exercício" que desmarca todos os itens daquela aula.
 
 **US15: Marcar aula como concluída**
 Como João, quero marcar uma aula como concluída, para acompanhar meu progresso na lista de aulas.
-- [ ] No fim da aula há o botão "Marcar aula como concluída". Depois de clicado, ele muda para "Aula concluída ✓" e permite desfazer ("Desmarcar").
-- [ ] O botão informa o estado para leitores de tela (por exemplo, `aria-pressed`).
-- [ ] O estado fica salvo e aparece na lista de aulas (US07) ao voltar para ela.
-- [ ] Marcar a aula como concluída **não** depende de o checklist estar completo.
+- [x] No fim da aula há o botão "Marcar aula como concluída". Depois de clicado, ele muda para "Aula concluída ✓" e permite desfazer ("Desmarcar").
+- [x] O botão informa o estado para leitores de tela (por exemplo, `aria-pressed`).
+- [x] O estado fica salvo e aparece na lista de aulas (US07) ao voltar para ela.
+- [x] Marcar a aula como concluída **não** depende de o checklist estar completo.
 
 **US16: Tamanho da letra e tema "papel"**
 Como João, quero ajustar o tamanho da letra e trocar para um tema claro, para ler com conforto em qualquer lugar.
-- [ ] Os botões A− e A+ diminuem e aumentam o texto da aula em passos (sugestão: 5 tamanhos). No menor e no maior tamanho, o botão correspondente fica desativado.
-- [ ] Os botões têm rótulo acessível ("Diminuir letra" e "Aumentar letra").
-- [ ] Um botão alterna entre o tema escuro (padrão) e o tema claro "papel" (fundo creme, texto escuro). O botão informa o estado para leitores de tela.
-- [ ] Tamanho de letra e tema ficam salvos e valem para todas as aulas.
-- [ ] O tema claro existe **só** na tela de aula. As outras páginas continuam sempre escuras.
-- [ ] O tema salvo é aplicado antes de a aula aparecer, sem "piscar" o tema escuro ao abrir a página.
-- [ ] Texto, caixas, links, código, sumário e balões do glossário têm contraste AA nos dois temas.
+- [x] Os botões A− e A+ diminuem e aumentam o texto da aula em passos (sugestão: 5 tamanhos). No menor e no maior tamanho, o botão correspondente fica desativado.
+- [x] Os botões têm rótulo acessível ("Diminuir letra" e "Aumentar letra").
+- [x] Um botão alterna entre o tema escuro (padrão) e o tema claro "papel" (fundo creme, texto escuro). O botão informa o estado para leitores de tela.
+- [x] Tamanho de letra e tema ficam salvos e valem para todas as aulas.
+- [x] O tema claro existe **só** na tela de aula. As outras páginas continuam sempre escuras.
+- [x] O tema salvo é aplicado antes de a aula aparecer, sem "piscar" o tema escuro ao abrir a página.
+- [x] Texto, caixas, links, código, sumário e balões do glossário têm contraste AA nos dois temas.
 
 **US17: Reescrever as Aulas 01 e 02 no novo formato** (tarefa do professor)
 Como João, quero as aulas que já existem no formato novo, para usar todas as funções da tela de leitura.
@@ -185,14 +185,14 @@ Como João, quero as aulas que já existem no formato novo, para usar todas as f
 - [ ] Todo termo marcado com `[[...]]` existe em `data/glossario.json`.
 - [ ] Na Aula 02, a Parte A do exercício (preencher a página Sobre) é removida, porque o João já fez, e substituída por uma nova atividade escolhida pelo professor sobre o conteúdo da Etapa 2.
 - [ ] As duas aulas continuam legíveis abrindo o `.md` no GitHub.
-- [ ] `data/aulas.json` tem as duas aulas cadastradas.
+- [x] `data/aulas.json` tem as duas aulas cadastradas.
 
 **Requisitos gerais da Etapa 3**
-- [ ] Todo o progresso (checklist, aula concluída, tamanho da letra e tema) fica salvo no `localStorage` do navegador de quem lê. Cada pessoa vê só o próprio progresso.
-- [ ] Se o `localStorage` estiver indisponível (modo anônimo restrito, bloqueado ou cheio), todas as funções continuam funcionando na página, só não salvam. Nenhum erro quebra a página.
-- [ ] As chaves do `localStorage` usam um prefixo do site para não misturar com outros sites (sugestão: `jsl:`).
-- [ ] `marked` e `highlight.js` vêm de CDN com versão fixa na URL (nada de "latest"). Só `aula.html` carrega essas bibliotecas.
-- [ ] Tudo funciona a 360px, por teclado (foco visível em todos os controles) e respeita `prefers-reduced-motion`.
+- [x] Todo o progresso (checklist, aula concluída, tamanho da letra e tema) fica salvo no `localStorage` do navegador de quem lê. Cada pessoa vê só o próprio progresso.
+- [x] Se o `localStorage` estiver indisponível (modo anônimo restrito, bloqueado ou cheio), todas as funções continuam funcionando na página, só não salvam. Nenhum erro quebra a página.
+- [x] As chaves do `localStorage` usam um prefixo do site para não misturar com outros sites (sugestão: `jsl:`).
+- [x] `marked` e `highlight.js` vêm de CDN com versão fixa na URL (nada de "latest"). Só `aula.html` carrega essas bibliotecas.
+- [x] Tudo funciona a 360px, por teclado (foco visível em todos os controles) e respeita `prefers-reduced-motion`.
 - [ ] Funciona publicado no GitHub Pages, com caminhos relativos.
 
 ### Requisitos gerais (todas as etapas)

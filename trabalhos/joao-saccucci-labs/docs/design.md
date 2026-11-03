@@ -2,7 +2,7 @@
 
 Conceito: **"centro de comando de IA"**. Fundo espacial escuro, grade e partículas sutis, painéis de vidro e brilhos neon. Cada agente é uma "unidade de IA" com cor e avatar geométrico próprios. O neon fica em detalhes (bordas, rótulos, botões); o texto é sempre claro sobre escuro, para continuar legível e profissional.
 
-Arquivos: `css/style.css` (tudo pronto, com variáveis em `:root`), `img/agentes/*.svg` e `img/icones/*.svg` (Etapa 2). A Etapa 2 está na seção 10.
+Arquivos: `css/style.css` (tudo pronto, com variáveis em `:root`), `img/agentes/*.svg` e `img/icones/*.svg` (Etapa 2). A Etapa 2 está na seção 10 e a Etapa 3 (aulas) na seção 11.
 
 ---
 
@@ -392,3 +392,407 @@ Em **todas** as páginas, a lista do menu passa a ser:
 **Celular (360px):** cartão com 280px úteis; monograma em cima, `h1` quebra entre as palavras se precisar; ficha `dl` em 1 coluna; botões de contato crescem para preencher cada linha (alvo de 44px); blocos de baixo em 1 coluna. Nada passa da largura (`overflow: hidden` no cartão + `overflow-wrap: anywhere` nos textos longos).
 
 **Movimento reduzido:** o anel do monograma para (regra própria na seção 16 + a regra geral da seção 21); `surgir`, `pulso` e o hover dos avatares também ficam desligados pela regra geral.
+
+---
+
+## 11. Etapa 3: Aulas (US07 a US17)
+
+CSS pronto em `css/style.css`, **seções 23 a 36** (no fim do arquivo, depois do bloco `@supports`). Ícones novos em `img/icones/`: `sumario.svg`, `tema.svg`, `concluida.svg`, `relogio.svg`, `copiar.svg` (mesmo padrão da Etapa 2: colar o `<svg>` inline, `aria-hidden="true"`).
+
+### 11.0 Conceito e decisões
+
+- **"Modo foco" = sala de estudo do centro de comando.** Mesma identidade (escuro, Exo 2 no `h1`, Space Grotesk no texto, JetBrains Mono nos rótulos), mas sem grade, sem partículas e sem vidro. O fundo é liso (`#070A14`) com um brilho verde fraquinho e parado no topo.
+- **Verde do professor (`#7CFFB2`) é a cor de destaque da aula:** número da aula, tracinho dos `h2`, marcadores de lista, item ativo do sumário, barra de progresso, checkbox, botão de concluir. Links continuam ciano (cor de link do site todo).
+- **Coluna de texto `64ch`** (cerca de 68 a 72 letras por linha, porque o `ch` mede o "0", mais largo que a letra média). Letra de 17px (celular) a 19px (desktop) no nível padrão, entrelinha 1.75.
+- **Tudo dentro do texto usa `em`**: títulos, código e caixas crescem junto com A+. Já cabeçalho, barra de ferramentas, sumário e botões do fim usam `rem` e **não** mudam.
+- **Tema papel troca as variáveis do `:root`** (`--cor-fundo`, `--cor-texto`, `--cor-ciano`...) quando o `<html>` tem `data-tema="papel"`. Assim o header, o footer, os botões `.btn` e o contorno de foco mudam sozinhos. Só a `aula.html` coloca esse atributo, então as outras páginas continuam sempre escuras.
+- **`aulas.html` é uma página normal do site** (com grade e partículas, sempre escura). O modo foco e o tema papel são só da `aula.html`.
+
+### 11.1 Atributos no `<html>` e no `<body>` da `aula.html`
+
+```html
+<html lang="pt-BR" data-tema="escuro" data-fonte="3">
+...
+<body class="modo-foco">
+```
+
+| Onde | Atributo / classe | Valores | Quem muda |
+|---|---|---|---|
+| `<html>` | `data-tema` | `"escuro"` (padrão) ou `"papel"` | botão de tema |
+| `<html>` | `data-fonte` | `"1"` a `"5"` (padrão `"3"`) | botões A− e A+ |
+| `<body>` | `modo-foco` | fixa | já vem no HTML |
+| `<body>` | `sumario-aberto` | entra e sai | botão "Sumário", X, fundo escuro, Esc, clique em item |
+
+**Sem "piscar" (US16):** os atributos ficam no `<html>` justamente para um `<script>` curto **no `<head>`, antes do `style.css`**, ler o `localStorage` (`jsl:leitura-tema`, `jsl:leitura-fonte`) e aplicá-los antes de a página aparecer. Esse script precisa de `try/catch` (o `localStorage` pode estar bloqueado).
+
+**Tamanhos de letra (`--leitura-escala`):**
+
+| `data-fonte` | escala | celular → desktop |
+|---|---|---|
+| 1 | 0.88 | ~15 → 17px |
+| 2 | 0.94 | ~16 → 18px |
+| **3 (padrão)** | **1** | **17 → 19px** |
+| 4 | 1.12 | ~19 → 21px |
+| 5 | 1.25 | ~21 → 24px |
+
+No nível 1 o A− recebe `disabled`; no nível 5, o A+.
+
+### 11.2 Tokens e contraste (tema escuro × papel)
+
+| Token | Escuro | Papel | Contraste (escuro / papel) |
+|---|---|---|---|
+| `--leitura-fundo` | `#070A14` | `#F7F1E3` (creme) | - |
+| `--leitura-superficie` | `#0E1324` | `#EFE6D2` | - |
+| `--leitura-codigo-fundo` | `#0A0E1C` | `#EFE6D2` | - |
+| `--leitura-texto` (`--cor-texto`) | `#E8ECF8` | `#1F1A14` | 16:1 / 15.3:1 |
+| `--leitura-texto-suave` | `#9AA3BF` | `#5C5346` | 7.9:1 / 6.7:1 |
+| `--leitura-destaque` (`--cor-verde`) | `#7CFFB2` | `#0A6B3C` | 15.8:1 / 5.9:1 |
+| `--leitura-link` (`--cor-ciano`) | `#00E5FF` | `#005F8F` | 12.8:1 / 6.1:1 |
+| `--cor-erro` | `#FF6B81` | `#B3261E` | 7:1 / 5.8:1 |
+| `--cor-roxo` / `--cor-magenta` | (iguais ao site) | `#6B2FB3` / `#A3127A` | - / 7:1 e 6.4:1 |
+| texto sobre o verde (`--leitura-sobre-destaque`) | `#070A14` | `#FFFDF7` | 15.8:1 / 5.9:1 |
+| `--balao-fundo` / `--balao-texto` | `#141A30` / `#E8ECF8` | `#FFFDF7` / `#1F1A14` | 14.6:1 / 16.9:1 |
+
+**Caixas de destaque** (título na cor, fundo = 8% da cor misturada ao fundo):
+
+| Markdown | Classe | Ícone + título | Escuro | Papel |
+|---|---|---|---|---|
+| `[!TIP]` | `.aviso--dica` | 💡 Dica | `#7CFFB2` | `#0A6B3C` |
+| `[!CAUTION]` | `.aviso--erro` | ⚠️ Erro comum | `#FF6B81` | `#B3261E` |
+| `[!IMPORTANT]` | `.aviso--entrevista` | 🎤 Em entrevista | `#C792FF` | `#6B2FB3` |
+| `[!NOTE]` | `.aviso--palavra` | 📖 Palavra nova | `#00E5FF` | `#005F8F` |
+
+Todas acima de 5:1 sobre o fundo da própria caixa nos dois temas.
+
+**Código (highlight.js, tema próprio: não importar CSS de tema do CDN)**
+
+| Variável | O que pinta (classes `.hljs-*`) | Escuro | Papel |
+|---|---|---|---|
+| `--hl-texto` | texto normal | `#E8ECF8` | `#1F1A14` |
+| `--hl-comentario` | `comment`, `quote` (+ itálico) | `#8B93AD` (6.2:1) | `#6A6152` (4.9:1) |
+| `--hl-palavra` | `keyword`, `selector-tag`, `this` | `#FF7AD9` | `#A3127A` |
+| `--hl-string` | `string`, `regexp` | `#7CFFB2` | `#0A6B3C` |
+| `--hl-numero` | `number`, `literal` (true/false/null) | `#FFB86B` | `#9A4A00` |
+| `--hl-funcao` | `title`, `title.function_`, `title.class_` | `#67E8F9` | `#1D4FA8` |
+| `--hl-tag` | `name` (tag HTML), `selector-class/id/pseudo` | `#67E8F9` | `#005F8F` |
+| `--hl-atributo` | `attr` (HTML e chaves JSON), `attribute`, `property`, `params` | `#C9A2FF` | `#6B2FB3` |
+| `--hl-embutido` | `built_in` (console, document), `type`, `variable` | `#FFD580` | `#7A4F00` |
+| `--hl-pontuacao` | `tag` (`< >`), `punctuation`, `operator`, `meta` | `#9AA3BF` | `#5C5346` |
+
+Todas com 4.5:1 ou mais sobre o fundo do código nos dois temas (a menor é o comentário no papel, ~4.9:1). Bloco sem linguagem: sem `.hljs-*`, fica todo em `--hl-texto`, mesma fonte mono.
+
+### 11.3 Wireframe: `aulas.html` (lista)
+
+```
+[HEADER: logo ............ Início Projetos Equipe Aulas* Sobre]
+// AULAS DO PROFESSOR                         (.rotulo)
+h1 Aulas
+Texto curto: "Leia no seu ritmo..."           (.texto-suave)
+
++--+--------------------------------------------------------+
+|01| JOÃO SACCUCCI LABS   [✓ CONCLUÍDA]                       |  a.card.aula-card.aula-card--concluida
+|██| h2 Como HTML, JS, fetch e JSON se conectam               |  (quadrado "01" preenchido de verde)
+|  | O caminho dos dados do JSON até a tela...                |
+|  | (relógio) 15 min de leitura              Ler aula ->     |
++--+--------------------------------------------------------+
++--+--------------------------------------------------------+
+|02| JOÃO SACCUCCI LABS                                       |  a.card.aula-card (não concluída:
+|  | h2 Linha do tempo, página Sobre e truques de CSS         |   quadrado só com contorno verde)
+|  | ...                                                      |
++--+--------------------------------------------------------+
+(ou .mensagem.mensagem--erro se o JSON falhar)
+[FOOTER]
+```
+Uma coluna em todas as telas (aulas são uma sequência; lista lê melhor que grade), largura máxima 880px. Quadrado do número: 48px no celular, 64px a partir de 640px.
+
+**Menu com 5 itens (todas as páginas):** Início, Projetos, Equipe, **Aulas**, Sobre (nessa ordem). Conferido: a 768px, logo (~230px) + 5 links (~370px) = ~600px, cabe nos 704px úteis; no celular são 5 linhas de ~46px no hambúrguer. Em `aulas.html` e `aula.html`, `aria-current="page"` no link "Aulas".
+
+**HTML exato** (dentro de `<main class="secao container">`):
+
+```html
+<div class="pagina-titulo">
+  <p class="rotulo">// Aulas do professor</p>
+  <h1>Aulas</h1>
+  <p class="texto-suave">Leia no seu ritmo. Marque a aula como concluída no fim de cada uma.</p>
+</div>
+
+<ol class="lista-aulas" id="lista-aulas">
+  <!-- gerado pelo JS, um <li> por aula, já ordenado -->
+  <li class="surgir" style="--atraso: 0ms">
+    <a class="card aula-card aula-card--concluida" href="aula.html?id=joao-saccucci-labs-aula-01">
+      <span class="aula-card-numero" aria-hidden="true">01</span>
+      <div class="aula-card-corpo">
+        <div class="aula-card-topo">
+          <span class="aula-card-projeto">João Saccucci Labs</span>
+          <!-- só nas concluídas: -->
+          <span class="aula-card-status"><span aria-hidden="true">✓</span> Concluída</span>
+        </div>
+        <h2 class="aula-card-titulo"><span class="sr-only">Aula 01: </span>Como HTML, JS, fetch e JSON se conectam</h2>
+        <p class="aula-card-resumo">O caminho dos dados do JSON até a tela...</p>
+        <div class="aula-card-rodape">
+          <span class="aula-card-tempo"><!-- svg relogio.svg -->15 min de leitura</span>
+          <span class="aula-card-ler" aria-hidden="true">Ler aula &rarr;</span>
+        </div>
+      </div>
+    </a>
+  </li>
+</ol>
+```
+- Não concluída: sem a classe `aula-card--concluida` e sem o `span.aula-card-status`.
+- Número com 2 dígitos: `String(numero).padStart(2, "0")`.
+- O `h2` tem "Aula 01:" escondido para leitores de tela, porque o quadrado "01" é `aria-hidden`.
+- Nome do projeto: vem do `projetos.json` (`nome`); se não achar, mostrar o `id` do projeto.
+
+### 11.4 Wireframe: `aula.html` (leitura)
+
+**Desktop (1024px ou mais)**
+```
+███████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  <- .leitura-progresso (3px, fixa no topo)
+[HEADER: logo ............ Início Projetos Equipe Aulas* Sobre]
+                 <- Voltar para as aulas
+SUMÁRIO          [AULA 01] JOÃO SACCUCCI LABS
+| 1. O caminho   h1 Como HTML, JS, fetch e JSON se conectam
+|█2. Os 5 conc.  (relógio) 15 min de leitura
+|   2.1 fetch    ------------------------------------------------
+| 3. Live Ser.   [A− A+] [◐ Tema papel]  ........  [✓ Concluída]   <- .aula-ferramentas (gruda no topo)
+| 4. Exercício
+(sticky)         ▬ (tracinho verde)
+                 h2 1. O caminho dos dados
+                 Texto em 64ch, 19px, entrelinha 1.75...
+                 +-[JS]-----------------------[Copiar]-+
+                 | const r = await fetch(...)          |   <- .codigo
+                 +-------------------------------------+
+                 |💡 DICA                                 <- .aviso.aviso--dica
+                 | Use o Live Server...
+                 [ ] Criar o arquivo...                  <- .checklist
+                 [✓] ~~Abrir no navegador~~
+                 [Limpar exercício]
+                 +-------------------------------------+
+                 | Terminou? [✓ Marcar aula como concluída]   <- .aula-fim
+                 +-------------------------------------+
+                 [<- AULA ANTERIOR ...] [PRÓXIMA AULA -> ...]
+[FOOTER]
+```
+
+**Celular (360px)**
+```
+████████░░░░░░░░░░░░░░░░  (progresso)
+[HEADER: logo        [≡]]
+<- Voltar para as aulas
+[AULA 01] JOÃO SACCUCCI LABS
+h1 Como HTML, JS...
+(relógio) 15 min de leitura
+---------------------------------
+[≡ Sumário] [A−|A+] [◐] ..... [✓]   <- gruda abaixo do header; tema e
+---------------------------------      concluir só com ícone (texto vira sr-only)
+texto (17px, 1 coluna, 328px úteis)
+blocos de código e tabelas rolam por dentro
+
+Gaveta aberta (body.sumario-aberto):
++--------------------+░░░░░░
+| SUMÁRIO        [X] |░░░░░░  <- fundo escuro (.aula-sumario-fundo)
+|█2. Os 5 conceitos  |░░░░░░
+|  2.1 fetch         |░░░░░░
++--------------------+░░░░░░
+```
+
+**HTML exato da página** (o que fica fixo no `aula.html`; o JS preenche os `id`):
+
+```html
+<body class="modo-foco">
+  <div class="leitura-progresso" aria-hidden="true"><div class="leitura-progresso-barra"></div></div>
+
+  <header class="site-header">...igual às outras páginas, com "Aulas" em aria-current="page"...</header>
+
+  <main class="container aula-layout">
+    <aside class="aula-sumario" id="aula-sumario" aria-labelledby="sumario-titulo">
+      <div class="aula-sumario-topo">
+        <p class="aula-sumario-titulo" id="sumario-titulo">Sumário</p>
+        <button class="aula-sumario-fechar" type="button" aria-label="Fechar sumário">&times;</button>
+      </div>
+      <nav aria-labelledby="sumario-titulo">
+        <ol class="sumario-lista" id="sumario-lista">
+          <!-- gerado pelo JS a partir dos ## e ### -->
+          <li class="sumario-item"><a class="sumario-link" href="#1-o-caminho">1. O caminho dos dados</a></li>
+          <li class="sumario-item sumario-item--sub"><a class="sumario-link" href="#fetch">fetch</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <div class="aula-sumario-fundo"></div>
+
+    <article class="aula" id="aula">
+      <a class="voltar" href="aulas.html">&larr; Voltar para as aulas</a>
+
+      <header class="aula-cabecalho">
+        <p class="aula-sobretitulo">
+          <span class="aula-numero">Aula 01</span>
+          <span class="aula-projeto">João Saccucci Labs</span>
+        </p>
+        <h1 class="aula-titulo">Como HTML, JS, fetch e JSON se conectam</h1>
+        <p class="aula-meta"><!-- svg relogio.svg --><span>15 min de leitura</span></p>
+      </header>
+
+      <div class="aula-ferramentas" role="toolbar" aria-label="Ferramentas de leitura">
+        <button class="ferramenta aula-sumario-botao" type="button" aria-controls="aula-sumario" aria-expanded="false">
+          <!-- svg sumario.svg --><span>Sumário</span>
+        </button>
+        <div class="ferramenta-grupo" role="group" aria-label="Tamanho da letra">
+          <button class="ferramenta ferramenta-letra" type="button" id="fonte-menos" aria-label="Diminuir letra">A&minus;</button>
+          <button class="ferramenta ferramenta-letra" type="button" id="fonte-mais" aria-label="Aumentar letra">A+</button>
+        </div>
+        <button class="ferramenta" type="button" id="botao-tema" aria-pressed="false">
+          <!-- svg tema.svg --><span class="ferramenta-texto">Tema papel</span>
+        </button>
+        <span class="ferramenta-espaco"></span>
+        <button class="ferramenta" type="button" data-acao="concluir" aria-pressed="false">
+          <!-- svg concluida.svg --><span class="ferramenta-texto">Concluída</span>
+        </button>
+      </div>
+
+      <div class="aula-conteudo" id="aula-conteudo">
+        <!-- HTML do marked, já tratado pelo JS (seção 11.5) -->
+      </div>
+
+      <section class="aula-fim" aria-labelledby="aula-fim-titulo">
+        <p class="aula-fim-texto" id="aula-fim-titulo">Terminou de estudar esta aula?</p>
+        <button class="btn aula-concluir" type="button" data-acao="concluir" aria-pressed="false">
+          <!-- svg concluida.svg --><span>Marcar aula como concluída</span>
+        </button>
+      </section>
+
+      <nav class="aula-navegacao" aria-label="Outras aulas do projeto">
+        <a class="aula-nav aula-nav--anterior" href="aula.html?id=...">
+          <span class="aula-nav-rotulo">&larr; Aula anterior</span>
+          <span class="aula-nav-titulo">Aula 01 · Como HTML, JS...</span>
+        </a>
+        <a class="aula-nav aula-nav--proxima" href="aula.html?id=...">
+          <span class="aula-nav-rotulo">Próxima aula &rarr;</span>
+          <span class="aula-nav-titulo">Aula 02 · Linha do tempo...</span>
+        </a>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="site-footer">...</footer>
+</body>
+```
+
+Regras para o dev:
+- **Não usar `.surgir` dentro da `aula.html`.** Ele deixa um `transform` no elemento, e isso quebra o balão do glossário no celular (que usa `position: fixed`).
+- **Os dois botões `data-acao="concluir"`** (o compacto na barra e o grande no fim) mostram o mesmo estado: o JS atualiza os dois juntos. Estado concluído do botão grande:
+  ```html
+  <button class="btn aula-concluir" type="button" data-acao="concluir" aria-pressed="true">
+    <!-- svg concluida.svg --><span>Aula concluída <span aria-hidden="true">✓</span></span>
+    <span class="aula-concluir-desfazer">Desmarcar</span>
+  </button>
+  ```
+- **Botão de tema:** o texto fica sempre "Tema papel"; o que muda é `aria-pressed` (`true` = papel ligado).
+- **Só um link de navegação:** mostrar só o que existir. Sem nenhum, remover o `<nav>`.
+- **Primeiro `#` do `.md`** (`# Aula 01 ...`) é escondido pelo CSS (`.aula-conteudo > h1:first-child`), porque o título já está no cabeçalho.
+- **Aula não encontrada / erro:** colocar `hidden` no `.aula-sumario`, na `.aula-ferramentas` e no `.aula-sumario-fundo`, esvaziar o resto do `article` e mostrar:
+  ```html
+  <div class="mensagem mensagem--erro aula-mensagem" role="alert">
+    <p>Aula não encontrada.</p>
+    <a href="aulas.html">&larr; Ver todas as aulas</a>
+  </div>
+  ```
+  Mesma estrutura para "Não foi possível carregar a aula" e para o `marked` fora do ar (o link aponta para o `.md` original). "Carregando aula..." usa só `<div class="mensagem aula-mensagem">`.
+
+### 11.5 Componentes gerados pelo JS dentro de `.aula-conteudo`
+
+**Bloco de código** (embrulhar cada `<pre>`; a linguagem vem da classe `language-xxx` do `<code>`; sem linguagem, não mostrar o `span.codigo-linguagem`):
+```html
+<div class="codigo">
+  <div class="codigo-topo">
+    <span class="codigo-linguagem">js</span>
+    <button class="codigo-copiar" type="button"><!-- svg copiar.svg --><span>Copiar</span></button>
+    <span class="sr-only" role="status"></span>
+  </div>
+  <pre tabindex="0"><code class="hljs language-js">...</code></pre>
+</div>
+```
+- Copiou: texto do botão vira "Copiado!", `data-estado="copiado"`, e o `span[role=status]` recebe "Código copiado". Depois de ~2s, volta tudo (remove `data-estado`, esvazia o status).
+- Falhou: "Não foi possível copiar" e `data-estado="erro"`.
+- Copiar o `textContent` do `<code>` (nunca do `div.codigo`).
+- `tabindex="0"` no `<pre>`: quem usa teclado consegue rolar o código na horizontal.
+
+**Caixa de destaque** (blockquote cujo primeiro parágrafo começa com `[!TIP]`, etc.; tirar o marcador do texto):
+```html
+<div class="aviso aviso--dica" role="note">
+  <p class="aviso-titulo"><span class="aviso-icone" aria-hidden="true">💡</span>Dica</p>
+  <p>Use o Live Server para testar o fetch no computador.</p>
+</div>
+```
+Trocar a classe e o par ícone/título conforme a tabela da seção 11.2. Blockquote sem `[!...]` fica como está (vira citação comum, em itálico com barra cinza).
+
+**Termo do glossário** (`[[fetch]]` fora de código e existente no glossário; `id` único por termo na página):
+```html
+<span class="glossario">
+  <button class="glossario-termo" type="button" aria-expanded="false" aria-describedby="glossario-1">fetch</button>
+  <span class="glossario-balao" id="glossario-1" role="tooltip">
+    <span class="glossario-traducao">buscar</span>
+    <span class="glossario-explicacao">Função do JavaScript que busca um arquivo ou endereço e devolve a resposta.</span>
+  </span>
+</span>
+```
+- Abrir = pôr `.is-aberto` no `span.glossario` e `aria-expanded="true"` no botão. Antes, fechar qualquer outro aberto (um por vez).
+- Abre com: `mouseenter` e `focusin` no `.glossario`, e clique/toque no botão (alterna).
+- Fecha com: `mouseleave`/`focusout` do `.glossario`, tecla Esc, clique/toque fora.
+- O balão fica dentro do `.glossario`, então o mouse pode ir até ele sem fechar (a "ponte" de 10px é CSS).
+- Sem `explicacao`: não criar o `span.glossario-explicacao`. Termo fora do glossário: só o texto, sem nada em volta.
+- Desktop: balão logo abaixo da palavra (até 18rem). Celular (menos de 640px): faixa fixa no pé da tela.
+- Limitação conhecida: dentro de uma tabela que rola, no desktop o balão pode ser cortado pela borda da tabela.
+
+**Checklist** (cada `ul` com itens `- [ ]`/`- [x]`; o `marked` gera `<li><input disabled type="checkbox"> texto</li>`):
+```html
+<ul class="checklist">
+  <li class="checklist-item">
+    <label class="checklist-rotulo">
+      <input class="checklist-caixa" type="checkbox">
+      <span class="checklist-texto">Criar o arquivo <code>aulas.json</code></span>
+    </label>
+  </li>
+</ul>
+<button class="btn btn-secundario checklist-limpar" type="button">Limpar exercício</button>
+```
+- Tirar o `disabled` que o `marked` coloca. O `<label>` em volta dá o nome acessível e deixa a linha inteira clicável.
+- Um único "Limpar exercício", logo depois do **último** `ul.checklist` da aula.
+- Visual: caixa de ~24px com borda verde; marcada fica verde com "certo"; o texto fica riscado e na cor suave (continua AA). A linha marcada fica tracejada e sem fundo.
+
+**Tabela:** embrulhar cada `<table>`:
+```html
+<div class="tabela-rolagem" tabindex="0" role="region" aria-label="Tabela"> <table>...</table> </div>
+```
+Se o JS não embrulhar, o CSS faz a própria tabela rolar (plano B).
+
+**Títulos:** cada `h2`/`h3` ganha `id` (o mesmo que vai no `href` do sumário). O CSS já tem `scroll-margin-top` para o título não ficar atrás do header + barra.
+
+**Item ativo do sumário:** `aria-current="true"` no `a.sumario-link` da seção lida (tirar dos outros).
+
+**Barra de progresso:** o JS só muda `style="--progresso: 0.42"` (0 a 1) na `.leitura-progresso`. 0 = topo do `.aula-conteudo` no topo da tela; 1 = fim do `.aula-conteudo` visível.
+
+**Gaveta do sumário (abaixo de 1024px):**
+- Abrir: `body.classList.add("sumario-aberto")`, `aria-expanded="true"` no `.aula-sumario-botao`, foco no botão X.
+- Fechar (X, clique no `.aula-sumario-fundo`, Esc, clique num item): tirar a classe, `aria-expanded="false"` e devolver o foco ao botão "Sumário" (menos quando foi clique num item: aí o foco segue para a seção).
+- Fechada, a gaveta fica com `visibility: hidden`: o Tab não entra nela.
+
+### 11.6 Tipografia da leitura
+
+| Elemento | Tamanho | Detalhe |
+|---|---|---|
+| `h1.aula-titulo` | 28 → 40px (`clamp`) | Exo 2 700, fixo (não muda com A±) |
+| texto | 17 → 19px × escala | Space Grotesk 400, entrelinha 1.75 |
+| `h2` | 1.5em | Space Grotesk 700, tracinho verde de 2.5rem × 3px em cima, 2.2em de espaço antes |
+| `h3` | 1.2em | 1.8em de espaço antes |
+| código em bloco | 0.84em | JetBrains Mono, entrelinha 1.6 |
+| código inline | 0.86em | mono, fundo de superfície e borda fina |
+| tabela | 0.9em | cabeçalho com fundo, linhas zebradas |
+| rótulos (AULA 01, SUMÁRIO, DICA) | 12px | mono maiúsculo, espaçado |
+
+### 11.7 Celular, teclado e movimento
+
+- **360px:** coluna de 328px. `pre` e `.tabela-rolagem` rolam por dentro; código inline, títulos e links longos quebram (`overflow-wrap`). A barra de ferramentas cabe em uma linha (~305px: Sumário com texto, A−/A+, tema e concluir só com ícone); se não couber, ela quebra linha em vez de vazar.
+- **Toque:** botões da barra, X da gaveta, itens do sumário e linhas do checklist têm 44px de altura. "Copiar" tem 36px com mouse e 44px em tela de toque.
+- **Foco visível:** o contorno ciano global (`:focus-visible`) vale para tudo; no papel ele vira `#005F8F` (6:1). No checklist, o contorno aparece em volta da linha inteira.
+- **Movimento reduzido:** a regra geral (seção 21) já desliga transições; a seção 36 garante que a gaveta e a troca de tema sejam instantâneas. A rolagem até a seção deve usar `behavior: "auto"` no JS quando `prefers-reduced-motion` estiver ligado (o `scroll-behavior` do CSS já fica `auto`).
+- **Alto contraste do Windows:** o checkbox volta a ser o nativo (`forced-colors`).
