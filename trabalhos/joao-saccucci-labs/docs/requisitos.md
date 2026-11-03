@@ -411,14 +411,14 @@ Como visitante, quero ver que existe um agente que testa o site antes de cada en
 
 **US27: Relatório de teste em cada entrega** (tarefa do testador)
 Como João, quero um relatório de teste antes de cada entrega, para saber o que foi conferido e o que ainda falta corrigir.
-- [ ] A partir da Etapa 5, antes de cada entrega, o testador confere as 5 áreas (celular a 360px, teclado, acessibilidade, contraste e erros) e escreve o relatório em `docs/testes/etapa-<N>.md`, seguindo a estrutura acima.
-- [ ] O primeiro relatório é o da própria Etapa 5 (`docs/testes/etapa-5.md`), testando as US25, US26, US28 e US29.
-- [ ] Cada problema tem passos para reproduzir, resultado esperado, resultado obtido, gravidade e status.
-- [ ] Com problema de gravidade "alta", o resultado é "Reprovado" e o trabalho volta para o dev. O professor só começa depois de o relatório estar "Aprovado" ou "Aprovado com pendências".
-- [ ] `data/projetos.json` ganha um item em `trabalhos` com `"agente": "testador"`, um resumo de 1 a 2 frases e o entregável `{ "titulo": "Relatório de teste — Etapa 5", "url": "docs/testes/etapa-5.md" }`, além de um evento na `linhaDoTempo`.
-- [ ] No detalhe do projeto, o relatório aparece como entregável do testador, igual aos entregáveis dos outros agentes, e o link abre o arquivo no site publicado.
-- [ ] O relatório é legível abrindo o `.md` no GitHub.
-- [ ] O relatório não tem senhas, chaves, dados pessoais nem nada da pasta de carreira.
+- [x] A partir da Etapa 5, antes de cada entrega, o testador confere as 5 áreas (celular a 360px, teclado, acessibilidade, contraste e erros) e escreve o relatório em `docs/testes/etapa-<N>.md`, seguindo a estrutura acima.
+- [x] O primeiro relatório é o da própria Etapa 5 (`docs/testes/etapa-5.md`), testando as US25, US26, US28 e US29.
+- [x] Cada problema tem passos para reproduzir, resultado esperado, resultado obtido, gravidade e status.
+- [x] Com problema de gravidade "alta", o resultado é "Reprovado" e o trabalho volta para o dev. O professor só começa depois de o relatório estar "Aprovado" ou "Aprovado com pendências".
+- [x] `data/projetos.json` ganha um item em `trabalhos` com `"agente": "testador"`, um resumo de 1 a 2 frases e o entregável `{ "titulo": "Relatório de teste — Etapa 5", "url": "docs/testes/etapa-5.md" }`, além de um evento na `linhaDoTempo`.
+- [x] No detalhe do projeto, o relatório aparece como entregável do testador, igual aos entregáveis dos outros agentes, e o link abre o arquivo no site publicado.
+- [x] O relatório é legível abrindo o `.md` no GitHub.
+- [x] O relatório não tem senhas, chaves, dados pessoais nem nada da pasta de carreira.
 
 **US28: Mentor de carreira na Equipe como agente de apoio**
 Como visitante, quero conhecer o mentor de carreira na página Equipe, para entender que o João também planeja os estudos e a carreira com a ajuda da equipe.
@@ -445,7 +445,7 @@ Como visitante, quero ver na página inicial que o mentor apoia o João sem faze
 - [x] Os avatares novos têm texto `alt` em todas as páginas em que aparecem.
 - [x] Nada do trabalho do mentor (pasta `C:\Projetos\claude\carreira\`) entra no repositório.
 - [x] O `README.md` do site é atualizado com a equipe de 6 agentes e o novo fluxo.
-- [ ] Funciona publicado no GitHub Pages, com caminhos relativos.
+- [x] Funciona publicado no GitHub Pages, com caminhos relativos.
 
 **Nota: tarefa fora do site** (feita com o João, sem user story)
 - Criar `.claude/agents/testador.md` e `.claude/agents/mentor-carreira.md`.
