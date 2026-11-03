@@ -2,7 +2,7 @@
 
 ## 1. Visão do produto
 
-Site da **João Saccucci Labs**, uma empresa em que os funcionários são agentes de IA (product-owner, artista, dev, professor) e o João é o chefe. No começo o site serve como painel pessoal para acompanhar os projetos. Depois vira portfólio público para recrutadores, mostrando o que foi construído, quem fez cada parte e como o trabalho aconteceu. Por isso precisa ter cara profissional desde o início.
+Site da **João Saccucci Labs**, uma empresa em que os funcionários são agentes de IA (product-owner, artista, dev, testador, professor e, como apoio fora dos projetos, um mentor de carreira) e o João é o chefe. No começo o site serve como painel pessoal para acompanhar os projetos. Depois vira portfólio público para recrutadores, mostrando o que foi construído, quem fez cada parte e como o trabalho aconteceu. Por isso precisa ter cara profissional desde o início.
 
 **Restrições técnicas**
 - HTML, CSS e JavaScript puros, sem framework e sem back-end.
@@ -23,7 +23,7 @@ Site da **João Saccucci Labs**, uma empresa em que os funcionários são agente
 **US01: Página Início**
 Como visitante (recrutador ou o próprio João), quero ver uma apresentação da João Saccucci Labs logo ao abrir o site, para entender rapidamente o que é a empresa e como ela funciona.
 - [ ] A página mostra o nome "João Saccucci Labs" e um texto curto (até 3 frases) explicando o conceito: uma empresa de agentes de IA chefiada pelo João.
-- [ ] Mostra o fluxo de trabalho na ordem PO → artista → dev → professor.
+- [ ] Mostra o fluxo de trabalho na ordem PO → artista → dev → professor. *(Na Etapa 5, o fluxo passa a ser PO → artista → dev → testador → professor: ver US26 e US29.)*
 - [ ] Tem links ou botões que levam para as seções Projetos e Equipe.
 - [ ] Há um menu de navegação presente em todas as páginas, com links para as seções disponíveis.
 - [ ] No celular, o menu continua usável (pode virar um menu recolhível) e nada exige rolagem horizontal.
@@ -46,7 +46,7 @@ Como visitante, quero ver o detalhe de um projeto com o trabalho de cada agente,
 
 **US04: Equipe**
 Como visitante, quero conhecer cada agente da empresa, para entender o papel de cada um e em quais projetos trabalhou.
-- [ ] A página lista os 4 agentes a partir de `data/agentes.json`.
+- [ ] A página lista os 4 agentes a partir de `data/agentes.json`. *(Na Etapa 5 passam a ser 6, e os agentes de apoio mostram um texto no lugar da lista de projetos: ver US28.)*
 - [ ] Cada perfil mostra avatar SVG, nome, papel, descrição curta e a cor própria do agente.
 - [ ] Cada perfil lista os projetos em que o agente trabalhou. Essa lista é calculada a partir de `projetos.json`, não digitada à mão.
 - [ ] Cada projeto listado tem um link para o detalhe dele.
@@ -65,6 +65,8 @@ Como recrutador, quero conhecer o João, o chefe da empresa, para saber quem ele
 - [x] A página mostra uma frase de apresentação, o que o João estuda e os links de GitHub, LinkedIn e e-mail.
 - [x] Os textos ficam como placeholder (exemplo: "[Sua frase aqui]") até o João enviar as informações.
 - [x] Os links de GitHub e LinkedIn abrem em nova aba, e o de e-mail usa `mailto:`.
+
+*(Na Etapa 5, o cartão do Sobre ganha o campo "Estudando agora": ver US25.)*
 
 ### Etapa 3 — Tela de leitura das aulas
 
@@ -358,6 +360,98 @@ Como João, quero aulas curtas sobre um conceito por vez, cobrindo o que foi fei
 - [x] Os botões têm texto visível; o "▶" é decorativo para leitores de tela.
 - [x] Funciona publicado no GitHub Pages, com caminhos relativos.
 
+### Etapa 5 — Equipe nova e ajuste no Sobre
+
+**Contexto.** A equipe ganha dois agentes. O **Testador** (QA) entra no fluxo dos projetos, entre o dev e o professor: antes de cada entrega, ele confere o site e escreve um relatório de teste. O **Mentor de carreira** ajuda o João a planejar os estudos e a carreira: aparece na página Equipe, mas não participa dos projetos. Além disso, o cartão da página Sobre troca o campo "Acesso" por "Estudando agora".
+
+**Novo fluxo de trabalho**
+- PO → artista → dev → **testador** → professor.
+- O mentor de carreira fica **fora** do fluxo. Ele é um agente de "apoio": trabalha direto com o João, não com os projetos.
+- Se o testador achar um problema que quebra um critério de aceite, o trabalho volta para o dev antes da entrega, e o testador confere de novo. Problemas pequenos (que não quebram critério de aceite) podem ficar como pendências anotadas no relatório.
+
+**Privacidade (o repositório é público)**
+- O trabalho do mentor (LinkedIn, currículo, entrevistas simuladas, planos de estudo) fica em `C:\Projetos\claude\carreira\`, **fora** do repositório. Nada disso entra no site, nos JSON, nos relatórios de teste ou no histórico do Git.
+- No site, o mentor aparece só com nome, avatar, cor e uma descrição neutra.
+- O mentor não tem `trabalhos` nem eventos de `linhaDoTempo` em `data/projetos.json`.
+
+**Relatório de teste (guia para o testador)**
+- Um arquivo por etapa, dentro da pasta do site: `docs/testes/etapa-<N>.md` (ex.: `docs/testes/etapa-5.md`). Assim ele fica acessível no site publicado, como `docs/requisitos.md`.
+- Se a etapa for testada de novo depois de uma correção, o mesmo arquivo ganha uma nova rodada ("Rodada 2"), sem apagar a anterior.
+- Prints, se houver, ficam em `docs/testes/img/` e têm texto `alt`.
+- Estrutura do arquivo:
+  1. `# Relatório de teste — Etapa N`
+  2. Data, o que foi testado (páginas e user stories) e onde (navegadores, Live Server e/ou GitHub Pages).
+  3. `## Resultado`: "Aprovado", "Aprovado com pendências" ou "Reprovado", com 1 ou 2 frases.
+  4. `## Verificações`: tabela com as 5 áreas e o resultado em texto ("Passou" ou "Falhou") e uma observação curta:
+     - Celular a 360px (sem rolagem horizontal, nada cortado, menu usável).
+     - Teclado (tudo alcançável com Tab, foco visível, Esc fecha o que abre, ordem lógica).
+     - Acessibilidade (textos `alt`, rótulos de botões, títulos em ordem, estados anunciados, `prefers-reduced-motion`).
+     - Contraste (AA para texto e controles, nos dois temas onde houver tema papel).
+     - Erros (console sem erros, links e arquivos sem 404, mensagens amigáveis quando um JSON falha).
+  5. `## Critérios de aceite`: checklist com os critérios das user stories da etapa, marcados `[x]` quando conferidos e aprovados.
+  6. `## Problemas encontrados`: para cada problema, página, passos para reproduzir, resultado esperado, resultado obtido, gravidade ("alta" quando quebra critério de aceite, "baixa" nos outros casos) e status ("corrigido" ou "pendente"). Se não houver, escrever "Nenhum problema encontrado."
+
+**US25: Cartão do Sobre com o que estou estudando**
+Como recrutador, quero ver o que o João está estudando agora, para entender o momento dele e em quais linguagens ele está investindo.
+- [ ] No cartão de identidade de `sobre.html`, o campo "Acesso: Nível máximo" é removido.
+- [ ] No lugar dele (primeiro item da ficha), aparece o campo "Estudando agora" com o valor "JavaScript e Java", com o mesmo estilo dos campos "Base" e "Foco".
+- [ ] O texto fica escrito direto no HTML, como o resto do cartão (sem JSON e sem JS).
+- [ ] O campo continua dentro da lista `dl`/`dt`/`dd`, então o leitor de tela lê "Estudando agora: JavaScript e Java".
+- [ ] A 360px, o valor pode quebrar linha, sem rolagem horizontal e sem desalinhar os outros campos.
+- [ ] O bloco "Unidades sob comando" passa a mostrar os 6 agentes (os 4 atuais, o testador e o mentor, com avatar e cor de cada um) e o título muda para "Chefe de 6 unidades de IA". *(Ver pergunta 1 na seção 6.)*
+
+**US26: Testador na equipe e no fluxo**
+Como visitante, quero ver que existe um agente que testa o site antes de cada entrega, para confiar na qualidade do que foi construído.
+- [ ] `data/agentes.json` tem o agente `testador`, com nome, papel (sugestão: "Garante a qualidade (QA): testa celular, teclado, acessibilidade, contraste e erros antes de cada entrega."), cor e avatar, seguindo o modelo da seção 3.
+- [ ] O testador tem avatar SVG próprio em `img/agentes/testador.svg` e cor própria, diferente das cores dos outros agentes e com contraste AA sobre o fundo escuro (tarefa do artista).
+- [ ] O fluxo de `index.html` mostra 5 etapas na ordem Product Owner → Artista → Dev → Testador → Professor, com o avatar e a cor do testador (mesma cor de `agentes.json`).
+- [ ] A 360px, o fluxo com 5 etapas não causa rolagem horizontal (pode quebrar em linhas ou ficar na vertical, a critério do artista).
+- [ ] A página Equipe mostra o card do testador igual aos outros agentes do fluxo, com a lista de projetos calculada a partir de `projetos.json`.
+- [ ] O detalhe do projeto e a linha do tempo mostram o testador com o nome e a cor dele, sem mudar o JS (eles já leem `agentes.json`).
+
+**US27: Relatório de teste em cada entrega** (tarefa do testador)
+Como João, quero um relatório de teste antes de cada entrega, para saber o que foi conferido e o que ainda falta corrigir.
+- [ ] A partir da Etapa 5, antes de cada entrega, o testador confere as 5 áreas (celular a 360px, teclado, acessibilidade, contraste e erros) e escreve o relatório em `docs/testes/etapa-<N>.md`, seguindo a estrutura acima.
+- [ ] O primeiro relatório é o da própria Etapa 5 (`docs/testes/etapa-5.md`), testando as US25, US26, US28 e US29.
+- [ ] Cada problema tem passos para reproduzir, resultado esperado, resultado obtido, gravidade e status.
+- [ ] Com problema de gravidade "alta", o resultado é "Reprovado" e o trabalho volta para o dev. O professor só começa depois de o relatório estar "Aprovado" ou "Aprovado com pendências".
+- [ ] `data/projetos.json` ganha um item em `trabalhos` com `"agente": "testador"`, um resumo de 1 a 2 frases e o entregável `{ "titulo": "Relatório de teste — Etapa 5", "url": "docs/testes/etapa-5.md" }`, além de um evento na `linhaDoTempo`.
+- [ ] No detalhe do projeto, o relatório aparece como entregável do testador, igual aos entregáveis dos outros agentes, e o link abre o arquivo no site publicado.
+- [ ] O relatório é legível abrindo o `.md` no GitHub.
+- [ ] O relatório não tem senhas, chaves, dados pessoais nem nada da pasta de carreira.
+
+**US28: Mentor de carreira na Equipe como agente de apoio**
+Como visitante, quero conhecer o mentor de carreira na página Equipe, para entender que o João também planeja os estudos e a carreira com a ajuda da equipe.
+- [ ] `data/agentes.json` tem o agente `mentor-carreira`, com nome "Mentor de carreira", papel "Ajuda o João a planejar os estudos e a carreira.", cor, avatar e `"apoio": true` (ver seção 3).
+- [ ] O mentor tem avatar SVG próprio em `img/agentes/mentor-carreira.svg` e cor própria, diferente das cores dos outros agentes e com contraste AA sobre o fundo escuro (tarefa do artista).
+- [ ] Na página Equipe, o card de um agente com `"apoio": true` tem um selo visível com o texto "Apoio" (não só cor ou ícone).
+- [ ] No lugar do bloco "Projetos", o card de apoio mostra o título "Atuação" e o texto "Agente de apoio: trabalha direto com o João, fora dos projetos." Ele **nunca** mostra "Nenhum projeto ainda" nem uma lista vazia.
+- [ ] Mesmo que, por engano, exista um trabalho do mentor em `projetos.json`, o card de apoio continua mostrando o texto de apoio (o campo `apoio` manda).
+- [ ] Os cards dos agentes do fluxo continuam como antes. Agente sem o campo `apoio` é tratado como agente do fluxo.
+- [ ] Os cards aparecem na ordem de `agentes.json`, com o mentor por último. Os cards continuam alinhados entre si (como na Etapa 1, com subgrid), mesmo com o bloco "Atuação" diferente.
+- [ ] O site não mostra nem tem links para nada do trabalho do mentor (currículo, LinkedIn revisado, entrevistas etc.).
+
+**US29: Mentor fora do fluxo na página inicial**
+Como visitante, quero ver na página inicial que o mentor apoia o João sem fazer parte do fluxo dos projetos, para entender o papel de cada agente.
+- [ ] Logo abaixo do fluxo, `index.html` mostra um bloco separado com título em texto (sugestão: "Fora do fluxo: apoio ao chefe"), com o avatar, o nome e a descrição neutra do mentor, na cor dele.
+- [ ] O bloco fica visualmente separado do fluxo, sem seta ou linha ligando o mentor às etapas, e com o selo "Apoio" em texto.
+- [ ] O bloco fica escrito direto no HTML, como o fluxo, com a mesma cor de `agentes.json`.
+- [ ] O avatar tem texto `alt` (ex.: "Avatar do Mentor de carreira").
+- [ ] A 360px não há rolagem horizontal, e a animação de entrada respeita `prefers-reduced-motion`.
+
+**Requisitos gerais da Etapa 5**
+- [ ] Nenhuma biblioteca nova. As mudanças são em HTML, CSS, JS puro e JSON.
+- [ ] Tudo funciona a 360px sem rolagem horizontal, por teclado (foco visível), com contraste AA e respeitando `prefers-reduced-motion`.
+- [ ] Os avatares novos têm texto `alt` em todas as páginas em que aparecem.
+- [ ] Nada do trabalho do mentor (pasta `C:\Projetos\claude\carreira\`) entra no repositório.
+- [ ] O `README.md` do site é atualizado com a equipe de 6 agentes e o novo fluxo.
+- [ ] Funciona publicado no GitHub Pages, com caminhos relativos.
+
+**Nota: tarefa fora do site** (feita com o João, sem user story)
+- Criar `.claude/agents/testador.md` e `.claude/agents/mentor-carreira.md`.
+- Atualizar o "Fluxo de trabalho" do `CLAUDE.md` da raiz para PO → artista → dev → testador → professor, com o mentor de carreira fora do fluxo.
+- Lembrete: `.claude/agents/` fica no repositório público. O arquivo do mentor descreve só o papel dele e onde ele trabalha, sem dados pessoais.
+
 ### Requisitos gerais (todas as etapas)
 - [ ] O layout funciona de 360px até telas de desktop.
 - [ ] As animações são suaves e respeitam `prefers-reduced-motion`.
@@ -384,6 +478,36 @@ Como João, quero aulas curtas sobre um conceito por vez, cobrindo o que foi fei
 ]
 ```
 As cores acima são sugestões. O artista define as finais.
+
+**A partir da Etapa 5:** entram dois agentes e o campo opcional `apoio`.
+```json
+[
+  { "id": "product-owner", "...": "..." },
+  { "id": "artista", "...": "..." },
+  { "id": "dev", "...": "..." },
+  {
+    "id": "testador",
+    "nome": "Testador",
+    "papel": "Garante a qualidade (QA): testa celular, teclado, acessibilidade, contraste e erros antes de cada entrega.",
+    "cor": "<definida pelo artista>",
+    "avatar": "img/agentes/testador.svg"
+  },
+  { "id": "professor", "...": "..." },
+  {
+    "id": "mentor-carreira",
+    "nome": "Mentor de carreira",
+    "papel": "Ajuda o João a planejar os estudos e a carreira.",
+    "cor": "<definida pelo artista>",
+    "avatar": "img/agentes/mentor-carreira.svg",
+    "apoio": true
+  }
+]
+```
+**Regras dos campos**
+- A ordem do arquivo é a ordem de exibição na página Equipe: agentes do fluxo na ordem do fluxo, e agentes de apoio no fim.
+- `apoio`: opcional. `true` = agente de apoio, fora do fluxo dos projetos (mostra o selo "Apoio" e o texto de atuação no lugar da lista de projetos). Sem o campo, ou com `false` = agente do fluxo (comportamento de antes).
+- Agente com `"apoio": true` não aparece em `trabalhos[].agente` nem em `linhaDoTempo[].agente`.
+- `cor`: diferente da cor dos outros agentes e com contraste AA sobre o fundo escuro.
 
 ### `data/projetos.json` (dados iniciais reais)
 ```json
@@ -421,6 +545,7 @@ As cores acima são sugestões. O artista define as finais.
 - O campo `linhaDoTempo` já entra nos dados na Etapa 1, mas só aparece na tela na Etapa 2.
 - **A partir da Etapa 3:** entregáveis que são aulas usam `aula.html?id=<id da aula>` como `url`. Exemplo: `{ "titulo": "Aula 01", "url": "aula.html?id=joao-saccucci-labs-aula-01" }`.
 - **A partir da Etapa 4:** os entregáveis do professor são um link por módulo. Exemplo: `{ "titulo": "Aulas — Módulo 1", "url": "aulas.html#joao-saccucci-labs-m1" }`.
+- **A partir da Etapa 5:** o testador tem um item em `trabalhos` por etapa testada, com o relatório como entregável. Exemplo: `{ "titulo": "Relatório de teste — Etapa 5", "url": "docs/testes/etapa-5.md" }`. Agentes de apoio (`"apoio": true`) não entram em `trabalhos` nem em `linhaDoTempo`.
 
 ### `data/aulas.json` (Etapa 3 — substituído na Etapa 4)
 ```json
@@ -506,6 +631,11 @@ O arquivo deixa de ser uma lista e passa a ser um objeto com `modulos` e `aulas`
 
 Observação: o checklist e o quiz são salvos pela ordem dos itens. Se o professor mudar a ordem ou a quantidade de itens ou perguntas de uma aula, as marcações antigas daquela aula podem ficar desalinhadas. Isso é aceito. Um índice salvo que não existe mais (ex.: alternativa 4 numa pergunta com 3) é ignorado. Chaves das aulas antigas podem ficar no navegador sem efeito; não é preciso apagá-las.
 
+### Relatórios de teste (Etapa 5)
+- Pasta: `docs/testes/`, dentro da pasta do site.
+- Nome do arquivo: `etapa-<N>.md` (ex.: `etapa-5.md`). Prints opcionais em `docs/testes/img/`.
+- Estrutura: ver "Relatório de teste (guia para o testador)" na Etapa 5.
+
 ---
 
 ## 4. Priorização
@@ -517,12 +647,15 @@ Observação: o checklist e o quiz são salvos pela ordem dos itens. Se o profes
 | **Etapa 3** | US07 Lista de aulas e item no menu, US08 Link pelo detalhe do projeto, US09 Tela de leitura (modo foco), US10 Sumário e progresso, US11 Código colorido e Copiar, US12 Caixas de destaque, US13 Glossário, US14 Checklist do exercício, US15 Aula concluída, US16 Letra e tema papel, US17 Reescrita das Aulas 01 e 02 (substituída pela US24), além dos requisitos gerais da Etapa 3 |
 | **Etapa 4 — essencial** | US18 Módulos, US19 Em resumo, US20 Linhas numeradas e linha por linha, US21 Rodar, US24 Novas aulas, além dos requisitos gerais da Etapa 4 |
 | **Etapa 4 — logo em seguida** | US22 Editar e Restaurar, US23 Quiz |
+| **Etapa 5** | US25 Cartão do Sobre, US26 Testador na equipe e no fluxo, US27 Relatório de teste, US28 Mentor na Equipe (apoio), US29 Mentor fora do fluxo no Início, além dos requisitos gerais da Etapa 5 e da nota "tarefa fora do site" |
 
 Ordem sugerida dentro da Etapa 1: JSON → Lista de projetos → Detalhe → Equipe → Início.
 
 Ordem sugerida dentro da Etapa 3: `aulas.json` e `glossario.json` → US09 Tela de leitura → US07 e US08 → US11 e US12 → US10 → US14 e US15 → US16 → US13. Em paralelo, o professor faz a US17 seguindo a tabela de sintaxe acima, para o dev já testar com as aulas reais.
 
 Ordem sugerida dentro da Etapa 4: o professor escreve primeiro **2 aulas-piloto** (uma com `html rodar` e quiz, outra com `js rodar`) e o novo `aulas.json` → dev faz US18 → US19 → US20 → US21 → US22 → US23 → o João lê as aulas-piloto e aprova o formato → o professor escreve as demais aulas (US24) → as aulas antigas são removidas.
+
+Ordem sugerida dentro da Etapa 5: criar os arquivos dos agentes e atualizar o `CLAUDE.md` (tarefa fora do site) → artista define as 2 cores, os 2 avatares, o selo "Apoio" e o fluxo com 5 etapas → dev atualiza `agentes.json` → US25 → US26 → US28 → US29 → testador faz a US27 testando a própria Etapa 5 → dev corrige o que for "alta" → professor explica.
 
 ---
 
@@ -542,3 +675,13 @@ Ordem sugerida dentro da Etapa 4: o professor escreve primeiro **2 aulas-piloto*
 - Recuperar o progresso das aulas antigas nas novas.
 - Sincronizar o progresso entre aparelhos ou navegadores (o progresso fica só no navegador de quem lê).
 - Glossário em página própria ou glossário escrito dentro do `.md` da aula.
+- (Etapa 5) Testes automatizados, ferramentas de teste instaladas (Playwright, Lighthouse CI etc.) ou integração contínua. O teste do testador é manual, com o navegador e as ferramentas do próprio navegador.
+- (Etapa 5) Relatórios de teste das Etapas 1 a 4 (os relatórios começam na Etapa 5).
+- (Etapa 5) Qualquer conteúdo do mentor de carreira no site ou no repositório (currículo, LinkedIn, entrevistas simuladas, planos de estudo), página própria do mentor ou "Estudando agora" vindo de JSON.
+
+---
+
+## 6. Decisões do João (Etapa 5)
+1. O mentor entra no bloco "Unidades sob comando" da página Sobre: o título vira "Chefe de 6 unidades de IA", com 6 mini avatares.
+2. Os relatórios de teste começam na Etapa 5. Não há relatório das Etapas 1 a 4.
+3. O nome no site é "Testador". A sigla QA aparece só no papel ("Garante a qualidade (QA): ...").
