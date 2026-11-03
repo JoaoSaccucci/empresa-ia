@@ -39,7 +39,7 @@ Cada entrega vira um commit, e o site no GitHub Pages se atualiza sozinho.
 
 | Projeto | O que tem | Pasta |
 |---|---|---|
-| **Site João Saccucci Labs** | Início, Projetos (com linha do tempo), Equipe, Aulas (tela de leitura com sumário, glossário, código colorido e exercícios) e Sobre | [`trabalhos/joao-saccucci-labs`](trabalhos/joao-saccucci-labs/) |
+| **Site João Saccucci Labs** | Início, Projetos (com linha do tempo), Equipe, Aulas (15 aulas curtas em módulos, com exemplos que rodam na própria página, quiz, sumário, glossário e código colorido) e Sobre | [`trabalhos/joao-saccucci-labs`](trabalhos/joao-saccucci-labs/) |
 
 ## Tecnologias
 

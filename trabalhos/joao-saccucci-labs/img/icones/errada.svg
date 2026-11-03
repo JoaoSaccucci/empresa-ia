@@ -1,0 +1,6 @@
+<!-- Ícone Errada (X dentro de um círculo). Etapa 4, quiz. Par do concluida.svg (que vira o "Certa").
+     Use INLINE no HTML (copie a tag <svg>) para herdar a cor via currentColor. -->
+<svg class="icone" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <circle cx="12" cy="12" r="9"/>
+  <path d="M9 9l6 6M15 9l-6 6"/>
+</svg>

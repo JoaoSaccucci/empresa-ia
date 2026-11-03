@@ -1,0 +1,7 @@
+<!-- Ícone Rodar (triângulo "play", preenchido). Etapa 4, botão "Rodar" dos exemplos.
+     É o "▶" do botão: decorativo (aria-hidden), o texto "Rodar" fica ao lado.
+     Usar o SVG (e não o caractere ▶) evita que o celular desenhe um emoji colorido.
+     Use INLINE no HTML (copie a tag <svg>) para herdar a cor via currentColor. -->
+<svg class="icone" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/>
+</svg>

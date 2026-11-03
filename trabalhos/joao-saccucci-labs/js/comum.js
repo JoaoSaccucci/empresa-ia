@@ -142,3 +142,48 @@ function lerAulasConcluidas() {
   const lista = lerProgresso("aulas-concluidas", []);
   return Array.isArray(lista) ? lista : []; // proteção se o valor salvo vier estranho
 }
+
+
+/* ---------------------------------------------------------
+   6. AULAS ORGANIZADAS POR MÓDULO (Etapa 4)
+   O data/aulas.json tem duas listas: "modulos" e "aulas".
+   Cada aula diz a qual módulo pertence (campo "modulo").
+   Esta função junta as duas e devolve tudo já em ordem:
+   - modulos: [{ modulo, aulas: [...] }, ...] em ordem de
+     modulo.numero, com as aulas em ordem de aula.numero.
+     Módulo sem nenhuma aula fica de fora.
+   - outras: aulas cujo "modulo" não existe na lista.
+   Usada pela lista (aulas.js) e pela anterior/próxima (aula.js).
+   --------------------------------------------------------- */
+function organizarAulas(dados) {
+  // Se o arquivo vier num formato inesperado, trabalhamos com listas vazias
+  const modulos = Array.isArray(dados && dados.modulos) ? dados.modulos : [];
+  const aulas = Array.isArray(dados && dados.aulas) ? dados.aulas : [];
+
+  function porNumero(a, b) {
+    return a.numero - b.numero; // menor número primeiro
+  }
+
+  // slice() copia a lista antes do sort, para não mexer na original
+  const modulosEmOrdem = modulos.slice().sort(porNumero)
+    .map(function (modulo) {
+      const aulasDoModulo = aulas
+        .filter(function (aula) { return aula.modulo === modulo.id; })
+        .sort(porNumero);
+      return { modulo: modulo, aulas: aulasDoModulo };
+    })
+    .filter(function (item) { return item.aulas.length > 0; });
+
+  const idsDosModulos = modulos.map(function (modulo) { return modulo.id; });
+  const outras = aulas
+    .filter(function (aula) { return !idsDosModulos.includes(aula.modulo); })
+    .sort(porNumero);
+
+  return { modulos: modulosEmOrdem, outras: outras };
+}
+
+// Número que aparece na tela: "Aula 1.2" (módulo 1, aula 2).
+// Aula sem módulo válido: só "Aula 2".
+function numeroDaAula(aula, modulo) {
+  return modulo ? modulo.numero + "." + aula.numero : String(aula.numero);
+}

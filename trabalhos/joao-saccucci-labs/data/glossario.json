@@ -59,5 +59,19 @@
   { "termo": "hidden", "traducao": "escondido", "explicacao": "Atributo do HTML que esconde um elemento. O CSS com display pode vencê-lo, então cuidado." },
   { "termo": "scroll", "traducao": "rolagem", "explicacao": "Rolar a página. O evento scroll dispara muitas vezes enquanto a pessoa rola." },
   { "termo": "requestAnimationFrame", "traducao": "pedir quadro de animação", "explicacao": "Agenda uma função para rodar logo antes de o navegador desenhar o próximo quadro da tela." },
-  { "termo": "IntersectionObserver", "traducao": "observador de interseção", "explicacao": "Ferramenta do navegador que avisa quando um elemento entra ou sai da área visível da tela." }
+  { "termo": "IntersectionObserver", "traducao": "observador de interseção", "explicacao": "Ferramenta do navegador que avisa quando um elemento entra ou sai da área visível da tela." },
+  { "termo": "HTML", "traducao": "linguagem de marcação de hipertexto", "explicacao": "A linguagem que diz ao navegador o que cada pedaço da página é: título, parágrafo, lista, link." },
+  { "termo": "tag", "traducao": "etiqueta", "explicacao": "Marcação entre < e > que diz o que um pedaço do HTML é, como <p> para parágrafo." },
+  { "termo": "href", "traducao": "referência de hipertexto (hypertext reference)", "explicacao": "Atributo do link que diz para onde ele leva." },
+  { "termo": "id", "traducao": "identificador", "explicacao": "Atributo com um nome único na página. O CSS e o JavaScript usam esse nome para achar o elemento." },
+  { "termo": "console.log", "traducao": "console: registrar", "explicacao": "Mostra um valor no console do navegador (F12). Serve para conferir o que o código está fazendo." },
+  { "termo": "true", "traducao": "verdadeiro", "explicacao": "Valor lógico que quer dizer sim. O contrário é false (falso)." },
+  { "termo": "CSS", "traducao": "folhas de estilo em cascata", "explicacao": "Linguagem que define a aparência da página: cores, tamanhos, espaços e layout." },
+  { "termo": "seletor", "traducao": "seletor", "explicacao": "A parte de uma regra CSS que escolhe quais elementos vão mudar, como p, .card ou #titulo." },
+  { "termo": "textContent", "traducao": "conteúdo de texto", "explicacao": "O texto que fica dentro de um elemento. Trocar esse valor troca o texto na tela, sem interpretar HTML." },
+  { "termo": "Live Server", "traducao": "servidor ao vivo", "explicacao": "Extensão do VS Code que abre a pasta como um site de verdade (http://), o que deixa o fetch funcionar." },
+  { "termo": "classList", "traducao": "lista de classes", "explicacao": "As classes de um elemento, com métodos como add, remove e toggle para mudar essas classes pelo JavaScript." },
+  { "termo": "JSON.parse", "traducao": "JSON: analisar", "explicacao": "Transforma um texto no formato JSON em objeto ou lista do JavaScript. Dá erro se o texto não seguir as regras do JSON." },
+  { "termo": "JSON.stringify", "traducao": "JSON: transformar em texto", "explicacao": "Transforma um objeto ou uma lista em texto no formato JSON, por exemplo para salvar no localStorage." },
+  { "termo": "null", "traducao": "nulo", "explicacao": "Valor que quer dizer \"nada aqui\", colocado de propósito. Aparece, por exemplo, quando o querySelector não encontra o elemento ou quando o localStorage.getItem não acha a chave." }
 ]

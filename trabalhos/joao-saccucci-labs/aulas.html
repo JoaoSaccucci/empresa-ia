@@ -39,10 +39,11 @@
     <div class="pagina-titulo">
       <p class="rotulo">// Aulas do professor</p>
       <h1>Aulas</h1>
-      <p class="texto-suave">Leia no seu ritmo. Marque a aula como concluída no fim de cada uma.</p>
+      <p class="texto-suave">Aulas curtas, um conceito por vez. Leia no seu ritmo e marque cada aula como concluída no fim.</p>
     </div>
 
-    <!-- A lista <ol class="lista-aulas"> é criada pelo js/aulas.js a partir de data/aulas.json -->
+    <!-- A lista (projeto > módulo > aula) é criada pelo js/aulas.js a partir de data/aulas.json.
+         Cada módulo ganha um id, então aulas.html#<id do módulo> leva direto a ele. -->
     <div id="area-aulas" aria-live="polite">
       <p class="mensagem">Carregando aulas...</p>
     </div>

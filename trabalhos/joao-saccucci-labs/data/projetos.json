@@ -48,7 +48,7 @@
         "agente": "professor",
         "resumo": "Escreveu a Aula 01: como HTML, JS, fetch, JSON, DOM e CSS se conectam, os 5 conceitos principais do código, por que usar o Live Server, um exercício prático e frases para entrevista de estágio.",
         "entregaveis": [
-          { "titulo": "Aula 01", "url": "aula.html?id=joao-saccucci-labs-aula-01" }
+          { "titulo": "Aulas — Módulo 1", "url": "aulas.html#joao-saccucci-labs-m1" }
         ],
         "imagens": []
       },
@@ -79,7 +79,7 @@
         "agente": "professor",
         "resumo": "Escreveu a Aula 02: ordenar com sort + localeCompare, agrupar eventos por data, fallback de agente, ordem dos scripts, HTML semântico e acessível no Sobre, subgrid com @supports. Exercício: criar um evento novo na linha do tempo (e, na versão reescrita, provocar o erro da ordem dos scripts).",
         "entregaveis": [
-          { "titulo": "Aula 02", "url": "aula.html?id=joao-saccucci-labs-aula-02" }
+          { "titulo": "Aulas — Módulo 2", "url": "aulas.html#joao-saccucci-labs-m2" }
         ],
         "imagens": []
       },
@@ -102,7 +102,7 @@
         "resumo": "Implementou a Etapa 3: lista de aulas e tela de leitura que converte o .md com marked, colore o código com highlight.js e cria caixas de destaque, glossário, checklist salvo, sumário, barra de progresso, tamanho da letra, tema papel e aula concluída, com planos B se algo não carregar. O menu ganhou o item Aulas.",
         "entregaveis": [
           { "titulo": "Aulas", "url": "aulas.html" },
-          { "titulo": "Aula 01 (tela de leitura)", "url": "aula.html?id=joao-saccucci-labs-aula-01" },
+          { "titulo": "Aula 1.1 (tela de leitura)", "url": "aula.html?id=joao-saccucci-labs-m1-aula-01" },
           { "titulo": "Lista de aulas (JS)", "url": "js/aulas.js" },
           { "titulo": "Tela de leitura (JS)", "url": "js/aula.js" },
           { "titulo": "Dados das aulas", "url": "data/aulas.json" },
@@ -115,7 +115,43 @@
         "agente": "professor",
         "resumo": "Etapa 3: reescreveu as Aulas 01 e 02 no formato novo (caixas de destaque, glossário e exercício em checklist, com as linhas conferidas no código atual) e escreveu a Aula 03 sobre a tela de leitura: CDN com SRI, Markdown seguro, localStorage, tema antes de pintar e sumário ativo.",
         "entregaveis": [
-          { "titulo": "Aula 03", "url": "aula.html?id=joao-saccucci-labs-aula-03" },
+          { "titulo": "Aulas — Módulo 3", "url": "aulas.html#joao-saccucci-labs-m3" },
+          { "titulo": "Glossário", "url": "data/glossario.json" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "artista",
+        "resumo": "Etapa 4: desenhou o \"laboratório dentro da aula\": código com linhas numeradas, botões Rodar, Editar, Restaurar e Copiar, quadro Linha por linha, área de Resultado e Console, caixa Em resumo em âmbar, quiz com explicações e a lista de aulas por módulo. Criou 5 ícones novos.",
+        "entregaveis": [
+          { "titulo": "Design (seção 12)", "url": "docs/design.md" },
+          { "titulo": "Ícone Em resumo", "url": "img/icones/resumo.svg" },
+          { "titulo": "Ícone Rodar", "url": "img/icones/rodar.svg" },
+          { "titulo": "Ícone Editar", "url": "img/icones/editar.svg" },
+          { "titulo": "Ícone Restaurar", "url": "img/icones/restaurar.svg" },
+          { "titulo": "Ícone Errada", "url": "img/icones/errada.svg" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "dev",
+        "resumo": "Implementou a Etapa 4: aulas agrupadas em módulos, caixa Em resumo, linhas numeradas, exemplos que rodam num iframe isolado (sandbox, sem rede) com Console, edição com Restaurar e quiz com explicação salvo no navegador, tudo em JS puro.",
+        "entregaveis": [
+          { "titulo": "Exemplos executáveis (JS)", "url": "js/aula-codigo.js" },
+          { "titulo": "Quiz (JS)", "url": "js/aula-quiz.js" },
+          { "titulo": "Tela de leitura (JS)", "url": "js/aula.js" },
+          { "titulo": "Folha de estilo (seção 38)", "url": "css/style.css" },
+          { "titulo": "Dados das aulas", "url": "data/aulas.json" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "professor",
+        "resumo": "Etapa 4: trocou as 3 aulas longas por 15 aulas curtas, de um conceito cada, em 3 módulos, com resumo no topo, exemplo pequeno explicado linha por linha, botão Rodar e quiz em 11 delas.",
+        "entregaveis": [
+          { "titulo": "Aulas — Módulo 1", "url": "aulas.html#joao-saccucci-labs-m1" },
+          { "titulo": "Aulas — Módulo 2", "url": "aulas.html#joao-saccucci-labs-m2" },
+          { "titulo": "Aulas — Módulo 3", "url": "aulas.html#joao-saccucci-labs-m3" },
           { "titulo": "Glossário", "url": "data/glossario.json" }
         ],
         "imagens": []
@@ -136,7 +172,11 @@
       { "data": "2026-11-03", "agente": "dev", "descricao": "Página Sobre preenchida com os dados do João (formação, cidade, foco, frase, contatos e estudos)." },
       { "data": "2026-11-03", "agente": "artista", "descricao": "Design da Etapa 3: tela de leitura das aulas em modo foco, tema papel e lista de aulas." },
       { "data": "2026-11-03", "agente": "dev", "descricao": "Implementação da Etapa 3: lista de aulas e tela de leitura com sumário, glossário, checklist, código colorido e tema papel." },
-      { "data": "2026-11-03", "agente": "professor", "descricao": "Aulas 01 e 02 reescritas no formato novo e Aula 03 sobre a tela de leitura." }
+      { "data": "2026-11-03", "agente": "professor", "descricao": "Aulas 01 e 02 reescritas no formato novo e Aula 03 sobre a tela de leitura." },
+      { "data": "2026-11-03", "agente": "product-owner", "descricao": "Requisitos da Etapa 4 \"Aulas 2.0\": aulas curtas, um conceito por aula, exemplo executável e quiz." },
+      { "data": "2026-11-03", "agente": "artista", "descricao": "Design da Etapa 4: exemplo executável, Linha por linha, Console, Em resumo, quiz e módulos." },
+      { "data": "2026-11-03", "agente": "dev", "descricao": "Implementação da Etapa 4: módulos, botão Rodar com Console, Editar/Restaurar e quiz." },
+      { "data": "2026-11-03", "agente": "professor", "descricao": "15 aulas curtas em 3 módulos substituem as 3 aulas antigas." }
     ]
   }
 ]

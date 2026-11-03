@@ -1597,6 +1597,11 @@ html[data-tema] {
   --aviso-erro: var(--cor-erro);       /* CAUTION */
   --aviso-entrevista: #C792FF;         /* IMPORTANT (roxo mais claro = mais contraste) */
   --aviso-palavra: var(--cor-ciano);   /* NOTE */
+  --aviso-resumo: #FFC857;             /* "Em resumo" (Etapa 4), âmbar */
+
+  /* Etapa 4: console e resultado dos exemplos */
+  --console-aviso: #FFD580;            /* linhas de console.warn */
+  --resultado-fundo: #FFFFFF;          /* área "Resultado": branca nos dois temas */
 
   /* Cores do código (nosso tema próprio para o highlight.js).
      Todas passam de 4.5:1 sobre --leitura-codigo-fundo. */
@@ -1682,6 +1687,8 @@ html[data-tema="papel"] .modo-foco {
   --balao-texto: #1F1A14;
 
   --aviso-entrevista: #6B2FB3;
+  --aviso-resumo: #8A5300;     /* âmbar "tinta" */
+  --console-aviso: #7A4F00;
 
   /* Código no papel: todas passam de 4.5:1 sobre #EFE6D2 */
   --hl-texto: #1F1A14;
@@ -1928,7 +1935,9 @@ body.modo-foco::after {
 .ferramenta[aria-pressed="true"] {
   color: var(--leitura-destaque);
   border-color: currentColor;
-  background: color-mix(in srgb, var(--leitura-destaque) 12%, var(--leitura-superficie));
+  /* 8% (e não 12%): no tema papel, 12% deixava o verde com 4.48:1,
+     um pouco abaixo do mínimo de 4.5:1 (docs/design.md, 12.10) */
+  background: color-mix(in srgb, var(--leitura-destaque) 8%, var(--leitura-superficie));
 }
 
 .ferramenta .icone {
@@ -2389,7 +2398,7 @@ body.sumario-aberto {
   color: var(--leitura-texto-suave);
 }
 
-.codigo-copiar {
+.codigo-botao {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -2407,16 +2416,16 @@ body.sumario-aberto {
 
 /* Em tela de toque, o botão fica com 44px de altura */
 @media (pointer: coarse) {
-  .codigo-copiar {
+  .codigo-botao {
     min-height: 44px;
   }
 }
 
-.codigo-copiar:hover {
+.codigo-botao:hover {
   border-color: var(--leitura-destaque);
 }
 
-.codigo-copiar .icone {
+.codigo-botao .icone {
   width: 14px;
   height: 14px;
 }
@@ -3101,4 +3110,687 @@ body.sumario-aberto {
    --------------------------------------------------------- */
 .modo-foco [hidden] {
   display: none !important;
+}
+
+
+/* =========================================================
+   ETAPA 4 - AULAS 2.0
+   Seção 38: módulos na lista de aulas, "Em resumo", linhas
+   numeradas, "Linha por linha", Rodar/Editar/Restaurar,
+   área de resultado e quiz. As decisões estão no
+   docs/design.md, seção 12. Só 3 tokens novos (seções 23 e
+   24): --aviso-resumo, --console-aviso e --resultado-fundo.
+   Os botões do bloco de código usam a classe .codigo-botao
+   (seção 30); o Copiar tem também .codigo-copiar.
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   38. AULAS 2.0
+   --------------------------------------------------------- */
+
+/* --- 38.1 Lista de aulas por módulo (aulas.html, sempre escura) ---
+   section.aulas-projeto > h2 + section.modulo (h3) > ol.lista-aulas */
+.aulas-projeto {
+  max-width: 880px;
+}
+
+.aulas-projeto + .aulas-projeto {
+  margin-top: var(--esp-8);
+}
+
+.aulas-projeto-titulo {
+  margin-bottom: var(--esp-6);
+  padding-bottom: var(--esp-3);
+  font-family: var(--fonte-texto);
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  color: var(--cor-texto);
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.modulo + .modulo {
+  margin-top: var(--esp-7);
+}
+
+/* aulas.html#<id do módulo>: o título não fica escondido atrás do header */
+.modulo {
+  scroll-margin-top: calc(var(--altura-header) + var(--esp-5));
+}
+
+.modulo-cabecalho {
+  margin-bottom: var(--esp-4);
+}
+
+.modulo-titulo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-2);
+  font-family: var(--fonte-texto);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+}
+
+/* "MÓDULO 1" numa pílula verde (igual ao "✓ Concluída") */
+.modulo-numero {
+  align-self: flex-start;
+  padding: 2px var(--esp-3);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cor-verde);
+  background: rgba(124, 255, 178, 0.10);
+  border: 1px solid currentColor;
+  border-radius: var(--raio-pill);
+}
+
+.modulo-resumo {
+  margin-top: var(--esp-2);
+  font-size: var(--fs-sm);
+  color: var(--cor-texto-suave);
+}
+
+/* "2 de 5 concluídas" + barrinha decorativa */
+.modulo-progresso {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--esp-2) var(--esp-3);
+  margin-top: var(--esp-3);
+}
+
+.modulo-progresso-texto {
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-sm);
+  color: var(--cor-texto-suave);
+}
+
+.modulo--completo .modulo-progresso-texto {
+  color: var(--cor-verde);
+}
+
+.modulo-barra {
+  width: 10rem;
+  height: 6px;
+  overflow: hidden;
+  background: var(--cor-borda-forte);
+  border-radius: var(--raio-pill);
+}
+
+/* O JS escreve style="--progresso: 0.4" na .modulo-barra (0 a 1) */
+.modulo-barra-preenchida {
+  display: block;
+  height: 100%;
+  background: var(--cor-verde);
+  transform-origin: left;
+  transform: scaleX(var(--progresso, 0));
+}
+
+@media (max-width: 639.98px) {
+  .modulo-barra {
+    flex: 1 1 100%;                /* no celular, a barra ocupa a linha toda */
+  }
+}
+
+/* O número do card agora é "1.2" (módulo.aula): letra menor para caber "1.10" */
+.aula-card-numero {
+  font-size: 1.125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 640px) {
+  .aula-card-numero {
+    font-size: 1.5rem;
+  }
+}
+
+
+/* --- 38.2 Topo da aula: link do módulo ---
+   <p class="aula-sobretitulo"><span class="aula-numero">Aula 1.2</span>
+     <a class="aula-modulo" href="aulas.html#...">Módulo 1 · ...</a></p> */
+.aula-modulo {
+  color: var(--leitura-texto-suave);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+
+.aula-modulo:hover {
+  color: var(--leitura-texto);
+  text-decoration-thickness: 2px;
+}
+
+
+/* --- 38.3 Caixa "Em resumo" ---
+   Diferente da Dica em 4 pontos: borda inteira, cantos maiores,
+   título numa pílula preenchida e texto um pouco maior. */
+.aviso--resumo {
+  --aviso-cor: var(--aviso-resumo);
+  margin-bottom: 2em;
+  padding: 1.1em 1.3em;
+  border: 1px solid color-mix(in srgb, var(--aviso-cor) 55%, transparent);
+  border-radius: var(--raio-lg);
+}
+
+.aviso--resumo .aviso-titulo {
+  display: inline-flex;
+  padding: 0.3em 0.9em;
+  color: var(--leitura-sobre-destaque);
+  background: var(--aviso-cor);
+  border-radius: var(--raio-pill);
+}
+
+.aviso--resumo .aviso-titulo .icone {
+  width: 1.2em;
+  height: 1.2em;
+}
+
+.aviso--resumo > :not(.aviso-titulo) {
+  font-size: 1.05em;
+  font-weight: 500;
+  color: var(--leitura-texto);
+}
+
+
+/* --- 38.4 Bloco de código: barra de botões e números de linha ---
+   Ordem dos botões: Rodar, Editar, Restaurar, Copiar */
+.codigo-topo {
+  flex-wrap: wrap;
+}
+
+.codigo-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-1);
+  margin-left: auto;
+}
+
+/* Rodar: o único botão preenchido (é a ação principal) */
+.codigo-botao--rodar {
+  font-weight: 600;
+  color: var(--leitura-sobre-destaque);
+  background: var(--leitura-destaque);
+  border-color: var(--leitura-destaque);
+  transition: box-shadow var(--transicao);
+}
+
+.codigo-botao--rodar:hover {
+  box-shadow: 0 0 16px color-mix(in srgb, var(--leitura-destaque) 40%, transparent);
+}
+
+.codigo-botao--rodar:active {
+  filter: brightness(0.9);
+}
+
+.codigo-botao:not(.codigo-botao--rodar):active {
+  background: color-mix(in srgb, var(--leitura-texto) 10%, transparent);
+}
+
+/* Editar "ligado" (modo edição) */
+.codigo-botao[aria-pressed="true"] {
+  color: var(--leitura-destaque);
+  border-color: currentColor;
+  background: color-mix(in srgb, var(--leitura-destaque) 8%, var(--leitura-superficie));
+}
+
+/* Restaurar sem nada para restaurar */
+.codigo-botao:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.codigo-botao:disabled:hover {
+  border-color: var(--leitura-borda-forte);
+}
+
+/* O .codigo tem overflow: hidden; com o recuo padrão (3px) o
+   contorno de foco seria cortado nas bordas */
+.codigo :focus-visible {
+  outline-offset: 1px;
+}
+
+/* O que rola (código, console): contorno por dentro */
+.codigo pre:focus-visible,
+.console-lista:focus-visible {
+  outline-offset: -2px;
+}
+
+/* Números de linha à esquerda, código à direita */
+.codigo-corpo {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.codigo-corpo pre {
+  min-width: 0;                    /* deixa o código encolher e rolar */
+}
+
+/* MESMA fonte, entrelinha e espaço de cima/baixo do <pre>: assim cada
+   número fica na altura da sua linha. user-select: none + aria-hidden:
+   os números não são selecionados, copiados nem lidos. */
+.codigo-numeros {
+  padding: 1em 0.75em 1em 1em;
+  font-family: var(--fonte-mono);
+  font-size: 0.84em;
+  line-height: 1.6;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--hl-comentario);
+  border-right: 1px solid var(--leitura-borda);
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.codigo-numeros span {
+  display: block;
+}
+
+/* Celular: os 4 botões do exemplo viram uma grade 2 x 2 */
+@media (max-width: 639.98px) {
+  .codigo--executavel .codigo-topo {
+    padding: var(--esp-2);
+  }
+
+  .codigo--executavel .codigo-acoes {
+    flex: 1 1 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-left: 0;
+  }
+
+  .codigo--executavel .codigo-botao {
+    justify-content: center;
+  }
+}
+
+
+/* --- 38.5 "Linha por linha" (dentro do .codigo, depois do código) --- */
+.linhas {
+  padding: 0.9em 1.1em;
+  font-size: 0.95em;               /* cresce com A+ */
+  background: var(--leitura-superficie);
+  border-top: 1px dashed var(--leitura-borda-forte);
+}
+
+.linhas-titulo {
+  margin-bottom: 0.6em;
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--leitura-texto-suave);
+}
+
+/* .aula-conteudo na frente: vence as regras de listas da seção 29 */
+.aula-conteudo .linhas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6em;
+  padding: 0;
+}
+
+.aula-conteudo .linhas-item {
+  display: grid;
+  grid-template-columns: 7.5em minmax(0, 1fr);
+  gap: 0.4em 0.9em;
+  align-items: baseline;
+  margin-top: 0;
+}
+
+/* "Linha 3" numa pílula verde */
+.linhas-rotulo {
+  justify-self: start;
+  padding: 0.1em 0.6em;
+  font-family: var(--fonte-mono);
+  font-size: 0.8em;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--leitura-destaque);
+  border: 1px solid color-mix(in srgb, var(--leitura-destaque) 50%, transparent);
+  border-radius: var(--raio-pill);
+}
+
+.linhas-texto {
+  line-height: 1.6;
+  color: var(--leitura-texto);
+}
+
+/* Celular: o rótulo fica em cima do texto */
+@media (max-width: 479.98px) {
+  .aula-conteudo .linhas-item {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* --- 38.6 Modo edição (botão Editar) --- */
+.codigo--editando {
+  border-color: var(--leitura-destaque);
+}
+
+/* Nunca menos de 16px: abaixo disso o celular dá zoom sozinho ao tocar */
+.codigo-editor {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 1em 1.1em;
+  font-family: var(--fonte-mono);
+  font-size: max(1rem, 0.84em);
+  line-height: 1.6;
+  white-space: pre;
+  tab-size: 2;
+  color: var(--hl-texto);
+  caret-color: var(--leitura-destaque);
+  background: var(--leitura-codigo-fundo);
+  border: 0;
+  border-radius: 0;
+  resize: none;
+  overflow-x: auto;
+  overflow-y: hidden;              /* a caixa cresce com o código (rows) */
+}
+
+/* Os números acompanham o tamanho de letra da caixa */
+.codigo--editando .codigo-numeros {
+  font-size: max(1rem, 0.84em);
+}
+
+.codigo-editor:focus-visible {
+  outline: 2px solid var(--cor-ciano);
+  outline-offset: -2px;
+}
+
+.codigo-dica {
+  padding: var(--esp-2) var(--esp-4);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  color: var(--leitura-texto-suave);
+  background: var(--leitura-superficie);
+  border-top: 1px solid var(--leitura-borda);
+}
+
+
+/* --- 38.7 Área de saída: "Resultado" e "Console" --- */
+.codigo-saida {
+  border-top: 1px solid var(--leitura-borda-forte);
+  animation: saida-aparecer 200ms ease;
+}
+
+/* Só opacidade (nada de transform) */
+@keyframes saida-aparecer {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.saida-titulo {
+  padding: var(--esp-2) var(--esp-4);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--leitura-texto-suave);
+  background: var(--leitura-superficie);
+  border-bottom: 1px solid var(--leitura-borda);
+}
+
+.saida-bloco + .saida-bloco {
+  border-top: 1px solid var(--leitura-borda);
+}
+
+.saida-bloco--resultado {
+  background: var(--leitura-codigo-fundo);
+}
+
+/* "Página em branco do navegador": branca nos dois temas, altura fixa
+   (o conteúdo maior rola DENTRO do iframe) e nunca mais larga que o bloco */
+.saida-iframe {
+  display: block;
+  width: calc(100% - 2 * var(--esp-2));
+  height: 12rem;
+  margin: var(--esp-2);
+  background: var(--resultado-fundo);
+  border: 0;
+  border-radius: var(--raio-sm);
+  outline: 1px solid var(--leitura-borda);
+}
+
+.aula-conteudo .console-lista {
+  max-height: 14rem;
+  overflow-y: auto;
+  padding: var(--esp-1) 0;
+  font-family: var(--fonte-mono);
+  font-size: 0.8em;
+  line-height: 1.5;
+  background: var(--leitura-codigo-fundo);
+}
+
+.aula-conteudo .console-linha {
+  display: flex;
+  gap: 0.6em;
+  margin-top: 0;
+  padding: 0.3em 1.1em;
+  border-left: 3px solid transparent;
+}
+
+.aula-conteudo .console-linha + .console-linha {
+  border-top: 1px solid var(--leitura-borda);
+}
+
+.console-prefixo {
+  flex: 0 0 auto;
+  font-weight: 600;
+}
+
+/* Objetos em JSON mantêm as quebras e o recuo; texto longo quebra */
+.console-texto {
+  min-width: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.console-linha--log {
+  color: var(--hl-texto);
+}
+
+.console-linha--log .console-prefixo {
+  color: var(--leitura-texto-suave);
+}
+
+/* Aviso e erro: cor + barrinha + o texto "Aviso:"/"Erro:" (não só cor) */
+.aula-conteudo .console-linha--aviso {
+  color: var(--console-aviso);
+  border-left-color: var(--console-aviso);
+}
+
+.aula-conteudo .console-linha--erro {
+  color: var(--cor-erro);
+  border-left-color: var(--cor-erro);
+}
+
+.console-vazio {
+  padding: 0.6em 1.1em;
+  font-family: var(--fonte-mono);
+  font-size: 0.8em;
+  font-style: italic;
+  color: var(--leitura-texto-suave);
+  background: var(--leitura-codigo-fundo);
+}
+
+
+/* --- 38.8 Quiz ("Teste rápido") --- */
+.quiz {
+  padding: 1.1em 1.2em;
+  background: var(--leitura-superficie);
+  border: 1px solid var(--leitura-borda);
+  border-radius: var(--raio-lg);
+}
+
+.aula-conteudo .quiz + .quiz {
+  margin-top: 1em;
+}
+
+.quiz-rotulo {
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--leitura-texto-suave);
+}
+
+.quiz-pergunta {
+  margin-block: 0.3em 0.9em;
+  font-weight: 600;
+}
+
+.aula-conteudo .quiz-alternativas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6em;
+  padding: 0;
+}
+
+.aula-conteudo .quiz-item {
+  margin-top: 0;
+}
+
+.quiz-alternativa {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75em;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.65em 0.9em;
+  font: inherit;                   /* cresce com A+ */
+  text-align: left;
+  color: var(--leitura-texto);
+  background: var(--leitura-fundo);
+  border: 1px solid var(--leitura-borda-forte);
+  border-radius: var(--raio-md);
+  cursor: pointer;
+  transition: border-color var(--transicao);
+}
+
+.quiz-alternativa:not([aria-disabled="true"]):hover {
+  border-color: var(--leitura-destaque);
+}
+
+/* Depois de responder: travada, mas ainda focável e legível */
+.quiz-alternativa[aria-disabled="true"] {
+  cursor: default;
+}
+
+/* Letra A, B, C num círculo */
+.quiz-letra {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 1.7em;
+  height: 1.7em;
+  font-family: var(--fonte-mono);
+  font-size: 0.8em;
+  font-weight: 600;
+  border: 1px solid var(--leitura-borda-forte);
+  border-radius: 50%;
+}
+
+.quiz-texto {
+  flex: 1;
+  min-width: 0;
+  padding-top: 0.15em;
+}
+
+/* Certa (verde) e errada (vermelho): borda 2px + fundo 8% + letra cheia.
+   A marca "Certa!/Errada" em texto garante que não depende só da cor. */
+.quiz-alternativa[data-resultado="certa"] {
+  --quiz-cor: var(--leitura-destaque);
+}
+
+.quiz-alternativa[data-resultado="errada"] {
+  --quiz-cor: var(--cor-erro);
+}
+
+.quiz-alternativa[data-resultado] {
+  /* 1px a menos de espaço interno compensa a borda 1px mais grossa (nada "pula") */
+  padding: calc(0.65em - 1px) calc(0.9em - 1px);
+  background: color-mix(in srgb, var(--quiz-cor) 8%, var(--leitura-fundo));
+  border: 2px solid var(--quiz-cor);
+}
+
+.quiz-alternativa[data-resultado] .quiz-letra {
+  color: var(--leitura-sobre-destaque);
+  background: var(--quiz-cor);
+  border-color: var(--quiz-cor);
+}
+
+.quiz-marca {
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+  margin-top: 0.3em;
+  font-family: var(--fonte-mono);
+  font-size: 0.75em;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--quiz-cor);
+}
+
+.quiz-marca .icone {
+  width: 1.25em;
+  height: 1.25em;
+}
+
+/* Alinha com o texto da alternativa (depois da letra) */
+.quiz-explicacao {
+  margin: 0.4em 0 0 2.7em;
+  font-size: 0.92em;
+  color: var(--leitura-texto);
+}
+
+.quiz-rodape {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6em 1em;
+  margin-top: 1em;
+  padding-top: 1em;
+  border-top: 1px solid var(--leitura-borda);
+}
+
+.quiz-resultado {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  font-weight: 700;
+}
+
+.quiz-resultado--certa  { color: var(--leitura-destaque); }
+.quiz-resultado--errada { color: var(--cor-erro); }
+
+.quiz-resultado .icone {
+  width: 1.2em;
+  height: 1.2em;
+}
+
+.quiz-repetir {
+  font-size: var(--fs-sm);
+}
+
+
+/* --- 38.9 Movimento reduzido ---
+   A seção 21 já encurta tudo; aqui tiramos de vez a animação
+   da área de resultado e as transições dos botões novos. */
+@media (prefers-reduced-motion: reduce) {
+  .codigo-saida {
+    animation: none;
+  }
+
+  .codigo-botao,
+  .quiz-alternativa,
+  .modulo-barra-preenchida {
+    transition: none;
+  }
 }

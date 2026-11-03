@@ -1,29 +1,162 @@
-[
-  {
-    "id": "joao-saccucci-labs-aula-01",
-    "titulo": "Como HTML, JS, fetch e JSON se conectam",
-    "projeto": "joao-saccucci-labs",
-    "numero": 1,
-    "arquivo": "aulas/aula-01.md",
-    "tempoLeitura": 15,
-    "resumo": "O caminho dos dados do JSON até a tela, os 5 conceitos principais da Etapa 1 e por que usar o Live Server."
-  },
-  {
-    "id": "joao-saccucci-labs-aula-02",
-    "titulo": "Linha do tempo, página Sobre e truques de CSS",
-    "projeto": "joao-saccucci-labs",
-    "numero": 2,
-    "arquivo": "aulas/aula-02.md",
-    "tempoLeitura": 15,
-    "resumo": "Ordenar e agrupar eventos, ordem dos scripts, HTML acessível e subgrid."
-  },
-  {
-    "id": "joao-saccucci-labs-aula-03",
-    "titulo": "Por dentro da tela de leitura das aulas",
-    "projeto": "joao-saccucci-labs",
-    "numero": 3,
-    "arquivo": "aulas/aula-03.md",
-    "tempoLeitura": 15,
-    "resumo": "Biblioteca por CDN com integrity, Markdown seguro, localStorage com try/catch, tema sem piscar e sumário que acompanha a rolagem."
-  }
-]
+{
+  "modulos": [
+    {
+      "id": "joao-saccucci-labs-m1",
+      "projeto": "joao-saccucci-labs",
+      "numero": 1,
+      "titulo": "Etapa 1: o básico do site",
+      "resumo": "HTML, CSS e como o JavaScript lê um JSON e monta a página."
+    },
+    {
+      "id": "joao-saccucci-labs-m2",
+      "projeto": "joao-saccucci-labs",
+      "numero": 2,
+      "titulo": "Etapa 2: a linha do tempo",
+      "resumo": "Organizar o código em arquivos e ordenar e agrupar dados com JavaScript."
+    },
+    {
+      "id": "joao-saccucci-labs-m3",
+      "projeto": "joao-saccucci-labs",
+      "numero": 3,
+      "titulo": "Etapa 3: a tela de leitura",
+      "resumo": "Tratar erros, lembrar coisas no navegador e usar uma biblioteca pronta."
+    }
+  ],
+  "aulas": [
+    {
+      "id": "joao-saccucci-labs-m1-aula-01",
+      "titulo": "Tags e atributos: as etiquetas do HTML",
+      "modulo": "joao-saccucci-labs-m1",
+      "numero": 1,
+      "arquivo": "aulas/modulo-1/aula-01.md",
+      "tempoLeitura": 6,
+      "resumo": "Como o HTML marca cada pedaço da página com tags e dá informações extras com atributos."
+    },
+    {
+      "id": "joao-saccucci-labs-m1-aula-02",
+      "titulo": "Objetos e listas: como o site guarda dados",
+      "modulo": "joao-saccucci-labs-m1",
+      "numero": 2,
+      "arquivo": "aulas/modulo-1/aula-02.md",
+      "tempoLeitura": 6,
+      "resumo": "Guardar dados com { } e [ ], ler pelo nome ou pela posição e reconhecer esse formato no JSON do site."
+    },
+    {
+      "id": "joao-saccucci-labs-m1-aula-03",
+      "titulo": "Dar cor e forma com CSS",
+      "modulo": "joao-saccucci-labs-m1",
+      "numero": 3,
+      "arquivo": "aulas/modulo-1/aula-03.md",
+      "tempoLeitura": 6,
+      "resumo": "Como uma regra de CSS escolhe elementos e muda a aparência deles, e como uma variável CSS dá uma cor diferente a cada card."
+    },
+    {
+      "id": "joao-saccucci-labs-m1-aula-04",
+      "titulo": "Encontrar um elemento com querySelector",
+      "modulo": "joao-saccucci-labs-m1",
+      "numero": 4,
+      "arquivo": "aulas/modulo-1/aula-04.md",
+      "tempoLeitura": 6,
+      "resumo": "Como o JavaScript acha um elemento da página pelo seletor e troca o texto dele com textContent."
+    },
+    {
+      "id": "joao-saccucci-labs-m1-aula-05",
+      "titulo": "Montar HTML a partir de uma lista",
+      "modulo": "joao-saccucci-labs-m1",
+      "numero": 5,
+      "arquivo": "aulas/modulo-1/aula-05.md",
+      "tempoLeitura": 7,
+      "resumo": "Transformar cada item de uma lista em HTML com map e template string e colocar o resultado na página com innerHTML."
+    },
+    {
+      "id": "joao-saccucci-labs-m1-aula-06",
+      "titulo": "Buscar um arquivo com fetch e await",
+      "modulo": "joao-saccucci-labs-m1",
+      "numero": 6,
+      "arquivo": "aulas/modulo-1/aula-06.md",
+      "tempoLeitura": 6,
+      "resumo": "Como o site lê um arquivo JSON com fetch e await, e por que isso só funciona aberto pelo Live Server."
+    },
+    {
+      "id": "joao-saccucci-labs-m1-aula-07",
+      "titulo": "Uma página só para vários projetos",
+      "modulo": "joao-saccucci-labs-m1",
+      "numero": 7,
+      "arquivo": "aulas/modulo-1/aula-07.md",
+      "tempoLeitura": 6,
+      "resumo": "Ler o ?id= do endereço com URLSearchParams para uma única página de detalhe servir a qualquer projeto."
+    },
+    {
+      "id": "joao-saccucci-labs-m1-aula-08",
+      "titulo": "Responder a um clique",
+      "modulo": "joao-saccucci-labs-m1",
+      "numero": 8,
+      "arquivo": "aulas/modulo-1/aula-08.md",
+      "tempoLeitura": 5,
+      "resumo": "Executar uma função a cada clique com addEventListener e abrir e fechar um menu com classList.toggle."
+    },
+    {
+      "id": "joao-saccucci-labs-m2-aula-01",
+      "titulo": "A ordem dos scripts importa",
+      "modulo": "joao-saccucci-labs-m2",
+      "numero": 1,
+      "arquivo": "aulas/modulo-2/aula-01.md",
+      "tempoLeitura": 6,
+      "resumo": "Separar o JavaScript em arquivos e entender por que quem cria uma função precisa ser carregado antes de quem a usa."
+    },
+    {
+      "id": "joao-saccucci-labs-m2-aula-02",
+      "titulo": "Colocar uma lista em ordem",
+      "modulo": "joao-saccucci-labs-m2",
+      "numero": 2,
+      "arquivo": "aulas/modulo-2/aula-02.md",
+      "tempoLeitura": 7,
+      "resumo": "Ordenar uma cópia da lista com slice, sort e localeCompare, e entender por que datas no formato ano-mês-dia podem ser comparadas como texto."
+    },
+    {
+      "id": "joao-saccucci-labs-m2-aula-03",
+      "titulo": "Agrupar itens parecidos",
+      "modulo": "joao-saccucci-labs-m2",
+      "numero": 3,
+      "arquivo": "aulas/modulo-2/aula-03.md",
+      "tempoLeitura": 7,
+      "resumo": "Separar uma lista em grupos com forEach, if/else e push, do jeito que a linha do tempo junta os eventos do mesmo dia."
+    },
+    {
+      "id": "joao-saccucci-labs-m3-aula-01",
+      "titulo": "Quando algo pode dar errado: try e catch",
+      "modulo": "joao-saccucci-labs-m3",
+      "numero": 1,
+      "arquivo": "aulas/modulo-3/aula-01.md",
+      "tempoLeitura": 6,
+      "resumo": "Use try e catch para tratar um erro sem quebrar a página: o código pula para o catch e segue em frente."
+    },
+    {
+      "id": "joao-saccucci-labs-m3-aula-02",
+      "titulo": "Lembrar coisas no navegador: localStorage",
+      "modulo": "joao-saccucci-labs-m3",
+      "numero": 2,
+      "arquivo": "aulas/modulo-3/aula-02.md",
+      "tempoLeitura": 6,
+      "resumo": "Guarde dados no navegador com localStorage, usando JSON.stringify para salvar e JSON.parse para ler de volta."
+    },
+    {
+      "id": "joao-saccucci-labs-m3-aula-03",
+      "titulo": "Guardar um estado no HTML: atributos data-*",
+      "modulo": "joao-saccucci-labs-m3",
+      "numero": 3,
+      "arquivo": "aulas/modulo-3/aula-03.md",
+      "tempoLeitura": 6,
+      "resumo": "Atributos data-* guardam um estado na tag: o JavaScript muda o valor com dataset e o CSS reage com [data-tema=\"papel\"]."
+    },
+    {
+      "id": "joao-saccucci-labs-m3-aula-04",
+      "titulo": "Usar uma biblioteca pronta: marked pelo CDN",
+      "modulo": "joao-saccucci-labs-m3",
+      "numero": 4,
+      "arquivo": "aulas/modulo-3/aula-04.md",
+      "tempoLeitura": 6,
+      "resumo": "Carregue uma biblioteca pelo CDN com versão fixa, antes do seu script, e use o marked para transformar Markdown em HTML."
+    }
+  ]
+}

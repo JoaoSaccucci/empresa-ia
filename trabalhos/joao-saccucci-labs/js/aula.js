@@ -7,12 +7,18 @@
    1. lê o id da URL e acha a aula em data/aulas.json;
    2. busca o arquivo .md da aula com fetch;
    3. converte o Markdown em HTML com a biblioteca marked;
-   4. "arruma" esse HTML: caixas de destaque, glossário,
-      checklist, código colorido, tabelas e sumário;
+   4. "arruma" esse HTML: caixas de destaque (e "Em resumo"),
+      glossário, checklist, quiz, blocos de código, tabelas
+      e sumário;
    5. liga os botões (letra, tema, concluir, sumário).
 
-   Estrutura e classes: docs/design.md, seções 11.4 e 11.5.
-   Visual: css/style.css, seções 23 a 36.
+   Dois arquivos ajudam este (carregados antes dele na aula.html):
+   - js/aula-codigo.js: blocos de código, "Linha por linha",
+     Rodar, Editar, Restaurar e Copiar (Etapa 4);
+   - js/aula-quiz.js: o "Teste rápido" (Etapa 4).
+
+   Estrutura e classes: docs/design.md, seções 11.4, 11.5 e 12.
+   Visual: css/style.css, seções 23 a 38.
    ========================================================= */
 
 
@@ -46,7 +52,7 @@ const ALTURA_DO_TOPO = 160;
 
 // Ícones (img/icones/*.svg) colados aqui para herdar a cor do CSS
 const ICONE_CONCLUIDA = `<svg class="icone" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.8 2.8L16.5 9.5"/></svg>`;
-const ICONE_COPIAR = `<svg class="icone" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>`;
+const ICONE_RESUMO = `<svg class="icone" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>`;
 
 // As 4 caixas de destaque: marcador do GitHub -> classe, ícone e título
 const TIPOS_DE_AVISO = {
@@ -193,17 +199,31 @@ function criarAvisos(area) {
     const encontrado = primeiro.innerHTML.match(marcador);
     if (!encontrado) return;
 
-    const tipo = TIPOS_DE_AVISO[encontrado[1].toUpperCase()];
+    const marcadorDoGitHub = encontrado[1].toUpperCase();
+    const tipo = TIPOS_DE_AVISO[marcadorDoGitHub];
 
-    // Tira o "[!TIP]" do texto. Se o parágrafo ficar vazio, some.
+    // Tira o "[!TIP]" do texto
     primeiro.innerHTML = primeiro.innerHTML.replace(marcador, "");
+
+    // Etapa 4: um [!TIP] que começa com **Em resumo:** vira a caixa
+    // "Em resumo". O "Em resumo:" em negrito sai do texto (vira o título).
+    const emResumo = /^\s*<strong>\s*Em resumo:\s*<\/strong>\s*/i;
+    const ehResumo = marcadorDoGitHub === "TIP" && emResumo.test(primeiro.innerHTML);
+    if (ehResumo) primeiro.innerHTML = primeiro.innerHTML.replace(emResumo, "");
+
+    // Se o parágrafo ficar vazio, some
     if (primeiro.textContent.trim() === "") primeiro.remove();
 
     const caixa = document.createElement("div");
-    caixa.className = "aviso " + tipo.classe;
     caixa.setAttribute("role", "note");
     // O título em texto diz o tipo da caixa; o ícone é só decoração
-    caixa.innerHTML = `<p class="aviso-titulo"><span class="aviso-icone" aria-hidden="true">${tipo.icone}</span>${tipo.titulo}</p>`;
+    if (ehResumo) {
+      caixa.className = "aviso aviso--resumo";
+      caixa.innerHTML = `<p class="aviso-titulo">${ICONE_RESUMO}Em resumo</p>`;
+    } else {
+      caixa.className = "aviso " + tipo.classe;
+      caixa.innerHTML = `<p class="aviso-titulo"><span class="aviso-icone" aria-hidden="true">${tipo.icone}</span>${tipo.titulo}</p>`;
+    }
 
     // Move o conteúdo da citação para dentro da caixa
     while (citacao.firstChild) caixa.appendChild(citacao.firstChild);
@@ -412,75 +432,7 @@ function montarItemDoChecklist(li) {
   li.prepend(rotulo);
 }
 
-// 5.5 Blocos de código: cor (highlight.js) + botão Copiar
-function prepararCodigos(area) {
-  // window.hljs só existe se a biblioteca carregou do CDN
-  const temHighlight = typeof window.hljs !== "undefined";
-
-  area.querySelectorAll("pre").forEach(function (pre) {
-    const codigo = pre.querySelector("code");
-    if (!codigo) return;
-
-    // O marked marca a linguagem como class="language-js"
-    const classeLinguagem = Array.from(codigo.classList).find(function (c) { return c.startsWith("language-"); });
-    const linguagem = classeLinguagem ? classeLinguagem.replace("language-", "") : "";
-
-    // Só pinta se a biblioteca carregou E conhece a linguagem.
-    // Sem linguagem (ou sem a biblioteca): código sem cor, mesma fonte.
-    if (linguagem && temHighlight && hljs.getLanguage(linguagem)) {
-      hljs.highlightElement(codigo);
-    }
-
-    const rotuloLinguagem = linguagem
-      ? `<span class="codigo-linguagem">${escapar(linguagem)}</span>`
-      : "";
-
-    const bloco = document.createElement("div");
-    bloco.className = "codigo";
-    bloco.innerHTML = `
-      <div class="codigo-topo">
-        ${rotuloLinguagem}
-        <button class="codigo-copiar" type="button">${ICONE_COPIAR}<span>Copiar</span></button>
-        <span class="sr-only" role="status"></span>
-      </div>`;
-
-    pre.setAttribute("tabindex", "0"); // teclado consegue rolar o código na horizontal
-    pre.replaceWith(bloco);
-    bloco.appendChild(pre);
-
-    ligarBotaoCopiar(bloco.querySelector(".codigo-copiar"), codigo, bloco.querySelector('[role="status"]'));
-  });
-}
-
-function ligarBotaoCopiar(botao, codigo, aviso) {
-  const textoDoBotao = botao.querySelector("span");
-  let temporizador = null;
-
-  function mostrarEstado(estado, texto, textoDoAviso) {
-    botao.dataset.estado = estado;
-    textoDoBotao.textContent = texto;
-    aviso.textContent = textoDoAviso; // lido pelo leitor de tela (role="status")
-
-    // Depois de ~2 segundos, tudo volta ao normal
-    clearTimeout(temporizador);
-    temporizador = setTimeout(function () {
-      delete botao.dataset.estado;
-      textoDoBotao.textContent = "Copiar";
-      aviso.textContent = "";
-    }, 2000);
-  }
-
-  botao.addEventListener("click", async function () {
-    try {
-      // Copia o texto do <code> (nunca o do bloco todo, que tem o "Copiar")
-      await navigator.clipboard.writeText(codigo.textContent);
-      mostrarEstado("copiado", "Copiado!", "Código copiado");
-    } catch (erro) {
-      // Sem permissão ou navegador sem clipboard: não finge que copiou
-      mostrarEstado("erro", "Não foi possível copiar", "Não foi possível copiar o código");
-    }
-  });
-}
+// 5.5 Blocos de código e quiz: ficam em js/aula-codigo.js e js/aula-quiz.js
 
 // 5.6 Tabelas largas rolam dentro de uma "moldura" (a página não)
 function embrulharTabelas(area) {
@@ -650,22 +602,41 @@ function converterMarkdown(texto) {
   marked.use({
     gfm: true, // "GitHub Flavored Markdown": tabelas, - [ ] etc., igual ao GitHub
     renderer: {
-      html: function (html) { return escapar(html); }
+      html: function (html) { return escapar(html); },
+
+      // Bloco de código. O padrão do marked guarda só a 1ª palavra
+      // depois do ``` (a linguagem) e joga fora o resto. Na Etapa 4
+      // precisamos do resto: em "```html rodar", o "rodar" vai para
+      // data-extra="rodar" (lido pelo js/aula-codigo.js).
+      code: function (codigo, info) {
+        const partes = String(info || "").trim().split(/\s+/);
+        const linguagem = partes[0];
+        const extra = partes.slice(1).join(" ");
+
+        const classe = linguagem ? ` class="language-${escapar(linguagem)}"` : "";
+        const dataExtra = extra ? ` data-extra="${escapar(extra)}"` : "";
+        // escapar(): o código aparece como texto, nunca vira HTML.
+        // replace: tira a quebra de linha do fim (não é uma linha de verdade)
+        return `<pre><code${classe}${dataExtra}>${escapar(codigo.replace(/\n$/, ""))}</code></pre>\n`;
+      }
     }
   });
   return marked.parse(texto);
 }
 
 async function mostrarAula() {
-  // 7.1 Acha a aula no JSON
-  let aulas;
+  // 7.1 Acha a aula no JSON (Etapa 4: { modulos: [...], aulas: [...] })
+  let dados;
   try {
-    aulas = await carregarJSON("data/aulas.json");
+    dados = await carregarJSON("data/aulas.json");
   } catch (erro) {
     console.error(erro);
     mostrarMensagemDaAula(`<p>Não foi possível carregar a aula.</p><a href="aulas.html">&larr; Ver todas as aulas</a>`);
     return;
   }
+
+  const aulas = Array.isArray(dados.aulas) ? dados.aulas : [];
+  const modulos = Array.isArray(dados.modulos) ? dados.modulos : [];
 
   const aula = aulas.find(function (a) { return a.id === idDaAula; });
   if (!aula) {
@@ -673,13 +644,12 @@ async function mostrarAula() {
     return;
   }
 
-  // 7.2 Os "extras" carregam em paralelo. Se falharem, viram lista
-  // vazia e a aula aparece mesmo assim (nome do projeto = id; termos
-  // do glossário = texto simples).
-  const [projetos, glossario] = await Promise.all([
-    carregarJSON("data/projetos.json").catch(function () { return []; }),
-    carregarJSON("data/glossario.json").catch(function () { return []; })
-  ]);
+  // O módulo da aula (undefined se o "modulo" dela não existir)
+  const modulo = modulos.find(function (m) { return m.id === aula.modulo; });
+
+  // 7.2 O glossário é um "extra": se falhar, vira lista vazia e os
+  // termos [[...]] aparecem como texto simples.
+  const glossario = await carregarJSON("data/glossario.json").catch(function () { return []; });
 
   // 7.3 Biblioteca marked fora do ar: oferece o .md original
   if (typeof window.marked === "undefined") {
@@ -701,31 +671,38 @@ async function mostrarAula() {
     return;
   }
 
-  // 7.5 Cabeçalho
-  const projeto = projetos.find(function (p) { return p.id === aula.projeto; });
-  const numero = "Aula " + String(aula.numero).padStart(2, "0");
-  document.title = aula.titulo + " | João Saccucci Labs";
+  // 7.5 Cabeçalho: [AULA 1.2]  Módulo 1 · Etapa 1: o básico do site
+  const numero = "Aula " + numeroDaAula(aula, modulo);
+  document.title = numero + " · " + aula.titulo + " | João Saccucci Labs";
   artigo.querySelector(".aula-numero").textContent = numero;
-  artigo.querySelector(".aula-projeto").textContent = projeto ? projeto.nome : aula.projeto;
+  if (modulo) {
+    // Link para o módulo na lista de aulas (aulas.html#<id do módulo>)
+    artigo.querySelector(".aula-sobretitulo").insertAdjacentHTML("beforeend",
+      `<a class="aula-modulo" href="aulas.html#${encodeURIComponent(modulo.id)}">Módulo ${escapar(modulo.numero)} · ${escapar(modulo.titulo)}</a>`);
+  }
   artigo.querySelector(".aula-titulo").textContent = aula.titulo;
   artigo.querySelector(".aula-tempo").textContent = aula.tempoLeitura + " min de leitura";
   artigo.querySelector(".aula-cabecalho").hidden = false;
 
   // 7.6 Conteúdo: Markdown -> HTML -> componentes do design.
-  // A ordem importa: as caixas antes do glossário (o glossário
-  // funciona dentro delas) e o glossário antes do sumário.
+  // A ordem importa:
+  // - as caixas antes do glossário (o glossário funciona dentro delas);
+  // - o quiz antes dos blocos de código (o quiz também é um ```bloco;
+  //   se estiver malformado, continua <pre> e vira código comum);
+  // - o glossário antes do sumário.
   conteudo.innerHTML = converterMarkdown(markdown);
   protegerLinks(conteudo);
   criarAvisos(conteudo);
   aplicarGlossario(conteudo, glossario);
   criarChecklist(conteudo);
-  prepararCodigos(conteudo);
+  criarQuizzes(conteudo, idDaAula);   // js/aula-quiz.js
+  prepararCodigos(conteudo);          // js/aula-codigo.js
   embrulharTabelas(conteudo);
   titulosDaAula = montarSumario(conteudo);
 
   // 7.7 Fim da aula e navegação anterior/próxima
   artigo.querySelector(".aula-fim").hidden = false;
-  montarNavegacao(aulas, aula);
+  montarNavegacao(dados, aula);
 
   // 7.8 Leitura: progresso e item ativo
   window.addEventListener("scroll", agendarAtualizacao, { passive: true });
@@ -740,16 +717,34 @@ async function mostrarAula() {
   }
 }
 
-// Links para a aula anterior e a próxima DO MESMO PROJETO
-function montarNavegacao(aulas, aula) {
+// Links para a aula anterior e a próxima.
+// Ordem: módulo 1 (aulas 1, 2, 3...), depois módulo 2, e assim por
+// diante. A última aula de um módulo leva à primeira do seguinte.
+// Só andamos entre aulas do MESMO projeto. Uma aula de "Outras aulas"
+// (módulo inexistente) anda só entre as outras aulas desse grupo.
+function montarNavegacao(dados, aula) {
   const navegacao = artigo.querySelector(".aula-navegacao");
+  const organizadas = organizarAulas(dados); // comum.js
 
-  const doProjeto = aulas
-    .filter(function (a) { return a.projeto === aula.projeto; })
-    .sort(function (a, b) { return a.numero - b.numero; });
-  const posicao = doProjeto.indexOf(aula);
-  const anterior = doProjeto[posicao - 1]; // undefined se não existir
-  const proxima = doProjeto[posicao + 1];
+  // Acha o módulo desta aula (se houver) para saber o projeto
+  const doModulo = organizadas.modulos.find(function (item) { return item.modulo.id === aula.modulo; });
+
+  // Monta a "fila" de aulas, em ordem, guardando o módulo de cada uma
+  // (o módulo é usado no número "Aula 1.2" dos links)
+  let fila = [];
+  if (doModulo) {
+    organizadas.modulos
+      .filter(function (item) { return item.modulo.projeto === doModulo.modulo.projeto; })
+      .forEach(function (item) {
+        item.aulas.forEach(function (a) { fila.push({ aula: a, modulo: item.modulo }); });
+      });
+  } else {
+    fila = organizadas.outras.map(function (a) { return { aula: a, modulo: undefined }; });
+  }
+
+  const posicao = fila.findIndex(function (item) { return item.aula.id === aula.id; });
+  const anterior = fila[posicao - 1]; // undefined se não existir
+  const proxima = fila[posicao + 1];
 
   // Sem nenhuma das duas: o <nav> some
   if (!anterior && !proxima) {
@@ -757,12 +752,12 @@ function montarNavegacao(aulas, aula) {
     return;
   }
 
-  function htmlLink(outra, classe, rotulo) {
-    const numero = "Aula " + String(outra.numero).padStart(2, "0");
+  function htmlLink(item, classe, rotulo) {
+    const numero = "Aula " + numeroDaAula(item.aula, item.modulo);
     return `
-      <a class="aula-nav ${classe}" href="aula.html?id=${encodeURIComponent(outra.id)}">
+      <a class="aula-nav ${classe}" href="aula.html?id=${encodeURIComponent(item.aula.id)}">
         <span class="aula-nav-rotulo">${rotulo}</span>
-        <span class="aula-nav-titulo">${numero} · ${escapar(outra.titulo)}</span>
+        <span class="aula-nav-titulo">${escapar(numero)} · ${escapar(item.aula.titulo)}</span>
       </a>`;
   }
 

@@ -271,91 +271,91 @@ Exemplos:
 
 **US18: Aulas organizadas em módulos**
 Como João, quero ver as aulas agrupadas por módulo, para estudar em pequenos passos e saber em que parte do site cada conceito foi usado.
-- [ ] `data/aulas.json` segue o modelo da Etapa 4 (seção 3), com a lista de módulos e o campo `modulo` em cada aula.
-- [ ] `aulas.html` agrupa as aulas por projeto e, dentro dele, por módulo, em ordem de `modulos[].numero` e depois de `aulas[].numero`.
-- [ ] Cada módulo aparece com título próprio (ex.: "Módulo 1 — Etapa 1: o básico do site") e o progresso em texto (ex.: "2 de 5 concluídas").
-- [ ] Cada módulo tem um `id` na página, então `aulas.html#<id do módulo>` leva direto a ele.
-- [ ] Cada aula mostra número no formato "Aula 1.2" (módulo.aula), título, tempo de leitura, resumo e o estado "Concluída" (como na US07).
-- [ ] O topo de `aula.html` mostra o módulo, o número "Aula 1.2" e o tempo de leitura.
-- [ ] Anterior/próxima seguem a ordem módulo → aula e atravessam módulos (a última aula do Módulo 1 leva à primeira do Módulo 2).
-- [ ] Um módulo sem aulas não aparece na lista. Uma aula com `modulo` inexistente aparece num grupo "Outras aulas" no fim, sem quebrar a página.
-- [ ] Os entregáveis do professor em `data/projetos.json` passam a ser um link por módulo, apontando para `aulas.html#<id do módulo>`.
+- [x] `data/aulas.json` segue o modelo da Etapa 4 (seção 3), com a lista de módulos e o campo `modulo` em cada aula.
+- [x] `aulas.html` agrupa as aulas por projeto e, dentro dele, por módulo, em ordem de `modulos[].numero` e depois de `aulas[].numero`.
+- [x] Cada módulo aparece com título próprio (ex.: "Módulo 1 — Etapa 1: o básico do site") e o progresso em texto (ex.: "2 de 5 concluídas").
+- [x] Cada módulo tem um `id` na página, então `aulas.html#<id do módulo>` leva direto a ele.
+- [x] Cada aula mostra número no formato "Aula 1.2" (módulo.aula), título, tempo de leitura, resumo e o estado "Concluída" (como na US07).
+- [x] O topo de `aula.html` mostra o módulo, o número "Aula 1.2" e o tempo de leitura.
+- [x] Anterior/próxima seguem a ordem módulo → aula e atravessam módulos (a última aula do Módulo 1 leva à primeira do Módulo 2).
+- [x] Um módulo sem aulas não aparece na lista. Uma aula com `modulo` inexistente aparece num grupo "Outras aulas" no fim, sem quebrar a página.
+- [x] Os entregáveis do professor em `data/projetos.json` passam a ser um link por módulo, apontando para `aulas.html#<id do módulo>`.
 
 **US19: Caixa "Em resumo"**
 Como João, quero um resumo curto no começo de cada aula, para saber o essencial antes de ler e para revisar depois.
-- [ ] Um `> [!TIP]` cujo conteúdo começa com `**Em resumo:**` aparece como caixa "Em resumo", com título em texto, visual próprio e diferente da caixa Dica.
-- [ ] O texto "Em resumo:" em negrito não aparece repetido dentro da caixa (vira o título).
-- [ ] Um `> [!TIP]` comum continua aparecendo como "Dica".
+- [x] Um `> [!TIP]` cujo conteúdo começa com `**Em resumo:**` aparece como caixa "Em resumo", com título em texto, visual próprio e diferente da caixa Dica.
+- [x] O texto "Em resumo:" em negrito não aparece repetido dentro da caixa (vira o título).
+- [x] Um `> [!TIP]` comum continua aparecendo como "Dica".
 - [ ] No GitHub, a caixa aparece como alerta "Tip" com "Em resumo:" em negrito.
-- [ ] A caixa tem contraste AA nos dois temas.
+- [x] A caixa tem contraste AA nos dois temas.
 
 **US20: Exemplo com linhas numeradas e explicação linha por linha**
 Como João, quero ver um exemplo pequeno com as linhas numeradas e uma explicação de cada linha, para entender o conceito sem precisar ler o código inteiro do site.
-- [ ] Todo bloco de código com linguagem mostra o número de cada linha à esquerda.
-- [ ] Os números não são copiados pelo botão Copiar nem ao selecionar o texto, e são ignorados por leitores de tela.
-- [ ] Uma lista com itens no formato `- **L3:**` ou `- **L3–5:**` (também aceita `L3-5`) logo depois de um bloco de código aparece como bloco "Linha por linha", visualmente ligado ao exemplo.
-- [ ] No bloco "Linha por linha", cada item mostra o rótulo em texto ("Linha 3", "Linhas 3 a 5") e a explicação.
-- [ ] A 360px, linhas longas rolam dentro do bloco de código e os números de linha continuam alinhados com o código.
+- [x] Todo bloco de código com linguagem mostra o número de cada linha à esquerda.
+- [x] Os números não são copiados pelo botão Copiar nem ao selecionar o texto, e são ignorados por leitores de tela.
+- [x] Uma lista com itens no formato `- **L3:**` ou `- **L3–5:**` (também aceita `L3-5`) logo depois de um bloco de código aparece como bloco "Linha por linha", visualmente ligado ao exemplo.
+- [x] No bloco "Linha por linha", cada item mostra o rótulo em texto ("Linha 3", "Linhas 3 a 5") e a explicação.
+- [x] A 360px, linhas longas rolam dentro do bloco de código e os números de linha continuam alinhados com o código.
 
 **US21: Botão "▶ Rodar" com resultado na aula**
 Como João, quero rodar o exemplo e ver o resultado dentro da aula, para ligar o código ao que ele faz na tela.
-- [ ] Blocos ` ```html rodar ` e ` ```js rodar ` ganham o botão "▶ Rodar" (com rótulo acessível "Rodar exemplo").
-- [ ] Ao clicar, aparece abaixo do bloco uma área "Resultado" e/ou "Console".
+- [x] Blocos ` ```html rodar ` e ` ```js rodar ` ganham o botão "▶ Rodar" (com rótulo acessível "Rodar exemplo").
+- [x] Ao clicar, aparece abaixo do bloco uma área "Resultado" e/ou "Console".
   - `html rodar`: mostra a página renderizada e, se houver `console.log`, também o Console.
   - `js rodar`: mostra só o Console.
-- [ ] O Console mostra `console.log`, `console.warn` e `console.error` em ordem, com texto (objetos e listas aparecem em formato legível, como JSON). Se nada for exibido, mostra "(nada foi exibido no console)".
-- [ ] Erros do código aparecem no Console como "Erro: <mensagem>" (com a linha, quando o navegador informar), identificados por texto e não só pela cor. A aula não quebra.
-- [ ] O resultado roda num `iframe` com `sandbox="allow-scripts"` (sem `allow-same-origin`, sem `allow-forms`, `allow-popups` ou `allow-top-navigation`), com o código passado por `srcdoc`.
-- [ ] O código do exemplo não consegue ler nem alterar a página da aula nem o `localStorage` do site. A página recebe as mensagens do console por `postMessage` e só aceita mensagens vindas do próprio `iframe` do exemplo.
-- [ ] O exemplo não acessa a rede (sem `fetch`, imagens externas etc.), por uma regra de CSP dentro do `srcdoc`.
-- [ ] A área "Resultado" tem fundo branco nos dois temas (como uma página em branco do navegador), altura máxima definida e rolagem interna. Nunca causa rolagem horizontal na página a 360px.
-- [ ] Clicar em "Rodar" de novo recomeça o exemplo do zero (não acumula a saída anterior).
-- [ ] Ao terminar de rodar, um aviso curto é lido por leitores de tela (`aria-live="polite"`), por exemplo "Exemplo executado. 2 linhas no console." O foco do teclado não pula sozinho.
-- [ ] Com `prefers-reduced-motion`, a área de resultado aparece sem animação.
+- [x] O Console mostra `console.log`, `console.warn` e `console.error` em ordem, com texto (objetos e listas aparecem em formato legível, como JSON). Se nada for exibido, mostra "(nada foi exibido no console)".
+- [x] Erros do código aparecem no Console como "Erro: <mensagem>" (com a linha, quando o navegador informar), identificados por texto e não só pela cor. A aula não quebra.
+- [x] O resultado roda num `iframe` com `sandbox="allow-scripts"` (sem `allow-same-origin`, sem `allow-forms`, `allow-popups` ou `allow-top-navigation`), com o código passado por `srcdoc`.
+- [x] O código do exemplo não consegue ler nem alterar a página da aula nem o `localStorage` do site. A página recebe as mensagens do console por `postMessage` e só aceita mensagens vindas do próprio `iframe` do exemplo.
+- [x] O exemplo não acessa a rede (sem `fetch`, imagens externas etc.), por uma regra de CSP dentro do `srcdoc`.
+- [x] A área "Resultado" tem fundo branco nos dois temas (como uma página em branco do navegador), altura máxima definida e rolagem interna. Nunca causa rolagem horizontal na página a 360px.
+- [x] Clicar em "Rodar" de novo recomeça o exemplo do zero (não acumula a saída anterior).
+- [x] Ao terminar de rodar, um aviso curto é lido por leitores de tela (`aria-live="polite"`), por exemplo "Exemplo executado. 2 linhas no console." O foco do teclado não pula sozinho.
+- [x] Com `prefers-reduced-motion`, a área de resultado aparece sem animação.
 
 **US22: Editar o exemplo e restaurar o original**
 Como João, quero mudar o código do exemplo e rodar de novo, para testar o que acontece sem medo de estragar.
-- [ ] Blocos com Rodar têm o botão "Editar", que troca o código por uma caixa de texto editável com o mesmo conteúdo.
-- [ ] "Rodar" usa sempre o código que está na caixa (o editado, se houver).
-- [ ] O botão "Restaurar" volta o código ao original da aula e limpa o resultado. Ele só fica ativo quando o código foi alterado.
-- [ ] No modo edição, Copiar copia o código editado.
-- [ ] A caixa de texto tem rótulo acessível ("Código do exemplo, editável"), fonte mono e tamanho de letra de pelo menos 16px no celular (para o celular não dar zoom sozinho).
-- [ ] A tecla Tab **não** fica presa na caixa: ela leva ao próximo controle, como em qualquer campo. Uma dica curta abaixo da caixa avisa para usar espaços para recuar o código.
-- [ ] Funciona no celular a 360px (digitar, rodar e restaurar).
-- [ ] O código editado **não** é salvo: ao recarregar a página, o exemplo volta ao original.
+- [x] Blocos com Rodar têm o botão "Editar", que troca o código por uma caixa de texto editável com o mesmo conteúdo.
+- [x] "Rodar" usa sempre o código que está na caixa (o editado, se houver).
+- [x] O botão "Restaurar" volta o código ao original da aula e limpa o resultado. Ele só fica ativo quando o código foi alterado.
+- [x] No modo edição, Copiar copia o código editado.
+- [x] A caixa de texto tem rótulo acessível ("Código do exemplo, editável"), fonte mono e tamanho de letra de pelo menos 16px no celular (para o celular não dar zoom sozinho).
+- [x] A tecla Tab **não** fica presa na caixa: ela leva ao próximo controle, como em qualquer campo. Uma dica curta abaixo da caixa avisa para usar espaços para recuar o código.
+- [x] Funciona no celular a 360px (digitar, rodar e restaurar).
+- [x] O código editado **não** é salvo: ao recarregar a página, o exemplo volta ao original.
 
 **US23: Quiz opcional com explicação**
 Como João, quero responder perguntas rápidas e ver na hora por que cada alternativa está certa ou errada, para conferir se entendi.
-- [ ] Cada bloco ` ```quiz ` válido aparece como pergunta com alternativas clicáveis (botões), na ordem escrita.
-- [ ] Ao escolher uma alternativa, o quiz mostra na hora "Certa!" ou "Errada", em texto e não só com cor ou ícone.
-- [ ] Depois de responder, as alternativas ficam travadas, a certa é indicada e aparece a explicação de **todas** as alternativas.
-- [ ] O botão "Tentar de novo" limpa a resposta daquela pergunta.
-- [ ] O resultado é anunciado por leitores de tela com `aria-live="polite"` (ex.: "Errada. A resposta certa é: O primeiro elemento com id msg.").
-- [ ] Dá para responder só com o teclado (Tab até a alternativa, Enter ou Espaço para escolher), com foco visível.
-- [ ] A resposta dada fica salva por aula (ver seção 3) e aparece de novo ao voltar para a aula. Se o `localStorage` estiver indisponível, o quiz funciona igual, só não salva.
-- [ ] O quiz **não** conta para "Aula concluída" e não tem nota nem pontuação.
-- [ ] Contraste AA nos dois temas para alternativas, estados certa/errada e explicações.
+- [x] Cada bloco ` ```quiz ` válido aparece como pergunta com alternativas clicáveis (botões), na ordem escrita.
+- [x] Ao escolher uma alternativa, o quiz mostra na hora "Certa!" ou "Errada", em texto e não só com cor ou ícone.
+- [x] Depois de responder, as alternativas ficam travadas, a certa é indicada e aparece a explicação de **todas** as alternativas.
+- [x] O botão "Tentar de novo" limpa a resposta daquela pergunta.
+- [x] O resultado é anunciado por leitores de tela com `aria-live="polite"` (ex.: "Errada. A resposta certa é: O primeiro elemento com id msg.").
+- [x] Dá para responder só com o teclado (Tab até a alternativa, Enter ou Espaço para escolher), com foco visível.
+- [x] A resposta dada fica salva por aula (ver seção 3) e aparece de novo ao voltar para a aula. Se o `localStorage` estiver indisponível, o quiz funciona igual, só não salva.
+- [x] O quiz **não** conta para "Aula concluída" e não tem nota nem pontuação.
+- [x] Contraste AA nos dois temas para alternativas, estados certa/errada e explicações.
 
 **US24: Novas aulas curtas** (tarefa do professor)
 Como João, quero aulas curtas sobre um conceito por vez, cobrindo o que foi feito nas Etapas 1 a 3, para aprender com calma e sentir que consigo fazer igual.
-- [ ] Entre 12 e 15 aulas, divididas em 3 módulos: Módulo 1 (Etapa 1: o básico do site), Módulo 2 (Etapa 2) e Módulo 3 (Etapa 3: tela de leitura).
-- [ ] Cada aula trata de **um** conceito, com `tempoLeitura` de 5 a 7 minutos (até cerca de 1.000 palavras, contando o texto).
-- [ ] Cada aula segue a estrutura padrão acima: Em resumo (até 3 linhas), O conceito, Exemplo com explicação linha por linha.
-- [ ] Cada exemplo tem no máximo 15 linhas, é independente do código do site e roda sozinho.
-- [ ] Os exemplos em que ver o resultado ajuda usam `rodar`. Exemplos que dependem de `fetch`, `localStorage` ou arquivos do site **não** usam `rodar` (no sandbox eles não funcionam); nesses casos o professor mostra o resultado esperado em texto.
-- [ ] Pelo menos metade das aulas tem um Teste rápido (quiz) com 1 a 3 perguntas.
-- [ ] Conteúdo mais complexo aparece pouco e sempre marcado como opcional (ex.: numa caixa Dica "Para ir além").
-- [ ] Todo termo marcado com `[[...]]` existe em `data/glossario.json`.
+- [x] Entre 12 e 15 aulas, divididas em 3 módulos: Módulo 1 (Etapa 1: o básico do site), Módulo 2 (Etapa 2) e Módulo 3 (Etapa 3: tela de leitura).
+- [x] Cada aula trata de **um** conceito, com `tempoLeitura` de 5 a 7 minutos (até cerca de 1.000 palavras, contando o texto).
+- [x] Cada aula segue a estrutura padrão acima: Em resumo (até 3 linhas), O conceito, Exemplo com explicação linha por linha.
+- [x] Cada exemplo tem no máximo 15 linhas, é independente do código do site e roda sozinho.
+- [x] Os exemplos em que ver o resultado ajuda usam `rodar`. Exemplos que dependem de `fetch`, `localStorage` ou arquivos do site **não** usam `rodar` (no sandbox eles não funcionam); nesses casos o professor mostra o resultado esperado em texto.
+- [x] Pelo menos metade das aulas tem um Teste rápido (quiz) com 1 a 3 perguntas.
+- [x] Conteúdo mais complexo aparece pouco e sempre marcado como opcional (ex.: numa caixa Dica "Para ir além").
+- [x] Todo termo marcado com `[[...]]` existe em `data/glossario.json`.
 - [ ] Todas as aulas continuam legíveis abrindo o `.md` no GitHub.
-- [ ] As aulas antigas (`aulas/aula-01.md` a `aula-03.md`) são removidas do site e de `data/aulas.json`.
-- [ ] `data/aulas.json` e os entregáveis do professor em `data/projetos.json` estão atualizados.
+- [x] As aulas antigas (`aulas/aula-01.md` a `aula-03.md`) são removidas do site e de `data/aulas.json`.
+- [x] `data/aulas.json` e os entregáveis do professor em `data/projetos.json` estão atualizados.
 
 **Requisitos gerais da Etapa 4**
-- [ ] Nenhum bloco malformado quebra a aula (ver regra acima). Os outros blocos da mesma aula continuam funcionando.
-- [ ] Se `marked` ou `highlight.js` não carregarem, valem os comportamentos da Etapa 3. Rodar, Editar e Quiz não dependem de `highlight.js`.
-- [ ] Nenhuma biblioteca nova: Rodar, Editar, linhas numeradas e Quiz são feitos em JS puro.
-- [ ] Tudo funciona a 360px sem rolagem horizontal, por teclado (foco visível em Rodar, Editar, Restaurar, Copiar e alternativas do quiz), com contraste AA nos dois temas e respeitando `prefers-reduced-motion`.
-- [ ] Os botões têm texto visível; o "▶" é decorativo para leitores de tela.
+- [x] Nenhum bloco malformado quebra a aula (ver regra acima). Os outros blocos da mesma aula continuam funcionando.
+- [x] Se `marked` ou `highlight.js` não carregarem, valem os comportamentos da Etapa 3. Rodar, Editar e Quiz não dependem de `highlight.js`.
+- [x] Nenhuma biblioteca nova: Rodar, Editar, linhas numeradas e Quiz são feitos em JS puro.
+- [x] Tudo funciona a 360px sem rolagem horizontal, por teclado (foco visível em Rodar, Editar, Restaurar, Copiar e alternativas do quiz), com contraste AA nos dois temas e respeitando `prefers-reduced-motion`.
+- [x] Os botões têm texto visível; o "▶" é decorativo para leitores de tela.
 - [ ] Funciona publicado no GitHub Pages, com caminhos relativos.
 
 ### Requisitos gerais (todas as etapas)
