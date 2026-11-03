@@ -16,3 +16,9 @@ Esta pasta é o escritório de uma empresa onde os funcionários são agentes de
 2. artista: define o visual (cores, tipografia, layout).
 3. dev: implementa o que foi definido.
 4. professor: explica o código que foi escrito e propõe um pequeno exercício.
+
+## Git e GitHub
+- A empresa inteira é um repositório público: github.com/JoaoSaccucci/empresa-ia. O site é publicado no GitHub Pages a cada push.
+- Ao fim de cada entrega ou ajuste, proponha um commit: mostre os arquivos que mudaram e a mensagem. Só faça o commit e o push depois que eu aprovar.
+- Ao propor o commit, confira se o README.md da raiz precisa ser atualizado (projetos, tecnologias, estrutura de pastas, "Sobre mim") e diga se ele muda junto.
+- Nunca coloque no repositório senhas, chaves de API, documentos pessoais ou dados de outras pessoas. Avise antes do commit se encontrar algo assim.
