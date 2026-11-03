@@ -36,7 +36,7 @@ O caminho de uma página, por exemplo `lista-projetos.html`, é este:
  O que você vê na tela
 ```
 
-A ideia central é esta: **o HTML não tem os projetos escritos nele.** O HTML tem só uma "caixa vazia", e o JavaScript enche essa caixa com o que está no [[JSON]]. Por isso o `LEIAME.md` diz que, para adicionar um projeto, basta editar o `data/projetos.json`.
+A ideia central é esta: **o HTML não tem os projetos escritos nele.** O HTML tem só uma "caixa vazia", e o JavaScript enche essa caixa com o que está no [[JSON]]. Por isso o `README.md` diz que, para adicionar um projeto, basta editar o `data/projetos.json`.
 
 > [!NOTE]
 > **[[DOM]]** (Document Object Model) é a página transformada em objetos que o JavaScript consegue ler e alterar. Quando o JS "mexe na página", ele está mexendo no DOM.
@@ -276,7 +276,7 @@ if (window.location.protocol === "file:") {
 ```
 
 > [!TIP]
-> Clique com o botão direito no `index.html` e escolha **Open with Live Server** (o passo a passo está no `LEIAME.md`). No GitHub Pages funciona sem nada disso, porque lá já existe um servidor.
+> Clique com o botão direito no `index.html` e escolha **Open with Live Server** (o passo a passo está no `README.md`). No GitHub Pages funciona sem nada disso, porque lá já existe um servidor.
 
 ## 4. Exercício prático
 

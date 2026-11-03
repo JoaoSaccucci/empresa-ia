@@ -2,6 +2,8 @@
 
 Site da empresa de agentes de IA do João. HTML, CSS e JavaScript puros, sem framework e sem build.
 
+**Site no ar:** https://joaosaccucci.github.io/empresa-ia/ · Visão geral da empresa: [README da raiz](../../README.md)
+
 ## Como abrir
 
 O site lê os dados de arquivos JSON com `fetch`. Se você abrir o `index.html` com dois cliques (endereço `file://`), o navegador bloqueia essa leitura e as páginas mostram uma mensagem de erro.
@@ -38,6 +40,7 @@ aulas/                 Os textos das aulas em Markdown (.md), escritos pelo prof
 img/agentes/           Avatares SVG dos agentes
 img/icones/            Ícones SVG, colados inline no HTML/JS (contato no sobre.html; sumário, tema, concluída, relógio e copiar nas aulas)
 .nojekyll              Faz o GitHub Pages servir os arquivos .md como estão
+README.md              Este arquivo
 docs/requisitos.md     Requisitos (product-owner)
 docs/design.md         Decisões de visual (artista)
 ```

@@ -40,7 +40,7 @@
           { "titulo": "JavaScript comum", "url": "js/comum.js" },
           { "titulo": "Dados dos projetos", "url": "data/projetos.json" },
           { "titulo": "Dados dos agentes", "url": "data/agentes.json" },
-          { "titulo": "LEIAME", "url": "LEIAME.md" }
+          { "titulo": "README", "url": "README.md" }
         ],
         "imagens": []
       },
@@ -71,7 +71,7 @@
           { "titulo": "Sobre", "url": "sobre.html" },
           { "titulo": "Linha do tempo (JS)", "url": "js/timeline.js" },
           { "titulo": "Detalhe do projeto (JS)", "url": "js/detalhe-projeto.js" },
-          { "titulo": "LEIAME", "url": "LEIAME.md" }
+          { "titulo": "README", "url": "README.md" }
         ],
         "imagens": []
       },
@@ -107,7 +107,7 @@
           { "titulo": "Tela de leitura (JS)", "url": "js/aula.js" },
           { "titulo": "Dados das aulas", "url": "data/aulas.json" },
           { "titulo": "Glossário", "url": "data/glossario.json" },
-          { "titulo": "LEIAME", "url": "LEIAME.md" }
+          { "titulo": "README", "url": "README.md" }
         ],
         "imagens": []
       },
