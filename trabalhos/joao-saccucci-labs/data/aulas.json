@@ -1,0 +1,29 @@
+[
+  {
+    "id": "joao-saccucci-labs-aula-01",
+    "titulo": "Como HTML, JS, fetch e JSON se conectam",
+    "projeto": "joao-saccucci-labs",
+    "numero": 1,
+    "arquivo": "aulas/aula-01.md",
+    "tempoLeitura": 15,
+    "resumo": "O caminho dos dados do JSON até a tela, os 5 conceitos principais da Etapa 1 e por que usar o Live Server."
+  },
+  {
+    "id": "joao-saccucci-labs-aula-02",
+    "titulo": "Linha do tempo, página Sobre e truques de CSS",
+    "projeto": "joao-saccucci-labs",
+    "numero": 2,
+    "arquivo": "aulas/aula-02.md",
+    "tempoLeitura": 15,
+    "resumo": "Ordenar e agrupar eventos, ordem dos scripts, HTML acessível e subgrid."
+  },
+  {
+    "id": "joao-saccucci-labs-aula-03",
+    "titulo": "Por dentro da tela de leitura das aulas",
+    "projeto": "joao-saccucci-labs",
+    "numero": 3,
+    "arquivo": "aulas/aula-03.md",
+    "tempoLeitura": 15,
+    "resumo": "Biblioteca por CDN com integrity, Markdown seguro, localStorage com try/catch, tema sem piscar e sumário que acompanha a rolagem."
+  }
+]

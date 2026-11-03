@@ -48,7 +48,7 @@
         "agente": "professor",
         "resumo": "Escreveu a Aula 01: como HTML, JS, fetch, JSON, DOM e CSS se conectam, os 5 conceitos principais do código, por que usar o Live Server, um exercício prático e frases para entrevista de estágio.",
         "entregaveis": [
-          { "titulo": "Aula 01", "url": "aulas/aula-01.md" }
+          { "titulo": "Aula 01", "url": "aula.html?id=joao-saccucci-labs-aula-01" }
         ],
         "imagens": []
       },
@@ -77,9 +77,46 @@
       },
       {
         "agente": "professor",
-        "resumo": "Escreveu a Aula 02: ordenar com sort + localeCompare, agrupar eventos por data, fallback de agente, ordem dos scripts, HTML semântico e acessível no Sobre, subgrid com @supports. Exercício: preencher o Sobre e criar um evento novo na linha do tempo.",
+        "resumo": "Escreveu a Aula 02: ordenar com sort + localeCompare, agrupar eventos por data, fallback de agente, ordem dos scripts, HTML semântico e acessível no Sobre, subgrid com @supports. Exercício: criar um evento novo na linha do tempo (e, na versão reescrita, provocar o erro da ordem dos scripts).",
         "entregaveis": [
-          { "titulo": "Aula 02", "url": "aulas/aula-02.md" }
+          { "titulo": "Aula 02", "url": "aula.html?id=joao-saccucci-labs-aula-02" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "artista",
+        "resumo": "Etapa 3: desenhou a tela de leitura das aulas em \"modo foco\" (sem grade e sem partículas, coluna de 64ch, verde do professor como destaque), o tema claro \"papel\", as 4 caixas de destaque, o balão do glossário, o checklist, o tema de cores do código e a lista de aulas. Criou 5 ícones novos.",
+        "entregaveis": [
+          { "titulo": "Design (seção 11)", "url": "docs/design.md" },
+          { "titulo": "Folha de estilo (seções 23 a 36)", "url": "css/style.css" },
+          { "titulo": "Ícone Sumário", "url": "img/icones/sumario.svg" },
+          { "titulo": "Ícone Tema", "url": "img/icones/tema.svg" },
+          { "titulo": "Ícone Concluída", "url": "img/icones/concluida.svg" },
+          { "titulo": "Ícone Relógio", "url": "img/icones/relogio.svg" },
+          { "titulo": "Ícone Copiar", "url": "img/icones/copiar.svg" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "dev",
+        "resumo": "Implementou a Etapa 3: lista de aulas e tela de leitura que converte o .md com marked, colore o código com highlight.js e cria caixas de destaque, glossário, checklist salvo, sumário, barra de progresso, tamanho da letra, tema papel e aula concluída, com planos B se algo não carregar. O menu ganhou o item Aulas.",
+        "entregaveis": [
+          { "titulo": "Aulas", "url": "aulas.html" },
+          { "titulo": "Aula 01 (tela de leitura)", "url": "aula.html?id=joao-saccucci-labs-aula-01" },
+          { "titulo": "Lista de aulas (JS)", "url": "js/aulas.js" },
+          { "titulo": "Tela de leitura (JS)", "url": "js/aula.js" },
+          { "titulo": "Dados das aulas", "url": "data/aulas.json" },
+          { "titulo": "Glossário", "url": "data/glossario.json" },
+          { "titulo": "LEIAME", "url": "LEIAME.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "professor",
+        "resumo": "Etapa 3: reescreveu as Aulas 01 e 02 no formato novo (caixas de destaque, glossário e exercício em checklist, com as linhas conferidas no código atual) e escreveu a Aula 03 sobre a tela de leitura: CDN com SRI, Markdown seguro, localStorage, tema antes de pintar e sumário ativo.",
+        "entregaveis": [
+          { "titulo": "Aula 03", "url": "aula.html?id=joao-saccucci-labs-aula-03" },
+          { "titulo": "Glossário", "url": "data/glossario.json" }
         ],
         "imagens": []
       }
@@ -96,7 +133,10 @@
       { "data": "2026-11-02", "agente": "artista", "descricao": "Design da Etapa 2: linha do tempo e página Sobre (cartão de identidade do chefe)." },
       { "data": "2026-11-02", "agente": "dev", "descricao": "Implementação da Etapa 2: linha do tempo no detalhe do projeto e página Sobre." },
       { "data": "2026-11-02", "agente": "professor", "descricao": "Aula 02 sobre a linha do tempo, a página Sobre e o subgrid, com exercício prático." },
-      { "data": "2026-11-03", "agente": "dev", "descricao": "Página Sobre preenchida com os dados do João (formação, cidade, foco, frase, contatos e estudos)." }
+      { "data": "2026-11-03", "agente": "dev", "descricao": "Página Sobre preenchida com os dados do João (formação, cidade, foco, frase, contatos e estudos)." },
+      { "data": "2026-11-03", "agente": "artista", "descricao": "Design da Etapa 3: tela de leitura das aulas em modo foco, tema papel e lista de aulas." },
+      { "data": "2026-11-03", "agente": "dev", "descricao": "Implementação da Etapa 3: lista de aulas e tela de leitura com sumário, glossário, checklist, código colorido e tema papel." },
+      { "data": "2026-11-03", "agente": "professor", "descricao": "Aulas 01 e 02 reescritas no formato novo e Aula 03 sobre a tela de leitura." }
     ]
   }
 ]
