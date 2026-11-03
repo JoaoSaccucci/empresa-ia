@@ -143,7 +143,7 @@ Como João, quero dicas, erros comuns, perguntas de entrevista e palavras novas 
 - [x] As 4 caixas da tabela de sintaxe aparecem com cor, ícone e título próprios: Dica, Erro comum, Em entrevista, Palavra nova.
 - [x] O tipo da caixa é indicado também pelo título em texto (não só pela cor ou ícone). O ícone é decorativo para leitores de tela.
 - [x] Um blockquote comum (sem `[!...]`) continua aparecendo como citação normal.
-- [ ] O mesmo `.md` aparece como caixa de alerta quando aberto no GitHub.
+- [x] O mesmo `.md` aparece como caixa de alerta quando aberto no GitHub.
 
 **US13: Glossário de palavras em inglês**
 Como João, quero ver a tradução de palavras em inglês do código, para aprender o vocabulário sem sair da aula.
@@ -195,7 +195,7 @@ Como João, quero as aulas que já existem no formato novo, para usar todas as f
 - [x] As chaves do `localStorage` usam um prefixo do site para não misturar com outros sites (sugestão: `jsl:`).
 - [x] `marked` e `highlight.js` vêm de CDN com versão fixa na URL (nada de "latest"). Só `aula.html` carrega essas bibliotecas.
 - [x] Tudo funciona a 360px, por teclado (foco visível em todos os controles) e respeita `prefers-reduced-motion`.
-- [ ] Funciona publicado no GitHub Pages, com caminhos relativos.
+- [x] Funciona publicado no GitHub Pages, com caminhos relativos.
 
 ### Etapa 4 — Aulas 2.0
 
@@ -286,7 +286,7 @@ Como João, quero um resumo curto no começo de cada aula, para saber o essencia
 - [x] Um `> [!TIP]` cujo conteúdo começa com `**Em resumo:**` aparece como caixa "Em resumo", com título em texto, visual próprio e diferente da caixa Dica.
 - [x] O texto "Em resumo:" em negrito não aparece repetido dentro da caixa (vira o título).
 - [x] Um `> [!TIP]` comum continua aparecendo como "Dica".
-- [ ] No GitHub, a caixa aparece como alerta "Tip" com "Em resumo:" em negrito.
+- [x] No GitHub, a caixa aparece como alerta "Tip" com "Em resumo:" em negrito.
 - [x] A caixa tem contraste AA nos dois temas.
 
 **US20: Exemplo com linhas numeradas e explicação linha por linha**
@@ -346,7 +346,7 @@ Como João, quero aulas curtas sobre um conceito por vez, cobrindo o que foi fei
 - [x] Pelo menos metade das aulas tem um Teste rápido (quiz) com 1 a 3 perguntas.
 - [x] Conteúdo mais complexo aparece pouco e sempre marcado como opcional (ex.: numa caixa Dica "Para ir além").
 - [x] Todo termo marcado com `[[...]]` existe em `data/glossario.json`.
-- [ ] Todas as aulas continuam legíveis abrindo o `.md` no GitHub.
+- [x] Todas as aulas continuam legíveis abrindo o `.md` no GitHub.
 - [x] As aulas antigas (`aulas/aula-01.md` a `aula-03.md`) são removidas do site e de `data/aulas.json`.
 - [x] `data/aulas.json` e os entregáveis do professor em `data/projetos.json` estão atualizados.
 
@@ -356,7 +356,7 @@ Como João, quero aulas curtas sobre um conceito por vez, cobrindo o que foi fei
 - [x] Nenhuma biblioteca nova: Rodar, Editar, linhas numeradas e Quiz são feitos em JS puro.
 - [x] Tudo funciona a 360px sem rolagem horizontal, por teclado (foco visível em Rodar, Editar, Restaurar, Copiar e alternativas do quiz), com contraste AA nos dois temas e respeitando `prefers-reduced-motion`.
 - [x] Os botões têm texto visível; o "▶" é decorativo para leitores de tela.
-- [ ] Funciona publicado no GitHub Pages, com caminhos relativos.
+- [x] Funciona publicado no GitHub Pages, com caminhos relativos.
 
 ### Requisitos gerais (todas as etapas)
 - [ ] O layout funciona de 360px até telas de desktop.
