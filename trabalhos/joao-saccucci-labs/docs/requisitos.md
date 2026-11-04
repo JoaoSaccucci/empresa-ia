@@ -899,15 +899,15 @@ Ordem sugerida dentro da Etapa 6: US30 e US32 (regra, guias e agentes) → US31 
    - Nos entregáveis, links de código podem apontar para a versão atual (`/blob/main/`). Só as aulas exigem link fixo.
    - Os guias comuns ficam em `trabalhos/joao-saccucci-labs/docs/guias/`. Nas aulas da Agenda, a seção "Onde aparece no site" se chama "Onde aparece na Agenda".
 
-## 8. Agenda: perguntas pendentes (próxima conversa)
-Perguntas para o João, uma de cada vez, antes de escrever `docs/projetos/agenda/requisitos.md`:
-1. Quais informações um compromisso tem (por exemplo: título, data, hora, local, observação)? Quais são obrigatórias?
-2. Qual é a tela principal: uma lista dos próximos compromissos, a visão de um dia, de uma semana ou um calendário do mês?
-3. Na primeira versão, o que dá para fazer com um compromisso: só criar e excluir, ou também editar e marcar como feito?
-4. O que acontece com os compromissos que já passaram: somem, ficam riscados ou vão para uma parte separada?
-5. Precisa ter compromissos que se repetem (por exemplo, toda segunda) na primeira versão?
-6. Precisa de lembrete ou aviso perto da hora do compromisso?
-7. Precisa de busca ou de filtro (por exemplo, por categoria ou por cor)?
-8. O visual segue a identidade da Labs (escuro e neon) ou a Agenda tem um visual próprio?
-9. A Agenda mostra na tela um aviso de que os dados ficam só neste navegador?
-10. Excluir um compromisso pede confirmação antes?
+## 8. Agenda: perguntas da conversa (respondidas)
+As 10 perguntas foram respondidas pelo João em 2026-11-04. As respostas viraram os requisitos da Agenda em [`docs/projetos/agenda/requisitos.md`](projetos/agenda/requisitos.md) (Agenda US01 a US07, com regras, modelo de dados e evoluções futuras).
+1. [x] Quais informações um compromisso tem? Quais são obrigatórias? **Resposta:** título e data obrigatórios; hora, local e observação opcionais. Sem hora = dia todo.
+2. [x] Qual é a tela principal? **Resposta:** lista dos próximos compromissos agrupados por dia ("Hoje", "Amanhã", "Sex, 14/11"), só com os dias que têm compromisso e com "daqui a X dias". Calendário do mês é a primeira evolução futura.
+3. [x] O que dá para fazer com um compromisso? **Resposta:** criar, editar e excluir, com o mesmo formulário para criar e editar.
+4. [x] O que acontece com os compromissos que já passaram? **Resposta:** vão para a seção "Anteriores", recolhida embaixo. Nada é apagado sozinho.
+5. [x] Compromissos que se repetem? **Resposta:** não na primeira versão (futuro).
+6. [x] Lembrete perto da hora? **Resposta:** não na primeira versão (futuro; sem servidor, só funcionaria com a aba aberta).
+7. [x] Busca ou filtro? **Resposta:** não na primeira versão (futuro: busca por texto e categorias com cores).
+8. [x] Visual? **Resposta:** próprio, mas da mesma família da Labs, com liberdade para o artista ousar na cor e no clima.
+9. [x] Aviso de que os dados ficam só no navegador? **Resposta:** sim, discreto e fixo no rodapé: "Seus compromissos ficam salvos só neste navegador."
+10. [x] Excluir pede confirmação? **Resposta:** sim: "Excluir '<título>'? Essa ação não pode ser desfeita.", com os botões Excluir e Cancelar.
