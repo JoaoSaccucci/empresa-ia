@@ -1,8 +1,8 @@
 # João Saccucci Labs
 
-**Uma empresa em que os funcionários são agentes de IA e eu sou o chefe.**
+**Sou estudante de TI, e este repositório é o meu laboratório de projetos.**
 
-Cada agente cuida de uma parte do trabalho: levantar os requisitos, desenhar o visual, programar e me explicar o código. Eu decido o que construir, aprovo cada etapa e estudo o que foi feito.
+Ele simula uma empresa em que trabalho com uma equipe de agentes de IA para transformar ideias em projetos, do primeiro requisito ao código explicado. Cada agente cuida de uma parte do trabalho: levantar os requisitos, desenhar o visual, programar, testar e me explicar o código. Eu decido o que construir, aprovo cada etapa e estudo o que foi feito.
 
 ### 🌐 Veja o site: **https://joaosaccucci.github.io/empresa-ia/**
 
@@ -18,7 +18,7 @@ O primeiro projeto da empresa é o próprio site, que mostra os projetos, o que 
 | <img src="trabalhos/joao-saccucci-labs/img/agentes/artista.svg" width="40" alt=""> | **Artista** | Define cores, tipografia e layout, e escreve o CSS e os ícones em SVG. |
 | <img src="trabalhos/joao-saccucci-labs/img/agentes/dev.svg" width="40" alt=""> | **Dev** | Implementa o que foi definido e testa no computador e no celular. |
 | <img src="trabalhos/joao-saccucci-labs/img/agentes/testador.svg" width="40" alt=""> | **Testador** | Garante a qualidade (QA): testa celular, teclado, acessibilidade e contraste e escreve um relatório de teste. |
-| <img src="trabalhos/joao-saccucci-labs/img/agentes/professor.svg" width="40" alt=""> | **Professor** | Explica o código em aulas, com exercícios e frases para entrevista. |
+| <img src="trabalhos/joao-saccucci-labs/img/agentes/professor.svg" width="40" alt=""> | **Professor** | Explica o código de cada entrega em aulas curtas, com exercícios e frases para entrevista. As aulas ficam na aba **Aulas** do site. |
 | <img src="trabalhos/joao-saccucci-labs/img/agentes/mentor-carreira.svg" width="40" alt=""> | **Mentor de carreira** | Agente de apoio, fora do fluxo dos projetos: me ajuda a planejar os estudos e a carreira. |
 
 Os agentes rodam no [Claude Code](https://claude.com/claude-code). As regras da empresa estão em [`CLAUDE.md`](CLAUDE.md) e a descrição de cada agente em [`.claude/agents/`](.claude/agents/).
@@ -58,7 +58,7 @@ Cada entrega vira um commit, e o site no GitHub Pages se atualiza sozinho.
 ```text
 empresa-ia/
 ├── CLAUDE.md              Regras da empresa
-├── .claude/agents/        Os 4 agentes (product-owner, artista, dev, professor)
+├── .claude/agents/        Os 6 agentes (product-owner, artista, dev, testador, professor, mentor-carreira)
 ├── index.html             Atalho que leva ao site
 └── trabalhos/
     └── joao-saccucci-labs/
@@ -88,7 +88,7 @@ Sou o **João Saccucci**, estudante de Análise e Desenvolvimento de Sistemas na
 
 ## In English
 
-**João Saccucci Labs** is a "company" where the employees are AI agents and I'm the boss. A Product Owner agent gathers requirements by interviewing me, an Artist agent designs the UI, a Dev agent implements and tests it, and a Teacher agent writes lessons explaining the code so I learn from every delivery.
+I'm an IT student, and **João Saccucci Labs** is my project lab. It simulates a company where I work with a team of AI agents to turn ideas into projects, from the first requirement to the explained code. A Product Owner agent gathers requirements by interviewing me, an Artist agent designs the UI, a Dev agent implements it, a Tester agent checks it (QA), and a Teacher agent writes lessons explaining the code so I learn from every delivery. The lessons are in the site's **Aulas** (Lessons) tab.
 
 Its first project is its own website, built with **plain HTML, CSS and JavaScript** (no framework, no build step) and data in JSON. It shows each project, what each agent did, a project timeline, and an interactive lesson reader with table of contents, glossary tooltips, syntax highlighting and saved exercise checklists.
 
