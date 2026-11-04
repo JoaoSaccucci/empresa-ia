@@ -3971,3 +3971,62 @@ body.sumario-aberto {
   padding-top: var(--esp-3);
   border-top: 1px solid var(--cor-borda);
 }
+
+
+/* =========================================================
+   ETAPA 6 - PROJETOS INDEPENDENTES
+   Seção 40: botões "Ver site" e "Ver código" no detalhe do
+   projeto (US33). As decisões estão no docs/design.md, seção 14.
+   Os botões em si são os .btn da seção 6; aqui fica só o grupo,
+   o ícone e a setinha de "abre em nova aba".
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   40. LINKS DO PROJETO (detalhe-projeto.html)
+   <div class="projeto-links"> fica dentro do .projeto-cabecalho,
+   depois das tags. Sem nenhum link, o JS não cria o div.
+   --------------------------------------------------------- */
+.projeto-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-3);
+  margin-top: var(--esp-2);        /* + o gap de 16px do cabeçalho = 24px */
+}
+
+.projeto-link .icone {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* Setinha ↗ = "abre fora daqui" (o mesmo sinal dos entregáveis).
+   É aria-hidden: para o leitor de tela, quem avisa é o
+   <span class="sr-only">(abre em nova aba)</span>. */
+.projeto-link-seta {
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-sm);
+  line-height: 1;
+  transition: transform var(--transicao);
+}
+
+.projeto-link:hover .projeto-link-seta {
+  transform: translate(2px, -2px);
+}
+
+/* Celular: cada botão ocupa a linha inteira (os dois juntos
+   não cabem nos 328px úteis de uma tela de 360px) */
+@media (max-width: 479.98px) {
+  .projeto-link {
+    flex: 1 1 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .projeto-link-seta {
+    transition: none;
+  }
+
+  .projeto-link:hover .projeto-link-seta {
+    transform: none;
+  }
+}

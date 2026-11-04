@@ -1791,3 +1791,99 @@ Atenção: a borda tracejada **com 55%** de mistura daria só ~2.9:1. Usar **70%
 - **Movimento reduzido:** o bloco do mentor usa `.surgir` e os avatares novos usam `flutuar` (Equipe) e o hover dos mini avatares (Sobre). Tudo isso já é desligado pela regra geral da seção 21. Nenhuma regra nova.
 - **360px (sem rolagem horizontal):** fluxo em lista vertical de 328px; bloco do mentor com 296px por dentro e selo que desce de linha; cards da Equipe com 280px por dentro (avatar + selo cabem); 6 mini avatares com 256px dentro de 280px; "Estudando agora" em 1 coluna.
 - **Alto contraste do Windows (`forced-colors`):** as cores somem, mas "Apoio", "Atuação", "Fora do fluxo" e os nomes são texto, então nada se perde.
+
+---
+
+## 14. Etapa 6: projetos independentes (US33 e US37)
+
+CSS pronto em `css/style.css`, **seção 40** (no fim do arquivo). Ícone novo: `img/icones/site.svg` (mesmo padrão dos outros: colar o `<svg>` inline, `aria-hidden="true"`). O visual da Agenda é próprio e fica em [`docs/projetos/agenda/design.md`](projetos/agenda/design.md).
+
+### 14.1 Botões "Ver site" e "Ver código" no detalhe (US33)
+
+**Decisões**
+- **Posição:** no fim do cabeçalho do projeto (`.projeto-cabecalho`), **depois das tags**. É a "saída" do cabeçalho: primeiro o visitante lê o que é o projeto (nome, descrição, status, tecnologias) e logo em seguida tem as duas portas para fora. Ficam antes de "Trabalho dos agentes", então aparecem sem rolar no computador e logo depois do cabeçalho no celular.
+- **Ordem e estilo:** "Ver site" primeiro, com `.btn.btn-primario` (gradiente, texto escuro): é o produto funcionando, a ação mais importante para um recrutador. "Ver código" depois, com `.btn.btn-secundario` (vidro com borda). Os dois são os botões que já existem (seção 6 do CSS); a seção 40 só acrescenta o grupo, o ícone e a setinha.
+- **"Ver código" sozinho continua secundário** (caso da Labs e de projetos sem site, como um futuro projeto em Java). O estilo de cada botão não muda conforme o outro existe ou não: assim o visitante aprende uma vez o que cada um significa.
+- **Ícones:** "Ver site" usa o ícone novo `site.svg` (janela de navegador). "Ver código" reaproveita o `github.svg` (o mesmo desenho próprio do botão GitHub do Sobre), porque o código abre no GitHub.
+- **Nova aba, para a vista:** depois do texto vem a setinha `↗`, o mesmo sinal que os entregáveis já usam para "abre um arquivo". Ela fica `aria-hidden`.
+- **Nova aba, para o leitor de tela:** `<span class="sr-only">(abre em nova aba)</span>`, igual aos contatos do Sobre (seção 10.2). O leitor lê "Ver site (abre em nova aba), link".
+- **Sem nenhum dos dois campos** (ou com valor que não começa com `https://`): o `div.projeto-links` **não é criado**. Como o espaço entre os blocos vem do `gap` do `.projeto-cabecalho`, não sobra buraco.
+- `target="_blank" rel="noopener noreferrer"`, como no Sobre (o `noreferrer` já inclui o `noopener` que a US33 pede).
+
+**Wireframe (computador)**
+```
+<- Voltar para projetos
+h1 Agenda
+Agenda online para anotar compromissos...
+[EM ANDAMENTO]  início 2026-11-04  ·  fim —
+[HTML][CSS][JavaScript]
+
+[(janela) Ver site ↗]  [(gato) Ver código ↗]      <- .projeto-links
+--------------------------------------------------------------
+h2 Trabalho dos agentes
+```
+**Labs (só código):**
+```
+[HTML][CSS][JavaScript]
+[(gato) Ver código ↗]
+```
+**Celular (abaixo de 480px):** cada botão ocupa a linha inteira, um embaixo do outro (alvo grande para o polegar). Conferido a 360px: "Ver site" fica com ~150px de conteúdo (ícone 20 + 8 + texto ~60 + 8 + seta ~10 + padding 2 × 24) e "Ver código" com ~175px: os dois juntos (~337px + 12px de vão) **não** cabem nos 328px úteis, por isso empilham. De 480px para cima ficam lado a lado, com a largura do próprio texto.
+
+**HTML exato** (gerado pelo `detalhe-projeto.js`, logo depois do `<div class="tags">`, ainda dentro do `<header class="projeto-cabecalho">`):
+
+```html
+<div class="projeto-links">
+  <a class="btn btn-primario projeto-link" href="https://joaosaccucci.github.io/agenda/" target="_blank" rel="noopener noreferrer">
+    <!-- colar aqui o <svg> de img/icones/site.svg -->
+    <span>Ver site</span>
+    <span class="projeto-link-seta" aria-hidden="true">&#8599;</span>
+    <span class="sr-only">(abre em nova aba)</span>
+  </a>
+  <a class="btn btn-secundario projeto-link" href="https://github.com/JoaoSaccucci/agenda" target="_blank" rel="noopener noreferrer">
+    <!-- colar aqui o <svg> de img/icones/github.svg -->
+    <span>Ver código</span>
+    <span class="projeto-link-seta" aria-hidden="true">&#8599;</span>
+    <span class="sr-only">(abre em nova aba)</span>
+  </a>
+</div>
+```
+- Os SVGs podem ficar em duas constantes de texto no JS (copiadas dos arquivos), para o template ficar curto.
+- O endereço passa pelo `escapar()`, como todo o resto, **depois** da conferência do `https://` (US33).
+
+**Contraste e estados** (nada novo: são os botões da seção 6)
+
+| Elemento | Cor / fundo | Razão | Mínimo |
+|---|---|---|---|
+| Texto de "Ver site" | `#05060F` / gradiente (pior ponto: roxo `#B45CFF`) | 5.7:1 | 4.5:1 |
+| Texto de "Ver código" | `#E8ECF8` / vidro sobre o fundo | ~15:1 | 4.5:1 |
+| Setinha e ícone | mesma cor do texto de cada botão | igual ao texto | 3:1 |
+| Contorno de foco | `#00E5FF` / `#05060F` | ~13:1 | 3:1 |
+
+- **Hover:** "Ver site" sobe 2px com brilho ciano + magenta; "Ver código" ganha borda ciano com brilho (os dois já vêm da seção 6). Nos dois, a setinha anda 2px na diagonal (para cima e para a direita), reforçando "sai daqui".
+- **Foco:** contorno ciano global (seção 2 do CSS).
+- **Movimento reduzido:** a regra geral (seção 21) já tira as transições; a seção 40 também tira o movimento da setinha.
+
+### 14.2 Entregáveis com endereço completo (US33)
+
+Nada muda no visual: o chip `.entregavel` já tem a setinha `↗` na cor do agente. Quando a `url` começa com `https://`, o JS acrescenta `target="_blank" rel="noopener noreferrer"` e, depois do título, `<span class="sr-only"> (abre em nova aba)</span>`. Caminho relativo continua igual a hoje (mesma aba, sem o texto escondido).
+
+```html
+<a class="entregavel" href="https://github.com/JoaoSaccucci/agenda/blob/main/js/agenda.js" target="_blank" rel="noopener noreferrer">Código (JS)<span class="sr-only"> (abre em nova aba)</span></a>
+```
+
+### 14.3 A Agenda na vitrine (US37)
+
+**Nada muda na lista de projetos.** O card da Agenda é igual ao da Labs (linha de gradiente no topo, badge de status, descrição, data), sem cor nem ícone próprio. Motivos:
+- A US37 pede que a Agenda apareça "sem mudar HTML ou JS além do que a US33 pede". Uma cor ou ícone por projeto precisaria de um campo novo no JSON e de mudança no `lista-projetos.js`.
+- Os cards iguais deixam a vitrine organizada como um portfólio: o que diferencia os projetos é o nome, a descrição e o status, que são texto.
+- A personalidade da Agenda aparece quando o visitante clica em "Ver site".
+
+Se um dia houver muitos projetos, dá para criar um campo opcional `cor` em `projetos.json` (usado como `--agente-cor` na linha do topo do card). Fica como ideia para o futuro, sem nada no CSS agora.
+
+### 14.4 Classes novas (resumo para o dev)
+
+| Classe | Onde | Seção do CSS |
+|---|---|---|
+| `.projeto-links` | grupo dos botões, dentro do `.projeto-cabecalho` | 40 |
+| `.projeto-link` (junto com `.btn .btn-primario` ou `.btn .btn-secundario`) | cada botão | 40 |
+| `.projeto-link-seta` | a setinha `↗` | 40 |
