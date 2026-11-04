@@ -30,9 +30,10 @@
   {
     "id": "professor",
     "nome": "Professor",
-    "papel": "Explica o código e propõe exercícios.",
+    "papel": "Explica o código de cada entrega em aulas curtas, com exercícios práticos. Todas as aulas ficam na aba Aulas.",
     "cor": "#7CFFB2",
-    "avatar": "img/agentes/professor.svg"
+    "avatar": "img/agentes/professor.svg",
+    "linkAulas": "aulas.html"
   },
   {
     "id": "mentor-carreira",

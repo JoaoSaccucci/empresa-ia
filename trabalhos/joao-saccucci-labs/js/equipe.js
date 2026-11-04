@@ -37,7 +37,20 @@ function htmlBlocoProjetos(agente, projetos) {
       <div class="agente-projetos">
         <h4>Projetos</h4>
         ${listaHtml}
+        ${htmlBlocoAulas(agente)}
       </div>`;
+}
+
+// Bloco "Aulas": só aparece se o agente tem "linkAulas" no agentes.json
+// (hoje, só o professor). Fica DENTRO do .agente-projetos para o card
+// continuar com 5 partes e não bagunçar as linhas do subgrid.
+function htmlBlocoAulas(agente) {
+  if (!agente.linkAulas) return "";
+  return `
+        <div class="agente-aulas">
+          <h4>Aulas</h4>
+          <a href="${escapar(agente.linkAulas)}">Ver as aulas &rarr;</a>
+        </div>`;
 }
 
 // Bloco "Atuação" de um agente de apoio. Usa também a classe
