@@ -452,6 +452,137 @@ Como visitante, quero ver na página inicial que o mentor apoia o João sem faze
 - Atualizar o "Fluxo de trabalho" do `CLAUDE.md` da raiz para PO → artista → dev → testador → professor, com o mentor de carreira fora do fluxo.
 - Lembrete: `.claude/agents/` fica no repositório público. O arquivo do mentor descreve só o papel dele e onde ele trabalha, sem dados pessoais.
 
+### Etapa 6 — Projetos independentes e a Agenda
+
+**Contexto.** Até aqui o único projeto da empresa é o próprio site da Labs. A partir da Etapa 6, os mesmos agentes fazem projetos novos, e cada projeto é **independente**: repositório próprio no GitHub, site próprio no GitHub Pages e README próprio. Mesmo assim, cada projeto aparece na aba Projetos da Labs (com o trabalho de cada agente) e tem as aulas do professor na aba Aulas. O primeiro projeto novo é uma **Agenda** online para anotar compromissos. Nesta etapa entram a estrutura completa e o começo da Agenda; as telas e funções da Agenda ainda serão conversadas com o João (ver seção 8).
+
+**Como fica a organização (modelo aprovado pelo João)**
+
+| O quê | Onde fica | Repositório |
+|---|---|---|
+| Regras, agentes, guias comuns | raiz do `empresa-ia` (`CLAUDE.md`, `.claude/agents/`) e `trabalhos/joao-saccucci-labs/docs/guias/` | `empresa-ia` |
+| Site da Labs (vitrine), aulas do professor, `projetos.json` | `trabalhos/joao-saccucci-labs/` (mesmo endereço de hoje) | `empresa-ia` |
+| Requisitos, design e relatórios de teste da Agenda | `trabalhos/joao-saccucci-labs/docs/projetos/agenda/` | `empresa-ia` |
+| Código e README da Agenda (só o produto) | `trabalhos/agenda/` no computador, ignorada pelo `.gitignore` do `empresa-ia` | `agenda` (github.com/JoaoSaccucci/agenda) |
+
+- **Pasta dos docs de cada projeto novo:** `trabalhos/joao-saccucci-labs/docs/projetos/<id do projeto>/` (para a Agenda: `docs/projetos/agenda/requisitos.md`, `docs/projetos/agenda/design.md` e `docs/projetos/agenda/testes/etapa-<N>.md`). **Por quê:** dentro da pasta do site da Labs eles ficam acessíveis no site publicado e podem ser linkados com caminho relativo, igual a `docs/requisitos.md`, sem se misturar com os docs da própria Labs.
+- O repositório do projeto tem **só o produto**: código e README. Nada de requisitos, design ou relatórios lá.
+- **Sem submódulos do Git.** Os dois repositórios ficam um do lado do outro no computador, mas o Git do `empresa-ia` não enxerga nada de `trabalhos/agenda/`.
+- **Tecnologia padrão de todo projeto:** HTML, CSS e JavaScript puros. Exceções (ex.: Java) são aprovadas pelo João nos requisitos de cada projeto. Projeto sem site publicado (ex.: Java) não tem o botão "Ver site".
+- **Nomes dos repositórios:** curtos e descritivos, só letras minúsculas, números e hífen (ex.: `agenda`). O nome do repositório é também o `id` do projeto em `projetos.json`. **Nunca** criar um repositório chamado `joaosaccucci.github.io`: esse nome muda o endereço principal do GitHub Pages da conta.
+- Os requisitos de cada projeto novo têm numeração própria, no arquivo do projeto (para a Agenda: "Agenda US01", "Agenda US02"...). Este arquivo continua com as user stories da Labs e da estrutura do escritório.
+
+**Entrega em dois repositórios (commit e push)**
+1. Trabalho no projeto (código da Agenda) → testador aprova.
+2. **Uma proposta de commit só**, com dois blocos separados e com título: "Repositório agenda" e "Repositório empresa-ia", cada um com a lista de arquivos e a mensagem.
+3. Depois da aprovação do João: primeiro commit e push da **agenda**; depois o dev atualiza na Labs os links fixos (que dependem do commit da agenda); só então commit e push do **empresa-ia**.
+4. Se o push da agenda falhar, o commit do `empresa-ia` não é feito, e o João é avisado.
+
+**US30: Regra de projetos independentes no escritório** (tarefa fora do site)
+Como João, quero uma regra escrita sobre projetos independentes, para que todos os agentes saibam onde fica cada coisa sem eu precisar repetir.
+- [ ] O `CLAUDE.md` da raiz ganha uma seção nova (sugestão: "Projetos independentes") com: cada projeto novo tem repositório, site e README próprios; o código fica em `trabalhos/<projeto>/` no computador; os docs ficam em `trabalhos/joao-saccucci-labs/docs/projetos/<projeto>/`; a Labs continua no `empresa-ia`; sem submódulos.
+- [ ] A regra diz que a tecnologia padrão é HTML, CSS e JS puros e que exceções são aprovadas nos requisitos de cada projeto.
+- [ ] A regra diz como nomear repositórios e proíbe o nome `joaosaccucci.github.io`.
+- [ ] A regra descreve a entrega em dois repositórios (proposta única, agenda primeiro, `empresa-ia` depois) e as regras de Git da US31.
+- [ ] A regra da seção "Git e GitHub" sobre o README da raiz passa a valer também para o README de cada projeto (conferir se ele muda junto em cada commit).
+- [ ] A regra de não colocar senhas, chaves, documentos pessoais ou dados de outras pessoas vale para todos os repositórios.
+- [ ] A exceção do `marked` e `highlight.js` continua valendo só para a tela de aula da Labs.
+
+**US31: Git sempre no repositório certo**
+Como João, quero que todo comando Git rode no repositório certo, para não misturar os arquivos da Agenda com os da Labs nem criar conflitos.
+- [ ] O `.gitignore` do `empresa-ia` ignora as pastas dos projetos novos **sem** ignorar a Labs. Sugestão: `trabalhos/*` seguido da exceção `!trabalhos/joao-saccucci-labs/`.
+- [ ] Com a pasta `trabalhos/agenda/` existindo, `git status` na raiz do `empresa-ia` **não** mostra nada dela, e `git ls-files trabalhos/agenda` não devolve nada (nenhum arquivo nem submódulo registrado).
+- [ ] Os arquivos da Labs continuam aparecendo normalmente no `git status` do `empresa-ia` quando mudam.
+- [ ] Não existe `.gitmodules` no `empresa-ia`.
+- [ ] Todo comando Git de um projeto é escrito com `git -C trabalhos/<projeto> ...` (caminho completo), nunca dependendo da pasta atual do terminal. Os comandos do `empresa-ia` usam `git -C C:\Projetos\claude\empresa-ia ...`.
+- [ ] Antes de cada commit, o agente roda `git -C <pasta> remote -v` e confere: na pasta do projeto, o endereço é `github.com/JoaoSaccucci/<projeto>`; na raiz, é `github.com/JoaoSaccucci/empresa-ia`. Se não bater, para e avisa o João.
+- [ ] A proposta de commit mostra, em cada bloco, o resultado do `remote -v` e o `git status` daquele repositório.
+- [ ] A ordem da entrega segue o item "Entrega em dois repositórios" acima. Se o push da agenda falhar, o `empresa-ia` não é commitado.
+
+**US32: Guias comuns do escritório e agentes revisados** (tarefa fora do site)
+Como João, quero que os guias de trabalho valham para qualquer projeto, para que o testador e o professor façam o mesmo trabalho na Agenda e na Labs.
+- [ ] Os guias que hoje ficam presos neste arquivo viram arquivos próprios em `trabalhos/joao-saccucci-labs/docs/guias/`: no mínimo, o guia do relatório de teste (hoje na Etapa 5) e o guia das aulas (estrutura padrão, sintaxe do Markdown e regras do quiz, hoje nas Etapas 3 e 4).
+- [ ] Este arquivo continua com o texto original das etapas (histórico) e ganha, em cada trecho, uma nota apontando para o guia como versão atual.
+- [ ] O guia do relatório explica onde fica o relatório de cada projeto: Labs em `docs/testes/etapa-<N>.md` e projetos novos em `docs/projetos/<projeto>/testes/etapa-<N>.md`.
+- [ ] Os arquivos de `.claude/agents/` são revisados para o modelo novo:
+  - product-owner: requisitos de projeto novo vão para `docs/projetos/<projeto>/requisitos.md`;
+  - artista: design de projeto novo vai para `docs/projetos/<projeto>/design.md`;
+  - dev: o código vai para `trabalhos/<projeto>/` e o Git segue a US31;
+  - testador: lê os requisitos e o design na pasta certa e segue o guia comum;
+  - professor: as aulas ficam na Labs e o código do projeto é citado por link fixo (US34).
+- [ ] Os agentes continuam sem dados pessoais (o repositório é público).
+
+**US33: Botões "Ver site" e "Ver código" no detalhe do projeto**
+Como recrutador, quero abrir o site e o código de cada projeto a partir da Labs, para ver o produto funcionando e como ele foi programado.
+- [ ] `data/projetos.json` aceita os campos novos `repositorio` e `site` (ver seção 3). Os dois são opcionais.
+- [ ] O detalhe do projeto mostra o botão "Ver site" quando `site` está preenchido e o botão "Ver código" quando `repositorio` está preenchido. Sem o campo (ou com `null`), o botão não aparece e não sobra espaço vazio.
+- [ ] Os dois botões abrem em nova aba, com `rel="noopener"`, e avisam isso para leitores de tela (ex.: texto escondido "abre em nova aba").
+- [ ] Só endereços que começam com `https://` são aceitos nesses campos. Qualquer outro valor é tratado como vazio (o botão não aparece) e o site registra o motivo com `console.warn`.
+- [ ] `entregaveis[].url` passa a aceitar também endereço completo (`https://...`). Endereço completo é usado como está e abre em nova aba; caminho relativo continua funcionando como hoje, a partir do site da Labs.
+- [ ] O resto do detalhe continua igual (trabalho de cada agente, entregáveis, imagens e linha do tempo) para todos os projetos.
+- [ ] Os botões têm texto visível, foco visível, contraste AA e funcionam a 360px sem rolagem horizontal.
+- [ ] O projeto da Labs ganha `repositorio` (`https://github.com/JoaoSaccucci/empresa-ia`) e fica sem `site` (o visitante já está nele).
+
+**US34: Aulas da Agenda na aba Aulas, com link fixo para o código**
+Como João, quero estudar as aulas da Agenda no mesmo lugar das aulas da Labs, para ter todo o meu estudo junto e ligado ao código certo.
+- [ ] As aulas da Agenda ficam na Labs, em `aulas/agenda/modulo-<N>/aula-<NN>.md`, e são cadastradas em `data/aulas.json` com módulos de `"projeto": "agenda"`.
+- [ ] Na aba Aulas, a Agenda aparece como um grupo próprio (projeto → módulo → aula), igual à Labs, sem filtro e sem mudança de tela. Os grupos de projeto seguem a ordem de `projetos.json`.
+- [ ] O progresso, o quiz, o checklist e o "Concluída" das aulas da Agenda funcionam como nas aulas da Labs.
+- [ ] Toda citação do código da Agenda numa aula usa **link fixo** (preso a um commit), no formato `https://github.com/JoaoSaccucci/agenda/blob/<hash completo do commit>/<arquivo>#L<início>-L<fim>`. Nenhum link de aula usa `/blob/main/`.
+- [ ] O commit citado já está publicado no GitHub quando a aula é publicada (por isso a Labs é commitada depois da agenda).
+- [ ] A seção opcional "Onde aparece no site" se chama "Onde aparece na Agenda" nas aulas da Agenda e segue a mesma regra de 1 a 3 frases, com o link fixo.
+- [ ] Os entregáveis do professor no projeto `agenda` em `projetos.json` apontam para `aulas.html#agenda-m<N>`.
+- [ ] As aulas continuam legíveis abrindo o `.md` no GitHub, e os links fixos funcionam dos dois lados (site e GitHub).
+- [ ] Os exemplos das aulas continuam independentes e seguem a regra da US24 (exemplos com `localStorage` não usam `rodar`).
+- [ ] *(Este critério só pode ser conferido quando existir a primeira entrega de código da Agenda.)*
+
+**US35: Passo a passo para criar o repositório e ligar o GitHub Pages** (entregável para o João)
+Como João, quero um passo a passo para criar o repositório `agenda` e publicar o site, para fazer isso sozinho e aprender como funciona.
+- [ ] O passo a passo fica em `trabalhos/joao-saccucci-labs/docs/guias/criar-repositorio.md`, escrito em linguagem simples, e serve para qualquer projeto novo (com a Agenda como exemplo).
+- [ ] Cobre, em ordem numerada: criar o repositório **público** e **vazio** no github.com (sem README, sem licença e sem `.gitignore`, para não dar conflito no primeiro push); ligar a pasta `trabalhos/agenda/` ao repositório (`git init`, `git remote add origin`, primeiro commit e `git push`, sempre com `git -C`); conferir com `remote -v`; ligar o GitHub Pages em Settings → Pages (branch `main`, pasta raiz); esperar a publicação e abrir `https://joaosaccucci.github.io/agenda/`.
+- [ ] Cada passo diz o que o João deve ver na tela quando dá certo e o que fazer nos erros mais comuns (ex.: push recusado, página 404 logo depois de ligar o Pages).
+- [ ] O guia avisa para nunca usar o nome `joaosaccucci.github.io`.
+- [ ] O guia não tem senhas, tokens ou dados pessoais. Se for preciso entrar na conta, ele só diz "faça login", sem pedir para colar credenciais em nenhum arquivo.
+- [ ] Prints, se houver, ficam em `docs/guias/img/` e têm texto `alt`.
+
+**US36: Repositório e README próprios da Agenda**
+Como recrutador, quero que a Agenda tenha um README próprio, para entender o projeto sem precisar abrir a Labs.
+- [ ] O repositório `github.com/JoaoSaccucci/agenda` existe, é público e tem só o produto (código e README), sem requisitos, design ou relatórios.
+- [ ] O site está publicado em `https://joaosaccucci.github.io/agenda/` e abre sem erros.
+- [ ] O README da Agenda tem: o que é o projeto (1 a 3 frases), o link do site publicado, as tecnologias, como rodar no computador e as limitações dos dados (ficam só no navegador, não sincronizam entre aparelhos e somem se o navegador for limpo).
+- [ ] O README tem uma seção dizendo que o projeto foi feito com a equipe de agentes da João Saccucci Labs, com links para o detalhe do projeto na Labs (requisitos, design, testes) e para as aulas.
+- [ ] O README não tem senhas, chaves, dados pessoais ou dados de outras pessoas.
+
+**US37: Agenda na vitrine da Labs**
+Como visitante, quero ver a Agenda na aba Projetos, para saber o que já foi construído além do próprio site.
+- [ ] `data/projetos.json` ganha o projeto `"id": "agenda"`, com nome, descrição, status, datas, tecnologias, `repositorio` (`https://github.com/JoaoSaccucci/agenda`) e `site` (`https://joaosaccucci.github.io/agenda/`).
+- [ ] A Agenda aparece na lista de projetos e o detalhe `detalhe-projeto.html?id=agenda` funciona, sem mudar HTML ou JS além do que a US33 pede.
+- [ ] Cada agente que trabalhar na Agenda ganha um item em `trabalhos` e eventos em `linhaDoTempo`, como na Labs. Os entregáveis de requisitos, design e testes usam caminho relativo para `docs/projetos/agenda/...`; os entregáveis de código usam endereço completo do repositório `agenda`.
+- [ ] A página Equipe passa a listar a Agenda nos agentes que trabalharam nela, sem mudar o JS (a lista já é calculada a partir de `projetos.json`).
+- [ ] Todos os links de entregáveis da Agenda abrem sem 404 (conferido pelo testador).
+
+**US38: README da raiz com os repositórios dos projetos**
+Como recrutador, quero ver no README principal todos os projetos e onde está cada um, para navegar entre os repositórios.
+- [ ] A tabela "Projetos" do `README.md` da raiz lista a Labs e a Agenda, com links para o repositório e para o site de cada uma.
+- [ ] O texto "O primeiro projeto da empresa é o próprio site" é ajustado para explicar que a Labs é a vitrine e que os projetos novos têm repositório próprio.
+- [ ] A seção "Estrutura" explica que `trabalhos/<projeto>/` de projetos novos fica fora deste repositório (ignorado pelo `.gitignore`) e que os docs deles ficam em `docs/projetos/`.
+- [ ] A seção "Como rodar" avisa que clonar o `empresa-ia` não traz os projetos novos, e mostra como clonar cada um dentro de `trabalhos/`.
+- [ ] O `README.md` do site da Labs é atualizado do mesmo jeito, onde fizer sentido.
+
+**Agenda: o que já está decidido** (os requisitos do produto ficam em `docs/projetos/agenda/requisitos.md`, depois da próxima conversa)
+- Agenda online para anotar compromissos.
+- HTML, CSS e JavaScript puros, sem back-end e sem login.
+- Os dados ficam no `localStorage` do navegador: cada pessoa vê só a própria agenda. O João entendeu as limitações: não sincroniza entre aparelhos e some se o navegador for limpo.
+- Atenção: a Agenda e a Labs ficam no mesmo endereço base (`joaosaccucci.github.io`), então **dividem o mesmo `localStorage`**. As chaves da Agenda precisam de um prefixo próprio, diferente de `jsl:` (sugestão: `agenda:`), e nenhum dos dois sites pode apagar o `localStorage` inteiro (`localStorage.clear()`).
+- Tudo o mais (campos, telas e funções) está **pendente**: ver seção 8.
+
+**Requisitos gerais da Etapa 6**
+- [ ] Nenhuma biblioteca nova na Labs. As mudanças são em HTML, CSS, JS puro, JSON e Markdown.
+- [ ] Tudo o que muda na Labs funciona a 360px sem rolagem horizontal, por teclado (foco visível), com contraste AA e respeitando `prefers-reduced-motion`.
+- [ ] O testador escreve o relatório da parte da Labs em `docs/testes/etapa-6.md` e o da Agenda em `docs/projetos/agenda/testes/etapa-<N>.md`.
+- [ ] Nada de senhas, chaves, documentos pessoais ou dados de outras pessoas em nenhum dos dois repositórios.
+- [ ] Funciona publicado no GitHub Pages, com caminhos relativos na Labs.
+
 ### Requisitos gerais (todas as etapas)
 - [ ] O layout funciona de 360px até telas de desktop.
 - [ ] As animações são suaves e respeitam `prefers-reduced-motion`.
@@ -546,6 +677,47 @@ As cores acima são sugestões. O artista define as finais.
 - **A partir da Etapa 3:** entregáveis que são aulas usam `aula.html?id=<id da aula>` como `url`. Exemplo: `{ "titulo": "Aula 01", "url": "aula.html?id=joao-saccucci-labs-aula-01" }`.
 - **A partir da Etapa 4:** os entregáveis do professor são um link por módulo. Exemplo: `{ "titulo": "Aulas — Módulo 1", "url": "aulas.html#joao-saccucci-labs-m1" }`.
 - **A partir da Etapa 5:** o testador tem um item em `trabalhos` por etapa testada, com o relatório como entregável. Exemplo: `{ "titulo": "Relatório de teste — Etapa 5", "url": "docs/testes/etapa-5.md" }`. Agentes de apoio (`"apoio": true`) não entram em `trabalhos` nem em `linhaDoTempo`.
+- **A partir da Etapa 6:** campos novos `repositorio` e `site`, e `entregaveis[].url` aceita endereço completo.
+
+**Exemplo do projeto Agenda (Etapa 6)**
+```json
+{
+  "id": "agenda",
+  "nome": "Agenda",
+  "descricao": "Agenda online para anotar compromissos, com os dados salvos no navegador.",
+  "status": "em andamento",
+  "dataInicio": "<data do início>",
+  "dataFim": null,
+  "tecnologias": ["HTML", "CSS", "JavaScript"],
+  "repositorio": "https://github.com/JoaoSaccucci/agenda",
+  "site": "https://joaosaccucci.github.io/agenda/",
+  "trabalhos": [
+    {
+      "agente": "product-owner",
+      "resumo": "...",
+      "entregaveis": [
+        { "titulo": "Requisitos", "url": "docs/projetos/agenda/requisitos.md" }
+      ],
+      "imagens": []
+    },
+    {
+      "agente": "dev",
+      "resumo": "...",
+      "entregaveis": [
+        { "titulo": "Código (JS)", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/js/agenda.js" }
+      ],
+      "imagens": []
+    }
+  ],
+  "linhaDoTempo": []
+}
+```
+**Regras dos campos novos (Etapa 6)**
+- `id`: para projetos novos, é igual ao nome do repositório.
+- `repositorio`: opcional. Endereço completo do repositório no GitHub, começando com `https://`. Mostra o botão "Ver código".
+- `site`: opcional. Endereço completo do site publicado, começando com `https://`. Mostra o botão "Ver site". Fica sem valor em projetos sem site (ex.: Java) e na própria Labs.
+- `entregaveis[].url`: caminho relativo (a partir do site da Labs) **ou** endereço completo `https://...`. Docs de projetos novos usam caminho relativo para `docs/projetos/<projeto>/...`; arquivos de código do projeto usam o endereço do repositório dele.
+- Nas **aulas**, o código do projeto é sempre citado por link fixo (`/blob/<hash do commit>/`). Nos entregáveis, pode ser `/blob/main/`, e o testador confere se não há 404.
 
 ### `data/aulas.json` (Etapa 3 — substituído na Etapa 4)
 ```json
@@ -606,6 +778,7 @@ O arquivo deixa de ser uma lista e passa a ser um objeto com `modulos` e `aulas`
 - `aulas[].arquivo`: caminho relativo do `.md`, no formato `aulas/modulo-<N>/aula-<NN>.md`.
 - `aulas[].tempoLeitura`: minutos (inteiro), de 5 a 7.
 - `aulas[].resumo`: 1 frase.
+- **A partir da Etapa 6:** aulas de projetos novos ficam em `aulas/<id do projeto>/modulo-<N>/aula-<NN>.md` (ex.: `aulas/agenda/modulo-1/aula-01.md`), com módulos `<id do projeto>-m<N>` (ex.: `agenda-m1`). As aulas da Labs continuam no formato de antes.
 
 ### `data/glossario.json` (Etapa 3)
 ```json
@@ -631,10 +804,23 @@ O arquivo deixa de ser uma lista e passa a ser um objeto com `modulos` e `aulas`
 
 Observação: o checklist e o quiz são salvos pela ordem dos itens. Se o professor mudar a ordem ou a quantidade de itens ou perguntas de uma aula, as marcações antigas daquela aula podem ficar desalinhadas. Isso é aceito. Um índice salvo que não existe mais (ex.: alternativa 4 numa pergunta com 3) é ignorado. Chaves das aulas antigas podem ficar no navegador sem efeito; não é preciso apagá-las.
 
+**A partir da Etapa 6:** a Agenda fica no mesmo endereço base (`joaosaccucci.github.io`) e divide o mesmo `localStorage` com a Labs. Ela usa um prefixo próprio (sugestão: `agenda:`), e nenhum dos dois sites usa `localStorage.clear()`.
+
 ### Relatórios de teste (Etapa 5)
 - Pasta: `docs/testes/`, dentro da pasta do site.
 - Nome do arquivo: `etapa-<N>.md` (ex.: `etapa-5.md`). Prints opcionais em `docs/testes/img/`.
 - Estrutura: ver "Relatório de teste (guia para o testador)" na Etapa 5.
+- **A partir da Etapa 6:** relatórios de projetos novos ficam em `docs/projetos/<projeto>/testes/etapa-<N>.md`, com a etapa contada dentro do projeto. O guia passa a ficar em `docs/guias/` (US32).
+
+### Docs de projetos novos (Etapa 6)
+| Arquivo | Quem escreve |
+|---|---|
+| `docs/projetos/<projeto>/requisitos.md` | product-owner |
+| `docs/projetos/<projeto>/design.md` | artista |
+| `docs/projetos/<projeto>/testes/etapa-<N>.md` | testador |
+| `aulas/<projeto>/modulo-<N>/aula-<NN>.md` | professor |
+
+Todos ficam dentro de `trabalhos/joao-saccucci-labs/`, no repositório `empresa-ia`.
 
 ---
 
@@ -648,6 +834,8 @@ Observação: o checklist e o quiz são salvos pela ordem dos itens. Se o profes
 | **Etapa 4 — essencial** | US18 Módulos, US19 Em resumo, US20 Linhas numeradas e linha por linha, US21 Rodar, US24 Novas aulas, além dos requisitos gerais da Etapa 4 |
 | **Etapa 4 — logo em seguida** | US22 Editar e Restaurar, US23 Quiz |
 | **Etapa 5** | US25 Cartão do Sobre, US26 Testador na equipe e no fluxo, US27 Relatório de teste, US28 Mentor na Equipe (apoio), US29 Mentor fora do fluxo no Início, além dos requisitos gerais da Etapa 5 e da nota "tarefa fora do site" |
+| **Etapa 6 — estrutura** | US30 Regra no CLAUDE.md, US31 Git no repositório certo, US32 Guias comuns e agentes revisados, US33 Ver site e Ver código, US35 Passo a passo do repositório, US38 README da raiz, além dos requisitos gerais da Etapa 6 |
+| **Etapa 6 — Agenda** | Conversa com o João sobre a Agenda (seção 8) e requisitos em `docs/projetos/agenda/requisitos.md`, US36 Repositório e README da Agenda, US37 Agenda na vitrine, US34 Aulas da Agenda |
 
 Ordem sugerida dentro da Etapa 1: JSON → Lista de projetos → Detalhe → Equipe → Início.
 
@@ -656,6 +844,8 @@ Ordem sugerida dentro da Etapa 3: `aulas.json` e `glossario.json` → US09 Tela 
 Ordem sugerida dentro da Etapa 4: o professor escreve primeiro **2 aulas-piloto** (uma com `html rodar` e quiz, outra com `js rodar`) e o novo `aulas.json` → dev faz US18 → US19 → US20 → US21 → US22 → US23 → o João lê as aulas-piloto e aprova o formato → o professor escreve as demais aulas (US24) → as aulas antigas são removidas.
 
 Ordem sugerida dentro da Etapa 5: criar os arquivos dos agentes e atualizar o `CLAUDE.md` (tarefa fora do site) → artista define as 2 cores, os 2 avatares, o selo "Apoio" e o fluxo com 5 etapas → dev atualiza `agentes.json` → US25 → US26 → US28 → US29 → testador faz a US27 testando a própria Etapa 5 → dev corrige o que for "alta" → professor explica.
+
+Ordem sugerida dentro da Etapa 6: US30 e US32 (regra, guias e agentes) → US31 (`.gitignore`) → US33 (botões no detalhe, já com o `repositorio` da Labs) → US35 (passo a passo) → o João cria o repositório `agenda` e liga o Pages → product-owner conversa com o João sobre a Agenda (seção 8) e escreve `docs/projetos/agenda/requisitos.md` → artista faz o design da Agenda → dev faz a Agenda e o README (US36) → testador testa a Agenda → proposta de commit única → commit e push da agenda → dev faz a US37 e a US38 → professor escreve as aulas da Agenda (US34) → testador escreve `docs/testes/etapa-6.md` → commit e push do `empresa-ia`.
 
 ---
 
@@ -678,6 +868,14 @@ Ordem sugerida dentro da Etapa 5: criar os arquivos dos agentes e atualizar o `C
 - (Etapa 5) Testes automatizados, ferramentas de teste instaladas (Playwright, Lighthouse CI etc.) ou integração contínua. O teste do testador é manual, com o navegador e as ferramentas do próprio navegador.
 - (Etapa 5) Relatórios de teste das Etapas 1 a 4 (os relatórios começam na Etapa 5).
 - (Etapa 5) Qualquer conteúdo do mentor de carreira no site ou no repositório (currículo, LinkedIn, entrevistas simuladas, planos de estudo), página própria do mentor ou "Estudando agora" vindo de JSON.
+- (Etapa 6) Submódulos do Git, ou mover o site da Labs para outro repositório.
+- (Etapa 6) Requisitos, design ou relatórios de teste dentro do repositório do projeto (eles ficam na Labs).
+- (Etapa 6) Agentes criando repositórios ou ligando o GitHub Pages sozinhos (o João faz isso à mão, com o passo a passo).
+- (Etapa 6) Botões "Ver site" e "Ver código" no cartão da lista de projetos (só no detalhe).
+- (Futuro) Aba Aulas abrindo com uma lista de projetos clicáveis e, ao clicar em um, mostrando as aulas daquele projeto exatamente como hoje.
+- (Futuro) Agenda: exportar e importar os compromissos em arquivo.
+- (Futuro) "Agenda 2.0" com back-end em Java (vai precisar de exceção de tecnologia aprovada nos requisitos dela e de outra hospedagem, porque o GitHub Pages só publica sites estáticos).
+- (Etapa 6) Agenda: login, sincronizar entre aparelhos ou guardar dados fora do navegador.
 
 ---
 
@@ -685,3 +883,31 @@ Ordem sugerida dentro da Etapa 5: criar os arquivos dos agentes e atualizar o `C
 1. O mentor entra no bloco "Unidades sob comando" da página Sobre: o título vira "Chefe de 6 unidades de IA", com 6 mini avatares.
 2. Os relatórios de teste começam na Etapa 5. Não há relatório das Etapas 1 a 4.
 3. O nome no site é "Testador". A sigla QA aparece só no papel ("Garante a qualidade (QA): ...").
+
+## 7. Decisões do João (Etapa 6)
+1. A Etapa 6 inclui a estrutura e um primeiro projeto pequeno e real: uma Agenda online para anotar compromissos.
+2. O site da Labs continua no `empresa-ia`, no mesmo endereço.
+3. O repositório se chama `agenda`. O João cria o repositório e liga o GitHub Pages à mão, com um passo a passo (US35).
+4. Mudança no modelo inicial: o repositório da Agenda tem só o produto (código e README). Requisitos, design e relatórios de teste ficam no `empresa-ia`, em `trabalhos/joao-saccucci-labs/docs/projetos/agenda/`.
+5. O detalhe do projeto fica igual ao de hoje, mais os botões "Ver site" e "Ver código".
+6. As aulas citam o código da Agenda por link fixo (preso ao commit). As aulas da Agenda aparecem como um grupo próprio na aba Aulas, sem filtro. A lista de projetos clicáveis na aba Aulas fica para o futuro.
+7. Uma proposta de commit só, com os dois repositórios separados: primeiro a agenda, depois a Labs. Todo comando Git usa `git -C` e o `remote -v` é conferido antes de cada commit.
+8. HTML, CSS e JS puros são o padrão de todo projeto. Exceções (ex.: Java) são aprovadas nos requisitos de cada projeto. "Ver site" é opcional.
+9. Acréscimos do product-owner, aprovados pelo João em 2026-11-04:
+   - A Agenda e a Labs dividem o mesmo `localStorage` (mesma origem `joaosaccucci.github.io`). A Agenda usa o prefixo `agenda:` em todas as chaves, e nenhum dos dois sites usa `localStorage.clear()`.
+   - A Labs tem só o botão "Ver código" (sem "Ver site", porque o visitante já está nela).
+   - Nos entregáveis, links de código podem apontar para a versão atual (`/blob/main/`). Só as aulas exigem link fixo.
+   - Os guias comuns ficam em `trabalhos/joao-saccucci-labs/docs/guias/`. Nas aulas da Agenda, a seção "Onde aparece no site" se chama "Onde aparece na Agenda".
+
+## 8. Agenda: perguntas pendentes (próxima conversa)
+Perguntas para o João, uma de cada vez, antes de escrever `docs/projetos/agenda/requisitos.md`:
+1. Quais informações um compromisso tem (por exemplo: título, data, hora, local, observação)? Quais são obrigatórias?
+2. Qual é a tela principal: uma lista dos próximos compromissos, a visão de um dia, de uma semana ou um calendário do mês?
+3. Na primeira versão, o que dá para fazer com um compromisso: só criar e excluir, ou também editar e marcar como feito?
+4. O que acontece com os compromissos que já passaram: somem, ficam riscados ou vão para uma parte separada?
+5. Precisa ter compromissos que se repetem (por exemplo, toda segunda) na primeira versão?
+6. Precisa de lembrete ou aviso perto da hora do compromisso?
+7. Precisa de busca ou de filtro (por exemplo, por categoria ou por cor)?
+8. O visual segue a identidade da Labs (escuro e neon) ou a Agenda tem um visual próprio?
+9. A Agenda mostra na tela um aviso de que os dados ficam só neste navegador?
+10. Excluir um compromisso pede confirmação antes?
