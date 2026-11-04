@@ -79,6 +79,7 @@ Como recrutador, quero conhecer o João, o chefe da empresa, para saber quem ele
 - Não usar URLs "bonitas" como `/aulas/aula-01` (precisariam de configuração de servidor que o GitHub Pages não tem).
 
 **Sintaxe do Markdown das aulas (compatível com o GitHub)**
+> **Versão atual:** [`docs/guias/aulas.md`](guias/aulas.md) (Etapa 6, US32). Este trecho fica como histórico.
 
 | Recurso | Como o professor escreve | No GitHub aparece como | No site aparece como |
 |---|---|---|---|
@@ -210,6 +211,8 @@ Como João, quero as aulas que já existem no formato novo, para usar todas as f
 - Progresso salvo das aulas antigas é ignorado (as novas aulas usam `id` novos, então nada antigo aparece misturado).
 
 **Estrutura padrão de uma aula (guia para o professor)**
+> **Versão atual:** [`docs/guias/aulas.md`](guias/aulas.md) (Etapa 6, US32). Este trecho fica como histórico.
+
 1. `# Título` (o conceito, em linguagem simples).
 2. Caixa **Em resumo** (até 3 linhas).
 3. `## O conceito`: explicação curta e tranquila.
@@ -219,6 +222,7 @@ Como João, quero as aulas que já existem no formato novo, para usar todas as f
 7. `## Para praticar` (opcional): checklist com no máximo 3 itens.
 
 **Sintaxe nova do Markdown (compatível com o GitHub)**
+> **Versão atual:** [`docs/guias/aulas.md`](guias/aulas.md) (Etapa 6, US32). Este trecho fica como histórico.
 
 | Recurso | Como o professor escreve | No GitHub aparece como | No site aparece como |
 |---|---|---|---|
@@ -259,6 +263,8 @@ Exemplos:
 ````
 
 **Regras do bloco `quiz`**
+> **Versão atual:** [`docs/guias/aulas.md`](guias/aulas.md) (Etapa 6, US32). Este trecho fica como histórico.
+
 - Um bloco = uma pergunta. Várias perguntas = vários blocos.
 - Linha que começa com `?` = pergunta (exatamente uma, e ela vem primeiro).
 - Linhas que começam com `[ ]` ou `[x]` = alternativas, de 2 a 5, com **exatamente uma** `[x]`.
@@ -266,6 +272,8 @@ Exemplos:
 - Linhas em branco são ignoradas. As alternativas aparecem na ordem escrita (sem embaralhar).
 
 **Bloco malformado (regra geral)**
+> **Versão atual:** [`docs/guias/aulas.md`](guias/aulas.md) (Etapa 6, US32). Este trecho fica como histórico.
+
 - Quiz fora das regras acima: aparece como bloco de código comum, com o texto original, e a aula continua normal. O site registra o motivo com `console.warn` (para o professor/dev achar o erro).
 - ` ```css rodar ` ou qualquer linguagem diferente de `html`/`js` com `rodar`: aparece como bloco de código comum, sem botão Rodar.
 - Lista `**Lnn:**` que não vem logo depois de um bloco de código, ou que cita uma linha que não existe: aparece como lista normal.
@@ -340,6 +348,8 @@ Como João, quero responder perguntas rápidas e ver na hora por que cada altern
 
 **US24: Novas aulas curtas** (tarefa do professor)
 Como João, quero aulas curtas sobre um conceito por vez, cobrindo o que foi feito nas Etapas 1 a 3, para aprender com calma e sentir que consigo fazer igual.
+> **Versão atual das regras de escrita:** [`docs/guias/aulas.md`](guias/aulas.md) (Etapa 6, US32). Este trecho fica como histórico.
+
 - [x] Entre 12 e 15 aulas, divididas em 3 módulos: Módulo 1 (Etapa 1: o básico do site), Módulo 2 (Etapa 2) e Módulo 3 (Etapa 3: tela de leitura).
 - [x] Cada aula trata de **um** conceito, com `tempoLeitura` de 5 a 7 minutos (até cerca de 1.000 palavras, contando o texto).
 - [x] Cada aula segue a estrutura padrão acima: Em resumo (até 3 linhas), O conceito, Exemplo com explicação linha por linha.
@@ -375,6 +385,8 @@ Como João, quero aulas curtas sobre um conceito por vez, cobrindo o que foi fei
 - O mentor não tem `trabalhos` nem eventos de `linhaDoTempo` em `data/projetos.json`.
 
 **Relatório de teste (guia para o testador)**
+> **Versão atual:** [`docs/guias/relatorio-de-teste.md`](guias/relatorio-de-teste.md) (Etapa 6, US32). Este trecho fica como histórico.
+
 - Um arquivo por etapa, dentro da pasta do site: `docs/testes/etapa-<N>.md` (ex.: `docs/testes/etapa-5.md`). Assim ele fica acessível no site publicado, como `docs/requisitos.md`.
 - Se a etapa for testada de novo depois de uma correção, o mesmo arquivo ganha uma nova rodada ("Rodada 2"), sem apagar a anterior.
 - Prints, se houver, ficam em `docs/testes/img/` e têm texto `alt`.
@@ -411,6 +423,8 @@ Como visitante, quero ver que existe um agente que testa o site antes de cada en
 
 **US27: Relatório de teste em cada entrega** (tarefa do testador)
 Como João, quero um relatório de teste antes de cada entrega, para saber o que foi conferido e o que ainda falta corrigir.
+> **Versão atual do guia:** [`docs/guias/relatorio-de-teste.md`](guias/relatorio-de-teste.md) (Etapa 6, US32). Este trecho fica como histórico.
+
 - [x] A partir da Etapa 5, antes de cada entrega, o testador confere as 5 áreas (celular a 360px, teclado, acessibilidade, contraste e erros) e escreve o relatório em `docs/testes/etapa-<N>.md`, seguindo a estrutura acima.
 - [x] O primeiro relatório é o da própria Etapa 5 (`docs/testes/etapa-5.md`), testando as US25, US26, US28 e US29.
 - [x] Cada problema tem passos para reproduzir, resultado esperado, resultado obtido, gravidade e status.
@@ -810,6 +824,7 @@ Observação: o checklist e o quiz são salvos pela ordem dos itens. Se o profes
 - Pasta: `docs/testes/`, dentro da pasta do site.
 - Nome do arquivo: `etapa-<N>.md` (ex.: `etapa-5.md`). Prints opcionais em `docs/testes/img/`.
 - Estrutura: ver "Relatório de teste (guia para o testador)" na Etapa 5.
+- **Versão atual do guia:** [`docs/guias/relatorio-de-teste.md`](guias/relatorio-de-teste.md) (Etapa 6, US32).
 - **A partir da Etapa 6:** relatórios de projetos novos ficam em `docs/projetos/<projeto>/testes/etapa-<N>.md`, com a etapa contada dentro do projeto. O guia passa a ficar em `docs/guias/` (US32).
 
 ### Docs de projetos novos (Etapa 6)

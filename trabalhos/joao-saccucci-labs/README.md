@@ -2,6 +2,8 @@
 
 Site da empresa de agentes de IA do João. HTML, CSS e JavaScript puros, sem framework e sem build.
 
+É a vitrine da empresa: mostra todos os projetos, inclusive os que têm repositório próprio, como a [Agenda](https://github.com/JoaoSaccucci/agenda) ([site](https://joaosaccucci.github.io/agenda/)). O código desses projetos fica no repositório de cada um; os requisitos, o design, os relatórios de teste e as aulas deles ficam aqui.
+
 **Site no ar:** https://joaosaccucci.github.io/empresa-ia/ · Visão geral da empresa: [README da raiz](../../README.md)
 
 ## Como abrir
@@ -19,12 +21,12 @@ No GitHub Pages funciona sem nada disso, porque todos os caminhos são relativos
 ```
 index.html             Início: apresentação, fluxo de trabalho (5 etapas) e o agente de apoio
 lista-projetos.html    Lista de projetos (gerada a partir do JSON)
-detalhe-projeto.html   Detalhe de um projeto (com linha do tempo): detalhe-projeto.html?id=<id-do-projeto>
+detalhe-projeto.html   Detalhe de um projeto (com linha do tempo e os botões Ver site / Ver código): detalhe-projeto.html?id=<id-do-projeto>
 equipe.html            Perfis dos 6 agentes e projetos de cada um (o de apoio mostra "Atuação")
 sobre.html             Sobre mim: cartão do João (conteúdo fixo, sem JSON)
 aulas.html             Lista de aulas agrupada por módulo (gerada a partir do JSON), com ✓ nas concluídas
 aula.html              Tela de leitura de uma aula: aula.html?id=<id-da-aula>
-css/style.css          Visual do site (feito pelo artista; ajustes do dev nas seções 22 e 37; seção 38 = Etapa 4; seção 39 = Etapa 5)
+css/style.css          Visual do site (feito pelo artista; ajustes do dev nas seções 22 e 37; seção 38 = Etapa 4; seção 39 = Etapa 5; seção 40 = Etapa 6)
 js/comum.js            Menu do celular, leitura dos JSON, funções auxiliares e progresso salvo (localStorage)
 js/lista-projetos.js   Monta a lista de projetos
 js/detalhe-projeto.js  Monta o detalhe do projeto
@@ -40,13 +42,17 @@ data/aulas.json        Os módulos e as aulas (título, módulo, número, arquiv
 data/glossario.json    Palavras em inglês usadas nas aulas, com tradução e explicação
 aulas/                 Os textos das aulas em Markdown, em aulas/modulo-N/aula-NN.md, escritos pelo professor
 img/agentes/           Avatares SVG dos agentes
-img/icones/            Ícones SVG, colados inline no HTML/JS (contato no sobre.html; sumário, tema, concluída, relógio, copiar, resumo, rodar, editar, restaurar e errada nas aulas)
+img/icones/            Ícones SVG, colados inline no HTML/JS (contato no sobre.html; site e github nos botões do detalhe; sumário, tema, concluída, relógio, copiar, resumo, rodar, editar, restaurar e errada nas aulas)
 .nojekyll              Faz o GitHub Pages servir os arquivos .md como estão
 README.md              Este arquivo
 docs/requisitos.md     Requisitos (product-owner)
 docs/design.md         Decisões de visual (artista)
 docs/testes/           Relatórios de teste do testador, um por etapa: etapa-<N>.md (a partir da Etapa 5)
+docs/guias/            Guias comuns da equipe, para qualquer projeto: relatório de teste, aulas e criar repositório
+docs/projetos/<id>/    Requisitos, design e testes (testes/etapa-<N>.md) de cada projeto novo, ex.: docs/projetos/agenda/
 ```
+
+O código dos projetos novos **não** fica nesta pasta: cada um tem o próprio repositório e fica em `trabalhos/<projeto>/`, fora do repositório `empresa-ia` (ignorado pelo `.gitignore`). Para ter o código da Agenda no computador, a partir da pasta `empresa-ia`: `git clone https://github.com/JoaoSaccucci/agenda.git trabalhos/agenda`.
 
 ## A equipe
 
@@ -72,6 +78,8 @@ O fluxo do Início e os mini avatares do Sobre são escritos à mão no HTML: se
 ## Como adicionar um projeto
 
 Edite só o `data/projetos.json`, seguindo o modelo descrito no `docs/requisitos.md`. Não é preciso mexer em HTML nem em JS: a lista, o detalhe e a página Equipe se atualizam sozinhos.
+
+Os campos opcionais `site` e `repositorio` mostram os botões "Ver site" e "Ver código" no detalhe. Só endereços que começam com `https://` são aceitos; outro valor é ignorado e o motivo aparece no console (F12). Nos entregáveis, o `url` pode ser um caminho relativo (abre na mesma aba, a partir deste site) ou um endereço completo `https://...` (abre em nova aba), usado para o código de projetos com repositório próprio.
 
 A linha do tempo do detalhe vem do campo `linhaDoTempo` de cada projeto. Os eventos são ordenados pela data (formato `AAAA-MM-DD`) e agrupados por dia. Projeto sem eventos não mostra a seção.
 

@@ -12,3 +12,8 @@ desktop.ini
 # Dependências e registros (caso algum projeto futuro use)
 node_modules/
 *.log
+
+# Projetos independentes (Etapa 6): cada projeto novo em trabalhos/<projeto>/
+# tem o próprio repositório Git e não entra neste. Só a Labs fica aqui.
+trabalhos/*
+!trabalhos/joao-saccucci-labs/

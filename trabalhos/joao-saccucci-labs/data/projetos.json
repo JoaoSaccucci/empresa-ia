@@ -7,6 +7,7 @@
     "dataInicio": "2026-11-02",
     "dataFim": null,
     "tecnologias": ["HTML", "CSS", "JavaScript"],
+    "repositorio": "https://github.com/JoaoSaccucci/empresa-ia",
     "trabalhos": [
       {
         "agente": "product-owner",
@@ -193,6 +194,47 @@
           { "titulo": "Relatório de teste — Etapa 5", "url": "docs/testes/etapa-5.md" }
         ],
         "imagens": []
+      },
+      {
+        "agente": "product-owner",
+        "resumo": "Etapa 6: levantou com o João o modelo de projetos independentes (repositório, site e README próprios para cada projeto novo, com os docs e as aulas na Labs) em 9 user stories, e conduziu a conversa de 10 perguntas que virou os requisitos da Agenda.",
+        "entregaveis": [
+          { "titulo": "Requisitos (Etapa 6)", "url": "docs/requisitos.md" },
+          { "titulo": "Requisitos da Agenda", "url": "docs/projetos/agenda/requisitos.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "artista",
+        "resumo": "Etapa 6: desenhou os botões \"Ver site\" e \"Ver código\" no cabeçalho do detalhe do projeto (ordem, estilo, setinha de nova aba e empilhados no celular), os entregáveis com endereço completo e a Agenda na vitrine. Criou o ícone de site.",
+        "entregaveis": [
+          { "titulo": "Design (seção 14)", "url": "docs/design.md" },
+          { "titulo": "Folha de estilo (seção 40)", "url": "css/style.css" },
+          { "titulo": "Ícone Site", "url": "img/icones/site.svg" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "dev",
+        "resumo": "Etapa 6: organizou o escritório para os projetos independentes (regra no CLAUDE.md, .gitignore que deixa os projetos novos de fora, guias comuns em docs/guias/ e agentes revisados), criou os botões \"Ver site\" e \"Ver código\" no detalhe, com conferência de https://, colocou a Agenda na vitrine e atualizou os READMEs.",
+        "entregaveis": [
+          { "titulo": "Guia do relatório de teste", "url": "docs/guias/relatorio-de-teste.md" },
+          { "titulo": "Guia das aulas", "url": "docs/guias/aulas.md" },
+          { "titulo": "Passo a passo do repositório", "url": "docs/guias/criar-repositorio.md" },
+          { "titulo": "Detalhe do projeto (JS)", "url": "js/detalhe-projeto.js" },
+          { "titulo": "Detalhe da Agenda", "url": "detalhe-projeto.html?id=agenda" },
+          { "titulo": "Dados dos projetos", "url": "data/projetos.json" },
+          { "titulo": "README", "url": "README.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "testador",
+        "resumo": "Etapa 6: testou a regra de projetos independentes, o .gitignore, os guias, os botões \"Ver site\" e \"Ver código\", a Agenda na vitrine e os READMEs a 1280, 360 e 320px, com teclado, leitor de tela, contraste AA medido e os links externos abertos de verdade. Resultado: Aprovado, sem problemas da Etapa 6.",
+        "entregaveis": [
+          { "titulo": "Relatório de teste — Etapa 6", "url": "docs/testes/etapa-6.md" }
+        ],
+        "imagens": []
       }
     ],
     "linhaDoTempo": [
@@ -218,7 +260,72 @@
       { "data": "2026-11-03", "agente": "product-owner", "descricao": "Requisitos da Etapa 5: testador, mentor de carreira e ajuste no Sobre." },
       { "data": "2026-11-03", "agente": "artista", "descricao": "Design da Etapa 5: cores e avatares do testador e do mentor, fluxo com 5 etapas." },
       { "data": "2026-11-03", "agente": "dev", "descricao": "Implementação da Etapa 5: equipe com 6 agentes, fluxo novo e Estudando agora no Sobre." },
-      { "data": "2026-11-03", "agente": "testador", "descricao": "Primeiro relatório de teste: Etapa 5 (equipe nova e ajuste no Sobre)." }
+      { "data": "2026-11-03", "agente": "testador", "descricao": "Primeiro relatório de teste: Etapa 5 (equipe nova e ajuste no Sobre)." },
+      { "data": "2026-11-04", "agente": "product-owner", "descricao": "Requisitos da Etapa 6: projetos independentes e a Agenda (US30 a US38)." },
+      { "data": "2026-11-04", "agente": "product-owner", "descricao": "Conversa com o João sobre a Agenda e requisitos em docs/projetos/agenda/requisitos.md." },
+      { "data": "2026-11-04", "agente": "artista", "descricao": "Design da Etapa 6: botões Ver site e Ver código no detalhe do projeto." },
+      { "data": "2026-11-04", "agente": "dev", "descricao": "Escritório reorganizado: regra no CLAUDE.md, .gitignore, guias comuns em docs/guias/ e agentes revisados." },
+      { "data": "2026-11-04", "agente": "dev", "descricao": "Implementação da Etapa 6: botões Ver site e Ver código, Agenda na vitrine e READMEs atualizados." },
+      { "data": "2026-11-04", "agente": "testador", "descricao": "Relatório de teste da Etapa 6 (projetos independentes e a Agenda na vitrine): aprovado." }
+    ]
+  },
+  {
+    "id": "agenda",
+    "nome": "Agenda",
+    "descricao": "Agenda online para anotar compromissos, com os dados salvos no navegador.",
+    "status": "em andamento",
+    "dataInicio": "2026-11-04",
+    "dataFim": null,
+    "tecnologias": ["HTML", "CSS", "JavaScript"],
+    "repositorio": "https://github.com/JoaoSaccucci/agenda",
+    "site": "https://joaosaccucci.github.io/agenda/",
+    "trabalhos": [
+      {
+        "agente": "product-owner",
+        "resumo": "Fez 10 perguntas ao João (campos do compromisso, tela principal, editar e excluir, compromissos que já passaram, repetição, lembrete, busca, visual, aviso dos dados e confirmação de exclusão) e escreveu os requisitos da primeira versão em 7 user stories.",
+        "entregaveis": [
+          { "titulo": "Requisitos", "url": "docs/projetos/agenda/requisitos.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "artista",
+        "resumo": "Criou um visual próprio, da mesma família da Labs: o conceito \"quadro de partidas ao anoitecer\", com fundo ameixa-escuro, horários em placas âmbar, lilás para o \"Dia todo\", foco azul-céu, o favicon e um CSS de referência completo, com o contraste conferido.",
+        "entregaveis": [
+          { "titulo": "Design", "url": "docs/projetos/agenda/design.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "dev",
+        "resumo": "Programou a primeira versão da Agenda em uma página só: lista dos próximos compromissos por dia, formulário para criar e editar com avisos, exclusão com confirmação, seção \"Anteriores\" e os dados salvos no localStorage, com chaves que começam com \"agenda:\". Escreveu o README do repositório.",
+        "entregaveis": [
+          { "titulo": "Site publicado", "url": "https://joaosaccucci.github.io/agenda/" },
+          { "titulo": "Página (HTML)", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/index.html" },
+          { "titulo": "Folha de estilo", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/css/style.css" },
+          { "titulo": "Tela (JS)", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/js/app.js" },
+          { "titulo": "Datas (JS)", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/js/datas.js" },
+          { "titulo": "Armazenamento (JS)", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/js/armazenamento.js" },
+          { "titulo": "README", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/README.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "testador",
+        "resumo": "Etapa 1: testou a Agenda a 1280, 360 e 320px, com teclado, acessibilidade, contraste AA, movimento reduzido, localStorage bloqueado, cheio ou com erro, e o relógio fixado para conferir as regras de data e a virada da meia-noite. Resultado: aprovado, com uma pendência baixa que o dev já corrigiu.",
+        "entregaveis": [
+          { "titulo": "Relatório de teste — Etapa 1", "url": "docs/projetos/agenda/testes/etapa-1.md" }
+        ],
+        "imagens": []
+      }
+    ],
+    "linhaDoTempo": [
+      { "data": "2026-11-04", "agente": "product-owner", "descricao": "Conversa com o João sobre a Agenda (10 perguntas)." },
+      { "data": "2026-11-04", "agente": "product-owner", "descricao": "Requisitos da primeira versão, com 7 user stories, em docs/projetos/agenda/requisitos.md." },
+      { "data": "2026-11-04", "agente": "artista", "descricao": "Visual \"quadro de partidas ao anoitecer\" definido em docs/projetos/agenda/design.md." },
+      { "data": "2026-11-04", "agente": "dev", "descricao": "Implementação da primeira versão: lista por dia, criar, editar, excluir e Anteriores." },
+      { "data": "2026-11-04", "agente": "testador", "descricao": "Relatório de teste da Etapa 1 da Agenda: aprovado, com uma pendência baixa corrigida pelo dev." },
+      { "data": "2026-11-04", "agente": "dev", "descricao": "Primeira versão publicada no repositório agenda e no GitHub Pages." }
     ]
   }
 ]
