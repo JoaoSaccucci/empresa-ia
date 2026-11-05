@@ -73,5 +73,9 @@
   { "termo": "classList", "traducao": "lista de classes", "explicacao": "As classes de um elemento, com métodos como add, remove e toggle para mudar essas classes pelo JavaScript." },
   { "termo": "JSON.parse", "traducao": "JSON: analisar", "explicacao": "Transforma um texto no formato JSON em objeto ou lista do JavaScript. Dá erro se o texto não seguir as regras do JSON." },
   { "termo": "JSON.stringify", "traducao": "JSON: transformar em texto", "explicacao": "Transforma um objeto ou uma lista em texto no formato JSON, por exemplo para salvar no localStorage." },
-  { "termo": "null", "traducao": "nulo", "explicacao": "Valor que quer dizer \"nada aqui\", colocado de propósito. Aparece, por exemplo, quando o querySelector não encontra o elemento ou quando o localStorage.getItem não acha a chave." }
+  { "termo": "null", "traducao": "nulo", "explicacao": "Valor que quer dizer \"nada aqui\", colocado de propósito. Aparece, por exemplo, quando o querySelector não encontra o elemento ou quando o localStorage.getItem não acha a chave." },
+  { "termo": "Blob", "traducao": "objeto binário grande (binary large object)", "explicacao": "Um arquivo que existe só na memória da página. Pode virar um download ou ser lido como texto." },
+  { "termo": "Array.isArray", "traducao": "lista: é uma lista?", "explicacao": "Confere se um valor é mesmo uma lista. Devolve true ou false." },
+  { "termo": "findIndex", "traducao": "encontrar a posição", "explicacao": "Devolve a posição do primeiro item da lista que passa no teste, ou -1 se nenhum passar." },
+  { "termo": "Map", "traducao": "mapa", "explicacao": "Estrutura que guarda um valor para cada chave, como um id. Com get e set, acha e troca um item quase na hora." }
 ]

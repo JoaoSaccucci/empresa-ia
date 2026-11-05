@@ -353,6 +353,15 @@
           { "titulo": "Relatório de teste — Entrega 2a", "url": "docs/projetos/agenda/testes/etapa-2a.md" }
         ],
         "imagens": []
+      },
+      {
+        "agente": "professor",
+        "resumo": "Etapa 2, Entrega 2a: 4 aulas curtas sobre a cópia e a importação: criar um arquivo com JSON.stringify e Blob, ler um arquivo escolhido com await, conferir dados de fora em camadas e juntar duas listas pelo id. Cada aula tem exemplo com Rodar e quiz, e cita o código da Agenda por link fixo.",
+        "entregaveis": [
+          { "titulo": "Aulas — Agenda, Módulo 1", "url": "aulas.html#agenda-m1" },
+          { "titulo": "Glossário", "url": "data/glossario.json" }
+        ],
+        "imagens": []
       }
     ],
     "linhaDoTempo": [
@@ -368,7 +377,8 @@
       { "data": "2026-11-05", "agente": "dev", "descricao": "Implementação da Entrega 2a: baixar e importar cópia e lembrete de cópia." },
       { "data": "2026-11-05", "agente": "testador", "descricao": "Entrega 2a reprovada na rodada 1: aviso da janela coberto em tela baixa." },
       { "data": "2026-11-05", "agente": "testador", "descricao": "Entrega 2a aprovada na rodada 2, com uma pendência baixa." },
-      { "data": "2026-11-05", "agente": "dev", "descricao": "Entrega 2a publicada no repositório agenda e no GitHub Pages." }
+      { "data": "2026-11-05", "agente": "dev", "descricao": "Entrega 2a publicada no repositório agenda e no GitHub Pages." },
+      { "data": "2026-11-05", "agente": "professor", "descricao": "4 aulas da Entrega 2a, com exemplo Rodar e quiz, no Módulo 1 da Agenda." }
     ]
   }
 ]

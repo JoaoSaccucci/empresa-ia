@@ -160,3 +160,73 @@
 - O `scroll-padding-bottom` não estragou a correção da Etapa 1: com o formulário rolado até o fim e o Título vazio, o rótulo "Título (obrigatório)" continua visível em todos os tamanhos.
 - O nome acessível de "Depois" agora é exatamente "Depois, lembrar daqui a 7 dias" (`getByRole` com o nome exato). O texto visível "Depois" continua no começo, o que é bom para o comando de voz.
 - Com isso, os critérios que estavam desmarcados por causa do problema 1 (erros do arquivo na US09 e "onde os avisos aparecem" nos requisitos gerais) passam. Continua só a conferência manual do critério "Chrome e Edge do computador e Chrome do Android" (US08), que está em "Conferência manual".
+
+## Aulas da Entrega 2a — 2026-11-05
+
+- **O que foi testado:** as 4 aulas novas da Agenda na Labs (`aulas/agenda/modulo-1/aula-01.md` a `aula-04.md`) e as mudanças em `data/aulas.json` (módulo `agenda-m1`), `data/glossario.json` (Blob, Array.isArray, findIndex, Map) e `data/projetos.json` (trabalho do professor e linha do tempo da Agenda). O teste foi feito antes do commit da Labs e seguiu o guia `docs/guias/aulas.md` e a regra do João de que nenhum exercício manda mexer no código de um projeto.
+- **Onde:** Edge 156 headless, com o site da Labs servido por um servidor local (marked e highlight.js carregados pelo CDN, nas versões fixas), a 1280px e a 360px. Os links fixos foram comparados com os arquivos locais da Agenda, que estão no commit `e413ad86d9f525fd94bfaa21e45153ff97cf0a06` (`git status` limpo). Esse commit já está publicado: a página dele no GitHub respondeu 200.
+
+### Resultado
+
+**Aprovado.** Foram 113 conferências automáticas. As poucas que falharam eram problemas do próprio script de teste, e eu conferi uma por uma (detalhes em "Erros" na tabela abaixo). Também conferi o conteúdo lendo as aulas. Não encontrei nenhum problema que quebre as regras das aulas, e ficaram só observações de gravidade baixa.
+
+### Verificações
+
+| Área | Resultado | Observação |
+|---|---|---|
+| Celular a 360px | Passou | Sem rolagem horizontal nas 4 aulas, em `aulas.html#agenda-m1` e em `detalhe-projeto.html?id=agenda`. |
+| Teclado | Passou | O Tab chega no Rodar, no Editar, no Restaurar, nas alternativas do quiz, no glossário (abre com Enter e fecha com Esc) e no checklist. O foco aparece em tudo. No checklist, o contorno fica no rótulo inteiro (`:has(:focus-visible)`), não na caixinha. |
+| Acessibilidade | Passou | Os componentes são os mesmos da Labs (caixas com `role="note"`, Linha por linha, quiz, glossário). Ver a observação A, sobre o aviso do Rodar na aula 2. |
+| Contraste | Passou | Nada de visual novo: as aulas usam os componentes que já existiam. |
+| Erros | Passou | A página da aula ficou sem erros no console nas 4 aulas, nas 3 aulas da Labs da amostra e no detalhe da Agenda. O Console do exemplo também ficou sem erro. O único 404 foi o `/favicon.ico` que o navegador pede sozinho na raiz do servidor de teste, e ele não tem relação com as aulas. |
+
+### Conferências
+
+**1. `aulas.html`**
+- [x] Há o grupo "Agenda" (`h2`) antes de "João Saccucci Labs", com "Módulo 1 — Entrega 2a: cópia e importação" e as 4 aulas (Aula 1.1 a 1.4), com links para `aula.html?id=agenda-m1-aula-01` a `-04`.
+- [x] A página tem 19 cards no total: 15 da Labs e 4 da Agenda.
+- [x] `aulas.html#agenda-m1` (o link usado em `projetos.json`) leva até o módulo.
+
+**2. Cada aula em `aula.html`** (as 4 passaram em tudo)
+- [x] Têm a caixa Em resumo, Erro comum e Em entrevista (a aula 4 também tem a Dica "Para ir além", marcada como opcional).
+- [x] O glossário funciona com todos os termos: JSON.stringify, Blob, Promise, await, async, try, JSON.parse, Array.isArray, typeof, textContent, innerHTML, XSS, slice, findIndex, forEach e push. Nenhum `[[...]]` sobra na página.
+- [x] O código aparece colorido, e há 1 exemplo com Rodar por aula, com até 15 linhas.
+- [x] O Linha por linha está ligado ao exemplo e cita as linhas certas. Conferi cada item com o código: aula 1 (L1–5, 7, 8, 9–10, 12, 13–14); aula 2 (L1, 3, 5, 7, 8–11, 12, 14–15); aula 3 (L3–5, 6–8, 9, 10, 12–14); aula 4 (L1–4, 5–8, 9, 10, 11, 12, 13, 15).
+- [x] O Rodar mostra exatamente o que o texto diz:
+  - Aula 1: o JSON numa linha, o JSON com recuo, "Tamanho do arquivo: 118 bytes" e "Tipo: application/json".
+  - Aula 2: **1, 2, 3** nessa ordem ("1. Começou a ler...", "2. A página continua livre...", "3. Texto lido: {"versao": 1, "compromissos": []}").
+  - Aula 3: "Erro: não é JSON.", "Erro: não é uma cópia da Agenda." e "OK: 1 certo(s), 1 ignorado(s).".
+  - Aula 4: a lista com "a1: Dentista às 10h", "a2: Academia" e "a3: Pagar boleto".
+- [x] Editar abre o código num campo de texto, o código editado roda, e Restaurar volta ao original.
+- [x] Cada aula tem 2 quizzes clicáveis, todos bem formados, com explicação. O checklist "Para praticar" é marcável.
+
+**3. Navegação e o resto do site**
+- [x] Anterior e próxima andam só entre as 4 aulas da Agenda: a 1.1 não tem "anterior" e a 1.4 não tem "próxima".
+- [x] Amostra da Labs (m1-aula-01, m1-aula-06, m3-aula-04): as aulas abrem sem erro, e nenhum link de navegação leva para a Agenda.
+- [x] `detalhe-projeto.html?id=agenda` mostra o trabalho do professor (com o link `aulas.html#agenda-m1` e o Glossário) e a nova linha da linha do tempo.
+
+**4. Links fixos** (todos com o hash completo, nenhum com `/blob/main/`)
+- [x] Aula 1: `copia.js#L47-L55` (é a `textoDoArquivoDeCopia` inteira) e `app.js#L735-L745` (a `baixarArquivo` inteira).
+- [x] Aula 2: `index.html#L216` (o `<input type="file">`), `app.js#L1101-L1107` (o `change` com `campoArquivo.value = ""`) e `app.js#L784-L799` (do tamanho até o `if (!janelaDados.open) return;`).
+- [x] Aula 3: `copia.js#L86-L109` (da `lerArquivoDeCopia` até a conferência da versão e da lista).
+- [x] Aula 4: `copia.js#L141-L158` (a `juntarCompromissos` inteira) e `copia.js#L114-L126` (o `Map` e o `forEach`).
+
+**5. Conteúdo**
+- [x] As explicações estão certas e batem com o código da Agenda:
+  - a versão é conferida antes da lista;
+  - no empate, fica o compromisso do navegador;
+  - a lista só é trocada se a gravação der certo;
+  - o `Map` é usado para os `id` repetidos;
+  - o `File` é um `Blob` com nome;
+  - o `change` não dispara quando a pessoa escolhe o mesmo arquivo de novo;
+  - o `findIndex` devolve -1 (e o `find` devolve `undefined`).
+- [x] **Nenhum exercício manda mexer no código da Agenda ou da Labs.** Todos os itens de "Para praticar" são "No exemplo, clique em **Editar**…", e as linhas citadas (aula 1: 8 e 12; aula 3: 14; aula 4: 3 e 6) são as certas.
+- [x] Tamanho das aulas: de 485 a 604 palavras fora do código, `tempoLeitura` 6, até 3 itens em "Para praticar" e quiz nas 4 aulas.
+
+### Observações (gravidade baixa, nenhuma impede a aprovação)
+
+- **A. O aviso do Rodar na aula 2 conta errado.** O leitor de tela ouve "Exemplo executado. 2 linhas no console.", mas o Console mostra 3 linhas. O aviso sai quando a página do exemplo termina de carregar, e a linha "3." chega depois, por causa do `await`. Isso é uma limitação do componente Rodar da Labs (`js/aula-codigo.js`), não da aula, e esta é a primeira aula que usa `await` no exemplo. Se quiserem, dá para corrigir depois no componente.
+- **B. Aula 2, "Para praticar", item 2 (apagar o `await`).** O Console da aula mostra `3. Texto lido: {}`, porque o Console da Labs transforma objetos em JSON e uma Promise vira `{}`. No console do navegador, apareceria `Promise {<pending>}`. A ordem também muda para 1, 3, 2. É um bom exercício, mas o `{}` pode confundir. Sugestão: uma dica curta, como "aparece `{}`: é a Promise, que o Console da aula mostra assim".
+- **C. Aula 1, primeiro quiz.** A explicação diz "compare as linhas 9 e 10 do Console". As linhas 9 e 10 são do **código**; no Console, são as duas primeiras saídas. Sugestão: "compare as duas primeiras saídas do Console (linhas 9 e 10 do exemplo)".
+- **D. Glossário.** "Blob" está traduzido como "bolha de dados (binary large object)". Funciona, mas "objeto binário grande" seria mais fiel. É questão de gosto.
+- **Conferir à mão (João):** depois do commit da Labs, abrir uma aula no GitHub Pages e clicar num link fixo, para ver se ele abre o GitHub com as linhas destacadas.

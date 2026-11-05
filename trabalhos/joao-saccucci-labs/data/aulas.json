@@ -20,6 +20,13 @@
       "numero": 3,
       "titulo": "Etapa 3: a tela de leitura",
       "resumo": "Tratar erros, lembrar coisas no navegador e usar uma biblioteca pronta."
+    },
+    {
+      "id": "agenda-m1",
+      "projeto": "agenda",
+      "numero": 1,
+      "titulo": "Entrega 2a: cópia e importação",
+      "resumo": "Criar e ler arquivos no navegador, conferir dados que vêm de fora e juntar duas listas pelo id."
     }
   ],
   "aulas": [
@@ -157,6 +164,42 @@
       "arquivo": "aulas/modulo-3/aula-04.md",
       "tempoLeitura": 6,
       "resumo": "Carregue uma biblioteca pelo CDN com versão fixa, antes do seu script, e use o marked para transformar Markdown em HTML."
+    },
+    {
+      "id": "agenda-m1-aula-01",
+      "titulo": "Criar um arquivo no navegador: JSON.stringify e Blob",
+      "modulo": "agenda-m1",
+      "numero": 1,
+      "arquivo": "aulas/agenda/modulo-1/aula-01.md",
+      "tempoLeitura": 6,
+      "resumo": "Transformar dados em texto com JSON.stringify e embrulhar o texto num arquivo na memória com Blob, como no Baixar cópia da Agenda."
+    },
+    {
+      "id": "agenda-m1-aula-02",
+      "titulo": "Ler um arquivo escolhido pela pessoa",
+      "modulo": "agenda-m1",
+      "numero": 2,
+      "arquivo": "aulas/agenda/modulo-1/aula-02.md",
+      "tempoLeitura": 6,
+      "resumo": "O input type=\"file\", o evento change e a leitura com await arquivo.text() dentro de um try."
+    },
+    {
+      "id": "agenda-m1-aula-03",
+      "titulo": "Nunca confie em dados que vêm de fora",
+      "modulo": "agenda-m1",
+      "numero": 3,
+      "arquivo": "aulas/agenda/modulo-1/aula-03.md",
+      "tempoLeitura": 6,
+      "resumo": "Conferir um arquivo em camadas antes de usar: se é JSON, se tem o formato certo e se cada item está certo."
+    },
+    {
+      "id": "agenda-m1-aula-04",
+      "titulo": "Juntar duas listas pelo id",
+      "modulo": "agenda-m1",
+      "numero": 4,
+      "arquivo": "aulas/agenda/modulo-1/aula-04.md",
+      "tempoLeitura": 6,
+      "resumo": "Acrescentar o que é novo e decidir qual versão fica quando o mesmo id aparece nas duas listas, com findIndex e uma cópia da lista."
     }
   ]
 }
