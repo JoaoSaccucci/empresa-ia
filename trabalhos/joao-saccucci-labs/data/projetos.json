@@ -317,6 +317,42 @@
           { "titulo": "Relatório de teste — Etapa 1", "url": "docs/projetos/agenda/testes/etapa-1.md" }
         ],
         "imagens": []
+      },
+      {
+        "agente": "product-owner",
+        "resumo": "Etapa 2: propôs 13 ideias de melhoria, combinou com o João o plano das Etapas 2 a 4 e escreveu os requisitos da Etapa 2 \"nada cai no esquecimento\" (US08 a US16), divididos na Entrega 2a (cópia e importação dos dados) e na Entrega 2b (\"Sair às\", \"Feito\", pendências e \"Sem data\").",
+        "entregaveis": [
+          { "titulo": "Requisitos (Etapa 2)", "url": "docs/projetos/agenda/requisitos.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "artista",
+        "resumo": "Etapa 2, Entrega 2a: desenhou a cópia dos dados como o \"guarda-volumes da estação\": botão \"Seus dados\" com ícone de cilindro, janela com a \"Última cópia\" numa placa, janelas de importação e de confirmação, avisos dentro da janela e a faixa lilás de lembrete de cópia.",
+        "entregaveis": [
+          { "titulo": "Design (seção 12)", "url": "docs/projetos/agenda/design.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "dev",
+        "resumo": "Implementou a Entrega 2a: baixar uma cópia dos compromissos em arquivo .json, importar uma cópia com \"Juntar\" ou \"Substituir tudo\" (com confirmação e cópia de segurança) e a faixa que lembra de fazer cópia depois de 30 dias. Corrigiu o aviso coberto pela barra das janelas em telas baixas e atualizou o README.",
+        "entregaveis": [
+          { "titulo": "Site publicado", "url": "https://joaosaccucci.github.io/agenda/" },
+          { "titulo": "Cópia (JS)", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/js/copia.js" },
+          { "titulo": "Tela (JS)", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/js/app.js" },
+          { "titulo": "Armazenamento (JS)", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/js/armazenamento.js" },
+          { "titulo": "README", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/README.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "testador",
+        "resumo": "Etapa 2, Entrega 2a: testou baixar, importar e o lembrete de cópia de 320 a 1280px, com teclado, leitor de tela, contraste AA, janelas empilhadas e localStorage cheio. Rodada 1: reprovado, porque o aviso da janela ficava coberto em tela baixa. Rodada 2: aprovado, com uma pendência baixa.",
+        "entregaveis": [
+          { "titulo": "Relatório de teste — Entrega 2a", "url": "docs/projetos/agenda/testes/etapa-2a.md" }
+        ],
+        "imagens": []
       }
     ],
     "linhaDoTempo": [
@@ -325,7 +361,14 @@
       { "data": "2026-11-04", "agente": "artista", "descricao": "Visual \"quadro de partidas ao anoitecer\" definido em docs/projetos/agenda/design.md." },
       { "data": "2026-11-04", "agente": "dev", "descricao": "Implementação da primeira versão: lista por dia, criar, editar, excluir e Anteriores." },
       { "data": "2026-11-04", "agente": "testador", "descricao": "Relatório de teste da Etapa 1 da Agenda: aprovado, com uma pendência baixa corrigida pelo dev." },
-      { "data": "2026-11-04", "agente": "dev", "descricao": "Primeira versão publicada no repositório agenda e no GitHub Pages." }
+      { "data": "2026-11-04", "agente": "dev", "descricao": "Primeira versão publicada no repositório agenda e no GitHub Pages." },
+      { "data": "2026-11-05", "agente": "product-owner", "descricao": "13 ideias de melhoria e plano das Etapas 2 a 4 combinados com o João." },
+      { "data": "2026-11-05", "agente": "product-owner", "descricao": "Requisitos da Etapa 2 (US08 a US16), divididos nas Entregas 2a e 2b." },
+      { "data": "2026-11-05", "agente": "artista", "descricao": "Design da Entrega 2a: \"Seus dados\", importação e lembrete de cópia (seção 12)." },
+      { "data": "2026-11-05", "agente": "dev", "descricao": "Implementação da Entrega 2a: baixar e importar cópia e lembrete de cópia." },
+      { "data": "2026-11-05", "agente": "testador", "descricao": "Entrega 2a reprovada na rodada 1: aviso da janela coberto em tela baixa." },
+      { "data": "2026-11-05", "agente": "testador", "descricao": "Entrega 2a aprovada na rodada 2, com uma pendência baixa." },
+      { "data": "2026-11-05", "agente": "dev", "descricao": "Entrega 2a publicada no repositório agenda e no GitHub Pages." }
     ]
   }
 ]

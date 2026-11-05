@@ -1576,3 +1576,738 @@ textarea.campo-controle {
 1. **Botão do topo no celular:** abaixo de 480px ele mostra só "+ Novo" (o leitor de tela continua ouvindo "Novo compromisso"). Com o texto inteiro, o botão não cabe ao lado do nome "Agenda" a 360px. **Aprovado.**
 2. **Clima "quadro de partidas ao anoitecer"**, com âmbar e lilás no lugar do ciano, roxo e magenta da Labs. **Aprovado.**
 3. **Link no rodapé:** "Um projeto da João Saccucci Labs", apontando para a Labs publicada. **Aprovado.** O dev confere o endereço real da Labs antes de usar.
+
+---
+
+## 12. Etapa 2 — Entrega 2a (cópia dos dados)
+
+Cobre a **Agenda US08** (baixar cópia), a **US09** (importar), a **US10** (lembrete de cópia) e a mudança da US07 da Entrega 2a. Nada da Entrega 2b está aqui. Tudo o que vem abaixo **se soma** às seções 1 a 11: as cores, as fontes, os espaços, as janelas, os botões e as faixas continuam os mesmos.
+
+### 12.1 Ideia visual
+
+No "quadro de partidas", a cópia dos dados é o **guarda-volumes da estação**: um lugar calmo, fora da lista, para guardar e trazer de volta a bagagem (os compromissos). Por isso:
+- A janela "Seus dados" usa a **mesma janela** do formulário (borda de cima âmbar) e mostra a "Última cópia" numa **placa** de duas metades, igual à placa de hora dos compromissos.
+- O lembrete de cópia é uma faixa **lilás** (a cor calma, do "sem hora"), diferente da faixa âmbar de problema. Ele é um lembrete, não um erro, e também diz isso em texto ("LEMBRETE DE CÓPIA").
+- Só a ação que apaga ("Substituir") usa vermelho cheio, como o "Excluir" da Etapa 1.
+
+### 12.2 Reaproveitado x novo
+
+| Parte | Reaproveita | Novo (e por quê) |
+|---|---|---|
+| Botão "Seus dados" | `.btn .btn-secundario`, ícone 20px, receita "esconde só da tela" do `.botao-novo-resto` | `.cabecalho-acoes` (agrupa os dois botões do topo) e `.botao-dados` (versão redonda só com ícone abaixo de 640px). Sem isso o botão não cabe a 360px. |
+| Janela "Seus dados" | `.janela`, `.janela-conteudo`, `.janela-titulo`, `.janela-acoes`, `.confirmar-icone`, `.confirmar-texto`, `.campo-dica`, `.btn-primario`, `.btn-secundario` | `.confirmar-icone--ambar` (o círculo da confirmação, em âmbar: não é perigo); `.dados-placa` (a "Última cópia" no visual de placa); `.dados-acoes` (os dois botões grandes); `.janela-aviso` (região de avisos **dentro** da janela, ver 12.6) |
+| Avisos dentro da janela | `.faixa`, `.faixa--erro`, `.faixa--alerta`, ícone "alerta" | `.faixa--sucesso` (verde, para "Cópia baixada." dentro da janela; o verde já existia na barrinha do aviso flutuante) |
+| Janela de escolha da importação | `.janela`, `.janela-acoes`, `.btn-primario`, `.confirmar-icone--ambar` | `.importar-resumo`, `.opcoes`/`.opcao` (botão + explicação embaixo) e `.btn-perigo-contorno` ("Substituir tudo" leva a uma ação perigosa, mas ainda não apaga nada: contorno vermelho, não cheio) |
+| Confirmação de "Substituir tudo" | `.janela--confirmar`, `.confirmar-icone`, `.confirmar-titulo`, `.confirmar-texto`, `.btn-perigo` (tudo igual à exclusão) | só o ícone "substituir" |
+| Faixa de lembrete | `.faixa`, `#faixas`, `.btn-primario`, `.btn-secundario` | `.faixa--lembrete` e as partes internas (`.faixa-corpo`, `.faixa-rotulo`, `.faixa-texto`, `.faixa-destaque`, `.faixa-acoes`): é a primeira faixa com botões |
+| Ícones | estilo da seção 8.2 | dados, baixar, importar, histórico, juntar, substituir (12.8) |
+
+Nenhuma cor nova: tudo sai das variáveis da seção 2 (as cores de fundo novas são misturas com `color-mix`, como as faixas que já existem).
+
+### 12.3 Botão "Seus dados" no cabeçalho (US08)
+
+**Posição:** à direita, **antes** do "+ Novo". O "+ Novo" continua na ponta (é a ação principal, o polegar acha no mesmo lugar). Ordem do Tab: "Seus dados" → "Novo compromisso".
+
+**Visual:** botão secundário (só contorno, pílula), com o ícone "dados" (um cilindro, o símbolo mais conhecido de "dados guardados").
+- **Abaixo de 640px:** só o ícone, num círculo de **44 × 44px**. O texto "Seus dados" continua no HTML, escondido só da tela: o nome acessível é sempre "Seus dados".
+- **A partir de 640px:** ícone + "Seus dados".
+
+**Conta a 360px** (328px úteis): marca (ícone 32 + 8 + "Agenda▪" ≈ 90) ≈ 130px · vão 12px · "Seus dados" 44px · vão 8px · "+ Novo" ≈ 100px = **≈ 294px**. Sobram ~34px; não quebra.
+**Conta a 480px** (448px úteis), com "+ Novo compromisso" inteiro (≈ 205px): 130 + 12 + 44 + 8 + 205 = **399px**. Cabe. Com o texto "Seus dados" (≈ 145px) **não** caberia, por isso o texto só aparece a partir de 640px (592px úteis: 130 + 12 + 145 + 8 + 205 = 500px).
+
+```
+360px                                    ≥ 640px
++--------------------------------------+ +-------------------------------------------------------------+
+| [ic] Agenda▪          (≡)  [+ Novo]  | | [ic] Agenda▪          [(≡) Seus dados] [+ Novo compromisso] |
++--------------------------------------+ +-------------------------------------------------------------+
+   (≡) = círculo 44px com o ícone "dados"
+```
+
+```html
+<header class="cabecalho">
+  <div class="container cabecalho-conteudo">
+    <div class="marca"><!-- igual --></div>
+
+    <div class="cabecalho-acoes">
+      <button class="btn btn-secundario botao-dados" type="button" id="botao-dados">
+        <!-- svg "dados" (12.8) -->
+        <span class="botao-dados-texto">Seus dados</span>
+      </button>
+      <button class="btn btn-primario botao-novo" type="button" id="botao-novo"><!-- igual --></button>
+    </div>
+  </div>
+</header>
+```
+
+- Sem `aria-label` e sem `title`: o nome vem do `<span>` (escondido só da tela no celular), do mesmo jeito do "Novo compromisso".
+- Contraste: borda `#8A7A9C` sobre o cabeçalho no canto do brilho âmbar (≈`#271C19`) = **4.2:1** (mínimo 3:1); ícone `#F5EEE6` sobre o mesmo fundo = **14.5:1**. Hover: fundo `#231A2E`, borda `#B8AAB9`.
+- Não tem bolinha de "atenção" quando a cópia está atrasada: quem avisa é a faixa (12.7), em texto.
+
+### 12.4 Janela "Seus dados" (US08 e começo da US09)
+
+`dialog` com `showModal()`, largura padrão da `.janela` (até 512px), borda de cima âmbar. Esc e "Fechar" fecham; o foco volta para o botão "Seus dados".
+
+```
+360px
++------------------------------------+  borda de cima âmbar 3px
+|  (≡)                               |  círculo âmbar 48px (enfeite)
+|  Seus dados                        |  h2 20px 700
+|                                    |
+|  Seus compromissos ficam guardados |  texto suave 16px
+|  só neste navegador. Baixe uma     |
+|  cópia de vez em quando para não   |
+|  perder nada e para levar a agenda |
+|  para outro aparelho.              |
+|                                    |
+| +--------------------------------+ |  placa (duas metades)
+| | ÚLTIMA CÓPIA        05/11/2026 | |  rótulo mono 12px | data mono âmbar 17px
+| +--------------------------------+ |
+|                                    |
+| [ (↓) Baixar cópia               ] |  principal âmbar, largura toda
+| [ (↑) Importar cópia             ] |  secundário, largura toda
+|  Escolha um arquivo .json baixado  |  dica 14px suave
+|  pela Agenda.                      |
+|                                    |
+| (✓) Cópia baixada.                 |  aviso dentro da janela (só quando há)
+|------------------------------------|
+| [            Fechar              ] |  barra grudada no fim
++------------------------------------+
+```
+
+Sem nenhuma cópia, a placa vira uma linha de texto com o ícone "alerta" em âmbar:
+```
+| +--------------------------------+ |
+| | (!) Você ainda não fez nenhuma | |
+| |     cópia.                     | |
+| +--------------------------------+ |
+```
+
+A partir de 480px, "Baixar cópia" e "Importar cópia" ficam **lado a lado** (duas colunas iguais) e "Fechar" vai para a direita da barra, como nas outras janelas.
+
+```html
+<dialog class="janela" id="janela-dados" aria-labelledby="dados-titulo" aria-describedby="dados-texto">
+  <div class="janela-conteudo">
+    <span class="confirmar-icone confirmar-icone--ambar" aria-hidden="true"><!-- svg "dados" --></span>
+    <h2 class="janela-titulo" id="dados-titulo">Seus dados</h2>
+    <p class="confirmar-texto" id="dados-texto">Seus compromissos ficam guardados só neste navegador. Baixe uma cópia de vez em quando para não perder nada e para levar a agenda para outro aparelho.</p>
+
+    <!-- Com cópia: mostra .dados-placa-data. Sem cópia: mostra .dados-placa-nunca. -->
+    <div class="dados-placa" id="dados-ultima">
+      <p class="dados-placa-data">
+        <span class="dados-placa-rotulo">Última cópia<span class="sr-only">:</span></span>
+        <time class="dados-placa-valor" id="dados-ultima-valor" datetime="2026-11-05T21:10">05/11/2026</time>
+      </p>
+      <p class="dados-placa-nunca" hidden>
+        <!-- svg "alerta" -->
+        <span>Você ainda não fez nenhuma cópia.</span>
+      </p>
+    </div>
+
+    <div class="dados-acoes">
+      <button class="btn btn-primario" type="button" id="botao-baixar" autofocus><!-- svg "baixar" -->Baixar cópia</button>
+      <button class="btn btn-secundario" type="button" id="botao-importar" aria-describedby="dica-importar"><!-- svg "importar" -->Importar cópia</button>
+    </div>
+    <p class="campo-dica" id="dica-importar">Escolha um arquivo .json baixado pela Agenda.</p>
+
+    <!-- seletor de arquivo: nunca aparece; o botão "Importar cópia" chama .click() nele -->
+    <input type="file" id="arquivo-importar" accept=".json,application/json" hidden>
+
+    <!-- Avisos da janela. SEMPRE no HTML (região viva), vazio quando não há aviso.
+         O JS coloca dentro um <p class="faixa faixa--..."> (12.6). -->
+    <div class="janela-aviso" id="dados-aviso" aria-live="polite"></div>
+
+    <div class="janela-acoes">
+      <button class="btn btn-secundario" type="button" data-acao="fechar">Fechar</button>
+    </div>
+  </div>
+</dialog>
+```
+
+**Foco e teclado**
+- Ao abrir: o foco vai para **"Baixar cópia"** (a ação mais comum; nada aqui apaga dados). O leitor de tela lê o título e o texto (`aria-labelledby` + `aria-describedby`).
+- Ordem do Tab: Baixar cópia → Importar cópia → Fechar (e volta, preso na janela).
+- Depois de "Baixar cópia": o foco **fica** no botão. A placa troca para a nova data e a região `#dados-aviso` recebe "Cópia baixada.".
+- Depois do seletor de arquivos (escolheu, cancelou ou deu erro): o foco fica em "Importar cópia".
+- Ao abrir a janela de novo, a região `#dados-aviso` começa vazia.
+- Dica para o dev: depois de ler o arquivo, limpar `input.value = ""`, senão escolher o mesmo arquivo de novo não dispara o evento.
+
+**A placa "Última cópia"**: a data é escrita `DD/MM/AAAA`. O leitor de tela ouve "Última cópia: 05/11/2026" (o ":" está em `sr-only`, porque na tela o rótulo em maiúsculas fica melhor sem ele). Sem cópia, ouve "Você ainda não fez nenhuma cópia.", exatamente o texto da US08.
+
+### 12.5 Fluxo da importação (US09)
+
+```
+"Seus dados"  --Importar cópia-->  seletor do sistema (.json)
+                                      |
+             cancelou: nada acontece  |  escolheu
+                                      v
+                    lê o arquivo e confere tudo (sem mudar nada)
+                     |                                  |
+            erro (12.6): aviso vermelho          ok: abre a janela
+            dentro de "Seus dados",              "Importar cópia" POR CIMA
+            foco em "Importar cópia"             de "Seus dados", foco em "Juntar"
+                                                   |               |
+                                                Juntar      Substituir tudo
+                                                   |               |
+                                                   |        confirmação POR CIMA,
+                                                   |        foco em "Cancelar"
+                                                   |               | Substituir
+                                                   v               v
+                                  fecha TODAS as janelas, redesenha a lista,
+                                  aviso flutuante "Cópia importada: ..."
+                                  e o foco volta para o botão "Seus dados"
+```
+
+- As janelas ficam **empilhadas** (`showModal()` numa janela com outra já aberta funciona: a de cima fica na frente). Esc fecha só a de cima e o foco volta para o botão que a abriu ("Substituir tudo" ou "Importar cópia").
+- Por que fechar tudo no fim: a pessoa quer **ver** os compromissos que chegaram. Com as janelas fechadas, o aviso flutuante volta a ser lido pelo leitor de tela (ver 12.6). Dica para o dev: fechar as janelas **antes** de escrever o texto no `#status`.
+
+#### Janela de escolha "Importar cópia"
+
+```
+360px
++------------------------------------+  borda de cima âmbar
+|  (↑)                               |  círculo âmbar 48px
+|  Importar cópia                    |  h2
+|                                    |
+|  Esta cópia tem 12 compromissos.   |  16px; "12" em mono âmbar 600
+|  (!) 2 itens com problema foram    |  14px suave, ícone âmbar
+|      ignorados.                    |  (só se houver ignorados)
+|  Neste navegador há 8 compromissos.|  14px suave
+|                                    |
+|  O que fazer com eles?             |  16px 600
+|                                    |
+| [ (Y) Juntar                     ] |  principal âmbar, largura toda
+|  Acrescenta os da cópia e mantém   |  14px suave
+|  os que já estão aqui. Nada é      |
+|  apagado.                          |
+|                                    |
+| [ (⇄) Substituir tudo            ] |  contorno VERMELHO, texto branco
+|  Troca os 8 compromissos daqui     |  14px suave
+|  pelos 12 da cópia.                |
+|------------------------------------|
+| [            Cancelar            ] |  barra grudada no fim
++------------------------------------+
+```
+
+Igual em todas as larguras (a janela tem no máximo 512px; os botões continuam um embaixo do outro, cada um com a sua explicação logo abaixo). Ordem do Tab: Juntar → Substituir tudo → Cancelar.
+
+```html
+<dialog class="janela" id="janela-importar" aria-labelledby="importar-titulo" aria-describedby="importar-resumo">
+  <div class="janela-conteudo">
+    <span class="confirmar-icone confirmar-icone--ambar" aria-hidden="true"><!-- svg "importar" --></span>
+    <h2 class="janela-titulo" id="importar-titulo">Importar cópia</h2>
+
+    <div class="importar-resumo" id="importar-resumo">
+      <p>Esta cópia tem <span class="importar-numero">12</span> compromissos.</p>
+      <p class="importar-ignorados"><!-- svg "alerta" --><span>2 itens com problema foram ignorados.</span></p>
+      <p class="importar-atual">Neste navegador há 8 compromissos.</p>
+    </div>
+
+    <p class="importar-pergunta">O que fazer com eles?</p>
+
+    <div class="opcoes">
+      <div class="opcao">
+        <button class="btn btn-primario" type="button" data-acao="juntar" aria-describedby="opcao-juntar-texto" autofocus><!-- svg "juntar" -->Juntar</button>
+        <p class="opcao-texto" id="opcao-juntar-texto">Acrescenta os da cópia e mantém os que já estão aqui. Nada é apagado.</p>
+      </div>
+      <div class="opcao">
+        <button class="btn btn-perigo-contorno" type="button" data-acao="substituir" aria-describedby="opcao-substituir-texto"><!-- svg "substituir" -->Substituir tudo</button>
+        <p class="opcao-texto" id="opcao-substituir-texto">Troca os 8 compromissos daqui pelos 12 da cópia.</p>
+      </div>
+    </div>
+
+    <div class="janela-acoes">
+      <button class="btn btn-secundario" type="button" data-acao="cancelar">Cancelar</button>
+    </div>
+  </div>
+</dialog>
+```
+
+- O resumo junta as frases da US09 ("Esta cópia tem 12 compromissos. 2 itens com problema foram ignorados.") e acrescenta "Neste navegador há 8 compromissos." para a pessoa comparar antes de escolher. A linha de ignorados só existe se houver ignorados.
+- "Juntar" e "Substituir tudo" se diferenciam por **texto** (nome e explicação), por ícone e por cor; nunca só pela cor.
+
+#### Confirmação "Substituir tudo?"
+
+A mesma janela da exclusão (seção 6.6 e 7.8), só com outro texto e outro ícone:
+
+```
++--------------------------------+  borda de cima VERMELHA
+|  (⇄)                           |  círculo vermelho claro
+|  Substituir tudo?              |  h2 20px 700
+|  Os 8 compromissos atuais serão|  suave
+|  trocados pelos 12 da cópia.   |
+|  Essa ação não pode ser        |
+|  desfeita.                     |
+|--------------------------------|
+| [ Cancelar ]  [ (⇄) Substituir]|  Cancelar com o foco; Substituir vermelho cheio
++--------------------------------+
+```
+
+```html
+<dialog class="janela janela--confirmar" id="janela-substituir" aria-labelledby="substituir-titulo" aria-describedby="substituir-texto">
+  <div class="janela-conteudo">
+    <span class="confirmar-icone" aria-hidden="true"><!-- svg "substituir" --></span>
+    <h2 class="confirmar-titulo" id="substituir-titulo">Substituir tudo?</h2>
+    <p class="confirmar-texto" id="substituir-texto">Os 8 compromissos atuais serão trocados pelos 12 da cópia. Essa ação não pode ser desfeita.</p>
+    <div class="janela-acoes">
+      <button class="btn btn-secundario" type="button" data-acao="cancelar" autofocus>Cancelar</button>
+      <button class="btn btn-perigo" type="button" data-acao="confirmar-substituir"><!-- svg "substituir" -->Substituir</button>
+    </div>
+  </div>
+</dialog>
+```
+
+#### Singular e plural (para os textos com número)
+
+| Quantidade | Texto |
+|---|---|
+| 1 na cópia | "Esta cópia tem 1 compromisso." |
+| 1 ignorado | "1 item com problema foi ignorado." |
+| 1 neste navegador | "Neste navegador há 1 compromisso." |
+| 0 neste navegador | "Neste navegador não há compromissos." (sugestão) |
+| Confirmação com 1 atual | "O compromisso atual será trocado pelos 12 da cópia. Essa ação não pode ser desfeita." (sugestão) |
+| Resultado do Juntar | "Cópia importada: 1 novo e 1 atualizado." / "Cópia importada: 5 novos." (sem a parte do zero) / com 0 e 0: "Cópia importada: nada mudou, você já tinha esses compromissos." (sugestão) |
+
+As linhas marcadas "sugestão" não estão nos requisitos: o João (ou o PO) confirma.
+
+### 12.6 Mensagens: onde cada uma aparece
+
+**Por que existe a `.janela-aviso`:** com uma janela aberta por `showModal()`, o resto da página fica "inerte" e coberto pelo fundo escurecido. O aviso flutuante (`#status`) fica atrás da janela, e o leitor de tela pode **não** ler uma região viva que está na parte inerte. Então, **enquanto a janela "Seus dados" estiver aberta**, os avisos aparecem **dentro dela**, na região `#dados-aviso` (o mesmo jeito do `#faixas`: um `div` vivo, sempre no HTML, onde o JS coloca uma `.faixa`). Com as janelas fechadas, vale o aviso flutuante de sempre.
+
+| Situação | Onde | Estilo | Texto |
+|---|---|---|---|
+| Baixou pela janela | `#dados-aviso` | `.faixa--sucesso` + ícone "check" | "Cópia baixada." |
+| Baixou pela faixa de lembrete | `#status` (flutuante) | sucesso | "Cópia baixada." |
+| Nenhum compromisso para copiar | `#dados-aviso` (ou `#status`, se veio da faixa; mas a faixa nem aparece sem compromissos) | `.faixa--alerta` + "alerta" | "Não há compromissos para copiar." |
+| Arquivo maior que 5 MB | `#dados-aviso` | `.faixa--erro` + "alerta" | "Arquivo grande demais para ser uma cópia da Agenda." |
+| Não é JSON ou não tem `compromissos` | `#dados-aviso` | `.faixa--erro` | "Este arquivo não é uma cópia da Agenda." |
+| Versão mais nova | `#dados-aviso` | `.faixa--erro` | "Esta cópia é de uma versão mais nova da Agenda." |
+| Nenhum item válido | `#dados-aviso` | `.faixa--erro` | "Nenhum compromisso válido nesta cópia." |
+| Itens ignorados (mas há válidos) | resumo da janela "Importar cópia" | linha com ícone "alerta" âmbar | "2 itens com problema foram ignorados." |
+| `localStorage` cheio/indisponível ao importar | fecha "Importar cópia" e a confirmação, volta para "Seus dados": `#dados-aviso`, foco em "Importar cópia" | `.faixa--erro` | "Não foi possível importar a cópia neste navegador." |
+| Importou (Juntar) | `#status`, depois de fechar as janelas | sucesso | "Cópia importada: 5 novos e 2 atualizados." |
+| Importou (Substituir) | `#status`, depois de fechar as janelas | sucesso | "Cópia importada: 12 compromissos." |
+| "Depois" na faixa | `#status` | sucesso | "Lembrete adiado por 7 dias." (**sugestão**, não está na US10) |
+
+Exemplo do que o JS coloca na região (o texto sempre com `textContent`):
+```html
+<div class="janela-aviso" id="dados-aviso" aria-live="polite">
+  <p class="faixa faixa--erro"><!-- svg "alerta" --><span>Este arquivo não é uma cópia da Agenda.</span></p>
+</div>
+```
+- Um aviso por vez: o novo **substitui** o anterior (`replaceChildren`).
+- Erro = fundo vermelho + borda vermelha + ícone + texto; sucesso = fundo verde + ícone de check + texto. O tipo nunca depende só da cor.
+- A região não usa `display: none` quando vazia (um leitor de tela pode ignorar uma região viva que estava escondida); o CSS só tira o espaço dela (12.9).
+
+### 12.7 Faixa de lembrete de cópia (US10)
+
+Fica no `#faixas`, no topo do conteúdo, **sempre depois** das faixas de problema da US07 (se houver alguma). Na prática elas quase nunca aparecem juntas (sem `localStorage` ou com dado corrompido não há compromissos salvos, então a faixa de lembrete nem aparece), mas a ordem fica definida: **problema primeiro, lembrete por último**, com o espaço normal entre faixas (24px).
+
+```
+360px
++--------------------------------------+
+| [ic] Agenda▪          (≡)  [+ Novo]  |
++--------------------------------------+
+| ┃ (⟲) LEMBRETE DE CÓPIA              |  faixa lilás, filete de 4px à esquerda
+| ┃     Sua última cópia foi há        |  16px 600 branco
+| ┃     42 dias.                       |  "42 dias" em mono âmbar
+| ┃     Baixe uma cópia para não       |  14px suave (sugestão)
+| ┃     perder nada se o navegador     |
+| ┃     for limpo.                     |
+| ┃ [ (↓) Baixar cópia agora ]         |  principal âmbar
+| ┃ [ Depois ]                         |  secundário
+|                                      |      (os dois dividem a linha se couberem;
+| PRÓXIMOS COMPROMISSOS                |       senão, um embaixo do outro, largura toda)
+| ▪ Hoje                               |
+| ...                                  |
+
+≥ 640px
+| ┃ (⟲) LEMBRETE DE CÓPIA                     [(↓) Baixar cópia agora] [Depois] |
+| ┃     Sua última cópia foi há 42 dias.                                         |
+| ┃     Baixe uma cópia para não perder nada se o navegador for limpo.           |
+```
+
+Sem nenhuma cópia, a linha principal é "Você ainda não fez uma cópia dos seus compromissos." (sem destaque âmbar).
+
+```html
+<!-- dentro de #faixas, sempre depois das faixas de problema -->
+<div class="faixa faixa--lembrete" id="faixa-lembrete">
+  <!-- svg "historico" -->
+  <div class="faixa-corpo">
+    <p class="faixa-rotulo">Lembrete de cópia</p>
+    <p class="faixa-texto">Sua última cópia foi há <span class="faixa-destaque">42 dias</span>.</p>
+    <p class="faixa-subtexto">Baixe uma cópia para não perder nada se o navegador for limpo.</p>
+  </div>
+  <div class="faixa-acoes">
+    <button class="btn btn-primario" type="button" data-acao="lembrete-baixar"><!-- svg "baixar" -->Baixar cópia agora</button>
+    <button class="btn btn-secundario" type="button" data-acao="lembrete-depois">Depois<span class="sr-only">, lembrar daqui a 7 dias</span></button>
+  </div>
+</div>
+```
+
+- **Não rouba o foco:** aparece ao abrir a página, sem `autofocus` e sem `.focus()`. Quem usa teclado chega nela pelo Tab logo depois do cabeçalho (ela é a primeira coisa do `main`).
+- O nome acessível de "Depois" fica "Depois, lembrar daqui a 7 dias" (começa com o texto visível, bom para comando de voz).
+- **Quando a faixa some** ("Baixar cópia agora" ou "Depois"), o foco iria para o nada. Regra: se o foco estava dentro da faixa, ele vai para o título "Próximos compromissos" (`<h2 id="titulo-proximos" tabindex="-1">`), que é o que vem logo depois. Assim ele nunca se perde no topo da página (mesma ideia da US05).
+- **Sugestão:** baixar a cópia pela janela "Seus dados" também tira a faixa (a condição dela deixou de valer).
+- Sem animação de entrada (ela aparece com a página; nada se mexe sozinho).
+- O "LEMBRETE DE CÓPIA" em texto separa esta faixa das faixas de problema, além da cor lilás e do ícone diferente.
+
+### 12.8 Ícones novos (mesmo padrão da 8.2: `viewBox="0 0 24 24"`, traço 2, `currentColor`, `aria-hidden="true" focusable="false"`)
+
+| Nome | Onde | Miolo |
+|---|---|---|
+| dados | botão "Seus dados", círculo da janela | `<ellipse cx="12" cy="5.5" rx="7.5" ry="2.5"/><path d="M4.5 5.5v13c0 1.4 3.4 2.5 7.5 2.5s7.5-1.1 7.5-2.5v-13"/><path d="M4.5 12c0 1.4 3.4 2.5 7.5 2.5s7.5-1.1 7.5-2.5"/>` |
+| baixar | "Baixar cópia", "Baixar cópia agora" | `<path d="M12 4v11M7 10l5 5 5-5"/><path d="M5 20h14"/>` |
+| importar | "Importar cópia", círculo da janela de escolha | `<path d="M12 15V4M7 9l5-5 5 5"/><path d="M5 20h14"/>` |
+| historico | faixa de lembrete | `<path d="M3 12a9 9 0 1 0 2.6-6.4L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/>` |
+| juntar | botão "Juntar" | `<path d="M6 3v2a7 7 0 0 0 6 7 7 7 0 0 0 6-7V3"/><path d="M12 12v8"/><path d="M8.5 17l3.5 3.5 3.5-3.5"/>` |
+| substituir | "Substituir tudo", confirmação | `<path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/>` |
+| check | aviso de sucesso dentro da janela | `<circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/>` |
+
+### 12.9 CSS de referência da Entrega 2a (acrescentar no `css/style.css` logo depois da seção "12. RODAPÉ" e **antes** da "13. MOVIMENTO REDUZIDO")
+
+Atenção: o `<div id="dados-aviso">` vazio não pode ter espaço nem quebra de linha dentro (o CSS usa `:empty`, igual ao `#status`).
+
+```css
+/* ---------------------------------------------------------
+   12b. ETAPA 2a: SEUS DADOS, IMPORTAÇÃO E LEMBRETE DE CÓPIA
+   Decisões em: design.md, seção 12.
+   --------------------------------------------------------- */
+
+/* --- Cabeçalho: os dois botões do topo juntos --- */
+.cabecalho-acoes {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-2);
+  flex-shrink: 0;
+}
+
+/* Abaixo de 640px: só o ícone, num círculo de 44px.
+   "Seus dados" continua no HTML para o leitor de tela. */
+@media (max-width: 639.98px) {
+  .botao-dados {
+    width: 44px;
+    padding: 0;
+  }
+
+  .botao-dados-texto {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+/* --- Círculo do topo da janela, em âmbar (não é perigo) --- */
+.confirmar-icone--ambar {
+  color: var(--cor-ambar);
+  background: color-mix(in srgb, var(--cor-ambar) 14%, transparent);
+}
+
+/* --- Placa "Última cópia" (mesmas duas metades da placa de hora) --- */
+.dados-placa {
+  padding: var(--esp-3) var(--esp-4);
+  background: linear-gradient(to bottom, var(--cor-superficie-2) 50%, var(--cor-placa-baixo) 50%);
+  border-radius: var(--raio-md);
+  box-shadow: inset 0 0 0 1px var(--cor-borda);
+}
+
+.dados-placa-data {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--esp-1) var(--esp-3);
+}
+
+.dados-placa-rotulo {
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);        /* 7.5:1 na placa */
+}
+
+.dados-placa-valor {
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-md);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--cor-ambar);              /* 9.5:1 na placa */
+}
+
+.dados-placa-nunca {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--esp-2);
+}
+
+.dados-placa-nunca .icone {
+  margin-top: 2px;
+  color: var(--cor-ambar);
+}
+
+/* --- Botões grandes da janela "Seus dados" --- */
+.dados-acoes {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--esp-3);
+}
+
+.dados-acoes .btn {
+  width: 100%;
+}
+
+@media (min-width: 480px) {
+  .dados-acoes {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* A dica fica colada nos botões (o gap da janela é 16px) */
+.dados-acoes + .campo-dica {
+  margin-top: calc(-1 * var(--esp-2));
+}
+
+/* --- Região de avisos dentro da janela ---
+   Fica sempre no HTML (região viva). Vazia, ela não pode usar
+   display: none; então só "devolve" o espaço do gap da janela. */
+.janela-aviso:empty {
+  margin-top: calc(-1 * var(--esp-4));
+}
+
+.janela-aviso .faixa {
+  margin-bottom: 0;
+}
+
+/* Sucesso: verde 12% sobre o card (texto 12.3:1, ícone 9.4:1) */
+.faixa--sucesso {
+  background: color-mix(in srgb, var(--cor-sucesso) 12%, var(--cor-superficie));
+  border-color: color-mix(in srgb, var(--cor-sucesso) 60%, transparent);
+}
+
+.faixa--sucesso .icone {
+  color: var(--cor-sucesso);
+}
+
+/* --- Janela de escolha da importação --- */
+.importar-resumo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-1);
+}
+
+.importar-numero {
+  font-family: var(--fonte-mono);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--cor-ambar);              /* 10.4:1 na janela */
+}
+
+.importar-ignorados {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--esp-2);
+  font-size: var(--fs-sm);
+  color: var(--cor-texto-suave);
+}
+
+.importar-ignorados .icone {
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  color: var(--cor-ambar);
+}
+
+.importar-atual {
+  font-size: var(--fs-sm);
+  color: var(--cor-texto-suave);
+}
+
+.importar-pergunta {
+  font-weight: 600;
+}
+
+.opcoes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-4);
+}
+
+.opcao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-1);
+}
+
+.opcao .btn {
+  width: 100%;
+}
+
+.opcao-texto {
+  font-size: var(--fs-sm);
+  color: var(--cor-texto-suave);
+}
+
+/* Leva a uma ação perigosa, mas ainda não apaga nada:
+   contorno vermelho (7.2:1), texto branco (15.8:1). */
+.btn-perigo-contorno {
+  color: var(--cor-texto);
+  background: transparent;
+  border-color: var(--cor-perigo);
+}
+
+.btn-perigo-contorno .icone {
+  color: var(--cor-perigo);
+}
+
+.btn-perigo-contorno:hover {
+  background: color-mix(in srgb, var(--cor-perigo) 12%, var(--cor-superficie));
+}
+
+/* --- Faixa de lembrete de cópia (lilás: lembrete, não problema) --- */
+.faixa--lembrete {
+  flex-wrap: wrap;
+  font-size: var(--fs-base);
+  background: color-mix(in srgb, var(--cor-lilas) 10%, var(--cor-superficie));
+  border-color: color-mix(in srgb, var(--cor-lilas) 55%, transparent);
+  border-left: 4px solid var(--cor-lilas);
+}
+
+.faixa--lembrete > .icone {
+  color: var(--cor-lilas);              /* 7.6:1 na faixa */
+}
+
+.faixa-corpo {
+  flex: 1 1 12rem;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.faixa-rotulo {
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);        /* 6.9:1 na faixa */
+}
+
+.faixa-texto {
+  font-weight: 600;                     /* branco: 13.2:1 na faixa */
+}
+
+.faixa-destaque {
+  font-family: var(--fonte-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--cor-ambar);              /* 8.7:1 na faixa */
+}
+
+.faixa-subtexto {
+  font-size: var(--fs-sm);
+  color: var(--cor-texto-suave);
+}
+
+/* Celular: botões numa linha nova, dividindo a largura;
+   se não couberem lado a lado, cada um ocupa a linha toda. */
+.faixa-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+  width: 100%;
+}
+
+.faixa-acoes .btn {
+  flex: 1 1 auto;
+}
+
+@media (min-width: 640px) {
+  .faixa--lembrete {
+    align-items: center;
+  }
+
+  .faixa-acoes {
+    width: auto;
+  }
+
+  .faixa-acoes .btn {
+    flex: 0 0 auto;
+  }
+}
+
+/* O título recebe o foco quando a faixa some (tabindex="-1").
+   Só aparece o contorno se a pessoa estiver no teclado. */
+#titulo-proximos:focus:not(:focus-visible) {
+  outline: none;
+}
+```
+
+**Acréscimo na seção "14. ALTO CONTRASTE DO WINDOWS"** (a lista de seletores ganha a placa e a faixa de lembrete):
+```css
+@media (forced-colors: active) {
+  .dados-placa {
+    border: 1px solid CanvasText;
+  }
+
+  .faixa--lembrete {
+    border-left-color: CanvasText;
+  }
+}
+```
+(Os botões novos já usam `.btn`, que já ganha borda nessa seção.)
+
+**Movimento reduzido:** nada novo para tratar. As janelas novas usam a mesma entrada da `.janela`, e a faixa não tem animação.
+
+### 12.10 Contraste conferido (WCAG 2.1)
+
+| Elemento | Cor / fundo | Razão | Mínimo |
+|---|---|---|---|
+| Ícone do botão "Seus dados" | `#F5EEE6` / ≈`#271C19` (cabeçalho no brilho âmbar) | 14.5:1 | 3:1 |
+| Borda do botão "Seus dados" | `#8A7A9C` / ≈`#271C19` | 4.2:1 | 3:1 |
+| Rótulo "ÚLTIMA CÓPIA" | `#B8AAB9` / `#231A2E` | 7.5:1 | 4.5:1 |
+| Data da última cópia | `#FFB547` / `#231A2E` | 9.5:1 | 4.5:1 |
+| Número no resumo ("12") | `#FFB547` / `#191321` | 10.4:1 | 4.5:1 |
+| Explicação das opções, resumo suave | `#B8AAB9` / `#191321` | 8.2:1 | 4.5:1 |
+| "Substituir tudo": texto | `#F5EEE6` / `#191321` | 15.8:1 | 4.5:1 |
+| "Substituir tudo": borda | `#FF7B7B` / `#191321` | 7.2:1 | 3:1 |
+| "Substituir tudo" no hover | `#F5EEE6` / ≈`#35202C` | 13.2:1 | 4.5:1 |
+| "Substituir" (confirmação) | `#1A1205` / `#FF7B7B` | 7.4:1 | 4.5:1 |
+| Aviso de sucesso na janela | `#F5EEE6` / ≈`#272C31` (verde 12%) | 12.3:1 | 4.5:1 |
+| Ícone de check | `#8EE6A8` / ≈`#272C31` | 9.4:1 | 3:1 |
+| Aviso de erro na janela | `#F5EEE6` / ≈`#35202C` (vermelho 12%) | 13.2:1 | 4.5:1 |
+| Texto da faixa de lembrete | `#F5EEE6` / ≈`#2A2237` (lilás 10%) | 13.2:1 | 4.5:1 |
+| Rótulo e subtexto da faixa | `#B8AAB9` / ≈`#2A2237` | 6.9:1 | 4.5:1 |
+| "42 dias" na faixa | `#FFB547` / ≈`#2A2237` | 8.7:1 | 4.5:1 |
+| Ícone da faixa | `#C4A8FF` / ≈`#2A2237` | 7.6:1 | 3:1 |
+| Borda de "Depois" na faixa | `#8A7A9C` / ≈`#2A2237` | 3.9:1 | 3:1 |
+| "Baixar cópia agora" | `#1A1205` / `#FFB547` | 10.5:1 | 4.5:1 |
+| Foco em tudo o que é novo | `#8FD3FF`, 3px | ≥ 11:1 | 3:1 |
+
+### 12.11 Conferência da Entrega 2a (para o dev e o testador)
+
+| Requisito | Como o visual atende |
+|---|---|
+| Botão "Seus dados" 44 × 44px e cabe a 360px | círculo de 44px abaixo de 640px; conta da 12.3 (≈ 294 de 328px) |
+| Nome acessível "Seus dados" | texto no `<span>`, escondido só da tela no celular |
+| Janelas novas com `showModal()`, Esc, Tab preso, foco certo | 12.4 e 12.5: foco inicial em "Baixar cópia", "Juntar" e "Cancelar"; janelas empilhadas; Esc fecha só a de cima |
+| Avisos lidos sem tirar o foco | `#dados-aviso` (dentro da janela) e `#status` (com as janelas fechadas), ambos `aria-live="polite"` |
+| Perigo com texto | "Substituir tudo" (contorno) e "Substituir" (cheio) dizem o que fazem e têm ícone |
+| Faixa de lembrete sem roubar o foco e sem cobrir nada | fica no fluxo da página (não é fixa), sem `focus()`; a 360px os botões quebram linha |
+| Nada só por cor | "LEMBRETE DE CÓPIA", textos de erro e sucesso, ícones diferentes, explicação de cada opção |
+| Textos do arquivo como texto | resumo e avisos com `textContent` (nada do arquivo vira HTML) |
+
+### 12.12 Decisões para o João confirmar
+
+1. **Ícone e texto do botão:** cilindro de "dados"; no celular só o ícone (o texto "Seus dados" aparece a partir de 640px, porque antes disso não cabe junto do "+ Novo compromisso").
+2. **Avisos dentro da janela:** com a janela "Seus dados" aberta, "Cópia baixada." e os erros da importação aparecem dentro dela, não no aviso flutuante (que ficaria escondido atrás da janela e talvez não fosse lido). Os requisitos gerais da Etapa 2 falam do aviso flutuante; isto é um ajuste que o PO e o testador precisam aceitar.
+3. **Fim da importação:** depois de "Juntar" ou "Substituir", todas as janelas fecham, a lista aparece já atualizada, o aviso flutuante diz o resultado e o foco volta para o botão "Seus dados".
+4. **Textos sugeridos que não estão nos requisitos:** a explicação da janela "Seus dados", "Neste navegador há 8 compromissos.", a explicação de cada opção, o subtexto da faixa, "Lembrete adiado por 7 dias." e as variantes de singular/zero da tabela da 12.5.
+5. **Baixar pela janela também esconde a faixa de lembrete** (mesmo efeito de "Baixar cópia agora").
+6. **Foco quando a faixa some:** vai para o título "Próximos compromissos".

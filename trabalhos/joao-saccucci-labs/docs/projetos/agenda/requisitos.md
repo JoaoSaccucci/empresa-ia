@@ -25,7 +25,7 @@ A **Agenda** é um site simples para anotar compromissos. A pessoa abre o site, 
 - Precisa funcionar publicado no GitHub Pages, com caminhos relativos.
 - Nenhum dado sai do navegador: sem envio para a internet, sem notificações do navegador (ver seção 5).
 
-**Direção visual** (quem detalha é o artista): visual **próprio**, mas da mesma família da Labs, com a mesma qualidade e o mesmo "jeito de estúdio". O João quer que a Agenda tenha personalidade própria: o artista tem liberdade para ousar na cor e no clima. O design fica em `docs/projetos/agenda/design.md`. As partes novas da Etapa 2 (janela "Seus dados", faixa de cópia, "Sair às", "Ficou pendente", "Sem data", situação em "Anteriores") seguem o conceito "quadro de partidas ao anoitecer" e são detalhadas pelo artista no mesmo arquivo.
+**Direção visual** (quem detalha é o artista): visual **próprio**, mas da mesma família da Labs, com a mesma qualidade e o mesmo "jeito de estúdio". O João quer que a Agenda tenha personalidade própria: o artista tem liberdade para ousar na cor e no clima. O design fica em `docs/projetos/agenda/design.md`. As partes novas da Etapa 2 (janela "Seus dados", faixa de cópia, "Sair às", "Ficou pendente", "Sem data", situação em "Anteriores") seguem o conceito "quadro de partidas ao anoitecer" e são detalhadas pelo artista no mesmo arquivo (Entrega 2a: seção 12 do design).
 
 ---
 
@@ -165,46 +165,82 @@ Como usuário, quero que meus compromissos continuem lá quando eu voltar, e sab
 
 #### Entrega 2a: cópia dos dados
 
+*(Visual e textos da Entrega 2a: seção 12 do design, com as 6 decisões da artista aprovadas pelo João em 2026-11-05.)*
+
+**Regra dos avisos na Entrega 2a** *(aprovada pelo João)*: enquanto a janela "Seus dados" estiver aberta, os avisos de baixar e de importar aparecem **dentro dela**, numa região de avisos própria (`aria-live="polite"`), e **não** no aviso flutuante. O motivo: a janela aberta com `showModal()` deixa o resto da página inerte, e o aviso flutuante ficaria escondido atrás dela e poderia não ser lido. Com as janelas fechadas, vale o aviso flutuante de sempre. A tabela completa de "onde aparece cada aviso" está na seção 12.6 do design.
+
 **Agenda US08: Baixar uma cópia dos compromissos**
 Como usuário, quero baixar um arquivo com todos os meus compromissos, para não perder nada se o navegador for limpo e para levar a agenda para outro aparelho.
-- [ ] O cabeçalho tem um botão "Seus dados" (pode ser só ícone na tela, mas o nome acessível é "Seus dados"), com área de toque de 44 × 44px. Ele cabe junto do nome "Agenda" e do botão "Novo" a 360px, sem quebrar o cabeçalho.
-- [ ] "Seus dados" abre uma janela (mesmo comportamento das outras: `showModal()`, Esc fecha, Tab fica dentro, foco volta para o botão ao fechar) com o título "Seus dados", um texto curto explicando que os compromissos ficam só neste navegador, a data da última cópia ("Última cópia: 05/11/2026" ou "Você ainda não fez nenhuma cópia.") e os botões "Baixar cópia", "Importar cópia" (US09) e "Fechar".
+- [ ] O cabeçalho tem o botão "Seus dados", com ícone de cilindro, à direita e **antes** do "Novo compromisso". Ordem do Tab: "Seus dados" → "Novo compromisso".
+- [ ] Abaixo de 640px o botão mostra só o ícone, num círculo de 44 × 44px; a partir de 640px mostra ícone + "Seus dados". Em todas as larguras o nome acessível é "Seus dados" (o texto continua no HTML, escondido só da tela).
+- [ ] A 360px o cabeçalho (ícone, "Agenda", "Seus dados" e "+ Novo") cabe numa linha, sem quebrar e sem rolagem horizontal.
+- [ ] "Seus dados" abre uma janela (`showModal()`, Esc e "Fechar" fecham, Tab fica dentro, o foco volta para "Seus dados" ao fechar) com:
+  - o título "Seus dados";
+  - o texto "Seus compromissos ficam guardados só neste navegador. Baixe uma cópia de vez em quando para não perder nada e para levar a agenda para outro aparelho.";
+  - a última cópia: "Última cópia: 05/11/2026" (data `DD/MM/AAAA`) ou, sem nenhuma cópia, "Você ainda não fez nenhuma cópia.";
+  - os botões "Baixar cópia" e "Importar cópia" (US09), com a dica "Escolha um arquivo .json baixado pela Agenda." ligada ao "Importar cópia";
+  - o botão "Fechar".
+- [ ] Ao abrir a janela, o foco vai para "Baixar cópia". A região de avisos da janela começa vazia toda vez que a janela abre.
 - [ ] "Baixar cópia" baixa um arquivo chamado `agenda-AAAA-MM-DD.json`, com a data de hoje do aparelho (ex.: `agenda-2026-11-05.json`).
 - [ ] O arquivo segue o formato "Arquivo de cópia" da seção 3: tem `"app": "agenda"`, a `versao`, a data da exportação e **todos** os compromissos (próximos e anteriores; na Entrega 2b, também os sem data, feitos e pendentes).
 - [ ] O arquivo é JSON válido, com recuo (fácil de ler num editor de texto), e os textos com acento aparecem corretos.
 - [ ] O arquivo **não** inclui outras chaves (`agenda:compromissos-corrompido`, cópias de segurança, chaves `jsl:` da Labs).
-- [ ] Depois de baixar, a data e a hora da cópia são salvas em `agenda:ultimo-backup`, a janela mostra a nova "Última cópia" e um aviso é lido por leitores de tela: "Cópia baixada."
-- [ ] Sem nenhum compromisso, "Baixar cópia" não gera arquivo e mostra o aviso "Não há compromissos para copiar."
+- [ ] Depois de baixar pela janela:
+  - a data e a hora da cópia são salvas em `agenda:ultimo-backup`;
+  - a "Última cópia" da janela mostra a data nova;
+  - o aviso "Cópia baixada." aparece **dentro da janela** e é lido por leitores de tela;
+  - o foco **fica** no botão "Baixar cópia";
+  - a faixa de lembrete (US10), se estiver na página, some.
+- [ ] Sem nenhum compromisso, "Baixar cópia" não gera arquivo e aparece, dentro da janela, o aviso "Não há compromissos para copiar."
+- [ ] Um aviso por vez: um aviso novo na janela substitui o anterior.
 - [ ] Funciona no Chrome e no Edge do computador e no Chrome do Android. *(No iPhone o Safari pergunta onde guardar; isso é do sistema e é aceito.)*
 
 **Agenda US09: Importar uma cópia (Juntar ou Substituir tudo)**
 Como usuário, quero abrir um arquivo de cópia na Agenda, para recuperar meus compromissos ou trazer os de outro aparelho.
-- [ ] "Importar cópia" (na janela "Seus dados") abre o seletor de arquivos do sistema, filtrando arquivos `.json`.
-- [ ] Arquivo com mais de 5 MB não é lido e aparece o aviso "Arquivo grande demais para ser uma cópia da Agenda."
-- [ ] Arquivo que não é JSON válido, ou que não tem a lista `compromissos`, não muda nada e aparece o aviso "Este arquivo não é uma cópia da Agenda."
-- [ ] Arquivo com `versao` maior que a que a Agenda conhece não muda nada e aparece o aviso "Esta cópia é de uma versão mais nova da Agenda."
+- [ ] "Importar cópia" (na janela "Seus dados") abre o seletor de arquivos do sistema, filtrando arquivos `.json`. Se a pessoa cancelar o seletor, nada acontece e o foco fica em "Importar cópia".
+- [ ] Escolher o **mesmo** arquivo duas vezes seguidas funciona nas duas vezes.
+- [ ] **Erros do arquivo:** nada muda, o aviso aparece **dentro da janela "Seus dados"** (em vermelho, com ícone e texto) e o foco fica em "Importar cópia":
+  - mais de 5 MB: "Arquivo grande demais para ser uma cópia da Agenda.";
+  - não é JSON válido ou não tem a lista `compromissos`: "Este arquivo não é uma cópia da Agenda.";
+  - `versao` maior que a que a Agenda conhece: "Esta cópia é de uma versão mais nova da Agenda.";
+  - nenhum item válido: "Nenhum compromisso válido nesta cópia."
 - [ ] Cada item do arquivo é conferido com as regras dos campos da seção 3. Item com problema (sem título, data inválida, hora fora do formato `HH:MM`) é **ignorado**. Textos maiores que o limite são cortados no limite. Item sem `id` ganha um `id` novo. Dois itens com o mesmo `id` no arquivo: fica o de `atualizadoEm` mais recente.
-- [ ] Se nenhum item for válido, nada muda e aparece o aviso "Nenhum compromisso válido nesta cópia."
-- [ ] Com o arquivo lido, aparece uma janela de escolha com o resumo (ex.: "Esta cópia tem 12 compromissos. 2 itens com problema foram ignorados.") e os botões "Juntar", "Substituir tudo" e "Cancelar". O foco começa em "Juntar". "Cancelar" ou Esc não mudam nada.
-- [ ] **Juntar:** os compromissos com `id` novo são acrescentados; com `id` que já existe, fica a versão de `atualizadoEm` mais recente (empate: fica a que já estava no navegador). Nada que já existia é apagado. O aviso diz o resultado, ex.: "Cópia importada: 5 novos e 2 atualizados."
-- [ ] **Substituir tudo:** abre uma confirmação "Substituir tudo? Os 8 compromissos atuais serão trocados pelos 12 da cópia. Essa ação não pode ser desfeita.", com os botões "Substituir" (aparência de perigo, com texto) e "Cancelar" (com o foco). Ao confirmar, o conteúdo atual de `agenda:compromissos` é guardado antes em `agenda:compromissos-antes-da-importacao` e a lista passa a ser só a da cópia. Aviso: "Cópia importada: 12 compromissos."
-- [ ] Depois de importar, a lista é redesenhada e cada compromisso vai para o lugar certo (próximos ou "Anteriores"), sem recarregar a página.
-- [ ] Tudo o que vem do arquivo aparece como texto, nunca como HTML (mesma regra da US01).
-- [ ] Se o `localStorage` estiver cheio ou indisponível, nada muda no que estava salvo e aparece o aviso "Não foi possível importar a cópia neste navegador."
+- [ ] Com o arquivo lido e pelo menos um item válido, abre a janela "Importar cópia" **por cima** de "Seus dados", com:
+  - o resumo "Esta cópia tem 12 compromissos.", a linha "2 itens com problema foram ignorados." (só se houver ignorados) e "Neste navegador há 8 compromissos.";
+  - a pergunta "O que fazer com eles?";
+  - o botão "Juntar", com a explicação "Acrescenta os da cópia e mantém os que já estão aqui. Nada é apagado.";
+  - o botão "Substituir tudo" (contorno vermelho, com ícone e texto), com a explicação "Troca os 8 compromissos daqui pelos 12 da cópia.";
+  - o botão "Cancelar".
+- [ ] Na janela "Importar cópia" o foco começa em "Juntar". Ordem do Tab: Juntar → Substituir tudo → Cancelar. "Cancelar" ou Esc fecham **só** essa janela, não mudam nada, e o foco volta para "Importar cópia".
+- [ ] **Singular, plural e zero** nos textos com número (tabela da seção 12.5 do design): "1 compromisso", "1 item com problema foi ignorado.", "Neste navegador há 1 compromisso." e "Neste navegador não há compromissos."
+- [ ] **Juntar:** os compromissos com `id` novo são acrescentados; com `id` que já existe, fica a versão de `atualizadoEm` mais recente (empate: fica a que já estava no navegador). Nada que já existia é apagado. Resultado: "Cópia importada: 5 novos e 2 atualizados.", sem a parte que for zero ("Cópia importada: 5 novos."), no singular quando for 1 ("1 novo e 1 atualizado") e, com 0 e 0, "Cópia importada: nada mudou, você já tinha esses compromissos."
+- [ ] **Substituir tudo:** abre a confirmação **por cima**, com o título "Substituir tudo?", o texto "Os 8 compromissos atuais serão trocados pelos 12 da cópia. Essa ação não pode ser desfeita." (com 1 atual: "O compromisso atual será trocado pelos 12 da cópia. Essa ação não pode ser desfeita.") e os botões "Substituir" (vermelho cheio, com ícone e texto) e "Cancelar" (com o foco). Esc ou "Cancelar" fecham só a confirmação, sem mudar nada, e o foco volta para "Substituir tudo".
+- [ ] Ao confirmar "Substituir", o conteúdo atual de `agenda:compromissos` é guardado antes em `agenda:compromissos-antes-da-importacao` e a lista passa a ser só a da cópia. Resultado: "Cópia importada: 12 compromissos."
+- [ ] *(Aprovado pelo João)* **Fim da importação** ("Juntar" ou "Substituir"): **todas** as janelas fecham, a lista aparece já redesenhada (cada compromisso no lugar certo, sem recarregar), o resultado aparece no **aviso flutuante** e é lido pelo leitor de tela, e o foco volta para o botão "Seus dados".
+- [ ] Se o `localStorage` estiver cheio ou indisponível ao gravar a importação, nada muda no que estava salvo: a janela "Importar cópia" e a confirmação fecham, a pessoa volta para "Seus dados", aparece **dentro dela** o aviso "Não foi possível importar a cópia neste navegador." e o foco vai para "Importar cópia".
+- [ ] Tudo o que vem do arquivo aparece como texto, nunca como HTML (mesma regra da US01), inclusive no resumo e nos avisos.
 - [ ] Importar não muda a data da "Última cópia" (importar não é fazer cópia).
 - [ ] Importar um arquivo baixado pela US08 num navegador vazio reproduz exatamente os mesmos compromissos (teste de "ida e volta").
 
 **Agenda US10: Lembrete de fazer cópia**
 Como usuário, quero ser lembrado de vez em quando de baixar uma cópia, para não descobrir que perdi tudo só quando for tarde.
 - [ ] Toda criação, edição, exclusão e importação grava a data e a hora em `agenda:ultima-mudanca`. *(Na Entrega 2b, marcar "Feito", "Não vou fazer" e desfazer também gravam.)*
-- [ ] Ao abrir a página, aparece uma faixa de lembrete (no lugar das faixas da US07) quando **as duas** condições valem:
+- [ ] Ao abrir a página, aparece a faixa de lembrete quando **as duas** condições valem:
   - a última cópia (`agenda:ultimo-backup`) tem mais de 30 dias; se nunca houve cópia, conta a partir do compromisso mais antigo (`criadoEm`);
   - houve mudança depois da última cópia (`agenda:ultima-mudanca` mais nova que ela; sem cópia nenhuma, basta existir compromisso).
-- [ ] Texto da faixa: "Sua última cópia foi há 42 dias." ou, sem cópia, "Você ainda não fez uma cópia dos seus compromissos." A faixa tem os botões "Baixar cópia agora" e "Depois".
-- [ ] "Baixar cópia agora" faz o mesmo que a US08 e a faixa some.
-- [ ] *(Decisão do PO)* "Depois" esconde a faixa e só deixa ela voltar depois de 7 dias (data guardada em `agenda:lembrete-backup-adiado-ate`).
+- [ ] A faixa fica no topo do conteúdo, **depois** das faixas de problema da US07 (se houver alguma), e no fluxo da página (não é fixa).
+- [ ] Conteúdo da faixa:
+  - o rótulo em texto "Lembrete de cópia" (diferencia a faixa das de problema, além da cor e do ícone);
+  - o texto "Sua última cópia foi há 42 dias." ou, sem cópia, "Você ainda não fez uma cópia dos seus compromissos.";
+  - o subtexto "Baixe uma cópia para não perder nada se o navegador for limpo.";
+  - os botões "Baixar cópia agora" e "Depois". O nome acessível de "Depois" é "Depois, lembrar daqui a 7 dias".
+- [ ] "Baixar cópia agora" faz o mesmo download da US08 (mesmo arquivo, grava `agenda:ultimo-backup`), a faixa some e o aviso flutuante diz "Cópia baixada."
+- [ ] "Depois" esconde a faixa e só deixa ela voltar depois de 7 dias (data guardada em `agenda:lembrete-backup-adiado-ate`). O aviso flutuante diz "Lembrete adiado por 7 dias."
+- [ ] Baixar a cópia pela janela "Seus dados" (US08) também tira a faixa.
+- [ ] *(Aprovado pelo João)* Quando a faixa some e o foco estava dentro dela, o foco vai para o título "Próximos compromissos". Ele nunca se perde no topo da página.
 - [ ] Sem compromissos, ou com o `localStorage` indisponível, a faixa não aparece.
-- [ ] A faixa é texto com contraste AA, não cobre compromissos nem botões a 360px e os botões dela funcionam com o teclado. Ela aparece ao abrir a página, sem roubar o foco.
+- [ ] A faixa aparece ao abrir a página sem roubar o foco e sem animação. Quem usa teclado chega nela pelo Tab logo depois do cabeçalho.
+- [ ] A faixa é texto com contraste AA, não cobre compromissos nem botões a 360px (os botões quebram linha se não couberem) e funciona com o teclado.
 
 #### Entrega 2b: migração, "Sair às...", "Feito", pendências e "Sem data"
 
@@ -281,21 +317,25 @@ Como usuário, quero anotar algo que eu ainda não sei quando vou fazer, para n�
 
 | Story | Entrega | O que muda |
 |---|---|---|
+| US01 | 2a | O cabeçalho ganha o botão "Seus dados" antes do "Novo compromisso" (US08). O título "Próximos compromissos" pode receber o foco pelo código (`tabindex="-1"`), para quando a faixa de lembrete some (US10). |
 | US01 | 2b | A lista principal mostra só compromissos **com data**, com `status: "aberto"` e que ainda não passaram. Cada item pode mostrar também "Sair às..." (US12) e a marca "Cobrar" (US14), e tem o botão "Feito" (US13). A atualização a cada minuto passa a mover itens também para "Ficou pendente" e a atualizar o "Sair às". Ordem da página: faixas, "Ficou pendente", "Próximos compromissos", "Sem data", "Anteriores". |
 | US02 | 2b | A **data deixa de ser obrigatória** quando "Ainda sem data" está marcada (US16); sem ela, continua obrigatória e vem com hoje. Campos novos: "Tempo para sair" (US12), "Me cobrar se eu não fizer" (US14) e "Ainda sem data" (US16). O rótulo de Data diz "(obrigatório)" só enquanto "Ainda sem data" está desmarcada. Novo aviso de salvar: "Anotado em Sem data." Item novo salvo com `status: "aberto"`. |
 | US03 | 2b | "Escolha uma data." só aparece com "Ainda sem data" desmarcada. Novo erro do campo de minutos de "Outro" (US12), com as mesmas regras. O foco vai para o primeiro campo com problema, na ordem do formulário. |
 | US04 | 2b | O formulário de edição mostra e salva os campos novos. Editar não muda o `status` (um item "Feito" continua "Feito"). Editar a data de uma pendência para o futuro tira ela de "Ficou pendente". O formulário também abre como "Remarcar compromisso" (US15) e "Agendar compromisso" (US16). |
 | US05 | 2b | Vale também para "Ficou pendente" e "Sem data". A regra do foco depois de excluir vale dentro de cada seção. |
 | US06 | 2b | "Anteriores" passa a ter: compromissos que passaram sem cobrança, ou com cobrança mas já resolvidos, **e** os marcados como "Feito" ou "Não vou fazer", mesmo com data futura. Cada item mostra a situação em texto (US13). Pendências não ficam aqui. Um item feito com data futura aparece no grupo do dia dele, com o título de dia normal ("Amanhã", "Sex, 14/11"), sem "daqui a X dias". |
-| US07 | 2a / 2b | 2a: chaves novas `agenda:ultimo-backup`, `agenda:ultima-mudanca`, `agenda:lembrete-backup-adiado-ate` e `agenda:compromissos-antes-da-importacao`. 2b: `agenda:compromissos` passa para a `versao: 2` (US11), chave `agenda:compromissos-v1`, e itens com `data: null` são válidos. As limitações aceitas continuam; o rodapé continua com o mesmo aviso. |
+| US07 | 2a / 2b | 2a: chaves novas `agenda:ultimo-backup`, `agenda:ultima-mudanca`, `agenda:lembrete-backup-adiado-ate` e `agenda:compromissos-antes-da-importacao`; a faixa de lembrete (US10) entra em `#faixas`, sempre depois das faixas de problema. 2b: `agenda:compromissos` passa para a `versao: 2` (US11), chave `agenda:compromissos-v1`, e itens com `data: null` são válidos. As limitações aceitas continuam; o rodapé continua com o mesmo aviso. |
 
 ### Requisitos gerais da Etapa 2
 
 Os requisitos gerais da Etapa 1 (celular a 360px, teclado, acessibilidade, contraste, erros e geral) valem para **tudo** o que é novo, e também:
-- [ ] As janelas novas ("Seus dados", escolha da importação, confirmação de "Substituir tudo") usam `dialog` com `showModal()`: Esc fecha sem mudar nada, o Tab fica dentro, o foco começa no lugar indicado em cada story e volta para o botão que abriu.
-- [ ] Os avisos novos ("Cópia baixada.", "Marcado como feito.", "Desfeito." etc.) são lidos por leitores de tela pelo aviso flutuante (`role="status"`), sem tirar o foco do lugar.
+- [ ] As janelas novas ("Seus dados", "Importar cópia", confirmação "Substituir tudo?") usam `dialog` com `showModal()`: Esc fecha sem mudar nada, o Tab fica dentro, o foco começa no lugar indicado em cada story e volta para o botão que abriu.
+- [ ] Janelas empilhadas (Entrega 2a): "Importar cópia" abre por cima de "Seus dados" e a confirmação abre por cima de "Importar cópia". Esc fecha **só** a janela de cima e o foco volta para o botão que a abriu.
+- [ ] **Onde os avisos aparecem** *(aprovado pelo João)*: todo aviso é lido por leitores de tela sem tirar o foco do lugar.
+  - Com a janela "Seus dados" aberta: na região de avisos **dentro da janela** (`aria-live="polite"`), em vermelho para erro e verde para sucesso, sempre com ícone e texto, um aviso por vez.
+  - Com as janelas fechadas: no aviso flutuante (`role="status"`), como na Etapa 1. Isso vale para o resultado da importação, para os avisos da faixa de lembrete e para todos os avisos da Entrega 2b ("Marcado como feito.", "Desfeito." etc.).
 - [ ] As seções novas têm títulos `h2` e os grupos de dia continuam com `h3`.
-- [ ] Situação ("Feito", "Não vou fazer", "Passou"), "Cobrar", "Sem data" e "Sair em X min" são **texto**, nunca só cor ou ícone.
+- [ ] "Lembrete de cópia", os tipos de aviso (erro, sucesso), "Substituir tudo", situação ("Feito", "Não vou fazer", "Passou"), "Cobrar", "Sem data" e "Sair em X min" são **texto**, nunca só cor ou ícone.
 - [ ] O `localStorage` continua só com chaves `agenda:` (tabela da seção 3) e nunca usa `localStorage.clear()`.
 - [ ] Nada é enviado para a internet: a cópia é um arquivo baixado e a importação lê um arquivo escolhido pela pessoa.
 
@@ -461,12 +501,12 @@ Já pensada para as Etapas 3 e 4: os campos `duracaoMin` e `itens` são criados 
 | Etapa | Itens |
 |---|---|
 | **Etapa 1 (MVP)** | US01 Lista por dia, US02 Criar, US03 Avisos do formulário, US04 Editar, US05 Excluir com confirmação, US06 Anteriores, US07 Salvo no navegador com aviso, além dos requisitos gerais da Etapa 1 |
-| **Etapa 2, Entrega 2a** | US08 Baixar cópia, US09 Importar cópia, US10 Lembrete de cópia, mudança da US07 (chaves novas) e requisitos gerais da Etapa 2 |
+| **Etapa 2, Entrega 2a** | US08 Baixar cópia, US09 Importar cópia, US10 Lembrete de cópia, mudanças da US01 e da US07 (cabeçalho, foco no título e chaves novas) e requisitos gerais da Etapa 2 |
 | **Etapa 2, Entrega 2b** | US11 Migração para a versão 2, US12 "Sair às...", US13 Feito e desfazer, US14 "Me cobrar" e "Ficou pendente", US15 Resolver pendência, US16 "Sem data", mudanças nas US01 a US07 e requisitos gerais da Etapa 2 |
 
 Ordem sugerida dentro da Etapa 1: modelo de dados e US07 (salvar e carregar) → US02 e US03 (formulário) → US01 (lista) → US06 (Anteriores) → US04 (editar) → US05 (excluir) → requisitos gerais → testador escreve `docs/projetos/agenda/testes/etapa-1.md` → commit da agenda e depois da Labs (US31 da Labs) → professor escreve as aulas (US34 da Labs).
 
-Ordem sugerida na Entrega 2a: artista desenha a janela "Seus dados" e a faixa de cópia → US08 (baixar) → US09 (importar, com o teste de "ida e volta") → US10 (lembrete) → testador escreve `docs/projetos/agenda/testes/etapa-2a.md` → commits (agenda e depois Labs) → aulas.
+Ordem sugerida na Entrega 2a: artista desenha a janela "Seus dados" e a faixa de cópia (feito: seção 12 do design) → US08 (baixar) → US09 (importar, com o teste de "ida e volta") → US10 (lembrete) → testador escreve `docs/projetos/agenda/testes/etapa-2a.md` → commits (agenda e depois Labs) → aulas.
 
 Ordem sugerida na Entrega 2b: artista desenha as partes novas → US11 (migração, testada com dados reais da versão 1 e com um arquivo da 2a) → US16 (sem data, porque mexe no formulário e na regra da data) → US13 (feito) → US14 e US15 (pendências) → US12 (sair às) → mudanças nas US01 a US07 → testador escreve `docs/projetos/agenda/testes/etapa-2b.md` → commits → aulas.
 
