@@ -2311,3 +2311,984 @@ Atenção: o `<div id="dados-aviso">` vazio não pode ter espaço nem quebra de 
 4. **Textos sugeridos que não estão nos requisitos:** a explicação da janela "Seus dados", "Neste navegador há 8 compromissos.", a explicação de cada opção, o subtexto da faixa, "Lembrete adiado por 7 dias." e as variantes de singular/zero da tabela da 12.5.
 5. **Baixar pela janela também esconde a faixa de lembrete** (mesmo efeito de "Baixar cópia agora").
 6. **Foco quando a faixa some:** vai para o título "Próximos compromissos".
+
+---
+
+## 13. Etapa 2 — Entrega 2b (sair às, feito, pendências e sem data)
+
+Cobre a **Agenda US11** (só as faixas de aviso), **US12** ("Sair às..."), **US13** (Feito e Desfazer), **US14** ("Me cobrar" e "Ficou pendente"), **US15** (resolver pendência), **US16** ("Sem data") e as mudanças da 2b nas US01 a US07. Tudo **se soma** às seções 1 a 12: mesmas cores, fontes, espaços, janelas, botões e faixas. Também traz a **correção de uma pendência baixa da 2a** (o `#erro-salvar` coberto a 320 × 568, ver 13.11.2).
+
+### 13.1 Ideia visual
+
+No "quadro de partidas", a 2b dá ao painel o que todo quadro de estação tem: **a hora de embarque, o status de cada partida e a plataforma dos atrasados**.
+- **"Sair às 08:50"** é a hora de embarque: uma linha âmbar (a cor do tempo) logo abaixo do título. Quando faltam 15 minutos ela vira uma **pílula âmbar cheia**, "Sair em 12 min", e a borda do card acende em âmbar. É o único momento em que um card "chama" (sem piscar e sem se mexer).
+- **Situação** ("Feito", "Não vou fazer", "Passou") é o **status da partida**: um selo pequeno em mono maiúsculo, como "EMBARCADO" ou "CANCELADO" no painel, sempre com ícone e texto.
+- **"Ficou pendente"** é a **plataforma dos atrasados**: um painel âmbar próprio, com filete de 4px à esquerda, no topo da página. É o único bloco da página com fundo colorido, então o olho acha a pendência antes de tudo.
+- **"Sem data"** é o **guarda-volumes de ideias**: recolhido como "Anteriores", com a placa tracejada em lilás (a cor do "sem hora"), porque ainda não tem horário no quadro.
+- Os botões do card ganham uma **faixa própria embaixo**, separada por um tracejado (o "canhoto" do bilhete).
+
+Nenhuma cor nova: âmbar, lilás, verde (`--cor-sucesso`), vermelho e cinza suave já existiam.
+
+### 13.2 Reaproveitado x novo
+
+| Parte | Reaproveita | Novo (e por quê) |
+|---|---|---|
+| Item do compromisso | `.compromisso`, placa, `.botao-item`, `.botao-item--perigo`, `.sr-only` | `.compromisso-meta` (linha de "Sair às" e "Cobrar"), `.compromisso-sair` com 3 estados, `.selo` e variações, `.botao-item--feito` e `.botao-item--agendar`. A faixa de botões muda de lugar (13.4.4) |
+| "Ficou pendente" | `.compromissos`, `.compromisso`, placa | `.pendentes` (painel âmbar), `.pendentes-titulo`, `.pendentes-texto`, `.compromisso-era` ("Era para: ...") |
+| "Sem data" | **toda** a estrutura de "Anteriores": `.anteriores-titulo`, `.anteriores-botao`, `.anteriores-contagem`, `.anteriores-seta`, `.anteriores-lista` | `.sem-data` (a seção) e `.compromisso-hora--sem-data` (placa tracejada) |
+| "Anteriores" com situação | `.compromisso--anterior` | só os selos (`.selo--feito`, `.selo--nao-vou-fazer`, `.selo--passou`) |
+| Formulário | `.janela`, `.campo`, `.campo-rotulo`, `.campo-controle`, `.campo-dica`, `.campo-erro`, `.campo-obrigatorio` | `.marcar` / `.marcar-caixa` (caixa de marcar com 44px de toque), `.grupo` (fieldset), `.escolhas` / `.escolha` (as "plaquinhas" do tempo para sair), `.campo-com-sufixo`, estilo de campo desativado, `.janela-subtitulo` (modo Remarcar) |
+| Avisos | `#status`, `.faixa--erro`, `.faixa--alerta` | `.status[data-tipo="alerta"]` (barrinha âmbar, para "Compromisso continua pendente.") |
+| Ícones | padrão da 8.2 | feito, desfazer, remarcar, nao-vou-fazer, agendar, sair, cobrar, pendente, passou (13.10) |
+
+### 13.3 Ordem da página
+
+Ordem dos requisitos (mudança da US01 na 2b): **faixas → "Ficou pendente" → "Próximos compromissos" → "Sem data" → "Anteriores"**.
+
+```
+360px
++--------------------------------------+
+| [ic] Agenda▪          (≡)  [+ Novo]  |
++--------------------------------------+
+| (faixas, só se houver)               |
+|                                      |
+| ┃ (despertador) FICOU PENDENTE (2)   |  painel âmbar 7%, filete âmbar 4px
+| ┃ Passou da data e você pediu para   |  14px suave (sugestão)
+| ┃ ser cobrado.                       |
+| ┃ +--------------------------------+ |
+| ┃ | +------+ Pagar boleto da luz   | |  card normal dentro do painel
+| ┃ | | DIA  | Era para: Ontem ·     | |  "Ontem · Dia todo" em mono âmbar
+| ┃ | | TODO | Dia todo              | |
+| ┃ | +------+                       | |
+| ┃ | - - - - - - - - - - - - - - -  | |  tracejado: o "canhoto"
+| ┃ | [✓ Feito] [Remarcar]           | |
+| ┃ | [Não vou fazer] [Excluir]      | |
+| ┃ +--------------------------------+ |
+|                                      |  48px
+| PRÓXIMOS COMPROMISSOS                |
+| ▪ Hoje                               |
+| +----------------------------------+ |
+| | +------+ Dentista                | |
+| | |09:30 | (porta) Sair às 08:50    | |  hora em mono âmbar
+| | +------+ (sino) COBRAR            | |  selo âmbar
+| |          (pino) Clínica Sorriso   | |
+| | - - - - - - - - - - - - - - - - - | |
+| | [✓ Feito] [Editar] [Excluir]     | |
+| +----------------------------------+ |
+|                                      |
+| - - - - - - - - - - - - - - - - - -  |
+| [ Sem data (3)                   v ] |  igual ao botão "Anteriores"
+|                                      |  24px (sem tracejado entre os dois)
+| [ Anteriores (5)                 v ] |
++--------------------------------------+
+```
+
+### 13.4 Item do compromisso na 2b
+
+#### 13.4.1 Linha de "meta" (Sair às e Cobrar)
+
+Fica **logo abaixo do título**, antes do local. Só existe se o item tiver "Sair às" ou "Cobrar" (sem nenhum dos dois, não criar o `div`, nada de espaço vazio). Os dois ficam na mesma linha se couberem; senão, quebram.
+
+```html
+<li class="compromisso" data-id="c-1731590400000-k3f9" tabindex="-1">
+  <div class="compromisso-hora"><time datetime="2026-11-14T09:30">09:30</time></div>
+  <div class="compromisso-corpo">
+    <p class="compromisso-titulo">Dentista</p>
+    <div class="compromisso-meta">
+      <p class="compromisso-sair" data-estado="normal">
+        <!-- svg "sair" -->
+        <span>Sair às <time class="compromisso-sair-hora" datetime="2026-11-14T08:50">08:50</time></span>
+      </p>
+      <p class="selo selo--cobrar"><!-- svg "cobrar" -->Cobrar<span class="sr-only"> se eu não fizer</span></p>
+    </div>
+    <p class="compromisso-local">...</p>
+    <p class="compromisso-obs">...</p>
+  </div>
+  <div class="compromisso-acoes"><!-- 13.4.3 --></div>
+</li>
+```
+
+#### 13.4.2 "Sair às": os três estados (US12)
+
+O JS escreve o texto e troca o `data-estado`. **Sem `aria-live`** nessa linha (a mudança não é anunciada a cada minuto).
+
+| `data-estado` | Texto | Visual |
+|---|---|---|
+| `normal` | "Sair às **08:50**" ou "Sair às **23:30** do dia anterior" | ícone "sair" âmbar 16px, "Sair às" 14px suave, hora em mono 600 âmbar |
+| `logo` (de 15 min antes até a hora de sair) | "Sair em 12 min" / "Sair agora" | **pílula âmbar cheia**, texto escuro `#1A1205` 700, ícone escuro; a borda do card fica âmbar |
+| `passou` (depois da hora de sair, até o compromisso passar) | "Hora de sair: **08:50** (já passou)" | tudo em cinza suave (ícone e hora também): o momento passou, não há mais o que fazer com ele |
+
+```
+normal   (porta) Sair às 08:50
+logo     ( (porta) Sair em 12 min )      <- pílula âmbar cheia, texto escuro
+passou   (porta) Hora de sair: 08:50 (já passou)    <- tudo cinza
+```
+
+- O destaque do estado `logo` **também é texto** ("Sair em 12 min" diz o que é); a cor é só reforço.
+- Em "Anteriores", "Ficou pendente" e "Sem data" a linha não aparece.
+- **Dica para o dev:** o texto "Sair em X min" muda a cada minuto. Em vez de redesenhar a lista inteira, o relógio de 1 minuto pode só trocar o texto e o `data-estado` dos `.compromisso-sair` que existem (assim o foco e o leitor de tela não são incomodados). Se preferir redesenhar, o estado do "Sair às" precisa entrar no "resumo" que decide se a tela mudou.
+
+#### 13.4.3 Botões do card (US13, US15, US16)
+
+A ação principal vem **primeiro**; "Excluir" fica **sempre por último** (longe do polegar que procura a ação boa).
+
+| Onde | Botões, nesta ordem |
+|---|---|
+| Lista principal | **Feito** · Editar · Excluir |
+| "Ficou pendente" | **Feito** · Remarcar · Não vou fazer · Excluir |
+| "Sem data" | **Agendar** · Editar · Excluir |
+| "Anteriores", situação "Passou" | **Feito** · Editar · Excluir |
+| "Anteriores", "Feito" ou "Não vou fazer" | **Desfazer** · Editar · Excluir |
+
+Todos são `.botao-item` (fantasma, 44px, ícone 18px + texto 14px). Destaques só no ícone:
+- **Feito:** ícone de check **verde** (`--cor-sucesso`); no hover, texto verde e borda verde.
+- **Agendar:** ícone de calendário **âmbar**; no hover, texto âmbar.
+- **Excluir:** como na Etapa 1 (vermelho no hover).
+- Desfazer, Remarcar, Não vou fazer: neutros (cinza suave, branco no hover).
+
+Nome acessível sempre **começando pelo texto visível** (bom para comando de voz):
+```html
+<button class="botao-item botao-item--feito" type="button" data-acao="feito"><!-- svg "feito" -->Feito<span class="sr-only">: marcar Dentista como feito</span></button>
+<button class="botao-item" type="button" data-acao="desfazer"><!-- svg "desfazer" -->Desfazer<span class="sr-only"> Dentista</span></button>
+<button class="botao-item" type="button" data-acao="remarcar"><!-- svg "remarcar" -->Remarcar<span class="sr-only"> Dentista</span></button>
+<button class="botao-item" type="button" data-acao="nao-vou-fazer"><!-- svg "nao-vou-fazer" -->Não vou fazer<span class="sr-only"> Dentista</span></button>
+<button class="botao-item botao-item--agendar" type="button" data-acao="agendar"><!-- svg "agendar" -->Agendar<span class="sr-only"> Dentista</span></button>
+```
+Leitor de tela: "Feito: marcar Dentista como feito", "Desfazer Dentista", "Não vou fazer Dentista", "Agendar Dentista".
+
+#### 13.4.4 Onde ficam os botões (muda a seção 8 do CSS)
+
+Com 3 ou 4 botões, eles não cabem mais à direita do texto no computador (4 botões ≈ 480px). Por isso, a partir da 2b:
+- **Celular (< 640px):** os botões ficam numa **faixa embaixo do card inteiro** (da borda da placa até a outra ponta), separada do texto por um tracejado decorativo. A faixa ganha 16px de largura a mais que a coluna do texto.
+- **Computador (≥ 640px):** os botões ficam **embaixo do texto**, alinhados com o título, sem tracejado. O card passa a ter 2 colunas (placa | texto).
+- Os botões quebram linha quando não cabem (`flex-wrap`), sempre com 44px de toque e 8px entre eles.
+
+**Conta a 360px** (card de 328px, padding 12px, borda 1px → 302px por dentro; faixa de botões com 8px a mais de cada lado = **318px**). Larguras estimadas (12px de espaço interno + ícone 18 + 8 + texto 14px):
+
+| Conjunto | Soma (com vãos de 8px) | Linhas a 360px |
+|---|---|---|
+| Feito 88 · Editar 96 · Excluir 102 | 302px | 1 |
+| Agendar 103 · Editar 96 · Excluir 102 | 317px | 1 (pode virar 2 com fonte do sistema; aceito) |
+| Desfazer 111 · Editar 96 · Excluir 102 | 325px | 2 |
+| Feito 88 · Remarcar 111 · Não vou fazer 145 · Excluir 102 (dentro do painel, faixa de 291px) | 207 + 255 | 2 |
+
+Nenhuma conta passa da largura: no pior caso o botão desce de linha. Sem rolagem horizontal.
+
+```
+≥ 640px
++--------------------------------------------------------------+
+| +-------+  Dentista                                          |
+| | 09:30 |  (porta) Sair às 08:50   (sino) COBRAR             |
+| +-------+  (pino) Clínica Sorriso                            |
+|            [✓ Feito] [Editar] [Excluir]                      |
++--------------------------------------------------------------+
+```
+
+#### 13.4.5 Selo "Cobrar" (US14)
+
+Selo pequeno: mono 12px 600, maiúsculas, contorno de 1px na cor do texto (55%), cantos redondos, ícone de sino 14px. Âmbar. Só na lista principal. O leitor de tela ouve "Cobrar se eu não fizer" (o resto está em `sr-only`).
+
+### 13.5 Seção "Ficou pendente" (US14 e US15)
+
+Painel no topo do `main`, **depois** das faixas e **antes** de "Próximos compromissos". Sempre aberto. Some (`hidden`) sem pendências.
+
+- Fundo: âmbar 7% sobre o fundo da página; borda de 1px âmbar a 45%; **filete de 4px âmbar à esquerda**; raio 16px; espaço interno 16/12px no celular, 24/16px a partir de 640px; 48px até "Próximos compromissos".
+- Título (`h2`): ícone "pendente" (despertador) âmbar + "FICOU PENDENTE" em mono 12px maiúsculo **âmbar** (o mesmo jeito do "PRÓXIMOS COMPROMISSOS", mas na cor do tempo) + "(2)" em mono suave.
+- Subtexto opcional (sugestão): "Passou da data e você pediu para ser cobrado." 14px suave.
+- Lista **sem grupos por dia** (ordem da mais antiga para a mais recente): cada card é o card normal (fundo `--cor-superficie`, que se destaca sobre o painel) com a classe `compromisso--pendente`.
+- No lugar da linha de meta, a linha **"Era para: Ontem · 09:30"**: "Era para:" em 14px suave e o valor em mono 600 âmbar. A placa continua mostrando a hora (ou "DIA TODO").
+
+```html
+<section class="pendentes" id="secao-pendentes" aria-labelledby="titulo-pendentes" hidden>
+  <h2 class="pendentes-titulo" id="titulo-pendentes">
+    <!-- svg "pendente" -->
+    <span>Ficou pendente</span> <span class="pendentes-contagem" id="contagem-pendentes">(2)</span>
+  </h2>
+  <p class="pendentes-texto">Passou da data e você pediu para ser cobrado.</p>
+  <ul class="compromissos" id="lista-pendentes">
+    <li class="compromisso compromisso--pendente" data-id="..." tabindex="-1">
+      <div class="compromisso-hora"><time datetime="2026-11-05T09:30">09:30</time></div>
+      <div class="compromisso-corpo">
+        <p class="compromisso-titulo">Pagar boleto da luz</p>
+        <p class="compromisso-era">
+          <span>Era para:</span>
+          <span class="compromisso-era-valor">Ontem<span aria-hidden="true"> · </span><span class="sr-only">, </span>09:30</span>
+        </p>
+        <!-- local e observação, se houver -->
+      </div>
+      <div class="compromisso-acoes"><!-- Feito, Remarcar, Não vou fazer, Excluir --></div>
+    </li>
+  </ul>
+</section>
+```
+
+- O "·" é decorativo; o leitor de tela ouve "Era para: Ontem, 09:30". Dia todo: "Era para: Ter, 11/11 · Dia todo". Os títulos de dia são os da seção 3 dos requisitos ("Ontem", "Ter, 11/11", com o ano se for de outro ano).
+- "Não vou fazer" não tem cara de perigo (é neutro): dá para desfazer, e não pede confirmação.
+
+### 13.6 Seção "Sem data" (US16)
+
+**Mesma estrutura e mesmo visual de "Anteriores"** (botão largo de 52px, contagem em mono, seta que gira, começa recolhida, `aria-expanded`). Fica entre "Próximos compromissos" e "Anteriores".
+- Ela tem o tracejado em cima (como "Anteriores" tinha). Quando as duas aparecem, "Anteriores" fica só 24px abaixo dela, **sem** outro tracejado: os dois botões formam um bloco só, "o que está guardado".
+- Lista **sem grupos por dia** (ordem por `criadoEm`, do mais antigo para o mais novo).
+- **Placa "SEM DATA":** a placa de sempre, mas **vazia e tracejada**: sem as duas metades, borda tracejada lilás, "SEM DATA" em mono 12px lilás, em duas linhas (como "DIA TODO"). É a plaquinha que ainda não recebeu horário.
+
+```html
+<section class="sem-data" id="secao-sem-data" aria-labelledby="titulo-sem-data" hidden>
+  <h2 class="anteriores-titulo" id="titulo-sem-data">
+    <button class="anteriores-botao" id="botao-sem-data" type="button" aria-expanded="false" aria-controls="lista-sem-data">
+      <span><span>Sem data</span> <span class="anteriores-contagem" id="contagem-sem-data">(3)</span></span>
+      <!-- svg "seta" com class="icone anteriores-seta" -->
+    </button>
+  </h2>
+  <div class="anteriores-lista" id="lista-sem-data" hidden>
+    <ul class="compromissos">
+      <li class="compromisso compromisso--sem-data" data-id="..." tabindex="-1">
+        <div class="compromisso-hora compromisso-hora--sem-data"><span>Sem data</span></div>
+        <div class="compromisso-corpo">
+          <p class="compromisso-titulo">Marcar oftalmologista</p>
+          <!-- local e observação, se houver -->
+        </div>
+        <div class="compromisso-acoes"><!-- Agendar, Editar, Excluir --></div>
+      </li>
+    </ul>
+  </div>
+</section>
+```
+
+O HTML fixo da seção fica no `index.html` entre a `section.proximos` e a `section.anteriores` (ordem do HTML = ordem do Tab).
+
+### 13.7 "Anteriores" com situação (US06 e US13)
+
+Cada item de "Anteriores" ganha um **selo** na linha de meta, logo abaixo do título:
+
+| Situação | Selo | Cor | Ícone |
+|---|---|---|---|
+| Feito | "FEITO" | verde `--cor-sucesso` | check |
+| Não vou fazer | "NÃO VOU FAZER" | lilás | círculo cortado |
+| Passou | "PASSOU" | cinza suave, contorno **tracejado** | relógio |
+
+```html
+<div class="compromisso-meta">
+  <p class="selo selo--feito"><!-- svg "feito" --><span class="sr-only">Situação: </span>Feito</p>
+</div>
+```
+- O leitor de tela ouve "Situação: Feito". A situação nunca é só cor: tem texto, ícone diferente e, no "Passou", contorno diferente.
+- O card continua com o visual calmo de `compromisso--anterior` (tracejado, sem fundo). Item "Feito" com data futura fica no grupo do dia dele, sem "daqui a X dias" (como os outros de "Anteriores").
+
+### 13.8 Formulário na 2b
+
+#### 13.8.1 Ordem dos campos
+
+Título · **Data** (com "Ainda sem data" logo abaixo) | **Hora** · **Tempo para sair** · **Me cobrar se eu não fizer** · Local · Observação · (erro de salvar) · barra de botões.
+
+As opções que dependem de data e hora ficam juntas, logo depois delas. "Ainda sem data" fica **dentro** do campo Data: no celular aparece entre Data e Hora; a partir de 480px fica embaixo da Data, na mesma altura da dica da Hora.
+
+```
+360px
++-----------------------------------+  borda de cima âmbar
+| Novo compromisso                  |
+| Título (obrigatório)              |
+| [                               ] |
+| Data (obrigatório)                |
+| [ 06/11/2026              (cal) ] |
+| [ ] Ainda sem data                |  caixa 22px, linha de 44px
+| Hora                              |
+| [ 09:30                   (rel) ] |
+| Deixe em branco para um...        |
+| Tempo para sair                   |  legend (14px 600)
+| [✓ Nenhum ][ 15 min ][ 30 min ]   |  "plaquinhas" de 44px, 3 por linha
+| [ 45 min  ][ 60 min ][ Outro  ]   |  marcada = âmbar cheio + check
+|   Minutos antes                   |  só com "Outro"
+|   [ 40      ] min                 |
+|   De 1 a 720 minutos (12 horas).  |
+| [ ] Me cobrar se eu não fizer     |
+|     Se a data passar sem você     |  dica alinhada com o texto
+|     marcar Feito, ele fica em...  |
+| Local                             |
+| Observação                        |
+|-----------------------------------|
+| [  Cancelar  ]   [   Salvar    ]  |
++-----------------------------------+
+```
+
+Com **"Ainda sem data" marcada**:
+```
+| Data                              |  "(obrigatório)" some
+| [ dd/mm/aaaa  - - - - - - - - - ] |  borda tracejada, texto suave, desativado
+| [✓] Ainda sem data                |
+| Hora                              |
+| [ --:--  - - - - - - - - - - - -] |  desativado
+| Tempo para sair                   |
+| Escolha uma hora para usar o      |  dica aparece
+| tempo para sair.                  |
+| [ Nenhum ][ 15 min ]...           |  plaquinhas tracejadas, desativadas
+| [ ] Me cobrar se eu não fizer     |  desativada (caixa tracejada)
+```
+
+#### 13.8.2 HTML dos campos novos
+
+```html
+<div class="campos-linha">
+  <div class="campo">
+    <label class="campo-rotulo" for="campo-data">Data <span class="campo-obrigatorio" id="data-obrigatorio">(obrigatório)</span></label>
+    <input class="campo-controle" id="campo-data" name="data" type="date">
+    <p class="campo-erro" id="erro-data" hidden><!-- svg "alerta" --><span>Escolha uma data.</span></p>
+    <label class="marcar" for="campo-sem-data">
+      <input class="marcar-caixa" type="checkbox" id="campo-sem-data" name="semData">
+      <span>Ainda sem data</span>
+    </label>
+  </div>
+  <div class="campo"><!-- Hora: igual --></div>
+</div>
+
+<fieldset class="grupo" id="grupo-sair" aria-describedby="dica-sair">
+  <legend class="campo-rotulo">Tempo para sair</legend>
+  <p class="campo-dica" id="dica-sair" hidden>Escolha uma hora para usar o tempo para sair.</p>
+  <div class="escolhas">
+    <label class="escolha"><input type="radio" name="antecedencia" value="" checked><span>Nenhum</span></label>
+    <label class="escolha"><input type="radio" name="antecedencia" value="15"><span>15 min</span></label>
+    <label class="escolha"><input type="radio" name="antecedencia" value="30"><span>30 min</span></label>
+    <label class="escolha"><input type="radio" name="antecedencia" value="45"><span>45 min</span></label>
+    <label class="escolha"><input type="radio" name="antecedencia" value="60"><span>60 min</span></label>
+    <label class="escolha"><input type="radio" name="antecedencia" value="outro"><span>Outro</span></label>
+  </div>
+  <div class="campo campo-minutos" id="bloco-minutos" hidden>
+    <label class="campo-rotulo" for="campo-minutos">Minutos antes</label>
+    <div class="campo-com-sufixo">
+      <input class="campo-controle" id="campo-minutos" name="minutos" type="number" inputmode="numeric" min="1" max="720" step="1" aria-describedby="dica-minutos">
+      <span class="campo-sufixo" aria-hidden="true">min</span>
+    </div>
+    <p class="campo-dica" id="dica-minutos">De 1 a 720 minutos (12 horas).</p>
+    <p class="campo-erro" id="erro-minutos" hidden><!-- svg "alerta" --><span>Digite um número de minutos entre 1 e 720.</span></p>
+  </div>
+</fieldset>
+
+<div class="campo">
+  <label class="marcar" for="campo-cobrar">
+    <input class="marcar-caixa" type="checkbox" id="campo-cobrar" name="cobrar" aria-describedby="dica-cobrar">
+    <span>Me cobrar se eu não fizer</span>
+  </label>
+  <p class="campo-dica campo-dica--marcar" id="dica-cobrar">Se a data passar sem você marcar Feito, ele fica em 'Ficou pendente'.</p>
+</div>
+```
+
+Regras do visual (o comportamento está nos requisitos):
+- **Grupo desativado** (sem hora ou sem data): `disabled` no `fieldset` (desativa as plaquinhas **e** o campo de minutos de uma vez) e `hidden` tirado do `#dica-sair`. As plaquinhas ficam tracejadas e cinza; a opção marcada continua com o check, em cinza.
+- **"Outro":** marcar "Outro" tira o `hidden` do `#bloco-minutos`. Em erro, o campo de minutos segue as regras da US03: `aria-invalid="true"`, borda vermelha de 2px e `aria-describedby="dica-minutos erro-minutos"` enquanto o erro aparece.
+- **"Ainda sem data" marcada:** `disabled` em Data e Hora (borda tracejada, texto suave), `hidden` no `#data-obrigatorio`, grupo "Tempo para sair" e "Me cobrar" desativados. O erro da data some (e o `aria-invalid` sai).
+- **"Me cobrar" desativada:** a caixa fica tracejada e o texto cinza; a dica continua visível.
+- As plaquinhas são `input type="radio"` de verdade (setas do teclado trocam a opção; o Tab entra e sai do grupo). O `input` fica invisível **por cima** da plaquinha (opacidade 0, ocupa a plaquinha toda), então toque, clique e leitor de tela funcionam normalmente. O foco aparece na plaquinha (contorno azul-céu).
+- A marcada não depende só da cor: ganha um **check** antes do texto, fundo âmbar cheio e texto escuro.
+
+#### 13.8.3 Modos "Remarcar compromisso" e "Agendar compromisso"
+
+É **o mesmo formulário**; muda o `h2` e o foco inicial vai para o campo **Data** (requisitos).
+
+- **Remarcar compromisso** (US15): debaixo do título, uma linha de contexto (sugestão) com a data antiga, no mesmo visual de "Era para":
+  ```html
+  <h2 class="janela-titulo" id="janela-titulo">Remarcar compromisso</h2>
+  <p class="janela-subtitulo" id="janela-subtitulo">Era para: <span class="compromisso-era-valor">Ontem · 09:30</span></p>
+  ```
+  O `#janela-subtitulo` fica no HTML com `hidden` e só aparece nesse modo. Os campos vêm preenchidos.
+- **Agendar compromisso** (US16): sem subtítulo; "Ainda sem data" vem desmarcada, a Data com hoje. Nada mais muda.
+- Em "Novo" e "Editar", o subtítulo fica escondido.
+
+### 13.9 Avisos novos
+
+Todos no **aviso flutuante** (`#status`), com as janelas fechadas (requisitos gerais da Etapa 2).
+
+| Situação | `data-tipo` | Texto |
+|---|---|---|
+| Marcou Feito | `sucesso` | "Marcado como feito." |
+| Desfez | `sucesso` | "Desfeito." |
+| Não vou fazer | `sucesso` | "Marcado como 'Não vou fazer'." |
+| Remarcou para o futuro | `sucesso` | "Compromisso remarcado." |
+| Remarcou, mas ainda no passado | **`alerta`** (barrinha âmbar, nova) | "Compromisso continua pendente." |
+| Salvou sem data | `sucesso` | "Anotado em Sem data." |
+| Agendou | `sucesso` | "Compromisso agendado." |
+| Migração não pôde gravar (US11) | faixa `.faixa--erro` no `#faixas` | "Não foi possível atualizar seus dados neste navegador. As mudanças não serão salvas." |
+| Dados de versão mais nova (US11) | faixa `.faixa--alerta` no `#faixas` | "Seus dados são de uma versão mais nova da Agenda. As mudanças não serão salvas." |
+| Minutos fora da regra | `.campo-erro` no formulário | "Digite um número de minutos entre 1 e 720." |
+
+As duas faixas da US11 seguem a ordem do `#faixas`: problemas primeiro, lembrete de cópia por último.
+
+### 13.10 Ícones novos (mesmo padrão da 8.2: `viewBox="0 0 24 24"`, traço 2, `currentColor`, `aria-hidden="true" focusable="false"`)
+
+| Nome | Onde | Miolo |
+|---|---|---|
+| feito | botão "Feito", selo "Feito" | `<path d="M5 12.5l4.5 4.5L19 7.5"/>` |
+| desfazer | botão "Desfazer" | `<path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>` |
+| remarcar | botão "Remarcar" | `<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M9 15.5h6.5M13.5 13l2.5 2.5-2.5 2.5"/>` |
+| nao-vou-fazer | botão "Não vou fazer", selo | `<circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/>` |
+| agendar | botão "Agendar" | `<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M12 13v5M9.5 15.5h5"/>` |
+| sair | linha "Sair às" | `<path d="M13 4H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h7"/><path d="M15 8l4 4-4 4M19 12H10"/>` |
+| cobrar | selo "Cobrar" | `<path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>` |
+| pendente | título "Ficou pendente" | `<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 1.5"/><path d="M5 3L2.5 5.5M19 3l2.5 2.5"/>` |
+| passou | selo "Passou" | `<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>` |
+
+Nos selos o ícone tem 14px; na linha "Sair às", 16px; nos botões, 18px (como os outros).
+
+### 13.11 CSS de referência da Entrega 2b
+
+São quatro mudanças no `css/style.css`, nesta ordem no arquivo.
+
+#### 13.11.1 Seção "8. COMPROMISSO": **substituir** as regras dos botões
+
+Trocar a regra `.compromisso-acoes { ... }` e o `@media (min-width: 640px) { ... }` que vem logo depois dela (os dois, inteiros) por:
+
+```css
+/* Botões numa faixa própria (2b: até 4 botões não cabem mais à direita).
+   Celular: embaixo do card todo, com um tracejado em cima (o "canhoto").
+   As margens negativas dão 8px a mais de cada lado: o texto do botão
+   fica alinhado com a borda da placa. */
+.compromisso-acoes {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+  margin-inline: calc(-1 * var(--esp-2));
+  padding-top: var(--esp-1);
+  border-top: 1px dashed var(--cor-borda);
+}
+
+/* Computador: placa | texto, e os botões embaixo do texto */
+@media (min-width: 640px) {
+  .compromisso {
+    grid-template-columns: 4.75rem minmax(0, 1fr);
+    gap: var(--esp-2) var(--esp-4);
+    padding: var(--esp-4);
+  }
+
+  .compromisso-acoes {
+    grid-column: 2;
+    margin-inline: calc(-1 * var(--esp-3)) 0;   /* "Feito" alinhado com o título */
+    padding-top: 0;
+    border-top: 0;
+  }
+}
+```
+
+#### 13.11.2 Seção "11. JANELAS": correção da pendência da 2a (`#erro-salvar` coberto a 320 × 568)
+
+**O problema:** a 320px a janela tem 288px; tirando a borda e o espaço interno da barra (24px de cada lado), sobram **238px** para os botões. Com `flex: 1 1 8rem`, "Cancelar" + "Salvar" pedem 128 + 12 + 128 = **268px**, então eles empilham. A barra empilhada mede 16 + 44 + 12 + 44 + 16 + 1 = **133px**, mais que os 6rem (96px) do `scroll-padding-bottom` que o dev colocou na `.janela`. Resultado: o `scrollIntoView` acha que o aviso está visível, mas ele está atrás da barra.
+
+**A correção (duas partes):**
+
+1. Na regra `.janela-acoes .btn`, trocar `8rem` por `6rem`. "Cancelar" (≈104px) + "Salvar" (≈90px) + 12 = **206px**, cabem nos 238px: os botões ficam lado a lado até 320px e a barra volta a ter ≈77px (menos que os 96px reservados). Acima de 360px nada muda (eles já dividiam a largura).
+   ```css
+   .janela-acoes .btn {
+     flex: 1 1 6rem;               /* celular: dividem a largura (antes 8rem: empilhava a 320px) */
+   }
+   ```
+2. Rede de segurança para as janelas que **ainda** empilham em telas muito estreitas (ex.: "Cancelar" + "Substituir" ≈ 262px a 320px). Logo **depois** da regra `.janela { ... }`:
+   ```css
+   /* Abaixo de 360px uma barra pode empilhar os botões (≈133px de altura):
+      reservamos 9rem (144px) para o aviso nunca ficar atrás dela. */
+   @media (max-width: 359.98px) {
+     .janela {
+       scroll-padding-bottom: 9rem;
+     }
+   }
+   ```
+
+Para o testador: a 320 × 568, com o `localStorage` cheio, "Salvar" mostra "Não foi possível salvar o compromisso." inteiro, **acima** da barra de botões. Repetir com o formulário da 2b aberto em "Outro" (formulário mais comprido).
+
+#### 13.11.3 Nova seção "12c": acrescentar logo **depois** da "12b. ETAPA 2a" e **antes** da "13. MOVIMENTO REDUZIDO"
+
+```css
+/* ---------------------------------------------------------
+   12c. ETAPA 2b: SAIR ÀS, FEITO, PENDÊNCIAS E SEM DATA
+   Decisões em: design.md, seção 13.
+   --------------------------------------------------------- */
+
+/* --- Linha de meta: "Sair às", "Cobrar" e a situação --- */
+.compromisso-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--esp-1) var(--esp-3);
+  margin-block: 2px;
+}
+
+/* --- "Sair às 08:50" (3 estados, US12) --- */
+.compromisso-sair {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--esp-1);
+  font-size: var(--fs-sm);
+  color: var(--cor-texto-suave);          /* 8.2:1 no card */
+}
+
+.compromisso-sair .icone {
+  width: 16px;
+  height: 16px;
+  color: var(--cor-ambar);
+}
+
+.compromisso-sair-hora {
+  font-family: var(--fonte-mono);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--cor-ambar);                /* 10.4:1 no card */
+}
+
+/* "Sair em 12 min": pílula âmbar cheia, texto escuro (10.5:1) */
+.compromisso-sair[data-estado="logo"] {
+  padding: 2px var(--esp-3) 2px var(--esp-2);
+  font-weight: 700;
+  color: var(--cor-sobre-cor);
+  background: var(--cor-ambar);
+  border-radius: var(--raio-pill);
+}
+
+.compromisso-sair[data-estado="logo"] .icone {
+  color: currentColor;
+}
+
+/* "Hora de sair: 08:50 (já passou)": tudo cinza */
+.compromisso-sair[data-estado="passou"] .icone,
+.compromisso-sair[data-estado="passou"] .compromisso-sair-hora {
+  color: var(--cor-texto-suave);
+}
+
+/* O card acende em âmbar enquanto está na hora de sair (enfeite) */
+.compromisso:has(.compromisso-sair[data-estado="logo"]) {
+  border-color: color-mix(in srgb, var(--cor-ambar) 70%, var(--cor-borda));
+}
+
+/* --- Selos: "Cobrar" e a situação em "Anteriores" --- */
+.selo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--esp-1);
+  min-height: 1.5rem;
+  padding: 1px var(--esp-2);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid color-mix(in srgb, currentColor 55%, transparent);
+  border-radius: var(--raio-pill);
+}
+
+.selo .icone {
+  width: 14px;
+  height: 14px;
+}
+
+.selo--cobrar        { color: var(--cor-ambar); }        /* 10.4:1 */
+.selo--feito         { color: var(--cor-sucesso); }      /* 11.1:1 no pior ponto */
+.selo--nao-vou-fazer { color: var(--cor-lilas); }        /* 8.2:1 no pior ponto */
+.selo--passou {
+  color: var(--cor-texto-suave);                         /* 7.5:1 no pior ponto */
+  border-style: dashed;
+}
+
+/* --- Botões novos do card (só o ícone tem cor) --- */
+.botao-item--feito .icone {
+  color: var(--cor-sucesso);              /* 12.3:1 no card */
+}
+
+.botao-item--feito:hover {
+  color: var(--cor-sucesso);              /* 11.2:1 no hover */
+  border-color: color-mix(in srgb, var(--cor-sucesso) 50%, transparent);
+}
+
+.botao-item--agendar .icone {
+  color: var(--cor-ambar);
+}
+
+.botao-item--agendar:hover {
+  color: var(--cor-ambar);                /* 9.5:1 no hover */
+  border-color: color-mix(in srgb, var(--cor-ambar) 50%, transparent);
+}
+
+/* --- "Ficou pendente": a plataforma dos atrasados --- */
+.pendentes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-3);
+  margin-bottom: var(--esp-7);
+  padding: var(--esp-4) var(--esp-3) var(--esp-3);
+  background: color-mix(in srgb, var(--cor-ambar) 7%, var(--cor-fundo));
+  border: 1px solid color-mix(in srgb, var(--cor-ambar) 45%, transparent);
+  border-left: 4px solid var(--cor-ambar);
+  border-radius: var(--raio-lg);
+}
+
+@media (min-width: 640px) {
+  .pendentes {
+    padding: var(--esp-5) var(--esp-4) var(--esp-4);
+  }
+}
+
+.pendentes-titulo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--esp-2);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cor-ambar);                /* 9.9:1 no painel */
+}
+
+.pendentes-titulo .icone {
+  width: 18px;
+  height: 18px;
+}
+
+.pendentes-contagem {
+  font-weight: 400;
+  color: var(--cor-texto-suave);          /* 7.8:1 no painel */
+}
+
+.pendentes-texto {
+  margin-top: calc(-1 * var(--esp-1));
+  font-size: var(--fs-sm);
+  color: var(--cor-texto-suave);
+}
+
+/* "Era para: Ontem · 09:30" (pendência e subtítulo do Remarcar) */
+.compromisso-era {
+  font-size: var(--fs-sm);
+  color: var(--cor-texto-suave);
+}
+
+.compromisso-era-valor {
+  font-family: var(--fonte-mono);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--cor-ambar);                /* 10.4:1 no card */
+}
+
+/* --- "Sem data": mesma cara de "Anteriores" --- */
+.sem-data {
+  margin-top: var(--esp-7);
+  padding-top: var(--esp-5);
+  border-top: 1px dashed var(--cor-borda);
+}
+
+/* Com "Sem data" na tela, "Anteriores" cola nela (um bloco só) */
+.sem-data:not([hidden]) + .anteriores {
+  margin-top: var(--esp-5);
+  padding-top: 0;
+  border-top: 0;
+}
+
+/* Placa vazia e tracejada: ainda não tem horário no quadro */
+.compromisso-hora--sem-data {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cor-lilas);                /* 9.0:1 no card */
+  background: transparent;
+  box-shadow: none;
+  border: 1px dashed color-mix(in srgb, var(--cor-lilas) 55%, transparent);
+}
+
+.compromisso-hora--sem-data > span {
+  width: min-content;                     /* "SEM / DATA" em duas linhas */
+}
+
+/* --- Formulário: caixa de marcar com 44px de toque --- */
+.marcar {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-3);
+  width: fit-content;
+  max-width: 100%;
+  min-height: 44px;
+  font-size: var(--fs-base);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.marcar-caixa {
+  appearance: none;
+  -webkit-appearance: none;
+  flex-shrink: 0;
+  width: 1.375rem;                        /* 22px */
+  height: 1.375rem;
+  margin: 0;
+  background: var(--cor-fundo) center / 1rem no-repeat;
+  border: 2px solid var(--cor-borda-campo);   /* 4.6:1 na janela */
+  border-radius: var(--raio-sm);
+  cursor: pointer;
+  transition: background-color var(--transicao), border-color var(--transicao);
+}
+
+.marcar:hover .marcar-caixa {
+  border-color: var(--cor-texto-suave);
+}
+
+/* Marcada: âmbar cheio + check escuro (o check é a diferença, não só a cor) */
+.marcar-caixa:checked {
+  background-color: var(--cor-ambar);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231A1205' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E");
+  border-color: var(--cor-ambar);
+}
+
+.marcar-caixa:focus-visible {
+  outline: 3px solid var(--cor-foco);
+  outline-offset: 2px;
+}
+
+.marcar:has(.marcar-caixa:disabled) {
+  color: var(--cor-texto-suave);
+  cursor: not-allowed;
+}
+
+.marcar-caixa:disabled,
+.marcar:hover .marcar-caixa:disabled {
+  border-style: dashed;
+  border-color: var(--cor-borda-campo);
+  cursor: not-allowed;
+}
+
+/* Dica alinhada com o texto da caixa (22px + 12px) */
+.campo-dica--marcar {
+  margin-top: calc(-1 * var(--esp-2));
+  padding-left: calc(1.375rem + var(--esp-3));
+}
+
+/* --- Campo desativado (Data e Hora com "Ainda sem data") --- */
+.campo-controle:disabled,
+.campo-controle:disabled:hover {
+  color: var(--cor-texto-suave);
+  background: transparent;
+  border-style: dashed;
+  border-color: var(--cor-borda-campo);
+  cursor: not-allowed;
+}
+
+/* --- "Tempo para sair": fieldset com as plaquinhas --- */
+.grupo {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-2);
+}
+
+.grupo > legend {
+  padding: 0;
+  margin-bottom: var(--esp-2);            /* o gap não vale para o legend */
+}
+
+.escolhas {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--esp-2);
+}
+
+.escolha {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 var(--esp-2);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  color: var(--cor-texto);
+  background: var(--cor-fundo);
+  border: 1px solid var(--cor-borda-campo);
+  border-radius: var(--raio-md);
+  cursor: pointer;
+  transition: background-color var(--transicao), border-color var(--transicao);
+}
+
+/* O radio de verdade fica invisível POR CIMA da plaquinha:
+   toque, clique, teclado e leitor de tela funcionam normalmente. */
+.escolha input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.escolha:hover {
+  background: var(--cor-superficie-2);
+  border-color: var(--cor-texto-suave);
+}
+
+.escolha:has(input:focus-visible) {
+  outline: 3px solid var(--cor-foco);
+  outline-offset: 2px;
+}
+
+.escolha:has(input:checked) {
+  color: var(--cor-sobre-cor);            /* 10.5:1 */
+  background: var(--cor-ambar);
+  border-color: var(--cor-ambar);
+}
+
+/* Check antes do texto da marcada */
+.escolha:has(input:checked)::before {
+  content: "";
+  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / contain no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* Grupo desativado (sem hora ou sem data) */
+.grupo:disabled .escolha,
+.grupo:disabled .escolha:hover {
+  color: var(--cor-texto-suave);
+  background: transparent;
+  border-style: dashed;
+  border-color: var(--cor-borda-campo);
+  cursor: not-allowed;
+}
+
+.grupo:disabled .escolha:has(input:checked) {
+  color: var(--cor-texto);
+  background: var(--cor-superficie-2);
+}
+
+/* Campo de minutos ("Outro") */
+.campo-minutos {
+  margin-top: var(--esp-1);
+}
+
+.campo-com-sufixo {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-2);
+}
+
+.campo-com-sufixo .campo-controle {
+  width: 7rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.campo-sufixo {
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-sm);
+  color: var(--cor-texto-suave);
+}
+
+/* --- Subtítulo da janela no modo "Remarcar compromisso" --- */
+.janela-subtitulo {
+  margin-top: calc(-1 * var(--esp-3));
+  font-size: var(--fs-sm);
+  color: var(--cor-texto-suave);
+}
+
+/* --- Aviso flutuante de alerta ("Compromisso continua pendente.") --- */
+.status[data-tipo="alerta"] {
+  border-left-color: var(--cor-ambar);
+}
+```
+
+#### 13.11.4 Seção "14. ALTO CONTRASTE DO WINDOWS": acrescentar dentro do `@media (forced-colors: active)`
+
+```css
+  /* Etapa 2b */
+  .selo,
+  .escolha,
+  .pendentes,
+  .compromisso-hora--sem-data,
+  .compromisso-sair[data-estado="logo"] {
+    border: 1px solid CanvasText;
+  }
+
+  .escolha:has(input:checked) {
+    border: 3px solid Highlight;
+  }
+
+  .escolha:has(input:checked)::before {
+    forced-color-adjust: none;
+    background: CanvasText;
+  }
+
+  /* a caixa de marcar volta a ser a do sistema (o check desenhado sumiria) */
+  .marcar-caixa {
+    appearance: auto;
+    -webkit-appearance: auto;
+  }
+```
+
+**Movimento reduzido:** nada novo. As transições novas já são cortadas pela regra geral da seção 13, e nada da 2b tem animação (o estado "Sair em X min" não pisca).
+
+### 13.12 Contraste conferido (WCAG 2.1 AA)
+
+"Pior ponto" = card de "Anteriores" (sem fundo) sobre o brilho âmbar do canto da página, ≈`#271C19`. Painel de pendências = âmbar 7% sobre o fundo, ≈`#201718`.
+
+| Elemento | Cor / fundo | Razão | Mínimo |
+|---|---|---|---|
+| "Sair às" (texto) | `#B8AAB9` / `#191321` | 8.2:1 | 4.5:1 |
+| Hora de sair e ícone | `#FFB547` / `#191321` | 10.4:1 | 4.5:1 |
+| "Sair em 12 min" (pílula) | `#1A1205` / `#FFB547` | 10.5:1 | 4.5:1 |
+| Pílula contra o card (não-texto) | `#FFB547` / `#191321` | 10.4:1 | 3:1 |
+| "Hora de sair: ... (já passou)" | `#B8AAB9` / `#191321` | 8.2:1 | 4.5:1 |
+| Selo "COBRAR" | `#FFB547` / `#191321` | 10.4:1 | 4.5:1 |
+| Selo "FEITO" | `#8EE6A8` / `#0F0B14` · pior ponto | 13.0 · 11.1:1 | 4.5:1 |
+| Selo "NÃO VOU FAZER" | `#C4A8FF` / `#0F0B14` · pior ponto | 9.6 · 8.2:1 | 4.5:1 |
+| Selo "PASSOU" | `#B8AAB9` / `#0F0B14` · pior ponto | 8.7 · 7.5:1 | 4.5:1 |
+| Ícone do botão "Feito" | `#8EE6A8` / `#191321` | 12.3:1 | 3:1 |
+| "Feito" no hover | `#8EE6A8` / `#231A2E` | 11.2:1 | 4.5:1 |
+| "Agendar" no hover | `#FFB547` / `#231A2E` | 9.5:1 | 4.5:1 |
+| Botões neutros (Desfazer, Remarcar...) | `#B8AAB9` / `#191321` · pior ponto | 8.2 · 7.5:1 | 4.5:1 |
+| Título "FICOU PENDENTE" e ícone | `#FFB547` / ≈`#201718` | 9.9:1 | 4.5:1 |
+| "(2)" e subtexto do painel | `#B8AAB9` / ≈`#201718` | 7.8:1 | 4.5:1 |
+| Texto branco no painel | `#F5EEE6` / ≈`#201718` | 15.1:1 | 4.5:1 |
+| "Era para:" / valor | `#B8AAB9` · `#FFB547` / `#191321` | 8.2 · 10.4:1 | 4.5:1 |
+| Placa "SEM DATA" | `#C4A8FF` / `#191321` | 9.0:1 | 4.5:1 |
+| Borda da caixa de marcar | `#8A7A9C` / `#191321` · `#0F0B14` | 4.6 · 4.9:1 | 3:1 |
+| Caixa marcada / check | `#FFB547` / `#191321` · `#1A1205` / `#FFB547` | 10.4 · 10.5:1 | 3:1 |
+| Borda das plaquinhas | `#8A7A9C` / `#191321` | 4.6:1 | 3:1 |
+| Texto das plaquinhas | `#F5EEE6` / `#0F0B14` | 16.8:1 | 4.5:1 |
+| Plaquinha no hover | `#F5EEE6` / `#231A2E` | 14.5:1 | 4.5:1 |
+| Plaquinha marcada | `#1A1205` / `#FFB547` | 10.5:1 | 4.5:1 |
+| Campo e plaquinha desativados | `#B8AAB9` / `#191321` | 8.2:1 | isento (WCAG 1.4.3), mas legível |
+| Sufixo "min", dicas, subtítulo do Remarcar | `#B8AAB9` / `#191321` | 8.2:1 | 4.5:1 |
+| Barrinha de alerta do aviso flutuante | `#FFB547` / `#231A2E` | 9.5:1 | 3:1 |
+| Foco em tudo o que é novo (inclusive plaquinhas) | `#8FD3FF`, 3px | ≥ 11:1 | 3:1 |
+
+Bordas âmbar do painel, do card na hora de sair, contorno dos selos e tracejado da faixa de botões são **enfeite**: a informação está sempre no texto.
+
+### 13.13 Conferência da Entrega 2b (para o dev e o testador)
+
+| Requisito | Como o visual atende |
+|---|---|
+| Botões do card quebram linha a 360px, sem rolagem horizontal, 44px | faixa de botões com `flex-wrap`, `.botao-item` de 44px; contas da 13.4.4 |
+| "Sair em X min" com destaque que também é texto | pílula âmbar **e** o texto "Sair em 12 min" / "Sair agora" |
+| "Sair às" sem anúncio a cada minuto | sem `aria-live` na linha; dica de atualizar só o texto (13.4.2) |
+| Situação, "Cobrar", "Sem data" nunca só por cor | selos com texto + ícone; placa "SEM DATA" escrita; "Passou" com contorno tracejado |
+| "Ficou pendente" com `h2` e quantidade, sempre aberta, acima da lista | `.pendentes` com `h2` "Ficou pendente (2)", sem botão de abrir |
+| "Sem data" igual a "Anteriores" | mesmas classes, `aria-expanded`, começa recolhida, `hidden` sem itens |
+| Seções com `h2`, dias com `h3` | pendências e sem data sem grupos por dia (lista simples); "Anteriores" mantém os `h3` |
+| Grupo "Tempo para sair" acessível | `fieldset` + `legend` + radios de verdade; `disabled` no `fieldset` com a dica ligada por `aria-describedby` |
+| Erro do campo de minutos | mesmo `.campo-erro` da US03 (texto + ícone + borda 2px) |
+| Data obrigatória só sem "Ainda sem data" | `#data-obrigatorio` com `hidden`; Data e Hora desativadas com borda tracejada |
+| Caixas de marcar com 44px de toque | `.marcar` com `min-height: 44px` (o rótulo inteiro é clicável) |
+| Formulário cabe a 360px e rola por dentro | mesma `.janela`; plaquinhas 3 por linha (≈87px cada a 360px) |
+| `#erro-salvar` visível a 320 × 568 | correção da 13.11.2 |
+| Alto contraste e movimento reduzido | 13.11.4; nada novo anima |
+
+### 13.14 Decisões aprovadas pelo João (2026-11-06)
+
+As 5 decisões abaixo foram aprovadas pelo João em 2026-11-06, sem mudanças.
+
+1. **Botões embaixo do texto também no computador:** com 3 ou 4 botões (Feito, Remarcar, Não vou fazer, Excluir) eles não cabem mais à direita. No celular ficam numa faixa com tracejado em cima.
+2. **"Ficou pendente" em âmbar** (painel com filete à esquerda, no topo da página), sem criar cor nova.
+3. **Cores das situações em "Anteriores":** Feito verde, Não vou fazer lilás, Passou cinza tracejado, sempre com texto e ícone.
+4. **"Sair em X min" vira uma pílula âmbar cheia** e a borda do card fica âmbar nesse intervalo; depois da hora de sair, a linha fica cinza.
+5. **Textos sugeridos (não estão nos requisitos):** o subtexto "Passou da data e você pediu para ser cobrado.", o rótulo "Minutos antes", a dica "De 1 a 720 minutos (12 horas).", a linha "Era para: ..." no topo do formulário "Remarcar compromisso" e a barrinha âmbar (alerta) no aviso "Compromisso continua pendente.".

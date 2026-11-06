@@ -362,6 +362,34 @@
           { "titulo": "Glossário", "url": "data/glossario.json" }
         ],
         "imagens": []
+      },
+      {
+        "agente": "artista",
+        "resumo": "Etapa 2, Entrega 2b: desenhou o \"Sair às\" como a hora de embarque do quadro de partidas (vira a pílula âmbar \"Sair em X min\" nos últimos 15 minutos), o selo \"Cobrar\", o painel âmbar \"Ficou pendente\", a seção \"Sem data\" com placa lilás, os selos de situação em \"Anteriores\" e os campos novos do formulário.",
+        "entregaveis": [
+          { "titulo": "Design (seção 13)", "url": "docs/projetos/agenda/design.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "dev",
+        "resumo": "Implementou a Entrega 2b: atualização automática dos dados para a versão 2 (guardando o original), \"Sair às\" atualizado a cada minuto, Feito e Desfazer, \"Me cobrar\" com a seção \"Ficou pendente\" (Feito, Remarcar, Não vou fazer) e compromissos \"Sem data\". A importação aceita cópias das versões 1 e 2. Corrigiu a pendência da 2a e atualizou o README.",
+        "entregaveis": [
+          { "titulo": "Site publicado", "url": "https://joaosaccucci.github.io/agenda/" },
+          { "titulo": "Datas e seções (JS)", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/js/datas.js" },
+          { "titulo": "Tela (JS)", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/js/app.js" },
+          { "titulo": "Armazenamento e migração (JS)", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/js/armazenamento.js" },
+          { "titulo": "README", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/README.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "testador",
+        "resumo": "Etapa 2, Entrega 2b: testou de 320 a 1280px, com relógio parado e andando minuto a minuto, a migração com dados reais da 2a, a ida e volta da cópia, teclado e contraste AA. Aprovado na primeira rodada, com três pendências baixas (todas só quando o navegador não consegue gravar).",
+        "entregaveis": [
+          { "titulo": "Relatório de teste — Entrega 2b", "url": "docs/projetos/agenda/testes/etapa-2b.md" }
+        ],
+        "imagens": []
       }
     ],
     "linhaDoTempo": [
@@ -378,7 +406,11 @@
       { "data": "2026-11-05", "agente": "testador", "descricao": "Entrega 2a reprovada na rodada 1: aviso da janela coberto em tela baixa." },
       { "data": "2026-11-05", "agente": "testador", "descricao": "Entrega 2a aprovada na rodada 2, com uma pendência baixa." },
       { "data": "2026-11-05", "agente": "dev", "descricao": "Entrega 2a publicada no repositório agenda e no GitHub Pages." },
-      { "data": "2026-11-05", "agente": "professor", "descricao": "4 aulas da Entrega 2a, com exemplo Rodar e quiz, no Módulo 1 da Agenda." }
+      { "data": "2026-11-05", "agente": "professor", "descricao": "4 aulas da Entrega 2a, com exemplo Rodar e quiz, no Módulo 1 da Agenda." },
+      { "data": "2026-11-06", "agente": "artista", "descricao": "Design da Entrega 2b: Sair às, Feito, Ficou pendente e Sem data (seção 13)." },
+      { "data": "2026-11-06", "agente": "dev", "descricao": "Implementação da Entrega 2b, com a migração dos dados para a versão 2." },
+      { "data": "2026-11-06", "agente": "testador", "descricao": "Entrega 2b aprovada na primeira rodada, com três pendências baixas." },
+      { "data": "2026-11-06", "agente": "dev", "descricao": "Entrega 2b publicada no repositório agenda e no GitHub Pages." }
     ]
   }
 ]

@@ -244,6 +244,8 @@ Como usuário, quero ser lembrado de vez em quando de baixar uma cópia, para n�
 
 #### Entrega 2b: migração, "Sair às...", "Feito", pendências e "Sem data"
 
+*(Visual e textos da Entrega 2b: seção 13 do design, com as 5 decisões da artista aprovadas pelo João em 2026-11-06. Também aprovados pelo João, a partir do teste: os avisos "Compromisso salvo em Ficou pendente." (novo com "Me cobrar" e data passada), "Anotado em Sem data." (ao remarcar ou editar para "Ainda sem data") e "Compromisso atualizado." (Remarcar sem "Me cobrar" com data ainda passada, que vai para "Anteriores").)*
+
 **Agenda US11: Atualização automática dos dados para a versão 2**
 Como usuário, quero que meus compromissos antigos continuem funcionando quando a Agenda ganhar funções novas, sem eu precisar fazer nada e sem risco de perder dados.
 - [ ] Ao abrir a página, se `agenda:compromissos` estiver na `versao: 1`, a Agenda **antes** guarda o texto original, sem nenhuma mudança, em `agenda:compromissos-v1` e **depois** grava os dados na `versao: 2` (formato na seção 3).

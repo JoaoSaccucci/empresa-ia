@@ -45,7 +45,7 @@ Cada entrega vira um commit, e o site no GitHub Pages se atualiza sozinho. Num p
 | Projeto | O que tem | Código | Site |
 |---|---|---|---|
 | **Site João Saccucci Labs** | A vitrine: Início, Projetos (com linha do tempo e os botões Ver site e Ver código), Equipe, Aulas (15 aulas curtas em módulos, com exemplos que rodam na própria página, quiz, sumário, glossário e código colorido) e Sobre | Este repositório, em [`trabalhos/joao-saccucci-labs`](trabalhos/joao-saccucci-labs/) | [joaosaccucci.github.io/empresa-ia](https://joaosaccucci.github.io/empresa-ia/) |
-| **Agenda** | Agenda online para anotar compromissos: lista por dia, criar, editar e excluir, seção "Anteriores" e dados salvos no navegador | [github.com/JoaoSaccucci/agenda](https://github.com/JoaoSaccucci/agenda) | [joaosaccucci.github.io/agenda](https://joaosaccucci.github.io/agenda/) |
+| **Agenda** | Agenda online para anotar compromissos: lista por dia, criar, editar e excluir, "Sair às...", marcar como feito, seções "Ficou pendente", "Sem data" e "Anteriores", dados salvos no navegador e cópia em arquivo .json para levar a outro aparelho | [github.com/JoaoSaccucci/agenda](https://github.com/JoaoSaccucci/agenda) | [joaosaccucci.github.io/agenda](https://joaosaccucci.github.io/agenda/) |
 
 Os requisitos, o design e os relatórios de teste de cada projeto novo ficam aqui, em [`trabalhos/joao-saccucci-labs/docs/projetos/`](trabalhos/joao-saccucci-labs/docs/projetos/). O repositório do projeto guarda só o produto (código e README).
 
