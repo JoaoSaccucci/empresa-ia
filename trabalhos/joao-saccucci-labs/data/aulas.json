@@ -27,6 +27,13 @@
       "numero": 1,
       "titulo": "Entrega 2a: cópia e importação",
       "resumo": "Criar e ler arquivos no navegador, conferir dados que vêm de fora e juntar duas listas pelo id."
+    },
+    {
+      "id": "agenda-m2",
+      "projeto": "agenda",
+      "numero": 2,
+      "titulo": "Entrega 2b: Sair às, Feito e pendências",
+      "resumo": "Mudar o formato dos dados sem perder nada, decidir em qual seção cada item aparece, fazer contas com datas e atualizar a tela a cada minuto."
     }
   ],
   "aulas": [
@@ -200,6 +207,42 @@
       "arquivo": "aulas/agenda/modulo-1/aula-04.md",
       "tempoLeitura": 6,
       "resumo": "Acrescentar o que é novo e decidir qual versão fica quando o mesmo id aparece nas duas listas, com findIndex e uma cópia da lista."
+    },
+    {
+      "id": "agenda-m2-aula-01",
+      "titulo": "Mudar o formato dos dados sem perder nada",
+      "modulo": "agenda-m2",
+      "numero": 1,
+      "arquivo": "aulas/agenda/modulo-2/aula-01.md",
+      "tempoLeitura": 6,
+      "resumo": "A migração da versão 1 para a versão 2: guardar o original antes de gravar o formato novo e nunca sobrescrever uma versão desconhecida."
+    },
+    {
+      "id": "agenda-m2-aula-02",
+      "titulo": "Decidir onde cada item aparece: perguntas em ordem",
+      "modulo": "agenda-m2",
+      "numero": 2,
+      "arquivo": "aulas/agenda/modulo-2/aula-02.md",
+      "tempoLeitura": 6,
+      "resumo": "Uma função que faz perguntas numa ordem fixa, com early return e operador ternário, para escolher entre Ficou pendente, Próximos, Sem data e Anteriores."
+    },
+    {
+      "id": "agenda-m2-aula-03",
+      "titulo": "Fazer contas com datas: o \"Sair às\"",
+      "modulo": "agenda-m2",
+      "numero": 3,
+      "arquivo": "aulas/agenda/modulo-2/aula-03.md",
+      "tempoLeitura": 6,
+      "resumo": "Criar uma Date a partir de texto, voltar minutos com setMinutes (até para o dia anterior) e calcular quanto falta subtraindo duas datas."
+    },
+    {
+      "id": "agenda-m2-aula-04",
+      "titulo": "Atualizar a tela a cada minuto sem redesenhar tudo",
+      "modulo": "agenda-m2",
+      "numero": 4,
+      "arquivo": "aulas/agenda/modulo-2/aula-04.md",
+      "tempoLeitura": 6,
+      "resumo": "Um setTimeout que cai na virada do minuto, um resumo em texto para saber se algo mudou de seção e o visibilitychange para a aba que volta a aparecer."
     }
   ]
 }

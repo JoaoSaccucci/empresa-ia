@@ -77,5 +77,12 @@
   { "termo": "Blob", "traducao": "objeto binário grande (binary large object)", "explicacao": "Um arquivo que existe só na memória da página. Pode virar um download ou ser lido como texto." },
   { "termo": "Array.isArray", "traducao": "lista: é uma lista?", "explicacao": "Confere se um valor é mesmo uma lista. Devolve true ou false." },
   { "termo": "findIndex", "traducao": "encontrar a posição", "explicacao": "Devolve a posição do primeiro item da lista que passa no teste, ou -1 se nenhum passar." },
-  { "termo": "Map", "traducao": "mapa", "explicacao": "Estrutura que guarda um valor para cada chave, como um id. Com get e set, acha e troca um item quase na hora." }
+  { "termo": "Map", "traducao": "mapa", "explicacao": "Estrutura que guarda um valor para cada chave, como um id. Com get e set, acha e troca um item quase na hora." },
+  { "termo": "migração", "traducao": "migração (mudança de formato)", "explicacao": "Atualizar dados já salvos de um formato antigo para um novo, sem perder nada. Na Agenda, da versão 1 para a versão 2." },
+  { "termo": "early return", "traducao": "retorno antecipado", "explicacao": "Usar return logo no começo da função, assim que a resposta já é conhecida. Evita if dentro de if." },
+  { "termo": "operador ternário", "traducao": "operador de três partes", "explicacao": "Um if/else curto que devolve um valor: condição ? valorSeSim : valorSeNão." },
+  { "termo": "Date", "traducao": "data", "explicacao": "Objeto do JavaScript que guarda um momento (dia e hora). Os meses começam em 0, e subtrair duas Date dá a diferença em milissegundos." },
+  { "termo": "setMinutes", "traducao": "definir os minutos", "explicacao": "Muda os minutos de uma Date. Com um número negativo ou maior que 59, a Date ajusta sozinha a hora e até o dia." },
+  { "termo": "setTimeout", "traducao": "definir um tempo de espera", "explicacao": "Agenda uma função para rodar uma vez, depois de um certo número de milissegundos, sem travar a página." },
+  { "termo": "visibilitychange", "traducao": "mudança de visibilidade", "explicacao": "Evento que acontece quando a aba fica escondida ou volta a aparecer. O document.hidden diz qual dos dois." }
 ]

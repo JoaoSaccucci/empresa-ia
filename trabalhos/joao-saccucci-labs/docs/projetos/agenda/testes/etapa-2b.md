@@ -166,3 +166,106 @@ Nenhum problema de gravidade alta. Seguem as observações de gravidade **baixa*
 3. **"Me cobrar":** crie um compromisso para daqui a 2 minutos com "Me cobrar" e deixe a página aberta: ele deve ir para "Ficou pendente" sozinho.
 4. **Leitor de tela** (NVDA ou TalkBack): ouvir "Feito: marcar … como feito", "Situação: Feito", "Cobrar se eu não fizer", o grupo "Tempo para sair" com a dica quando estiver sem hora, e os avisos "Marcado como feito." e "Compromisso continua pendente.".
 5. **Depois do push:** abrir `https://joaosaccucci.github.io/agenda/` e conferir que não há erro no console e que as fontes carregam.
+
+## Aulas da Entrega 2b — 2026-11-06
+
+- **O que foi testado:** as 4 aulas novas da Agenda na Labs (`aulas/agenda/modulo-2/aula-01.md` a `aula-04.md`) e as mudanças em `data/aulas.json` (módulo `agenda-m2` e 4 aulas), `data/glossario.json` (migração, early return, operador ternário, Date, setMinutes, setTimeout e visibilitychange) e `data/projetos.json` (trabalho do professor da 2b e linha do tempo da Agenda). O teste foi feito antes do commit da Labs, do mesmo jeito que as aulas da 2a, e seguiu o guia `docs/guias/aulas.md` e a regra do João de que nenhum exercício manda mexer no código de um projeto.
+- **Onde:** Edge headless, com o site da Labs servido por um servidor local (marked e highlight.js carregados pelo CDN), a 1280px e a 360px, com fuso `America/Sao_Paulo`. Os links fixos foram comparados com o commit `f91ecc6c5719438a4949736c977fca73886ca18b` no repositório local da Agenda (`HEAD` e `origin/main` estão nesse commit, `git status` limpo). Esse commit já está publicado: a página dele no GitHub respondeu 200.
+
+### Resultado
+
+**Aprovado com pendências.** Foram 146 conferências automáticas, em duas rodadas. As falhas da primeira rodada eram do meu script ou do ambiente, e conferi uma por uma (veja "Como foi testado"). Na segunda rodada, as 43 conferências passaram. Todos os exemplos rodam e mostram exatamente o que o texto diz, os links fixos apontam para as linhas certas e nenhum exercício manda mexer no código. Ficou **uma pendência média**, de conteúdo: a resposta "Em entrevista" da aula 3 diz que o `toISOString()` usa "o fuso de Londres" (problema 1). Ela é simples de corrigir e eu sugiro corrigir antes do commit da Labs. O resto são observações baixas.
+
+### Verificações
+
+| Área | Resultado | Observação |
+|---|---|---|
+| Celular a 360px | Passou | Sem rolagem horizontal nas 4 aulas (antes e depois de Rodar), em `aulas.html#agenda-m2` e em `detalhe-projeto.html?id=agenda`. A tabela da aula 2 fica dentro do `.tabela-rolagem` (326px, cabe na tela). |
+| Teclado | Passou | O Tab passa por: logo, menu, voltar, módulo, ferramentas, tabela rolável (aula 2), termos do glossário, botões do exemplo, Console, links fixos, alternativas do quiz e checklist. O foco aparece em todos. Cada balão do glossário abre com Enter e fecha com Esc, e o foco volta para o termo. |
+| Acessibilidade | Passou | Os componentes são os mesmos da Labs. O aviso do Rodar conta certo nas 4 aulas ("2", "5", "3" e "3 linhas no console"), porque nenhum exemplo usa `await` (a observação A da 2a não se repete). Depois de responder, as alternativas do quiz ficam travadas e todas as explicações aparecem. |
+| Contraste | Passou | Nada de visual novo: as aulas usam os componentes que já existiam. |
+| Erros | Passou | A página ficou sem erros no console nas 4 aulas, em `aulas.html`, no detalhe da Agenda, em 2 aulas da Labs da amostra e com um id que não existe (`agenda-m2-aula-09` mostra "Aula não encontrada." e o link "Ver todas as aulas"). O Console dos exemplos também ficou sem erro. O único 404 foi o `/favicon.ico` que o navegador pede sozinho na raiz do servidor de teste. |
+
+### Conferências
+
+**1. `aulas.html` e vitrine**
+- [x] Dentro do grupo "Agenda" há "Módulo 2 — Entrega 2b: Sair às, Feito e pendências", logo depois do Módulo 1, com as 4 aulas (Aula 2.1 a 2.4, `tempoLeitura` 6) e os links `aula.html?id=agenda-m2-aula-01` a `-04`. A página tem 23 cards: 15 da Labs e 8 da Agenda.
+- [x] `aulas.html#agenda-m2` leva até o módulo, a 1280px e a 360px.
+- [x] `detalhe-projeto.html?id=agenda` mostra o trabalho do professor da 2b (com "Aulas — Agenda, Módulo 2" → `aulas.html#agenda-m2` e o Glossário) e a nova linha da linha do tempo. O link do Módulo 1 continua lá. Clicando no link e depois no card 2.3, a aula 2.3 abre.
+
+**2. Cada aula em `aula.html`** (as 4 passaram em tudo)
+- [x] Têm Em resumo (2 linhas), Erro comum e Em entrevista. As aulas 1, 3 e 4 também têm a Dica "Para ir além", marcada como opcional.
+- [x] O glossário funciona com todos os termos: migração, localStorage, JSON.parse, undefined, map, JSON.stringify (aula 1); return, early return, operador ternário, forEach (aula 2); Date, split, map, setMinutes (aula 3); setTimeout, textContent, visibilitychange, map, join (aula 4). Nenhum `[[...]]` sobra na página e não há termo repetido em `glossario.json`.
+- [x] O código aparece colorido. Há 1 exemplo com Rodar por aula, com 14, 15, 15 e 14 linhas. O bloco de código da aula 4 em "O conceito" (sem Rodar) aparece como código comum.
+- [x] O Linha por linha está ligado ao exemplo e cita as linhas certas. Conferi cada item com o código: aula 1 (L1, 3, 4, 5, 6–8, 9, 11–12, 13–14); aula 2 (L1, 3, 4, 5, 6, 8–14, 15); aula 3 (L2–3, 4, 5, 8, 9–10, 11–12, 13, 14–15); aula 4 (L1, 2, 3, 5–7, 8, 9–12, 13, 14).
+- [x] O Rodar mostra exatamente o que o texto diz:
+  - Aula 1: `Original guardado: {"versao":1,...}` (o texto original, intacto) e `Versão nova: {"versao":2,...}`, com `"status":"aberto","cobrar":false`.
+  - Aula 2: `Comprar presente -> Sem data`, `Dentista -> Anteriores`, `Pagar boleto -> Ficou pendente`, `Academia -> Anteriores` e `Reunião -> Próximos`, como está escrito na aula.
+  - Aula 3: "Sair às 08:50", "Sair às 23:50 do dia 13" e "Faltam 10 min".
+  - Aula 4: "Próxima conferência em 23 segundos", "Nada mudou de seção: troca só o texto do Sair às." e "Algo mudou de seção: redesenha tudo.".
+- [x] Editar abre o código num campo de texto, o código editado roda, e Restaurar volta ao original (a saída fica igual à primeira).
+- [x] Cada aula tem 2 quizzes com 3 alternativas e **exatamente uma certa** (conferi no `.md`). Clicando na alternativa `[x]`, aparece "Certa!". Clicando numa errada, aparece "Errada. A resposta certa é a B.". Nos dois casos, as 3 explicações aparecem e o quiz trava. O checklist "Para praticar" é marcável.
+
+**3. Navegação**
+- [x] Anterior e próxima seguem a ordem da Agenda: a 1.4 agora leva à 2.1, a 2.1 volta para a 1.4, e a 2.4 não tem "próxima".
+- [x] Amostra da Labs (m1-aula-01 e m3-aula-04): as aulas abrem sem erro, e nenhum link de navegação leva para a Agenda.
+
+**4. Links fixos** (todos com o hash completo `f91ecc6c5719438a4949736c977fca73886ca18b`, nenhum com `/blob/main/`)
+- [x] Aula 1: `armazenamento.js#L194-L207` (a `migrarDaVersao1` inteira), `armazenamento.js#L149-L155` (o trecho da versão mais nova dentro da `carregarCompromissos`, do comentário até o `}`) e `app.js#L1699-L1706` (as duas faixas da US11).
+- [x] Aula 2: `datas.js#L167-L174` (a `secaoDoCompromisso` inteira), `app.js#L527-L533` (a `separarPorSecao` inteira) e `app.js#L270-L275` (a `acoesDoItem` inteira).
+- [x] Aula 3: `datas.js#L198-L222` (a `calcularSairAs` inteira) e `app.js#L333-L349` (a `preencherSairAs` inteira).
+- [x] Aula 4: `app.js#L632-L638` (a `agendarProximoMinuto` inteira), `app.js#L615-L627` (a `atualizarSeMudou` inteira), `app.js#L539-L544` (a `calcularResumo` inteira) e `app.js#L1624-L1626` (o `visibilitychange`).
+- Em todos os links que citam uma função, a função começa na primeira linha do intervalo e termina na última.
+
+**5. Conteúdo**
+- [x] As explicações batem com o código da Agenda:
+  - o original vai para `agenda:compromissos-v1` só se a chave ainda não existir, e só depois a versão 2 é gravada;
+  - se der erro, a gravação fica bloqueada (`gravacaoBloqueada`);
+  - a versão mais nova não é gravada por cima;
+  - as 4 perguntas da `secaoDoCompromisso` estão na ordem da aula;
+  - a mesma função é usada na lista, no resumo de cada minuto e no aviso do formulário (`app.js`, linhas 530, 541 e 1005);
+  - o limite de 15 minutos (`MINUTOS_DE_AVISO_PARA_SAIR`) bate com as faixas de texto da aula 3, e o `setSeconds(0, 0)` também;
+  - o resumo tem o formato `"2026-11-14|a1:proximos,..."` e usa `sort()` antes do `join`;
+  - a linha "Sair às" não tem `aria-live`.
+- [x] **Nenhum exercício manda mexer no código da Agenda ou da Labs.** Todos os itens de "Para praticar" mexem no exemplo da aba Aulas ("No exemplo, clique em **Editar**…", e os itens seguintes continuam no mesmo exemplo). O item 2 da aula 4 só *pergunta* por que a `calcularResumo` usa `sort()`. Rodei cada item, e todas as linhas citadas são as certas:
+  - Aula 1: aparece `2` e o original continua igual; com um segundo compromisso, os dois ganham `status` e `cobrar`.
+  - Aula 2: o Dentista com data passada e `cobrar: true` continua em "Anteriores" (está feito); trocando as linhas 4 e 5, ele vai para "Ficou pendente"; a Academia com "nao-vou-fazer" continua em "Anteriores", mas agora pela pergunta 2.
+  - Aula 3: com 90, "Sair às 08:00" e "Faltam -40 min"; com o "agora" às 8h55, "Faltam -5 min"; sem o `- 1`, continua "dia 13", mas `getMonth()` dá 11 (dezembro) e "Faltam 43210 min".
+  - Aula 4: com 5 segundos, "55 segundos"; com os itens trocados, as duas conferências dizem "Algo mudou de seção".
+- [x] Tamanho das aulas: de 652 a 721 palavras fora do código, `tempoLeitura` 6, 2 ou 3 itens em "Para praticar" e quiz nas 4 aulas.
+- [x] A observação D da 2a já foi resolvida: "Blob" agora está como "objeto binário grande (binary large object)".
+
+### Problemas encontrados
+
+**1. Aula 3, "Em entrevista": o `toISOString()` não usa "o fuso de Londres"** (status: pendente)
+- **Onde:** `aulas/agenda/modulo-2/aula-03.md`, caixa `[!IMPORTANT]` (linha 67).
+- **Passos:** abrir `aula.html?id=agenda-m2-aula-03` e ler a caixa "Em entrevista".
+- **Esperado:** "`toISOString()` devolve a data em UTC (o horário universal, sem fuso)".
+- **Obtido:** "`toISOString()` usa o fuso de Londres". Londres só fica em UTC no inverno. No horário de verão de lá (de março a outubro), ela fica em UTC+1. É uma frase que o João vai repetir numa entrevista, e o entrevistador pode corrigir.
+- **Gravidade:** média (conteúdo errado numa resposta de entrevista; não quebra nada no site). Para corrigir: trocar "usa o fuso de Londres" por "usa UTC, o horário universal".
+
+**2. Aula 3, "Para ir além": o exemplo do meio minuto não bate com o `Math.round`** (status: pendente)
+- **Onde:** `aula-03.md`, Dica "Para ir além" (linha 64).
+- **Obtido:** o texto diz que "às 08:49:30 a conta daria 0,5 minuto e o arredondamento poderia mostrar 'Sair agora' meio minuto antes da hora". Só que `Math.round(0.5)` dá **1**, e às 08:49:30 em ponto apareceria "Sair em 1 min". "Sair agora" só aparece a partir de 08:49:31. A ideia está certa, e o "poderia" deixa a frase quase correta.
+- **Gravidade:** baixa. Sugestão: "às 08:49:40 a conta daria 0,33 minuto, e o arredondamento mostraria 'Sair agora' 20 segundos antes da hora".
+
+### Observações (gravidade baixa, nenhuma impede a aprovação)
+
+- **A. Aula 1, "Para praticar", item 2.** O segundo compromisso precisa ser escrito em JSON **dentro** do texto entre aspas simples da linha 1. Se faltar uma aspa ou uma vírgula, o Console mostra um erro do `JSON.parse`, que pode assustar quem está começando. Sugestão: dar o trecho pronto, por exemplo `,{"titulo":"Academia","data":"2026-11-15"}` antes do `]`.
+- **B. Aula 4, "O conceito".** O bloco de código (sem Rodar) é quase igual à `agendarProximoMinuto` da Agenda (7 linhas). O guia pede para não colar o código do site em "Onde aparece". Aqui ele está em "O conceito" e é curto, então funciona como explicação. Só registro.
+- **C. Aula 3, "Para praticar", item 1.** Com 90 minutos, o "Faltam" fica negativo (-40), porque o "agora" das 08:40 já passou da hora de sair. O item pergunta "quantos minutos faltam agora?", e a resposta negativa prepara bem o item 2. Está certo, só pode surpreender.
+- **Conferir à mão (João):** depois do commit da Labs, abrir uma aula do Módulo 2 no GitHub Pages e clicar num link fixo, para ver se ele abre o GitHub com as linhas destacadas.
+
+### Como foi testado
+
+- **No navegador (Edge headless, por script):** tudo o que está marcado acima. Os exercícios de "Para praticar" foram rodados com o editor do próprio exemplo.
+- **Falhas da primeira rodada, que não eram das aulas:**
+  - o "foco sem contorno" em `modo-foco` era o `body` (o Tab tinha voltado ao começo da página);
+  - o "Tab não chega no checklist" era porque o script parava antes;
+  - um Esc que não fechou um balão na aula 3 não se repetiu na segunda rodada, testando termo por termo;
+  - o "404 em aulas.html" era o `/favicon.ico`;
+  - o navegador headless travou ("Target crashed") no quiz da aula 4.
+
+  Na segunda rodada, testei de novo o que faltava e o que tinha falhado: as 43 conferências passaram.
+- **Só por leitura:** a conferência do conteúdo com o código da Agenda no commit `f91ecc6` e a contagem de palavras.
+- Os scripts ficaram fora do projeto. Nenhum navegador nem servidor ficou aberto no fim, e não mexi nas aulas nem nos JSON.

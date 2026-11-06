@@ -390,6 +390,15 @@
           { "titulo": "Relatório de teste — Entrega 2b", "url": "docs/projetos/agenda/testes/etapa-2b.md" }
         ],
         "imagens": []
+      },
+      {
+        "agente": "professor",
+        "resumo": "Etapa 2, Entrega 2b: 4 aulas curtas sobre o que mudou: migrar o formato dos dados guardando o original, decidir a seção de cada item com perguntas em ordem, fazer contas com datas para o \"Sair às\" e atualizar a tela a cada minuto sem redesenhar tudo. Cada aula tem exemplo com Rodar e quiz, e cita o código da Agenda por link fixo.",
+        "entregaveis": [
+          { "titulo": "Aulas — Agenda, Módulo 2", "url": "aulas.html#agenda-m2" },
+          { "titulo": "Glossário", "url": "data/glossario.json" }
+        ],
+        "imagens": []
       }
     ],
     "linhaDoTempo": [
@@ -410,7 +419,8 @@
       { "data": "2026-11-06", "agente": "artista", "descricao": "Design da Entrega 2b: Sair às, Feito, Ficou pendente e Sem data (seção 13)." },
       { "data": "2026-11-06", "agente": "dev", "descricao": "Implementação da Entrega 2b, com a migração dos dados para a versão 2." },
       { "data": "2026-11-06", "agente": "testador", "descricao": "Entrega 2b aprovada na primeira rodada, com três pendências baixas." },
-      { "data": "2026-11-06", "agente": "dev", "descricao": "Entrega 2b publicada no repositório agenda e no GitHub Pages." }
+      { "data": "2026-11-06", "agente": "dev", "descricao": "Entrega 2b publicada no repositório agenda e no GitHub Pages." },
+      { "data": "2026-11-06", "agente": "professor", "descricao": "4 aulas da Entrega 2b, com exemplo Rodar e quiz, no Módulo 2 da Agenda." }
     ]
   }
 ]
