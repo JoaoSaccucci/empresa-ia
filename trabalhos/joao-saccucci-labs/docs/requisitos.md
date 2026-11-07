@@ -540,7 +540,7 @@ Como recrutador, quero abrir o site e o código de cada projeto a partir da Labs
 **US34: Aulas da Agenda na aba Aulas, com link fixo para o código**
 Como João, quero estudar as aulas da Agenda no mesmo lugar das aulas da Labs, para ter todo o meu estudo junto e ligado ao código certo.
 - [ ] As aulas da Agenda ficam na Labs, em `aulas/agenda/modulo-<N>/aula-<NN>.md`, e são cadastradas em `data/aulas.json` com módulos de `"projeto": "agenda"`.
-- [ ] Na aba Aulas, a Agenda aparece como um grupo próprio (projeto → módulo → aula), igual à Labs, sem filtro e sem mudança de tela. Os grupos de projeto seguem a ordem de `projetos.json`.
+- [ ] Na aba Aulas, a Agenda aparece como um grupo próprio (projeto → módulo → aula), igual à Labs, sem filtro e sem mudança de tela. Os grupos de projeto seguem a ordem de `projetos.json`. *(Substituído pela US39 na Etapa 7: a aba Aulas passa a ter um botão por projeto e mostra só o projeto escolhido.)*
 - [ ] O progresso, o quiz, o checklist e o "Concluída" das aulas da Agenda funcionam como nas aulas da Labs.
 - [ ] Toda citação do código da Agenda numa aula usa **link fixo** (preso a um commit), no formato `https://github.com/JoaoSaccucci/agenda/blob/<hash completo do commit>/<arquivo>#L<início>-L<fim>`. Nenhum link de aula usa `/blob/main/`.
 - [ ] O commit citado já está publicado no GitHub quando a aula é publicada (por isso a Labs é commitada depois da agenda).
@@ -596,6 +596,83 @@ Como recrutador, quero ver no README principal todos os projetos e onde está ca
 - [ ] O testador escreve o relatório da parte da Labs em `docs/testes/etapa-6.md` e o da Agenda em `docs/projetos/agenda/testes/etapa-<N>.md`.
 - [ ] Nada de senhas, chaves, documentos pessoais ou dados de outras pessoas em nenhum dos dois repositórios.
 - [ ] Funciona publicado no GitHub Pages, com caminhos relativos na Labs.
+
+### Etapa 7 — Aulas por projeto
+
+**Contexto.** Com a Agenda, a aba Aulas passou a mostrar as aulas de dois projetos numa lista só, uma embaixo da outra, e essa lista cresce a cada entrega. A Etapa 7 coloca no topo da aba Aulas um botão para cada projeto: o João escolhe o projeto e vê só as aulas dele, organizadas por módulo exatamente como hoje. Os links que já existem (`aulas.html#<id do módulo>`) continuam funcionando, e o "Voltar para as aulas" da tela de leitura leva para o projeto da aula. As respostas do João estão na seção 9.
+
+**Qual projeto abre** (ver seção 9, decisão 1)
+1. Endereço com `#` (ex.: `aulas.html#agenda` ou `aulas.html#agenda-m1`): abre o projeto indicado. O `#` **sempre vence** a chave salva.
+2. Sem `#` (ou com um `#` que não corresponde a nada): abre o último projeto que o João abriu neste navegador, salvo na chave `jsl:aulas-projeto` do `localStorage`.
+3. Se a chave não existir, não puder ser lida (`localStorage` bloqueado ou valor estranho) ou apontar para um projeto que não tem mais aulas: abre o projeto mais recente (o primeiro botão).
+
+**Ordem dos botões: do projeto mais recente para o mais antigo** (ver seção 9, decisão 2)
+- "Mais recente" é decidido pelo campo `dataInicio` de `data/projetos.json` (formato `AAAA-MM-DD`): a data maior vem primeiro.
+- Empate na mesma `dataInicio`: vem primeiro o projeto que aparece **mais para o fim** de `projetos.json` (projetos novos são acrescentados no fim do arquivo).
+- Projeto de `projetos.json` sem `dataInicio` válida: vai depois dos que têm data, também do fim do arquivo para o começo.
+- Projeto que tem aulas (`modulos[].projeto`) mas **não está** em `projetos.json`: vai depois de todos os projetos de `projetos.json`, em ordem alfabética do `id`, e o botão mostra o `id` no lugar do nome (como a lista já faz hoje).
+- "Outras aulas" (aulas com `modulo` inexistente, US18) é sempre o **último** botão, e só aparece quando existir alguma aula assim.
+- Projeto sem nenhuma aula não ganha botão.
+- Hoje: Agenda (`dataInicio` 2026-11-04), depois João Saccucci Labs (2026-11-02).
+
+**Texto do progresso no botão** (ver seção 9, decisão 3)
+- Conta **todas** as aulas do projeto (de todos os módulos) e as concluídas (US15), no formato "X de Y concluídas".
+- Singular e plural seguem o total (Y): com Y = 1, "concluída" ("0 de 1 concluída", "1 de 1 concluída"); com Y maior que 1, "concluídas" ("0 de 4 concluídas", "1 de 4 concluídas").
+- Quando todas estão concluídas (X = Y), aparece um ✓ junto do texto (ex.: "15 de 15 concluídas ✓"). O ✓ é decorativo para leitores de tela; o texto já diz que tudo foi concluído.
+
+**US39: Escolher o projeto na aba Aulas**
+Como João, quero escolher um projeto no topo da aba Aulas e ver só as aulas dele, para achar rápido o que estudar sem rolar pelas aulas dos outros projetos.
+- [ ] No topo de `aulas.html`, antes da lista, aparece um botão para cada projeto que tem pelo menos uma aula, mais o botão "Outras aulas" quando existir aula com `modulo` inexistente. Os botões aparecem mesmo quando só há um projeto.
+- [ ] Os botões são montados a partir de `data/aulas.json` e `data/projetos.json`. Um projeto novo com aulas ganha botão sem mudar HTML ou JS.
+- [ ] Os botões seguem a regra "Ordem dos botões" acima. Hoje: Agenda, depois João Saccucci Labs.
+- [ ] Cada botão mostra o nome do projeto (de `projetos.json`) e, embaixo, em texto menor, o progresso no formato da regra "Texto do progresso no botão" acima.
+- [ ] Abaixo dos botões aparece **só** o projeto escolhido: o nome dele como título e os módulos e aulas exatamente como hoje (US18: módulos em ordem, progresso de cada módulo, cards com "✓ Concluída").
+- [ ] Clicar em outro botão troca a lista na hora, sem recarregar a página. O botão do projeto aberto fica marcado como selecionado (no visual e com `aria-pressed="true"`; os outros ficam com `aria-pressed="false"`).
+- [ ] Não existe botão "Todas" nem outra forma de ver todos os projetos juntos.
+- [ ] Sempre que um projeto é aberto (pelo botão ou pelo endereço com `#`), o `id` dele é salvo na chave `jsl:aulas-projeto`. Para "Outras aulas", o valor salvo é `outras-aulas`.
+- [ ] Abrir `aulas.html` sem `#` abre o projeto salvo na chave. Se a chave não existir, não puder ser lida ou apontar para um projeto sem botão, abre o primeiro botão (projeto mais recente).
+- [ ] Ao voltar para a aba Aulas pelo "Voltar" do navegador (página guardada na memória), o progresso dos botões e da lista é atualizado, como já acontece hoje com o "✓ Concluída".
+
+**US40: Endereço com # e "Voltar para as aulas"**
+Como João, quero que o endereço da aba Aulas indique o projeto aberto e que o "Voltar para as aulas" me leve ao projeto da aula, para guardar ou compartilhar o link e continuar de onde eu estava.
+- [ ] `aulas.html#<id do projeto>` (ex.: `aulas.html#agenda`, `aulas.html#joao-saccucci-labs`) abre esse projeto, com a lista no topo.
+- [ ] Links antigos `aulas.html#<id do módulo>` (ex.: `aulas.html#agenda-m1`, `aulas.html#joao-saccucci-labs-m2`) continuam funcionando: abrem o projeto do módulo e rolam até o módulo. Os entregáveis do professor em `projetos.json` não precisam mudar.
+- [ ] `aulas.html#outras-aulas` abre "Outras aulas", quando esse grupo existir.
+- [ ] Para entender o `#`, a tela procura nesta ordem: um projeto com esse `id`, depois um módulo com esse `id`, depois `outras-aulas`. O `id` `outras-aulas` fica reservado: nenhum projeto pode usar esse nome.
+- [ ] Um `#` que não corresponde a nada (projeto sem aulas, módulo que não existe, texto qualquer) não quebra a página nem gera erro no console: a tela abre como se não houvesse `#` (chave salva ou projeto mais recente).
+- [ ] Quando a página abre sem `#` ou com um `#` que não serve, o endereço é ajustado para `aulas.html#<id do projeto aberto>` com `history.replaceState`, para que recarregar mostre o mesmo projeto. Um `#` de módulo válido fica como está.
+- [ ] Ao trocar de projeto pelos botões, o endereço vira `aulas.html#<id do projeto>` com `history.replaceState`: a troca **não** cria passo novo no "Voltar" do navegador (decisão do product-owner, seção 9). O "Voltar" leva para a página de onde o João veio.
+- [ ] Se o `#` mudar com a página aberta (ex.: o João edita o endereço e aperta Enter), a lista troca para o projeto certo.
+- [ ] Em `aula.html`, o link "Voltar para as aulas" aponta para `aulas.html#<id do projeto da aula>` (ex.: uma aula da Agenda leva para `aulas.html#agenda`). Uma aula com `modulo` inexistente leva para `aulas.html#outras-aulas`.
+- [ ] O link da mensagem "Aula não encontrada" continua apontando para `aulas.html` (sem `#`, então vale a chave salva).
+
+**US41: Escolha de projeto acessível, no teclado e no celular**
+Como João (e qualquer visitante), quero escolher o projeto com mouse, toque, teclado ou leitor de tela, para usar a aba Aulas do jeito que for mais confortável.
+- [ ] Os botões são `<button>` de verdade, dentro de um grupo com nome acessível (ex.: `role="group"` com o rótulo "Escolha o projeto").
+- [ ] Dá para chegar em cada botão com Tab e escolher com Enter ou Espaço, com foco visível. A ordem do Tab segue a ordem dos botões na tela.
+- [ ] O nome acessível de cada botão junta o nome do projeto e o progresso de forma natural, com uma pausa entre eles, ex.: "Agenda, 3 de 8 concluídas" e "João Saccucci Labs, 15 de 15 concluídas". O ✓ fica escondido do leitor de tela (`aria-hidden`), e o estado de selecionado é anunciado pelo `aria-pressed`.
+- [ ] Depois de trocar de projeto, o foco continua no botão escolhido e a página não pula sozinha. Os títulos seguem em ordem (título da página, depois projeto, módulos e aulas, sem pular nível).
+- [ ] O botão selecionado se diferencia dos outros por mais do que a cor (ex.: borda, marca ou peso da letra).
+- [ ] Cada botão tem área de toque de pelo menos 44 × 44px.
+- [ ] A 360px não há rolagem horizontal: os botões quebram linha ou empilham, e nomes longos quebram dentro do botão, sem cortar texto.
+- [ ] Nome, texto do progresso (mesmo sendo menor), estado selecionado e foco têm contraste AA sobre o fundo escuro.
+- [ ] Com `prefers-reduced-motion`, a troca de projeto acontece sem animação (a lista nova aparece direto, sem o efeito de "surgir" dos cards).
+
+**Requisitos gerais da Etapa 7**
+- [ ] Nenhuma biblioteca nova: os botões, o `#` e a chave salva são feitos em JS puro.
+- [ ] `data/aulas.json` e `data/projetos.json` não ganham campos novos. A ordem usa o `dataInicio` que já existe.
+- [ ] Só mudam a aba Aulas (`aulas.html` e o JS dela) e o link "Voltar para as aulas" de `aula.html`. O resto da tela de leitura continua igual.
+- [ ] Se o `localStorage` estiver indisponível ou cheio, a aba funciona normalmente: abre o projeto mais recente (ou o do `#`) e só não lembra a escolha. Nenhum erro quebra a página.
+- [ ] Se `data/aulas.json` não carregar, aparece a mesma mensagem de erro amigável de hoje, sem botões. Se só `data/projetos.json` não carregar, os botões aparecem com o `id` no lugar do nome, em ordem alfabética do `id`, com "Outras aulas" no fim.
+- [ ] Tudo funciona a 360px sem rolagem horizontal, por teclado (foco visível), com contraste AA e respeitando `prefers-reduced-motion`.
+- [ ] Funciona publicado no GitHub Pages, com caminhos relativos.
+- [ ] O testador escreve o relatório em `docs/testes/etapa-7.md`, testando as US39, US40 e US41 com: progresso em nenhuma, em parte e em todas as aulas de um projeto; chave salva, sem chave e `localStorage` bloqueado; `#` de projeto, de módulo, `#outras-aulas` e `#` inválido; os links de entregáveis do professor em `projetos.json`; o "Voltar para as aulas" de aulas da Labs e da Agenda; e o botão "Voltar" do navegador depois de trocar de projeto.
+- [ ] O `README.md` do site da Labs é conferido e atualizado se descrever a aba Aulas.
+
+**Fora da Etapa 7**
+- Botão "Todas" ou qualquer forma de ver as aulas de todos os projetos juntas.
+- Lembrar o módulo ou a posição da rolagem dentro do projeto (só o projeto é lembrado).
+- Sincronizar a escolha do projeto entre aparelhos ou navegadores.
 
 ### Requisitos gerais (todas as etapas)
 - [ ] O layout funciona de 360px até telas de desktop.
@@ -851,6 +928,7 @@ Todos ficam dentro de `trabalhos/joao-saccucci-labs/`, no repositório `empresa-
 | **Etapa 5** | US25 Cartão do Sobre, US26 Testador na equipe e no fluxo, US27 Relatório de teste, US28 Mentor na Equipe (apoio), US29 Mentor fora do fluxo no Início, além dos requisitos gerais da Etapa 5 e da nota "tarefa fora do site" |
 | **Etapa 6 — estrutura** | US30 Regra no CLAUDE.md, US31 Git no repositório certo, US32 Guias comuns e agentes revisados, US33 Ver site e Ver código, US35 Passo a passo do repositório, US38 README da raiz, além dos requisitos gerais da Etapa 6 |
 | **Etapa 6 — Agenda** | Conversa com o João sobre a Agenda (seção 8) e requisitos em `docs/projetos/agenda/requisitos.md`, US36 Repositório e README da Agenda, US37 Agenda na vitrine, US34 Aulas da Agenda |
+| **Etapa 7** | US39 Escolher o projeto na aba Aulas, US40 Endereço com # e "Voltar para as aulas", US41 Escolha de projeto acessível, além dos requisitos gerais da Etapa 7 e do relatório em `docs/testes/etapa-7.md` |
 
 Ordem sugerida dentro da Etapa 1: JSON → Lista de projetos → Detalhe → Equipe → Início.
 
@@ -871,7 +949,7 @@ Ordem sugerida dentro da Etapa 6: US30 e US32 (regra, guias e agentes) → US31 
 - Formulário de contato, blog e versão em outros idiomas.
 - Modo claro no site. **Exceção:** o tema claro "papel" existe só na tela de leitura das aulas (`aula.html`).
 - Busca e filtros de projetos (podem entrar em uma etapa futura, quando houver vários projetos).
-- Busca dentro das aulas, filtros na lista de aulas e comentários.
+- Busca dentro das aulas, filtros na lista de aulas e comentários. *(Escolher o projeto na aba Aulas, da Etapa 7 (US39), não é "filtro": é só a escolha de qual projeto mostrar, um por vez. Busca e filtros dentro das aulas de um projeto continuam fora.)*
 - Quiz com nota, pontuação, ranking, tempo limite, alternativas embaralhadas ou perguntas abertas (de digitar). O quiz também não conta para "Aula concluída".
 - Mini-site ou projeto guiado construído passo a passo nas aulas.
 - Editor com cores, autocompletar ou recuo automático; salvar o código editado; desfazer além do "Restaurar".
@@ -887,7 +965,6 @@ Ordem sugerida dentro da Etapa 6: US30 e US32 (regra, guias e agentes) → US31 
 - (Etapa 6) Requisitos, design ou relatórios de teste dentro do repositório do projeto (eles ficam na Labs).
 - (Etapa 6) Agentes criando repositórios ou ligando o GitHub Pages sozinhos (o João faz isso à mão, com o passo a passo).
 - (Etapa 6) Botões "Ver site" e "Ver código" no cartão da lista de projetos (só no detalhe).
-- (Futuro) Aba Aulas abrindo com uma lista de projetos clicáveis e, ao clicar em um, mostrando as aulas daquele projeto exatamente como hoje.
 - (Futuro) Agenda: exportar e importar os compromissos em arquivo.
 - (Futuro) "Agenda 2.0" com back-end em Java (vai precisar de exceção de tecnologia aprovada nos requisitos dela e de outra hospedagem, porque o GitHub Pages só publica sites estáticos).
 - (Etapa 6) Agenda: login, sincronizar entre aparelhos ou guardar dados fora do navegador.
@@ -905,7 +982,7 @@ Ordem sugerida dentro da Etapa 6: US30 e US32 (regra, guias e agentes) → US31 
 3. O repositório se chama `agenda`. O João cria o repositório e liga o GitHub Pages à mão, com um passo a passo (US35).
 4. Mudança no modelo inicial: o repositório da Agenda tem só o produto (código e README). Requisitos, design e relatórios de teste ficam no `empresa-ia`, em `trabalhos/joao-saccucci-labs/docs/projetos/agenda/`.
 5. O detalhe do projeto fica igual ao de hoje, mais os botões "Ver site" e "Ver código".
-6. As aulas citam o código da Agenda por link fixo (preso ao commit). As aulas da Agenda aparecem como um grupo próprio na aba Aulas, sem filtro. A lista de projetos clicáveis na aba Aulas fica para o futuro.
+6. As aulas citam o código da Agenda por link fixo (preso ao commit). As aulas da Agenda aparecem como um grupo próprio na aba Aulas, sem filtro. A lista de projetos clicáveis na aba Aulas fica para o futuro. *(A parte da aba Aulas foi substituída pela US39 na Etapa 7: um botão por projeto, mostrando só o projeto escolhido. Ver seção 9.)*
 7. Uma proposta de commit só, com os dois repositórios separados: primeiro a agenda, depois a Labs. Todo comando Git usa `git -C` e o `remote -v` é conferido antes de cada commit.
 8. HTML, CSS e JS puros são o padrão de todo projeto. Exceções (ex.: Java) são aprovadas nos requisitos de cada projeto. "Ver site" é opcional.
 9. Acréscimos do product-owner, aprovados pelo João em 2026-11-04:
@@ -926,3 +1003,12 @@ As 10 perguntas foram respondidas pelo João em 2026-11-04. As respostas viraram
 8. [x] Visual? **Resposta:** próprio, mas da mesma família da Labs, com liberdade para o artista ousar na cor e no clima.
 9. [x] Aviso de que os dados ficam só no navegador? **Resposta:** sim, discreto e fixo no rodapé: "Seus compromissos ficam salvos só neste navegador."
 10. [x] Excluir pede confirmação? **Resposta:** sim: "Excluir '<título>'? Essa ação não pode ser desfeita.", com os botões Excluir e Cancelar.
+
+## 9. Decisões do João (Etapa 7)
+Respostas do João em 2026-11-06, que viraram as US39, US40 e US41.
+1. **Projeto que abre sem `#`:** ao abrir `aulas.html` sem `#` no endereço, abre o **último** projeto que o João abriu neste navegador (chave `jsl:aulas-projeto` do `localStorage`). Na primeira vez, ou se a chave não existir, não puder ser lida ou apontar para um projeto sem aulas, abre o projeto mais recente. Um `#` no endereço sempre vence a chave.
+2. **Ordem dos botões:** do projeto mais recente para o mais antigo (hoje: Agenda, depois João Saccucci Labs). Regra definida pelo product-owner com o que já existe em `projetos.json`: ordena pelo `dataInicio` (maior primeiro); empate fica com o projeto que está mais para o fim do arquivo; projeto sem `dataInicio` válida vai depois dos que têm data; projeto com aulas que não está em `projetos.json` vai depois, em ordem alfabética do `id`; "Outras aulas" fica sempre no fim.
+3. **Progresso no botão:** texto pequeno embaixo do nome, "X de Y concluídas" (com singular e plural certos), com ✓ quando todas estiverem concluídas. O progresso entra no nome acessível de forma natural (ex.: "Agenda, 3 de 8 concluídas").
+4. **Sem botão "Todas".**
+5. **Decisão do product-owner:** trocar de projeto pelos botões **não** cria passo novo no "Voltar" do navegador. O endereço é atualizado com `history.replaceState` (e não `pushState`), para que o "Voltar" leve o João para a página de onde ele veio, e não para o projeto anterior.
+6. **Também aprovadas pelo João (2026-11-06):** singular e plural do progresso pelo total Y ("1 de 1 concluída", "1 de 4 concluídas"); ao abrir sem `#`, o endereço passa a mostrar `#<projeto aberto>`; a escolha "Outras aulas" também é lembrada em `jsl:aulas-projeto` (valor `outras-aulas`).

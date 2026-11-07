@@ -24,15 +24,15 @@ lista-projetos.html    Lista de projetos (gerada a partir do JSON)
 detalhe-projeto.html   Detalhe de um projeto (com linha do tempo e os botões Ver site / Ver código): detalhe-projeto.html?id=<id-do-projeto>
 equipe.html            Perfis dos 6 agentes e projetos de cada um (o de apoio mostra "Atuação")
 sobre.html             Sobre mim: cartão do João (conteúdo fixo, sem JSON)
-aulas.html             Lista de aulas agrupada por módulo (gerada a partir do JSON), com ✓ nas concluídas
+aulas.html             Aulas por projeto: um botão por projeto no topo e, embaixo, as aulas dele por módulo (geradas a partir do JSON), com ✓ nas concluídas. aulas.html#<id-do-projeto> abre o projeto; aulas.html#<id-do-módulo> rola até o módulo
 aula.html              Tela de leitura de uma aula: aula.html?id=<id-da-aula>
-css/style.css          Visual do site (feito pelo artista; ajustes do dev nas seções 22 e 37; seção 38 = Etapa 4; seção 39 = Etapa 5; seção 40 = Etapa 6)
+css/style.css          Visual do site (feito pelo artista; ajustes do dev nas seções 22 e 37; seção 38 = Etapa 4; seção 39 = Etapa 5; seção 40 = Etapa 6; seção 41 = Etapa 7)
 js/comum.js            Menu do celular, leitura dos JSON, funções auxiliares e progresso salvo (localStorage)
 js/lista-projetos.js   Monta a lista de projetos
 js/detalhe-projeto.js  Monta o detalhe do projeto
 js/timeline.js         Monta a linha do tempo do projeto (usada pelo detalhe-projeto.js)
 js/equipe.js           Monta a página Equipe
-js/aulas.js            Monta a lista de aulas
+js/aulas.js            Monta os botões de projeto e a lista de aulas do projeto escolhido
 js/aula.js             Tela de leitura: Markdown -> HTML, caixas, glossário, checklist, código, sumário, letra, tema
 js/aula-codigo.js      Exemplos das aulas: linhas numeradas, Linha por linha, Rodar (iframe isolado), Console, Editar e Restaurar
 js/aula-quiz.js        Quiz das aulas (bloco ```quiz), com a resposta salva no navegador
@@ -102,7 +102,7 @@ São aulas curtas (5 a 7 minutos), de um conceito cada, agrupadas em módulos: M
 
 1. O professor escreve o arquivo em `aulas/modulo-N/aula-NN.md`.
 2. Acrescente a aula em `data/aulas.json` (modelo no `docs/requisitos.md`), com o campo `modulo` apontando para o `id` de um módulo da lista `modulos`. O `id` da aula segue o formato `<id-do-projeto>-mN-aula-NN`.
-3. Pronto: ela aparece em `aulas.html`, dentro do módulo, e abre em `aula.html?id=<id>`. Não precisa mexer em HTML nem em JS.
+3. Pronto: ela aparece em `aulas.html`, no botão do projeto do módulo, e abre em `aula.html?id=<id>`. Um projeto novo com aulas ganha botão sozinho (ordem: `dataInicio` de `data/projetos.json`, do mais recente para o mais antigo). Não precisa mexer em HTML nem em JS.
 
 ### O que dá para escrever no `.md`
 
@@ -138,6 +138,7 @@ Fica no `localStorage` do navegador de quem lê (cada pessoa vê só o seu), com
 - `jsl:checklist:<id-da-aula>`: marcações do exercício;
 - `jsl:quiz:<id-da-aula>`: respostas do quiz;
 - `jsl:leitura-fonte`: tamanho da letra (1 a 5);
-- `jsl:leitura-tema`: `"escuro"` ou `"papel"`.
+- `jsl:leitura-tema`: `"escuro"` ou `"papel"`;
+- `jsl:aulas-projeto`: o último projeto aberto na aba Aulas (o `id` dele, ou `"outras-aulas"`).
 
 Para zerar tudo: F12 > Application > Local Storage > apagar as chaves `jsl:`. Se o navegador bloquear o `localStorage`, a tela funciona normalmente, só não lembra nada depois.

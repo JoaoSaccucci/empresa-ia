@@ -4030,3 +4030,153 @@ body.sumario-aberto {
     transform: none;
   }
 }
+
+
+/* =========================================================
+   ETAPA 7 - AULAS POR PROJETO
+   Seção 41: botões de projeto no topo da aba Aulas
+   (US39 a US41). As decisões estão no docs/design.md, seção 15.
+   A lista de módulos e cards continua a da seção 38.1.
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   41. ESCOLHA DO PROJETO (aulas.html)
+   <div class="aulas-escolha" role="group" hidden> fica entre o
+   .pagina-titulo e o #area-aulas. O display fica na lista de
+   dentro (e não no .aulas-escolha) para o atributo hidden
+   continuar escondendo o grupo até o JSON carregar.
+   --------------------------------------------------------- */
+.aulas-escolha {
+  max-width: 880px;                 /* mesma largura da lista de aulas */
+  margin-bottom: var(--esp-7);      /* 48px até o h2 do projeto */
+}
+
+/* "Escolha o projeto": mono pequeno, como os rótulos do site */
+.aulas-escolha-rotulo {
+  margin-bottom: var(--esp-3);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
+}
+
+/* Os botões quebram linha (nunca rolam para o lado) */
+.aulas-escolha-lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-3);
+}
+
+/* --- 41.1 Botão de projeto: nome + progresso --- */
+.escolha-botao {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 11rem;
+  max-width: 100%;
+  min-height: 44px;                 /* na prática ~62px (duas linhas) */
+  padding: var(--esp-3) var(--esp-4);
+  font-family: var(--fonte-texto);
+  text-align: left;
+  color: var(--cor-texto);
+  background: var(--cor-vidro);
+  border: 1px solid var(--cor-borda-forte);
+  border-radius: var(--raio-md);
+  cursor: pointer;
+  transition: border-color var(--transicao), background var(--transicao), box-shadow var(--transicao);
+}
+
+.escolha-botao-nome {
+  font-size: var(--fs-base);
+  font-weight: 600;                 /* não muda ao selecionar: o botão não "pula" */
+  line-height: 1.3;
+  overflow-wrap: anywhere;          /* nome longo quebra dentro do botão */
+}
+
+.escolha-botao-progresso {
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  line-height: 1.4;
+  color: var(--cor-texto-suave);
+  overflow-wrap: anywhere;
+}
+
+/* Hover: borda e fundo mais claros, sem ciano (ciano = selecionado) */
+.escolha-botao:not([aria-pressed="true"]):hover {
+  border-color: var(--cor-texto-suave);
+  background: color-mix(in srgb, #94A3FF 8%, var(--cor-fundo-2));
+}
+
+/* Selecionado: mais do que cor. Borda 2px + barra de 4px embaixo
+   ("aba aberta") + fundo ciano. O padding diminui o mesmo tanto
+   que a borda cresce, então o botão não muda de tamanho. */
+.escolha-botao[aria-pressed="true"] {
+  padding: calc(var(--esp-3) - 1px) calc(var(--esp-4) - 1px) calc(var(--esp-3) - 3px);
+  background: color-mix(in srgb, var(--cor-ciano) 8%, var(--cor-fundo-2));
+  border: 2px solid var(--cor-ciano);
+  border-bottom-width: 4px;
+  box-shadow: 0 0 16px rgba(0, 229, 255, 0.2);
+}
+
+/* Tudo concluído: progresso verde (o ✓ vem no HTML, aria-hidden) */
+.escolha-botao--completo .escolha-botao-progresso {
+  color: var(--cor-verde);
+}
+
+/* "Outras aulas": borda tracejada = grupo à parte */
+.escolha-botao--outras:not([aria-pressed="true"]) {
+  border-style: dashed;
+}
+
+/* Celular: o botão estica e ocupa a linha (ou divide com o vizinho
+   quando os dois cabem). A 360px, cada um fica na sua linha. */
+@media (max-width: 639.98px) {
+  .escolha-botao {
+    flex: 1 1 auto;
+  }
+}
+
+
+/* --- 41.2 Troca de projeto ---
+   O JS põe .aulas-trocar na section.aulas-projeto nova (só na troca;
+   na primeira montagem os cards usam o .surgir, como antes). */
+.aulas-trocar {
+  animation: aulas-trocar 240ms ease-out both;
+}
+
+@keyframes aulas-trocar {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+
+/* --- 41.3 Movimento reduzido ---
+   A seção 21 encurta as animações, mas NÃO tira o animation-delay:
+   com o .surgir (fill "both"), os cards ficariam invisíveis por até
+   500ms. Aqui a lista aparece direto, sem efeito nenhum. */
+@media (prefers-reduced-motion: reduce) {
+  .escolha-botao {
+    transition: none;
+  }
+
+  .aulas-trocar,
+  .aulas .surgir {
+    animation: none;
+  }
+}
+
+
+/* --- 41.4 Alto contraste do Windows ---
+   As cores somem, mas a forma fica: borda 2px + barra de 4px no
+   selecionado. Highlight é a cor de "selecionado" do sistema. */
+@media (forced-colors: active) {
+  .escolha-botao {
+    border-color: ButtonText;
+  }
+
+  .escolha-botao[aria-pressed="true"] {
+    border-color: Highlight;
+  }
+}

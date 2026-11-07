@@ -647,6 +647,12 @@ async function mostrarAula() {
   // O módulo da aula (undefined se o "modulo" dela não existir)
   const modulo = modulos.find(function (m) { return m.id === aula.modulo; });
 
+  // Etapa 7: "← Voltar para as aulas" abre a aba Aulas no projeto
+  // desta aula (aulas.html#agenda, por exemplo). Aula com módulo
+  // inexistente volta para o grupo "Outras aulas".
+  const idDoGrupo = modulo ? modulo.projeto : "outras-aulas";
+  artigo.querySelector(".voltar").href = "aulas.html#" + encodeURIComponent(idDoGrupo);
+
   // 7.2 O glossário é um "extra": se falhar, vira lista vazia e os
   // termos [[...]] aparecem como texto simples.
   const glossario = await carregarJSON("data/glossario.json").catch(function () { return []; });

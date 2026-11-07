@@ -1887,3 +1887,351 @@ Se um dia houver muitos projetos, dá para criar um campo opcional `cor` em `pro
 | `.projeto-links` | grupo dos botões, dentro do `.projeto-cabecalho` | 40 |
 | `.projeto-link` (junto com `.btn .btn-primario` ou `.btn .btn-secundario`) | cada botão | 40 |
 | `.projeto-link-seta` | a setinha `↗` | 40 |
+
+---
+
+## 15. Etapa 7: aulas por projeto (US39 a US41)
+
+O CSS desta etapa é escrito pelo dev numa **seção 41 nova, no fim do `css/style.css`** (depois da seção 40, "Links do projeto"), com o cabeçalho "ETAPA 7 - AULAS POR PROJETO". Nenhuma regra antiga muda de lugar, nenhum token novo, nenhum ícone novo. A lista de módulos e cards (seção 12.2) continua exatamente igual.
+
+### 15.0 Conceito e decisões
+
+- **"Seletor de canal" do centro de comando.** No topo da aba Aulas fica uma fileira de botões, um por projeto, como os canais de um painel. Cada botão é um cartãozinho de vidro com duas linhas: o **nome** do projeto e, embaixo, em mono pequeno, o **progresso** ("3 de 8 concluídas"). Abaixo da fileira aparece só o projeto escolhido.
+- **Ciano = "onde estou", verde = "concluído".** É a mesma regra do site: o link ativo do menu (`aria-current`) já é ciano, e o verde é a cor da aula e do "✓ Concluída". Por isso o botão **selecionado** é ciano e o progresso **completo** é verde. Os dois estados podem aparecer juntos sem se confundir.
+- **Selecionado se diferencia por forma, não só por cor (US41):** borda de **2px** (os outros têm 1px) + uma **barra grossa de 4px embaixo**, como a "aba aberta" de um fichário, + fundo levemente ciano. A forma continua visível no alto contraste do Windows e para quem não distingue cores.
+- **O peso da letra não muda** ao selecionar (fica 600 sempre). Trocar para 700 deixaria o nome mais largo e o botão "pularia" de tamanho a cada clique.
+- **Tudo concluído:** o texto do progresso fica verde e ganha o `✓` no fim ("15 de 15 concluídas ✓"), igual ao progresso do módulo (seção 12.2). O `✓` é `aria-hidden`; o texto já diz tudo.
+- **"Outras aulas"** (só existe se houver aula com módulo inexistente) usa o mesmo botão, com a borda **tracejada** quando não está selecionado: é o sinal visual de "grupo à parte", o mesmo usado no bloco de apoio do Início (seção 13.3).
+- **Quebra de linha, não rolagem lateral.** Com rolagem dentro da faixa, um botão pode ficar escondido à direita sem ninguém perceber que existe. Com quebra, todos ficam sempre à vista. A 360px, cada botão ocupa a linha inteira (alvo grande para o polegar).
+- **Troca de projeto com um "fade" curto da lista inteira** (240ms), e não com o "surgir" card a card. O "surgir" escalonado leva até 1,1s (5 × 100ms de atraso + 600ms) e, a cada clique, pareceria lento. Ele continua só na **primeira** montagem da página, como hoje.
+- **Rótulo visível "Escolha o projeto"** acima dos botões, em mono pequeno (como os rótulos `// ...` do site, mas sem as barras, porque ele também é o nome do grupo para o leitor de tela e "barra barra" seria lido em voz alta).
+
+### 15.1 Onde fica na página
+
+O grupo fica **fora** do `#area-aulas`, entre o `.pagina-titulo` (rótulo, `h1` e texto de introdução) e a lista. Ele começa com `hidden` e o JS tira o `hidden` quando o `data/aulas.json` carrega. Se o JSON falhar, o grupo continua escondido e só aparece a mensagem de erro de hoje (requisitos gerais da Etapa 7).
+
+**Por que fora do `#area-aulas`:** hoje o `#area-aulas` tem `aria-live="polite"`. Se os botões e a lista ficassem dentro dele, cada troca de projeto faria o leitor de tela ler a lista **inteira** em voz alta. Então:
+- o grupo de botões fica fora da região viva;
+- o `aria-live` **sai** do `#area-aulas`. A troca já é anunciada pelo próprio botão ("pressionado"), e a lista nova fica logo depois dele na ordem de leitura;
+- a mensagem de erro de carregamento continua aparecendo no `#area-aulas`; para ela ser anunciada, ela leva `role="alert"` (como a `aula-mensagem` da seção 11.4).
+
+**Desktop (a partir de 640px; coluna de até 880px, igual à lista)**
+```
+[HEADER: logo ............ Início Projetos Equipe Aulas* Sobre]
+// AULAS DO PROFESSOR                                   (.rotulo)
+h1 Aulas
+Aulas curtas, um conceito por vez...                    (.texto-suave)
+
+ESCOLHA O PROJETO                                       (.aulas-escolha-rotulo, mono 12px)
+╔══════════════════╗  ┌──────────────────────────┐
+║ Agenda           ║  │ João Saccucci Labs       │     <- .escolha-botao
+║ 3 de 8 concluídas║  │ 15 de 15 concluídas ✓    │        (2ª linha em verde: tudo concluído)
+╚▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀╝  └──────────────────────────┘
+ ^ selecionado: borda 2px ciano + barra de 4px embaixo + fundo ciano 8%
+                                                        48px
+h2 Agenda                                               (.aulas-projeto-titulo, igual a hoje)
+--------------------------------------------------------------
+[MÓDULO 1]
+h3 ...
+(módulos e cards exatamente como na seção 12.2)
+[FOOTER]
+```
+
+**Celular (abaixo de 640px; testado a 360px = 328px úteis)**
+```
+ESCOLHA O PROJETO
+╔════════════════════════════╗
+║ Agenda                     ║   cada botão ocupa a linha inteira
+║ 3 de 8 concluídas          ║   (~62px de altura)
+╚▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀╝
+┌────────────────────────────┐   12px entre eles
+│ João Saccucci Labs         │
+│ 15 de 15 concluídas ✓      │
+└────────────────────────────┘
+                                 48px
+h2 Agenda
+...
+```
+**Conta a 360px:** "João Saccucci Labs" em 16px/600 tem ~158px; "15 de 15 concluídas ✓" em mono 12px tem ~151px (21 letras × ~7,2px). Com padding 2 × 16px e borda, o botão fica com ~192px. O da Agenda fica com ~156px. Juntos (192 + 12 + 156 = **360px**) não cabem nos 328px, então cada um vai para a sua linha e estica até 328px (`flex: 1 1 auto`). Entre 480 e 639px os dois cabem lado a lado e dividem a linha. Nome muito longo: quebra **dentro** do botão (`overflow-wrap: anywhere`), sem cortar e sem vazar.
+
+**A partir de 640px:** cada botão tem a largura do próprio texto, com mínimo de 11rem (176px), alinhados à esquerda. Com muitos projetos no futuro, a fileira quebra em mais linhas.
+
+**Título do projeto mostrado:** continua o `h2.aulas-projeto-titulo` de hoje, com o nome do projeto (ou o `id`, se o projeto não estiver em `projetos.json`, ou "Outras aulas"). Nada muda no estilo. Ordem dos títulos: `h1` Aulas → `h2` projeto → `h3` módulo → `h4` aula (o rótulo do grupo é um `<p>`, não um título, então não entra na sequência).
+
+### 15.2 HTML de referência
+
+**Fixo no `aulas.html`** (entre o `.pagina-titulo` e o `#area-aulas`):
+
+```html
+<div class="aulas-escolha" id="escolha-projeto" role="group" aria-labelledby="escolha-projeto-rotulo" hidden>
+  <p class="aulas-escolha-rotulo" id="escolha-projeto-rotulo">Escolha o projeto</p>
+  <div class="aulas-escolha-lista" id="escolha-projeto-lista">
+    <!-- botões gerados pelo js/aulas.js, na ordem da regra "Ordem dos botões" -->
+  </div>
+</div>
+
+<!-- sem aria-live agora (ver 15.1) -->
+<div id="area-aulas">
+  <p class="mensagem">Carregando aulas...</p>
+</div>
+```
+
+**Botões gerados pelo JS** (exemplo de hoje: Agenda selecionada com parte feita; Labs com tudo concluído):
+
+```html
+<button class="escolha-botao" type="button" aria-pressed="true" aria-controls="area-aulas" data-projeto="agenda">
+  <span class="escolha-botao-nome">Agenda</span><span class="sr-only">, </span>
+  <span class="escolha-botao-progresso">3 de 8 concluídas</span>
+</button>
+
+<button class="escolha-botao escolha-botao--completo" type="button" aria-pressed="false" aria-controls="area-aulas" data-projeto="joao-saccucci-labs">
+  <span class="escolha-botao-nome">João Saccucci Labs</span><span class="sr-only">, </span>
+  <span class="escolha-botao-progresso">15 de 15 concluídas <span aria-hidden="true">✓</span></span>
+</button>
+
+<!-- só se existir aula com modulo inexistente; sempre o último -->
+<button class="escolha-botao escolha-botao--outras" type="button" aria-pressed="false" aria-controls="area-aulas" data-projeto="outras-aulas">
+  <span class="escolha-botao-nome">Outras aulas</span><span class="sr-only">, </span>
+  <span class="escolha-botao-progresso">0 de 1 concluída</span>
+</button>
+```
+
+- **Pausa no nome acessível:** o `<span class="sr-only">, </span>` entre nome e progresso faz o leitor de tela ler "Agenda, 3 de 8 concluídas, botão de alternância, pressionado" (sem ele, alguns leitores juntam "Agenda3 de 8"). Mesmo truque do `— ` escondido no título do módulo (seção 12.2).
+- `escolha-botao--completo` entra quando X = Y. Singular e plural seguem o total (regra "Texto do progresso no botão" dos requisitos).
+- `data-projeto` guarda o `id` (ou `outras-aulas`) para o JS saber qual projeto abrir. Todos os textos passam pelo `escapar()`.
+- `aria-pressed` é sempre `"true"` ou `"false"` (nunca ausente), e só um botão fica `"true"`.
+
+**Regras para o JS (para o visual e o foco baterem com a US41):**
+1. **Ao clicar, não recriar os botões.** Só trocar o `aria-pressed` (o antigo vira `"false"`, o clicado vira `"true"`) e montar a lista nova no `#area-aulas`. Se os botões forem recriados com `innerHTML`, o foco do teclado se perde (US41 pede que ele continue no botão escolhido).
+2. **Primeira montagem da página:** a lista usa o `.surgir` nos cards, como hoje.
+3. **Troca de projeto (clique ou mudança do `#`):** a lista nova é montada **sem** `.surgir` nos cards, e a `section.aulas-projeto` recebe a classe `aulas-trocar` (o fade curto da seção 41). Clicar no botão que já está selecionado não remonta nada.
+4. **"Voltar" do navegador (`pageshow` com `persisted`):** atualizar o texto do progresso de cada botão e a classe `--completo` **no lugar** (sem recriar os botões) e remontar a lista sem animação.
+5. **Nenhum elemento da página pode ter `id` igual ao `id` de um projeto** (ex.: `id="agenda"`), senão o navegador rola sozinho até ele quando o endereço é `aulas.html#agenda`, e os botões somem do topo. Os `id` de hoje (`projeto-agenda`, `agenda-m1`...) estão certos. **Atenção:** a `section` de "Outras aulas" tem hoje `id="outras-aulas"`. Esse `id` deve **sair** da `section` (o `aria-labelledby="titulo-outras-aulas"` continua), para `aulas.html#outras-aulas` abrir com a página no topo, igual aos projetos. Só o `#` de **módulo** rola até o módulo (comportamento de hoje, com o `scroll-margin-top` da seção 38.1).
+
+### 15.3 Estados do botão
+
+| Estado | Borda | Fundo | Nome | Progresso | Outros |
+|---|---|---|---|---|---|
+| Normal | 1px `--cor-borda-forte` | `--cor-vidro` | `--cor-texto`, 600 | `--cor-texto-suave` | - |
+| Hover (não selecionado) | 1px `--cor-texto-suave` | lilás 8% sobre `--cor-fundo-2` (≈ `#161B32`) | igual | igual | sem "pulo" (nada de `translateY`) |
+| Foco (teclado) | igual ao estado em que está | igual | igual | igual | contorno ciano global (2px, 3px de distância, seção 2) por fora da borda |
+| **Selecionado** (`aria-pressed="true"`) | **2px ciano + 4px embaixo** | ciano 8% sobre `--cor-fundo-2` (≈ `#0B2133`) | igual (600) | `--cor-texto-suave` | brilho ciano fraco; hover não muda nada |
+| Tudo concluído (`--completo`) | (a do estado atual) | (o do estado atual) | igual | **`--cor-verde`** + `✓` | vale junto com qualquer estado acima |
+| "Outras aulas" não selecionado | 1px **tracejada** | `--cor-vidro` | igual | igual | selecionado fica igual aos outros (sólido) |
+
+- O padding do selecionado diminui na mesma medida que a borda engrossa: o botão **não muda de tamanho** ao ser escolhido.
+- Selecionado + foco: o contorno de foco ciano fica 3px **para fora** da borda ciano, com uma faixa escura entre os dois. Dá para ver que são duas coisas diferentes.
+- Botão selecionado continua clicável e com `cursor: pointer` (clicar de novo não faz nada, mas também não parece "quebrado").
+
+### 15.4 CSS de referência (seção 41, no fim do `css/style.css`)
+
+```css
+/* =========================================================
+   ETAPA 7 - AULAS POR PROJETO
+   Seção 41: botões de projeto no topo da aba Aulas
+   (US39 a US41). As decisões estão no docs/design.md, seção 15.
+   A lista de módulos e cards continua a da seção 38.1.
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   41. ESCOLHA DO PROJETO (aulas.html)
+   <div class="aulas-escolha" role="group" hidden> fica entre o
+   .pagina-titulo e o #area-aulas. O display fica na lista de
+   dentro (e não no .aulas-escolha) para o atributo hidden
+   continuar escondendo o grupo até o JSON carregar.
+   --------------------------------------------------------- */
+.aulas-escolha {
+  max-width: 880px;                 /* mesma largura da lista de aulas */
+  margin-bottom: var(--esp-7);      /* 48px até o h2 do projeto */
+}
+
+/* "Escolha o projeto": mono pequeno, como os rótulos do site */
+.aulas-escolha-rotulo {
+  margin-bottom: var(--esp-3);
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
+}
+
+/* Os botões quebram linha (nunca rolam para o lado) */
+.aulas-escolha-lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-3);
+}
+
+/* --- 41.1 Botão de projeto: nome + progresso --- */
+.escolha-botao {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 11rem;
+  max-width: 100%;
+  min-height: 44px;                 /* na prática ~62px (duas linhas) */
+  padding: var(--esp-3) var(--esp-4);
+  font-family: var(--fonte-texto);
+  text-align: left;
+  color: var(--cor-texto);
+  background: var(--cor-vidro);
+  border: 1px solid var(--cor-borda-forte);
+  border-radius: var(--raio-md);
+  cursor: pointer;
+  transition: border-color var(--transicao), background var(--transicao), box-shadow var(--transicao);
+}
+
+.escolha-botao-nome {
+  font-size: var(--fs-base);
+  font-weight: 600;                 /* não muda ao selecionar: o botão não "pula" */
+  line-height: 1.3;
+  overflow-wrap: anywhere;          /* nome longo quebra dentro do botão */
+}
+
+.escolha-botao-progresso {
+  font-family: var(--fonte-mono);
+  font-size: var(--fs-xs);
+  line-height: 1.4;
+  color: var(--cor-texto-suave);
+  overflow-wrap: anywhere;
+}
+
+/* Hover: borda e fundo mais claros, sem ciano (ciano = selecionado) */
+.escolha-botao:not([aria-pressed="true"]):hover {
+  border-color: var(--cor-texto-suave);
+  background: color-mix(in srgb, #94A3FF 8%, var(--cor-fundo-2));
+}
+
+/* Selecionado: mais do que cor. Borda 2px + barra de 4px embaixo
+   ("aba aberta") + fundo ciano. O padding diminui o mesmo tanto
+   que a borda cresce, então o botão não muda de tamanho. */
+.escolha-botao[aria-pressed="true"] {
+  padding: calc(var(--esp-3) - 1px) calc(var(--esp-4) - 1px) calc(var(--esp-3) - 3px);
+  background: color-mix(in srgb, var(--cor-ciano) 8%, var(--cor-fundo-2));
+  border: 2px solid var(--cor-ciano);
+  border-bottom-width: 4px;
+  box-shadow: 0 0 16px rgba(0, 229, 255, 0.2);
+}
+
+/* Tudo concluído: progresso verde (o ✓ vem no HTML, aria-hidden) */
+.escolha-botao--completo .escolha-botao-progresso {
+  color: var(--cor-verde);
+}
+
+/* "Outras aulas": borda tracejada = grupo à parte */
+.escolha-botao--outras:not([aria-pressed="true"]) {
+  border-style: dashed;
+}
+
+/* Celular: o botão estica e ocupa a linha (ou divide com o vizinho
+   quando os dois cabem). A 360px, cada um fica na sua linha. */
+@media (max-width: 639.98px) {
+  .escolha-botao {
+    flex: 1 1 auto;
+  }
+}
+
+
+/* --- 41.2 Troca de projeto ---
+   O JS põe .aulas-trocar na section.aulas-projeto nova (só na troca;
+   na primeira montagem os cards usam o .surgir, como antes). */
+.aulas-trocar {
+  animation: aulas-trocar 240ms ease-out both;
+}
+
+@keyframes aulas-trocar {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+
+/* --- 41.3 Movimento reduzido ---
+   A seção 21 encurta as animações, mas NÃO tira o animation-delay:
+   com o .surgir (fill "both"), os cards ficariam invisíveis por até
+   500ms. Aqui a lista aparece direto, sem efeito nenhum. */
+@media (prefers-reduced-motion: reduce) {
+  .escolha-botao {
+    transition: none;
+  }
+
+  .aulas-trocar,
+  .aulas .surgir {
+    animation: none;
+  }
+}
+
+
+/* --- 41.4 Alto contraste do Windows ---
+   As cores somem, mas a forma fica: borda 2px + barra de 4px no
+   selecionado. Highlight é a cor de "selecionado" do sistema. */
+@media (forced-colors: active) {
+  .escolha-botao {
+    border-color: ButtonText;
+  }
+
+  .escolha-botao[aria-pressed="true"] {
+    border-color: Highlight;
+  }
+}
+```
+
+### 15.5 Contraste AA (conferido com números)
+
+Fórmula do WCAG, como na seção 13.1. Fundos usados: página `#05060F` (L ≈ 0.0020); vidro do botão ≈ `#0C1021` (L ≈ 0.0056); hover ≈ `#161B32` (L ≈ 0.012); selecionado = ciano 8% ≈ `#0B2133` (L ≈ 0.014). Luminâncias das cores: `#E8ECF8` 0.84; `#9AA3BF` 0.37; `#7CFFB2` 0.79; `#00E5FF` 0.63.
+
+| Elemento | Cor / fundo | Razão | Mínimo |
+|---|---|---|---|
+| Rótulo "ESCOLHA O PROJETO" (12px) | `#9AA3BF` / `#05060F` | 7.9:1 | 4.5:1 |
+| Nome do projeto: normal | `#E8ECF8` / `#0C1021` | 15.6:1 | 4.5:1 |
+| Nome do projeto: hover | `#E8ECF8` / `#161B32` | 14.3:1 | 4.5:1 |
+| Nome do projeto: selecionado | `#E8ECF8` / `#0B2133` | 13.9:1 | 4.5:1 |
+| **Progresso (mono 12px)**: normal | `#9AA3BF` / `#0C1021` | 7.4:1 | 4.5:1 |
+| **Progresso (mono 12px)**: hover | `#9AA3BF` / `#161B32` | 6.7:1 | 4.5:1 |
+| **Progresso (mono 12px)**: selecionado | `#9AA3BF` / `#0B2133` | 6.5:1 | 4.5:1 |
+| **Progresso completo (verde, 12px)**: normal / selecionado | `#7CFFB2` / `#0C1021` e `#0B2133` | 15.1:1 e 13.1:1 | 4.5:1 |
+| Indicador de selecionado (borda 2px + barra 4px, não-texto) | `#00E5FF` / `#0C1021` (vizinho) e `#05060F` (página) | 12.3:1 e 13.1:1 | 3:1 |
+| Borda do hover (não-texto) | `#9AA3BF` / `#05060F` | 7.9:1 | 3:1 |
+| Contorno de foco (não-texto) | `#00E5FF` / `#05060F` | 13.1:1 | 3:1 |
+
+- O texto pequeno do progresso (12px) passa como **texto normal** (4.5:1) em todos os estados; o pior caso é 6.5:1.
+- A borda do botão **normal** (`--cor-borda-forte`, ≈ 2:1) é decorativa: o botão é identificado pelo texto (nome + progresso), como os `.btn-secundario` do site. O que precisa de 3:1 é o **indicador de estado** (selecionado), e ele tem 12:1.
+- O `✓` é complemento: a informação "tudo concluído" está no texto "15 de 15".
+
+### 15.6 Teclado, movimento reduzido, alto contraste e 360px
+
+- **Teclado:** Tab passa pelos botões na ordem da tela (depois do menu e antes dos cards de aula); Enter ou Espaço escolhem (comportamento nativo do `<button>`). O foco fica no botão escolhido e a página não rola sozinha.
+- **Leitor de tela:** grupo "Escolha o projeto"; cada botão é lido como "Agenda, 3 de 8 concluídas, botão de alternância, pressionado/não pressionado". O `✓` não é lido.
+- **Movimento reduzido:** sem transição nos botões, sem fade na troca e sem o "surgir" dos cards (nem na primeira montagem). A lista aparece direto.
+- **Alto contraste (`forced-colors`):** borda com a cor de texto do sistema; selecionado com a cor `Highlight` **e** a borda mais grossa com a barra embaixo (a forma não depende da cor). Progresso e "concluídas" são texto.
+- **360px:** botões de 328px, um por linha, ~62px de altura (acima dos 44px); nomes longos quebram dentro do botão; nenhuma rolagem horizontal (o grupo usa `flex-wrap` e `max-width: 100%`).
+
+### 15.7 Conferência para o dev e o testador
+
+**Dev**
+- [ ] Grupo fixo no `aulas.html`, entre o `.pagina-titulo` e o `#area-aulas`, começando com `hidden`; `role="group"` + `aria-labelledby` apontando para o rótulo visível.
+- [ ] `aria-live` retirado do `#area-aulas`; mensagem de erro de carregamento com `role="alert"`.
+- [ ] Botões `<button type="button">` com `aria-pressed` sempre `"true"`/`"false"`, nome + `<span class="sr-only">, </span>` + progresso, `✓` com `aria-hidden` e classe `--completo` quando X = Y.
+- [ ] Ao clicar, só `aria-pressed` muda nos botões (sem recriar); a lista nova entra com `.aulas-trocar` e sem `.surgir`.
+- [ ] No `pageshow` (voltar do navegador), progresso e `--completo` atualizados no lugar.
+- [ ] Nenhum elemento com `id` igual ao `id` de um projeto; `id="outras-aulas"` retirado da `section` de Outras aulas.
+- [ ] CSS na seção 41 nova, no fim do `style.css`, sem mexer nas seções antigas.
+
+**Testador** (além do que os requisitos da Etapa 7 já pedem)
+- [ ] 360px: botões um por linha, sem rolagem horizontal, nada cortado; a 480–639px os dois dividem a linha; desktop com a largura do texto.
+- [ ] Selecionado reconhecível em escala de cinza (DevTools → Rendering → "Emulate vision deficiencies: achromatopsia"): borda grossa + barra embaixo.
+- [ ] O botão não muda de tamanho ao ser selecionado.
+- [ ] Tab: foco visível em cada botão, inclusive no selecionado; depois de Enter/Espaço o foco continua no mesmo botão.
+- [ ] Leitor de tela (NVDA ou Narrador): "Agenda, 3 de 8 concluídas, ... pressionado"; a troca **não** faz o leitor ler a lista inteira.
+- [ ] `prefers-reduced-motion` (DevTools → Rendering): a lista aparece na hora, sem fade e sem os cards "subindo", também ao abrir a página.
+- [ ] Alto contraste (DevTools → Rendering → "forced-colors: active", ou o tema de alto contraste do Windows): selecionado continua diferente dos outros.
+- [ ] `aulas.html#agenda` e `aulas.html#outras-aulas` abrem com a página no topo (botões à vista); `aulas.html#agenda-m1` rola até o módulo.
+- [ ] Contraste do texto pequeno do progresso conferido com o seletor de cor do DevTools nos três estados (normal, hover, selecionado).
+
+### 15.8 Decisões aprovadas pelo João (2026-11-06)
+
+As 3 decisões abaixo foram aprovadas pelo João em 2026-11-06, todas na opção recomendada: rótulo "Escolha o projeto" visível; fade curto da lista na troca de projeto (o "surgir" card a card só ao abrir a página); no celular, um botão por linha.
+
+1. **Rótulo visível "Escolha o projeto"** acima dos botões (recomendado). A outra opção é deixar o rótulo só para o leitor de tela, com a fileira de botões direto abaixo do texto de introdução.
+2. **Troca de projeto com um fade curto da lista inteira** (240ms), e o "surgir" card a card só ao abrir a página (recomendado). A outra opção é repetir o "surgir" card a card a cada troca (mais vistoso, mas leva até 1,1s).
+3. **No celular, um botão por linha** (quebra, recomendado). A outra opção é uma faixa única que rola para o lado, que ocupa menos altura mas pode esconder projetos fora da tela.

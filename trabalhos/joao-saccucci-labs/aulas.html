@@ -42,9 +42,20 @@
       <p class="texto-suave">Aulas curtas, um conceito por vez. Leia no seu ritmo e marque cada aula como concluída no fim.</p>
     </div>
 
-    <!-- A lista (projeto > módulo > aula) é criada pelo js/aulas.js a partir de data/aulas.json.
-         Cada módulo ganha um id, então aulas.html#<id do módulo> leva direto a ele. -->
-    <div id="area-aulas" aria-live="polite">
+    <!-- Etapa 7: um botão por projeto (criados pelo js/aulas.js).
+         Começa escondido (hidden) e aparece quando data/aulas.json carrega.
+         Fica FORA do #area-aulas, e o #area-aulas não tem aria-live:
+         assim a troca de projeto não faz o leitor de tela ler a lista inteira. -->
+    <div class="aulas-escolha" id="escolha-projeto" role="group" aria-labelledby="escolha-projeto-rotulo" hidden>
+      <p class="aulas-escolha-rotulo" id="escolha-projeto-rotulo">Escolha o projeto</p>
+      <div class="aulas-escolha-lista" id="escolha-projeto-lista"></div>
+    </div>
+
+    <!-- A lista do projeto escolhido (projeto > módulo > aula) é criada pelo
+         js/aulas.js a partir de data/aulas.json. Endereços aceitos:
+         aulas.html#<id do projeto>, aulas.html#<id do módulo> (rola até ele)
+         e aulas.html#outras-aulas. A mensagem de erro tem role="alert". -->
+    <div id="area-aulas">
       <p class="mensagem">Carregando aulas...</p>
     </div>
   </main>
