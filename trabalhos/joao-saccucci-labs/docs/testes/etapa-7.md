@@ -186,3 +186,92 @@ O único erro de console continua sendo o 404 do `favicon.ico`, que já existia 
 - **Resultado esperado:** um status desconhecido usa a classe padrão `badge--planejado`, como diz o comentário da função.
 - **Resultado obtido (pelo código):** `classes[status]` devolve a função herdada do JavaScript em vez de `undefined`, então o `|| "badge--planejado"` não entra e a classe do badge vira o texto da função (`function Object() { [native code] }`). O badge aparece sem a cor do status, mas com o texto certo, e a página não quebra. O texto da função não tem aspas nem `<`, então não abre brecha no HTML.
 - **Sugestão:** a mesma correção da aba Aulas, com `Map` ou `Object.hasOwn(classes, status)`. O risco é pequeno, porque o `projetos.json` é escrito pela própria equipe. Pode ficar para uma próxima etapa.
+
+## Teste das aulas do Módulo 4 — 2026-11-06
+
+- **O que foi testado:** as 4 aulas novas do Módulo 4 da Labs, "Etapa 7: um botão por projeto" (`aulas/modulo-4/aula-01.md` a `aula-04.md`), o módulo `joao-saccucci-labs-m4` e as 4 aulas em `data/aulas.json` e os 11 termos novos no fim de `data/glossario.json` (hash, hashchange, decodeURIComponent, history, pushState, replaceState, protótipo, Object.hasOwn, aria-pressed, aria-live e closest). O teste foi feito antes do commit da Labs e seguiu o guia `docs/guias/aulas.md` e a regra do João de que nenhum exercício manda mexer no código de um projeto.
+- **Onde:** Edge headless controlado pelo Playwright, com o site da Labs servido por um servidor local estático (marked e highlight.js pelo CDN), a 1280px e a 360px. Os links fixos foram comparados com os arquivos locais. Conferi com `git diff` que `js/`, `css/`, `aulas.html` e `docs/requisitos.md` não mudaram desde o commit `5d279156ab0888640bb9e9c0a2ac8111fd84a9ab`.
+
+### Resultado
+
+**Aprovado.** Foram 93 conferências automáticas, em duas rodadas, mais a leitura de cada aula linha por linha. Todos os exemplos rodam e mostram exatamente o que o texto diz, os números de linha batem, os links fixos apontam para as linhas certas, os quizzes funcionam e nenhum exercício manda mexer no código. As 8 falhas automáticas eram do meu script ou do ambiente, e conferi uma por uma (veja "Como foi testado"). Ficou **uma pendência baixa**, de texto: a aula 4.3 diz que foi o testador quem achou o problema da `classeDoStatus`, mas foi o dev (problema 1). As outras são observações.
+
+### Verificações
+
+| Área | Resultado | Observação |
+|---|---|---|
+| Celular a 360px | Passou | Sem rolagem horizontal nas 4 aulas (antes e depois de Rodar) e em `aulas.html#joao-saccucci-labs`. A tabela da aula 4.2 fica dentro do `.tabela-rolagem` (328px na tela, 658px rolando por dentro). |
+| Teclado | Passou | O Tab alcança Rodar, Editar, termos do glossário, links fixos, alternativas do quiz e checklist, com foco visível (no checklist, o contorno fica no rótulo). Cada balão do glossário abre com Enter e fecha com Esc. No exemplo da aula 4.4, o Espaço num botão do Resultado também troca o pressionado. |
+| Acessibilidade | Passou | As aulas usam os componentes que já existiam. O aviso do Rodar e o Console funcionam como nas outras aulas. Depois de responder, o quiz trava e mostra as 3 explicações. |
+| Contraste | Passou | Nada de visual novo. |
+| Erros | Passou | Sem erro de JavaScript nas 4 aulas, em `aulas.html` e com um id que não existe (`joao-saccucci-labs-m4-aula-09` mostra "Aula não encontrada." e "Ver todas as aulas"). O Console dos exemplos ficou sem linha de erro. O único 404 foi o `/favicon.ico` da raiz do servidor de teste, que já existia. |
+
+### Conferências
+
+**1. `aulas.html`**
+- [x] No projeto João Saccucci Labs aparece "Módulo 4 — Etapa 7: um botão por projeto", depois do Módulo 3, com o resumo, "0 de 4 concluídas" e as 4 aulas (Aula 4.1 a 4.4) com os links `aula.html?id=joao-saccucci-labs-m4-aula-01` a `-04`. O botão da Labs passou a mostrar "0 de 19 concluídas".
+- [x] `aulas.html#joao-saccucci-labs-m4` abre a Labs e rola até o módulo, a 1280px e a 360px.
+
+**2. Cada aula em `aula.html`** (as 4 passaram em tudo)
+- [x] Têm Em resumo, Erro comum, Em entrevista e a Dica "Para ir além", marcada como opcional. O "Voltar para as aulas" leva para `aulas.html#joao-saccucci-labs`.
+- [x] Navegação: a 3.4 leva à 4.1, as aulas 4.1 a 4.3 levam à seguinte, e a 4.4 não tem "próxima".
+- [x] O glossário funciona com todos os termos, e nenhum `[[...]]` sobra: hash, hashchange (2 vezes), query string, slice, encodeURIComponent, decodeURIComponent, try, catch, null (4.1); history, pushState, replaceState, push, join (4.2); Map, undefined, protótipo, Object.hasOwn, typeof (4.3); aria-pressed, seletor, aria-expanded, closest, true, aria-live, operador ternário (4.4). Os 11 termos novos não repetem nenhum termo que já existia.
+- [x] Há 1 exemplo com Rodar por aula (14, 15, 14 e 15 linhas), e o Linha por linha cita as linhas certas. Conferi cada item com o código:
+  - 4.1: L1, 2, 3–4, 5–8, 9, 11, 12, 13, 14.
+  - 4.2: L1, 2–4, 5–7, 8, 9–10, 11, 12, 13, 14–15.
+  - 4.3: L1, 2–5, 6, 7, 8, 9, 11–12, 13, 14.
+  - 4.4: L1, 2, 3–4, 7, 8, 9, 10–12, 13.
+- [x] O Rodar mostra exatamente o que o texto diz:
+  - 4.1: `agenda`, `João`, `null`, `Hash quebrado: URIError` e `null`.
+  - 4.2: `Com replace: index.html > aulas.html#agenda`, `Voltar leva para: index.html`, `Com push: index.html > aulas.html#agenda > aulas.html#joao-saccucci-labs` e `Voltar leva para: aulas.html#agenda`.
+  - 4.3: `achei: string`, `não achei`, `achei: function`, `false`, `agenda` e `false undefined`.
+  - 4.4 (HTML): os 2 botões aparecem no Resultado, a Agenda começa com borda de 3px e negrito, e o clique passa a borda e o negrito para o botão clicado. O Console aparece com `Labs agora está pressionado` (e `Agenda agora está pressionado` ao clicar de volta). Um clique fora dos botões não muda nada.
+- [x] **O `querySelectorAll("button")` da aula 4.4 não pega botões do sandbox.** O exemplo roda numa página própria, dentro do iframe, e lá só existem os 2 botões do exemplo. Rodar, Editar e Restaurar ficam na página da aula, fora do alcance desse `document`.
+- [x] Editar, rodar o código editado e Restaurar funcionam nas 4 aulas.
+- [x] Cada aula tem 2 quizzes com 3 alternativas e **exatamente uma certa** (conferi no `.md`). Clicando, aparece "Certa!" ou "Errada. A resposta certa é a …", as 3 explicações aparecem e o quiz trava.
+
+**3. Para praticar** (rodei cada item no editor do próprio exemplo)
+- [x] **Nenhum exercício manda mexer no código da Labs.** Todos começam com "No exemplo, clique em **Editar**" ou "Clique em **Restaurar**" e mexem só no exemplo.
+- [x] 4.1: `#caf%C3%A9` mostra `café`; `#100%` mostra `Hash quebrado: URIError` e `null` (o `%` sem os dois dígitos é um código quebrado); sem o `|| null`, a linha 13 mostra um texto vazio em vez de `null` (observação A).
+- [x] 4.2: com push nas linhas 9 e 10, o histórico tem 4 passos e o Voltar da linha 12 leva para `aulas.html#joao-saccucci-labs`; com o `simularReplace("sobre.html")` no fim, some o `aulas.html#joao-saccucci-labs` (fica `index.html > aulas.html#agenda > sobre.html`).
+- [x] 4.3: com `"toString"` e com `"hasOwnProperty"` na linha 8, aparece `achei: function` nos dois; com `Object.hasOwn` na linha 3, a linha 8 mostra `não achei`; com o `mapa.set("constructor", "teste")`, aparece `teste`.
+- [x] 4.4: o terceiro botão "Outras aulas" fica sozinho com a borda; com o ternário na linha 11, o resultado não muda; com `[aria-pressed]` na linha 1, os dois botões ficam com borda de 3px, porque os dois têm o atributo (um com `"true"` e outro com `"false"`).
+
+**4. Links fixos** (todos com o hash completo `5d279156ab0888640bb9e9c0a2ac8111fd84a9ab`, nenhum com `/blob/main/`)
+- [x] 4.1: `aulas.js#L295-L310` (a `lerEndereco` com o comentário), `#L412-L416` (o ouvinte do `hashchange`), `aula.js#L650-L654` (o link do "Voltar para as aulas" com `encodeURIComponent`), `aulas.js#L156-L158` (o `"projeto-" + id`), `#L142-L144` (o comentário da seção sem `id`) e `#L335-L340` (a `irParaModulo` com `scrollIntoView`).
+- [x] 4.2: `aulas.js#L320-L325` (a `trocarEndereco` com o comentário), `#L401-L410` (o clique: `abrirProjeto` e depois `trocarEndereco`), `#L347-L357` (página aberta sem `#`) e `requisitos.md?plain=1#L1013` (a decisão 5, com `replaceState`).
+- [x] 4.3: `aulas.js#L32-L44` (o comentário e o `new Map()`), `#L186-L196` (o `set` na `montarGrupos`), `#L307` (o `has` e o `get` na `lerEndereco`), `aula.js#L237-L242` (o `Map` do glossário), `aula-codigo.js#L461-L462` (o `Map` do Rodar) e `comum.js#L101-L109` (a `classeDoStatus` inteira).
+- [x] 4.4: `aulas.html#L45-L52` (o grupo "Escolha o projeto"), `aulas.js#L248-L263` (a `criarBotoes` com `aria-pressed="false"`), `#L280-L285` (a `marcarBotao` com `String(...)`), `style.css#L4112-L4121` (o `[aria-pressed="true"]`) e `aulas.js#L236-L241` (o comentário "criados uma vez só").
+
+**5. Precisão técnica**
+- [x] A tabela da aula 4.2 está certa: as três formas mudam o endereço sem recarregar; `location.hash = ...` cria passo no Voltar e dispara o `hashchange`; `pushState` cria passo e **não** dispara; `replaceState` não cria passo e não dispara. O quiz 2 da 4.2 e o glossário (hashchange) dizem o mesmo.
+- [x] Aula 4.1: o `location.hash` vem com o `#`; o `#` não vai ao servidor; `#%E0` lança `URIError`; o `hashchange` acontece ao editar o endereço ou clicar num link `#...` da página. Tudo confere com o código e com o navegador.
+- [x] Aula 4.3: `constructor`, `toString` e `hasOwnProperty` vêm do `Object.prototype`; `"toString" in {}` é `true`; `Object.hasOwn` e `Map.has` dão `false`. A história da Rodada 1 (`#constructor`, `TypeError` e "Ops! Não conseguimos carregar os dados.") bate com este relatório.
+- [x] Aula 4.4: o valor do `aria-pressed` é texto; sem o atributo o botão é um botão comum; o CSS usa o mesmo atributo; o `<div>` sem `tabindex` não recebe foco nem responde ao Enter e ao Espaço. A borda do botão do site passa de 1px para 2px com a barra de 4px embaixo, como diz "O conceito". O `#area-aulas` não tem `aria-live`, como diz a Dica.
+
+### Problemas encontrados
+
+**1. Aula 4.3, "Para ir além": quem achou o problema da `classeDoStatus` foi o dev, não o testador** (status: pendente)
+- **Onde:** `aulas/modulo-4/aula-03.md`, Dica "Para ir além" (linha 69).
+- **Passos:** abrir `aula.html?id=joao-saccucci-labs-m4-aula-03` e ler a Dica "Para ir além".
+- **Esperado:** o texto bate com o relatório da Rodada 2, que diz "Apontado pelo próprio dev e confirmado no código" (problema 2 desta etapa).
+- **Obtido:** "o testador achou a mesma armadilha em outro lugar".
+- **Gravidade:** baixa (não muda o conteúdo técnico). Para corrigir: trocar por "o dev achou a mesma armadilha em outro lugar, e o testador confirmou".
+
+### Observações (gravidade baixa, nenhuma impede a aprovação)
+
+- **A. Aula 4.1, "Para praticar", item 3.** Sem o `|| null`, a linha 13 mostra uma linha **vazia** no Console (o texto `""`). Quem está começando pode achar que nada apareceu. Sugestão: acrescentar "(repare: aparece uma linha vazia, que é o texto vazio `""`)".
+- **B. Glossário: `map` e `Map` são o mesmo termo para o site.** O `aplicarGlossario` (`js/aula.js`, linha 241) guarda os termos em minúsculas, então o `Map` (linha 80 do `glossario.json`) cobre o `map` (linha 15). Na aula 4.3, o `[[Map]]` mostra "mapa", que é o certo. Mas nas aulas da Agenda (`aulas/agenda/modulo-2/aula-01.md`, `aula-03.md` e `aula-04.md`) o `[[map]]` das listas também mostra "mapa — Estrutura que guarda um valor para cada chave", o que está errado lá. O problema já existia antes deste módulo. Sugestão para uma próxima etapa: diferenciar maiúsculas na busca ou trocar um dos termos (ex.: `[[Array.map]]`).
+- **C. Aula 4.4, exemplo.** O `document.querySelectorAll("button")` funciona porque o exemplo está sozinho na página. O site usa `listaEscolha.querySelectorAll(".escolha-botao")`, para não pegar os outros botões da página. Uma frase no Linha por linha (L10) explicaria a diferença. Só registro.
+- **Conferir à mão (João):** depois do commit da Labs, abrir uma aula do Módulo 4 no GitHub Pages e clicar num link fixo, para ver se ele abre o GitHub com as linhas destacadas.
+
+### Como foi testado
+
+- **No navegador (Edge headless, por script):** tudo o que está marcado acima, incluindo os exercícios de "Para praticar", rodados no editor do próprio exemplo, e os cliques nos botões dentro do Resultado da aula 4.4.
+- **Falhas automáticas que não eram das aulas:**
+  - o 404 em `aulas.html` era o `/favicon.ico`;
+  - o "foco sem contorno" no `checklist-caixa` é porque o contorno fica no rótulo (`.checklist-rotulo:has(.checklist-caixa:focus-visible)`, 2px sólido), e o `modo-foco` era o Tab voltando ao começo da página, como na Entrega 2b da Agenda;
+  - o balão de "closest" que "não abriu" na primeira rodada abriu com Enter e com clique, a 1280px e a 360px, quando testei o termo sozinho;
+  - um clique do script fora do iframe parou a primeira rodada na aula 4.4. Na segunda rodada, testei a aula 4.4 inteira de novo.
+- **Só por leitura:** os trechos dos links fixos e a precisão técnica dos textos.
+- Os scripts ficaram fora do projeto. Nenhum navegador nem servidor ficou aberto no fim, e não mexi nas aulas nem nos JSON.

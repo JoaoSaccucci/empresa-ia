@@ -268,6 +268,15 @@
           { "titulo": "Relatório de teste — Etapa 7", "url": "docs/testes/etapa-7.md" }
         ],
         "imagens": []
+      },
+      {
+        "agente": "professor",
+        "resumo": "Etapa 7: explicou o código da aba Aulas por projeto e escreveu o Módulo 4, com 4 aulas: o # do endereço e o hashchange, pushState × replaceState, a armadilha do {} como dicionário (o Map da rodada 2) e o aria-pressed.",
+        "entregaveis": [
+          { "titulo": "Aulas — Módulo 4", "url": "aulas.html#joao-saccucci-labs-m4" },
+          { "titulo": "Glossário", "url": "data/glossario.json" }
+        ],
+        "imagens": []
       }
     ],
     "linhaDoTempo": [
@@ -304,7 +313,9 @@
       { "data": "2026-11-06", "agente": "artista", "descricao": "Design da Etapa 7: botões de projeto com progresso na aba Aulas (seção 15)." },
       { "data": "2026-11-06", "agente": "dev", "descricao": "Implementação da Etapa 7: aba Aulas com um botão por projeto." },
       { "data": "2026-11-06", "agente": "testador", "descricao": "Etapa 7 reprovada na rodada 1: #constructor quebrava a página." },
-      { "data": "2026-11-06", "agente": "testador", "descricao": "Etapa 7 aprovada na rodada 2, com uma pendência baixa fora da etapa." }
+      { "data": "2026-11-06", "agente": "testador", "descricao": "Etapa 7 aprovada na rodada 2, com uma pendência baixa fora da etapa." },
+      { "data": "2026-11-06", "agente": "professor", "descricao": "Módulo 4 das aulas da Labs (Etapa 7), com 4 aulas, quiz e Rodar." },
+      { "data": "2026-11-06", "agente": "testador", "descricao": "Aulas do Módulo 4 conferidas: aprovado." }
     ]
   },
   {

@@ -84,5 +84,16 @@
   { "termo": "Date", "traducao": "data", "explicacao": "Objeto do JavaScript que guarda um momento (dia e hora). Os meses começam em 0, e subtrair duas Date dá a diferença em milissegundos." },
   { "termo": "setMinutes", "traducao": "definir os minutos", "explicacao": "Muda os minutos de uma Date. Com um número negativo ou maior que 59, a Date ajusta sozinha a hora e até o dia." },
   { "termo": "setTimeout", "traducao": "definir um tempo de espera", "explicacao": "Agenda uma função para rodar uma vez, depois de um certo número de milissegundos, sem travar a página." },
-  { "termo": "visibilitychange", "traducao": "mudança de visibilidade", "explicacao": "Evento que acontece quando a aba fica escondida ou volta a aparecer. O document.hidden diz qual dos dois." }
+  { "termo": "visibilitychange", "traducao": "mudança de visibilidade", "explicacao": "Evento que acontece quando a aba fica escondida ou volta a aparecer. O document.hidden diz qual dos dois." },
+  { "termo": "hash", "traducao": "cerquilha (a parte do #)", "explicacao": "A parte do endereço a partir do #, como #agenda. Não vai para o servidor e, quando muda, a página não recarrega. No JavaScript, vem em location.hash, com o # na frente." },
+  { "termo": "hashchange", "traducao": "mudança do hash", "explicacao": "Evento da janela que acontece quando o # do endereço muda com a página aberta. pushState e replaceState não disparam esse evento." },
+  { "termo": "decodeURIComponent", "traducao": "decodificar componente da URL", "explicacao": "Desfaz o encodeURIComponent: %C3%A3 volta a ser ã. Lança um erro (URIError) se o texto tiver um % quebrado, por isso costuma ficar dentro de um try." },
+  { "termo": "history", "traducao": "histórico", "explicacao": "Objeto do navegador com os passos do botão Voltar da aba. Tem os métodos pushState e replaceState." },
+  { "termo": "pushState", "traducao": "empurrar estado", "explicacao": "history.pushState muda o endereço sem recarregar a página e cria um passo novo no botão Voltar." },
+  { "termo": "replaceState", "traducao": "substituir estado", "explicacao": "history.replaceState muda o endereço sem recarregar a página e sem criar passo novo no Voltar: troca o passo atual." },
+  { "termo": "protótipo", "traducao": "prototype", "explicacao": "O objeto de onde um objeto herda coisas. Todo {} herda do Object.prototype nomes como constructor e toString, mesmo sem você escrever." },
+  { "termo": "Object.hasOwn", "traducao": "objeto: tem como próprio?", "explicacao": "Confere se uma chave foi colocada no próprio objeto, sem contar o que vem herdado do protótipo. Devolve true ou false." },
+  { "termo": "aria-pressed", "traducao": "ARIA: pressionado", "explicacao": "Atributo de um botão que liga e desliga. \"true\" é ligado e \"false\" é desligado; o leitor de tela anuncia o estado." },
+  { "termo": "aria-live", "traducao": "ARIA: ao vivo", "explicacao": "Faz o leitor de tela anunciar sozinho o que muda dentro de uma área. Numa área grande, como uma lista inteira, atrapalha mais do que ajuda." },
+  { "termo": "closest", "traducao": "o mais próximo", "explicacao": "Procura, a partir do próprio elemento e subindo pelos pais, o primeiro que combina com um seletor. Devolve null se não achar." }
 ]

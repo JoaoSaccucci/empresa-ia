@@ -96,7 +96,7 @@ O selo "Buscando estágio" pode ter o texto trocado ou a linha apagada.
 
 ## Aulas (Etapas 3 e 4)
 
-São aulas curtas (5 a 7 minutos), de um conceito cada, agrupadas em módulos: Módulo 1 (Etapa 1), Módulo 2 (Etapa 2) e Módulo 3 (Etapa 3). Cada aula tem a caixa "Em resumo", um exemplo pequeno explicado linha por linha e, em muitas, um quiz. A estrutura padrão está no `docs/requisitos.md` (Etapa 4).
+São aulas curtas (5 a 7 minutos), de um conceito cada, agrupadas em módulos: Módulo 1 (Etapa 1), Módulo 2 (Etapa 2), Módulo 3 (Etapa 3) e Módulo 4 (Etapa 7). Cada aula tem a caixa "Em resumo", um exemplo pequeno explicado linha por linha e, em muitas, um quiz. A estrutura padrão está no `docs/requisitos.md` (Etapa 4).
 
 ### Como adicionar uma aula
 

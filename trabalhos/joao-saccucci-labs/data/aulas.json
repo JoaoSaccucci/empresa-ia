@@ -22,6 +22,13 @@
       "resumo": "Tratar erros, lembrar coisas no navegador e usar uma biblioteca pronta."
     },
     {
+      "id": "joao-saccucci-labs-m4",
+      "projeto": "joao-saccucci-labs",
+      "numero": 4,
+      "titulo": "Etapa 7: um botão por projeto",
+      "resumo": "Ler e mudar o # do endereço sem criar passo no Voltar, fugir da armadilha do {} como dicionário e marcar o botão escolhido com aria-pressed."
+    },
+    {
       "id": "agenda-m1",
       "projeto": "agenda",
       "numero": 1,
@@ -171,6 +178,42 @@
       "arquivo": "aulas/modulo-3/aula-04.md",
       "tempoLeitura": 6,
       "resumo": "Carregue uma biblioteca pelo CDN com versão fixa, antes do seu script, e use o marked para transformar Markdown em HTML."
+    },
+    {
+      "id": "joao-saccucci-labs-m4-aula-01",
+      "titulo": "Ler o # do endereço e reagir quando ele muda",
+      "modulo": "joao-saccucci-labs-m4",
+      "numero": 1,
+      "arquivo": "aulas/modulo-4/aula-01.md",
+      "tempoLeitura": 6,
+      "resumo": "Ler o # com location.hash, slice e decodeURIComponent dentro de um try, entender a diferença entre ? e # e ouvir o hashchange."
+    },
+    {
+      "id": "joao-saccucci-labs-m4-aula-02",
+      "titulo": "Mudar o endereço sem criar passo no Voltar",
+      "modulo": "joao-saccucci-labs-m4",
+      "numero": 2,
+      "arquivo": "aulas/modulo-4/aula-02.md",
+      "tempoLeitura": 6,
+      "resumo": "A diferença entre pushState, replaceState e location.hash, e por que a aba Aulas usa replaceState para o Voltar levar à página de onde você veio."
+    },
+    {
+      "id": "joao-saccucci-labs-m4-aula-03",
+      "titulo": "A armadilha do {} como dicionário: use Map",
+      "modulo": "joao-saccucci-labs-m4",
+      "numero": 3,
+      "arquivo": "aulas/modulo-4/aula-03.md",
+      "tempoLeitura": 7,
+      "resumo": "Por que aulas.html#constructor quebrou a página: nomes herdados do protótipo, e como Map e Object.hasOwn evitam o problema."
+    },
+    {
+      "id": "joao-saccucci-labs-m4-aula-04",
+      "titulo": "Botão que fica ligado: aria-pressed",
+      "modulo": "joao-saccucci-labs-m4",
+      "numero": 4,
+      "arquivo": "aulas/modulo-4/aula-04.md",
+      "tempoLeitura": 6,
+      "resumo": "Botões de alternância acessíveis com aria-pressed, o CSS lendo o mesmo atributo e por que a lista não tem aria-live."
     },
     {
       "id": "agenda-m1-aula-01",
