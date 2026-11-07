@@ -3292,3 +3292,795 @@ As 5 decisões abaixo foram aprovadas pelo João em 2026-11-06, sem mudanças.
 3. **Cores das situações em "Anteriores":** Feito verde, Não vou fazer lilás, Passou cinza tracejado, sempre com texto e ícone.
 4. **"Sair em X min" vira uma pílula âmbar cheia** e a borda do card fica âmbar nesse intervalo; depois da hora de sair, a linha fica cinza.
 5. **Textos sugeridos (não estão nos requisitos):** o subtexto "Passou da data e você pediu para ser cobrado.", o rótulo "Minutos antes", a dica "De 1 a 720 minutos (12 horas).", a linha "Era para: ..." no topo do formulário "Remarcar compromisso" e a barrinha âmbar (alerta) no aviso "Compromisso continua pendente.".
+
+---
+
+## 14. Etapa 3 — Entrega 3a (o que levar, hora de fim, conflito e aperto)
+
+Cobre a **Agenda US17** (checklist no formulário), **US18** (checklist no card), **US19** (hora de fim), **US20** (conflito e aperto) e as mudanças da 3a nas stories anteriores. Tudo **se soma** às seções 1 a 13: mesmas cores, fontes, espaços, janelas, botões, caixas de marcar (`.marcar`) e grupos (`.grupo`). O tema claro **não** é desenhado aqui (é da 3b), mas todo o CSS novo usa **só variáveis** (`var(--...)`): nenhum hex novo, para a 3b só trocar os valores.
+
+### 14.1 Ideia visual
+
+No "quadro de partidas", a 3a dá a cada partida **a hora de chegada, a bagagem e o aviso de atraso**.
+- **Hora de fim** = a plaquinha que vira mostra **as duas horas**: a de início na metade de cima (âmbar, como sempre) e a de fim na metade de baixo, menor e em cinza suave. É exatamente o desenho de duas metades que a placa já tinha (seção 7.4): agora cada metade tem um papel.
+- **"O que levar"** = a **bagagem de mão**: um botão com ícone de mala, que abre a lista para conferir na porta de casa. Lilás no ícone (a cor das coisas "sem hora"); quando tudo está marcado, vira verde, a mesma cor de "Feito", e diz "tudo pronto".
+- **Conflito e aperto** = o **aviso do painel** ("plataforma alterada", "atraso"): uma tarja curta dentro do card, com filete colorido à esquerda, ícone e a palavra "Conflito:" ou "Aperto:" em negrito. Conflito em **vermelho** (os dois se atropelam), aperto em **âmbar** (dá, mas é corrido; âmbar é a cor do tempo).
+
+Nenhuma cor nova: âmbar, lilás, verde, vermelho e cinza suave já existiam.
+
+### 14.2 Reaproveitado x novo
+
+| Parte | Reaproveita | Novo (e por quê) |
+|---|---|---|
+| Placa de hora | `.compromisso-hora` (duas metades) | `.compromisso-hora--intervalo` e `.compromisso-hora-fim` (início em cima, fim embaixo) |
+| Aviso no card | `.icone`, cores `--cor-perigo` e `--cor-ambar` | `.compromisso-aviso`, `--conflito`, `--aperto`, `.compromisso-aviso-tipo` |
+| Checklist no card | `.marcar` e `.marcar-caixa` da 2b (caixa de 22px, linha de 44px, check âmbar), seta que gira de "Anteriores" | `.checklist`, `.checklist-botao`, `.checklist-lista`, `.checklist-item`, `.checklist--pronto` |
+| Hora de fim no formulário | `.grupo` (fieldset), `.campos-linha`, `.campo`, `.campo-erro`, `.campo-dica`, `.campo-minutos`, `.campo-com-sufixo` | `.grupo-filete` (os campos do grupo ganham um filete à esquerda), `.campo-selecao` (seta da lista de escolha), `.campo-controle.ajustado` (opcional, 14.3.2) |
+| "O que levar" no formulário | `.grupo`, `.campo-controle`, `.btn btn-secundario`, `.botao-item--perigo`, `.sr-only` | `.itens-lista`, `.item-form`, `.item-form-texto`, `.item-form--marcado`, `.itens-novo`, `.botao-adicionar` |
+| Ícones | padrão da 8.2 | mala, conflito, aperto, remover (14.8) |
+
+### 14.3 Formulário na 3a
+
+#### 14.3.1 Ordem dos campos
+
+Título · Data (com "Ainda sem data") | Hora · **Hora de fim** ("Termina às" | "Duração", e "Minutos" com "Outro") · Tempo para sair · Me cobrar · Local · Observação · **O que levar** · (erro de salvar) · barra de botões.
+
+"Hora de fim" fica logo depois da Hora (requisitos), **antes** de "Tempo para sair": as duas coisas que dependem da hora ficam juntas, e a de fim vem primeiro porque é sobre o próprio compromisso.
+
+```
+360px (280px por dentro da janela)
++-----------------------------------+  borda de cima âmbar
+| Novo compromisso                  |
+| Título (obrigatório)              |
+| [                               ] |
+| Data (obrigatório)                |
+| [ 06/11/2026              (cal) ] |
+| [ ] Ainda sem data                |
+| Hora                              |
+| [ 09:00                   (rel) ] |
+| Deixe em branco para um...        |
+| Hora de fim                       |  legend (14px 600)
+| Preencha um dos dois: o outro se  |  dica suave
+| ajusta sozinho.                   |
+| ┃ Termina às                      |  filete de 2px à esquerda
+| ┃ [ 10:30                 (rel) ] |  (um embaixo do outro até 479px)
+| ┃ Duração                         |
+| ┃ [ Outro                     v ] |  select com seta própria
+| ┃ Minutos                         |  só com "Outro"
+| ┃ [ 90      ] min                 |
+| ┃ De 1 a 1439 minutos.            |
+| Tempo para sair                   |
+| [✓ Nenhum ][ 15 min ][ 30 min ]   |
+| ...                               |
+| Observação                        |
+| [                               ] |
+| O que levar                       |  legend
+| +-------------------------------+ |
+| | ▪ Cartão do convênio [x Remover]| |  linha 48px, fundo "afundado"
+| +-------------------------------+ |
+| | ▪ Documento com foto [x Remover]| |
+| +-------------------------------+ |
+| Novo item                         |  rótulo
+| [ Ex.: chave         ][+ Adicionar] |  campo + botão na mesma linha
+|-----------------------------------|
+| [  Cancelar  ]   [   Salvar    ]  |
++-----------------------------------+
+```
+
+A partir de **480px**, "Termina às" e "Duração" ficam **lado a lado** (mesma regra de Data | Hora, `.campos-linha`). Abaixo disso ficam um embaixo do outro: a 360px cada metade teria 134px, e o `select` com "Sem hora de fim" precisa de ≈175px.
+
+#### 14.3.2 Hora de fim (US19)
+
+```html
+<fieldset class="grupo" id="grupo-fim" aria-describedby="dica-fim dica-fim-sem-hora">
+  <legend class="campo-rotulo">Hora de fim</legend>
+  <p class="campo-dica" id="dica-fim">Preencha um dos dois: o outro se ajusta sozinho.</p>
+  <p class="campo-dica" id="dica-fim-sem-hora" hidden>Escolha uma hora para usar a hora de fim.</p>
+
+  <div class="grupo-filete">
+    <div class="campos-linha">
+      <div class="campo">
+        <label class="campo-rotulo" for="campo-fim">Termina às</label>
+        <input class="campo-controle" id="campo-fim" name="fim" type="time">
+        <p class="campo-erro" id="erro-fim" hidden><!-- svg "alerta" --><span>A hora de fim precisa ser depois da hora de início.</span></p>
+      </div>
+      <div class="campo">
+        <label class="campo-rotulo" for="campo-duracao">Duração</label>
+        <div class="campo-selecao">
+          <select class="campo-controle" id="campo-duracao" name="duracao">
+            <option value="" selected>Sem hora de fim</option>
+            <option value="30">30 min</option>
+            <option value="60">1 h</option>
+            <option value="120">2 h</option>
+            <option value="outro">Outro</option>
+          </select>
+        </div>
+        <p class="campo-erro" id="erro-duracao" hidden><!-- svg "alerta" --><span>Com essa duração, o compromisso passaria da meia-noite. Escolha uma duração menor.</span></p>
+      </div>
+    </div>
+
+    <div class="campo campo-minutos" id="bloco-duracao-min" hidden>
+      <label class="campo-rotulo" for="campo-duracao-min">Minutos</label>
+      <div class="campo-com-sufixo">
+        <input class="campo-controle" id="campo-duracao-min" name="duracaoMin" type="number" inputmode="numeric" min="1" max="1439" step="1" aria-describedby="dica-duracao-min" data-dica="dica-duracao-min">
+        <span class="campo-sufixo" aria-hidden="true">min</span>
+      </div>
+      <p class="campo-dica" id="dica-duracao-min">De 1 a 1439 minutos.</p>
+      <p class="campo-erro" id="erro-duracao-min" hidden><!-- svg "alerta" --><span>Digite um número de minutos entre 1 e 1439.</span></p>
+    </div>
+  </div>
+</fieldset>
+```
+
+Regras do visual (o comportamento está na US19):
+- **Ids novos não colidem com os da 2b:** o "Minutos antes" do "Tempo para sair" continua `campo-minutos` / `erro-minutos`; o desta parte é `campo-duracao-min` / `erro-duracao-min`.
+- **Sem hora** (Hora vazia ou "Ainda sem data"): `disabled` no `fieldset` (desativa os três campos de uma vez, com a borda tracejada da 2b), `hidden` no `#dica-fim` e **sem** `hidden` no `#dica-fim-sem-hora`. Os campos aparecem vazios ("Sem hora de fim"). Com a Hora de volta, inverte.
+- **"Outro"** tira o `hidden` do `#bloco-duracao-min` (mesmo jeito do "Tempo para sair").
+- **Erros:** os três seguem a US03 (`aria-invalid="true"`, borda vermelha de 2px, mensagem com ícone embaixo do campo, `aria-describedby` com a mensagem; no campo de minutos, `"dica-duracao-min erro-duracao-min"`, como na 2b). O erro de "Termina às" fica embaixo dele; o da duração, embaixo do `select`.
+- **Um preenche o outro (opcional, enfeite):** quando o JS muda sozinho o valor de "Termina às" ou da Duração, pode pôr a classe `ajustado` no campo que mudou por ~1 s (a borda acende em âmbar e apaga). Mostra para quem enxerga "isto mudou por causa do que você digitou". Não é anunciado pelo leitor de tela (a dica "Preencha um dos dois: o outro se ajusta sozinho." já explica). Com `prefers-reduced-motion`, a regra geral da seção 13 do CSS corta a animação.
+- O `select` usa a aparência do próprio sistema por dentro (a lista que abre é a do celular), só com a caixa fechada redesenhada: mesma altura (48px), borda e fundo dos outros campos, e uma **seta própria** à direita, desenhada com `mask` em `currentColor` (assim a 3b muda a cor só pela variável).
+
+#### 14.3.3 "O que levar" no formulário (US17)
+
+```html
+<fieldset class="grupo" id="grupo-itens">
+  <legend class="campo-rotulo">O que levar</legend>
+
+  <!-- O JS monta aqui os itens. Sem itens, a lista fica vazia (o CSS a esconde). -->
+  <ul class="itens-lista" id="itens-lista" aria-label="Itens para levar">
+    <li class="item-form">
+      <span class="item-form-texto">Cartão do convênio</span>
+      <button class="botao-item botao-item--perigo" type="button" data-acao="remover-item" data-indice="0"><!-- svg "remover" -->Remover<span class="sr-only"> Cartão do convênio</span></button>
+    </li>
+    <li class="item-form item-form--marcado">
+      <span class="item-form-texto">Documento com foto<span class="sr-only"> (já marcado)</span></span>
+      <button class="botao-item botao-item--perigo" type="button" data-acao="remover-item" data-indice="1"><!-- svg "remover" -->Remover<span class="sr-only"> Documento com foto</span></button>
+    </li>
+  </ul>
+
+  <div class="campo">
+    <label class="campo-rotulo" for="campo-novo-item">Novo item</label>
+    <div class="itens-novo">
+      <input class="campo-controle" id="campo-novo-item" type="text" maxlength="60" autocomplete="off" placeholder="Ex.: chave" enterkeyhint="done">
+      <button class="btn btn-secundario botao-adicionar" type="button" id="botao-adicionar"><!-- svg "mais" -->Adicionar</button>
+    </div>
+    <p class="campo-dica" id="dica-itens-limite" hidden>Limite de 20 itens.</p>
+  </div>
+
+  <!-- Região de avisos do formulário (só para o leitor de tela). SEMPRE no HTML, vazia. -->
+  <p class="sr-only" id="itens-aviso" aria-live="polite"></p>
+</fieldset>
+```
+
+Regras do visual (o comportamento está na US17):
+- **Lista em cima, campo embaixo:** o item novo entra no fim da lista, logo **acima** do campo onde a pessoa está digitando. O olho vê o item aparecer sem sair do lugar, e o foco continua no campo.
+- **Cada item** é uma linha de no mínimo 48px, com o fundo "afundado" dos campos (`--cor-fundo`), borda decorativa, um quadradinho lilás antes do texto (o mesmo enfeite do "Agenda▪") e o botão "Remover" (o `.botao-item--perigo` do card, com ícone de "x": vermelho só no hover). Texto longo quebra linha (`overflow-wrap: anywhere`); o botão fica alinhado em cima.
+- **Item já marcado no card** (ao editar): o texto aparece **riscado e em cinza suave**, e o leitor de tela ouve "(já marcado)". Assim a pessoa sabe que remover e adicionar de novo perde a marca. Ele não pode ser marcado aqui (marcar é no card, US18).
+- **"Adicionar"** é o botão secundário (contorno), com ícone "+", 48px de altura e cantos de campo (10px), para formar uma peça só com o campo. A 360px: botão ≈128px, campo ≈144px. O `placeholder` é só exemplo (o rótulo "Novo item" é visível e é ele que dá o nome do campo).
+- **Com 20 itens:** o campo e o botão ficam com a aparência de desativado (borda tracejada, texto suave) e aparece a dica "Limite de 20 itens.", ligada ao campo por `aria-describedby="dica-itens-limite"`. Ver a nota sobre o foco em 14.6.
+- **Avisos** "Cartão do convênio adicionado." / "Cartão do convênio removido." vão no `#itens-aviso` (escondido da tela; para quem enxerga, o próprio item aparecendo ou sumindo já é o aviso). O texto do item entra com `textContent`. Limpar o `#itens-aviso` ao abrir o formulário.
+- O grupo funciona igual com "Ainda sem data" marcada (não é desativado).
+
+#### 14.3.4 Contas a 360px
+
+| Parte | Conta | Cabe? |
+|---|---|---|
+| Janela | 328px − 2 × 24px de espaço interno = **280px** | — |
+| Termina às / Duração | um embaixo do outro, 280px cada; filete 2px + 12px → campos com 266px | sim |
+| Linha "Novo item" | campo ≈144 + 8 + "Adicionar" ≈128 = 280 | sim |
+| Item da lista | 12 + quadradinho 6 + 8 + texto ≈136 + 8 + "Remover" ≈106 + 4 = 280 | sim (o texto quebra linha) |
+| Minutos | campo de 7rem + "min" | sim |
+
+### 14.4 Card na 3a
+
+#### 14.4.1 Placa com hora de fim (US19)
+
+```html
+<div class="compromisso-hora compromisso-hora--intervalo">
+  <span class="sr-only">Das </span>
+  <time datetime="2026-11-14T09:30">09:30</time>
+  <span class="compromisso-hora-fim"><span aria-hidden="true">–</span><span class="sr-only"> às </span><time datetime="2026-11-14T10:30">10:30</time></span>
+</div>
+```
+
+```
+sem fim     com fim (decisão 1)
++------+    +------+
+|      |    |09:30 |   metade de cima: início, mono 600 17px âmbar
+|09:30 |    |------|   (a linha do meio já é a da placa)
+|      |    |–10:30|   metade de baixo: fim, mono 400 14px cinza suave
++------+    +------+
+```
+
+- A placa com intervalo tem 2 linhas iguais (`grid-template-rows: 1fr 1fr`), cada hora na sua metade, e cresce para 60px de altura.
+- O leitor de tela ouve "Das 09:30 às 10:30" (o "–" é decorativo). Quem enxerga vê "09:30" em cima de "–10:30".
+- **Conta:** "–10:30" em mono 14px ≈ 8.4 × 6 + 2px = **53px**, cabe nos 60px úteis da placa de 64px (celular). No computador a placa tem 76px.
+- **Em "Anteriores":** as duas horas em cinza suave (regra da `.compromisso--anterior`). Em "Ficou pendente", igual à lista principal. Sem hora de fim: a placa de sempre.
+- A hora de fim **não muda** o resto do card ("Sair às", ordem, "Era para: Ontem · 09:30" continua com a hora de início).
+
+#### 14.4.2 Aviso de conflito e de aperto (US20)
+
+Fica **dentro do `.compromisso-corpo`**, logo depois da linha de meta ("Sair às" e "Cobrar") e **antes** do local. Só na lista "Próximos compromissos". Sem aviso, não criar o elemento.
+
+```html
+<p class="compromisso-aviso compromisso-aviso--conflito">
+  <!-- svg "conflito" -->
+  <span><strong class="compromisso-aviso-tipo">Conflito:</strong> Dentista vai até 10:30.</span>
+</p>
+
+<p class="compromisso-aviso compromisso-aviso--aperto">
+  <!-- svg "aperto" -->
+  <span><strong class="compromisso-aviso-tipo">Aperto:</strong> sair às 10:15, mas Dentista vai até 10:30.</span>
+</p>
+```
+
+| Tipo | Texto | Visual |
+|---|---|---|
+| Conflito | "**Conflito:** Dentista vai até 10:30." / "**Conflito:** mesmo horário de Dentista." | tarja com fundo vermelho 10% sobre o card, filete vermelho de 3px à esquerda, ícone de dois blocos sobrepostos, "Conflito:" em vermelho 700, resto em branco |
+| Aperto | "**Aperto:** sair às 10:15, mas Dentista vai até 10:30." | a mesma tarja em âmbar, ícone de ampulheta, "Aperto:" em âmbar 700 |
+
+```
+360px
++----------------------------------+
+| +------+ Reunião do TCC          |
+| |10:00 | (porta) Sair às 09:45   |
+| |------| ┃(▣▣) Conflito: Dentista |  tarja 14px, quebra linha
+| |–11:00| ┃vai até 10:30.          |
+| +------+ (pino) Biblioteca       |
+| [ (mala) O que levar (2 de 5)  v ] |  botão do checklist (14.4.3)
+| - - - - - - - - - - - - - - - - -  |
+| [✓ Feito] [Editar] [Excluir]       |
++----------------------------------+
+```
+
+- **Nada só por cor:** a palavra "Conflito:" ou "Aperto:" vem sempre escrita e em negrito, e cada tipo tem um ícone diferente. A cor é reforço.
+- O título do outro compromisso entra com `textContent` (o JS monta o `strong` e depois um nó de texto com o resto da frase).
+- O card **não** muda de borda por causa do aviso: a única borda que acende continua sendo a do "Sair em X min" (13.4.2). Assim a tela não fica cheia de cards coloridos num dia lotado.
+- **Sem `aria-live`** (requisitos): o aviso é lido quando o leitor de tela passa pelo card, como o resto do texto.
+- A 360px a tarja tem a largura da coluna do texto (≈228px) e quebra linha.
+
+#### 14.4.3 "O que levar" no card (US18)
+
+Fica **depois do `.compromisso-corpo` e antes da faixa de botões**, como filho direto do `li`. Celular: ocupa a largura toda do card (como a faixa de botões, para o polegar e para textos longos). Computador (≥ 640px): fica na coluna do texto, alinhado com o título.
+
+```html
+<div class="checklist">
+  <button class="checklist-botao" type="button" aria-expanded="false" aria-controls="checklist-c-1731590400000-k3f9">
+    <!-- svg "mala" com class="icone checklist-icone" -->
+    <span class="checklist-rotulo">O que levar <span class="checklist-contagem">(2 de 5)</span></span>
+    <span class="sr-only">, Dentista</span>
+    <!-- svg "seta" com class="icone checklist-seta" -->
+  </button>
+  <ul class="checklist-lista" id="checklist-c-1731590400000-k3f9" aria-label="O que levar: Dentista" hidden>
+    <li>
+      <label class="marcar checklist-item">
+        <input class="marcar-caixa" type="checkbox" data-indice="0" checked>
+        <span>Cartão do convênio</span>
+      </label>
+    </li>
+    <li>
+      <label class="marcar checklist-item">
+        <input class="marcar-caixa" type="checkbox" data-indice="1">
+        <span>Documento com foto</span>
+      </label>
+    </li>
+  </ul>
+</div>
+```
+
+**Tudo marcado:** a `div` ganha `checklist--pronto`, o ícone de mala vira o ícone "feito" (check) e o texto vira "O que levar: tudo pronto (5 de 5)":
+```html
+<div class="checklist checklist--pronto">
+  <button class="checklist-botao" ...>
+    <!-- svg "feito" com class="icone checklist-icone" -->
+    <span class="checklist-rotulo">O que levar: tudo pronto <span class="checklist-contagem">(5 de 5)</span></span>
+    ...
+```
+
+```
+fechado            [ (mala) O que levar (2 de 5)              v ]
+aberto             [ (mala) O que levar (2 de 5)              ^ ]
+                     [✓] ~~Cartão do convênio~~     <- riscado e cinza
+                     [ ] Documento com foto
+                     [ ] Guarda-chuva
+tudo pronto        [ (✓) O que levar: tudo pronto (5 de 5)    v ]   <- ícone e texto verdes
+```
+
+- **Botão:** 44px de altura, largura toda no celular (no computador, só a do conteúdo), contorno `--cor-borda-campo`, sem fundo, cantos de 10px, ícone de mala lilás, "O que levar" em 14px 600, "(2 de 5)" em mono suave, seta à direita que gira 180° quando abre (a mesma de "Anteriores"). Hover: fundo `--cor-superficie-2`.
+- **Nome acessível:** "O que levar (2 de 5), Dentista" (começa pelo texto visível; o título vai em `sr-only` porque há vários botões iguais na página). O `aria-expanded` diz se está aberto.
+- **Começa fechado** sempre que a página abre. O JS guarda numa lista (`Set`) os `id`s abertos para reabrir depois de cada redesenho (a cada minuto e depois de marcar). **Sem animação** ao abrir (a lista é redesenhada a cada minuto).
+- **Cada item:** a caixa de marcar da 2b (22px, check âmbar), texto em 16px (é para ler rápido na porta de casa), linha de no mínimo 44px, a linha inteira é clicável (`label`), hover com fundo `--cor-superficie-2`. Texto longo quebra linha; a caixa fica alinhada com a primeira linha.
+- **Marcado:** caixa âmbar **com check** + texto **riscado** (traço de 2px) e em cinza suave. Três sinais, nenhum depende só da cor.
+- **Leitor de tela:** cada caixa é um `checkbox` de verdade com o texto como rótulo ("Cartão do convênio, caixa de seleção, marcada"). Ao marcar, o próprio leitor anuncia "marcado"/"desmarcado"; não usar o aviso flutuante.
+- **Foco depois de marcar:** continua na mesma caixa. Se o dev redesenhar a lista inteira, precisa devolver o foco à caixa com o mesmo `data-id` + `data-indice` (dica: em vez de redesenhar, trocar só o texto do botão e a classe `--pronto`).
+- **Igual em todas as seções** ("Próximos", "Ficou pendente", "Sem data" e "Anteriores"). No card tracejado de "Anteriores" o botão também fica sem fundo, então ele combina com o card "apagado" sem regra extra.
+
+#### 14.4.4 Ordem dentro do card (e do Tab)
+
+`li.compromisso` → placa · corpo (título, meta, **aviso**, local, observação) · **checklist** (botão, caixas) · faixa de botões (Feito, Editar, Excluir...).
+
+O Tab passa: botão "O que levar" → caixas (se aberto) → Feito → Editar → Excluir. A ação do card continua por último, e "Excluir" continua sendo o último de todos.
+
+```
+≥ 640px
++--------------------------------------------------------------+
+| +-------+  Reunião do TCC                                    |
+| | 10:00 |  (porta) Sair às 09:45                             |
+| |-------|  ┃(▣▣) Conflito: Dentista vai até 10:30.           |
+| |–11:00 |  (pino) Biblioteca                                 |
+| +-------+  [ (mala) O que levar (2 de 5)  v ]                |
+|            [✓ Feito] [Editar] [Excluir]                      |
++--------------------------------------------------------------+
+```
+
+### 14.5 Mensagens (erros e avisos)
+
+| Situação | Onde | Texto |
+|---|---|---|
+| "Termina às" igual ou antes da Hora | `#erro-fim`, embaixo de "Termina às" | "A hora de fim precisa ser depois da hora de início." |
+| Duração passa de 23:59 ("Termina às" vazio) | `#erro-duracao`, embaixo da Duração | "Com essa duração, o compromisso passaria da meia-noite. Escolha uma duração menor." |
+| "Outro" com minutos vazios ou fora de 1 a 1439 | `#erro-duracao-min` | "Digite um número de minutos entre 1 e 1439." |
+| Adicionou / removeu item no formulário | `#itens-aviso` (só leitor de tela) | "Cartão do convênio adicionado." / "Cartão do convênio removido." |
+| 20 itens | `#dica-itens-limite` (dica, não erro: cinza, sem ícone) | "Limite de 20 itens." |
+| Marcar item no card falhou (`localStorage` cheio) | aviso flutuante `#status`, `data-tipo="erro"` (barrinha vermelha) | "Não foi possível salvar o compromisso." |
+| Sem hora | `#dica-fim-sem-hora` | "Escolha uma hora para usar a hora de fim." |
+
+Os três erros são iguais aos da US03 (texto + ícone + borda de 2px + fundo levemente vermelho). Marcar item com sucesso **não** tem aviso flutuante (US18).
+
+### 14.6 Teclado e foco
+
+| Ação | Para onde vai o foco |
+|---|---|
+| Tentar salvar com erro | primeiro campo com problema, **na ordem do formulário**: Título → Data → Termina às → Duração → Minutos (da duração) → Minutos antes (do "Tempo para sair") |
+| Enter em "Novo item" | adiciona e o foco **fica** no campo (não salva o formulário) |
+| "Adicionar" com o mouse/toque | adiciona e o foco vai para o campo "Novo item" |
+| "Remover" | próximo item ("Remover" dele) ou, se era o último, o campo "Novo item" |
+| Abrir/fechar "O que levar" no card | fica no botão |
+| Marcar/desmarcar no card | fica na caixa |
+
+- **Nota sobre o 20º item (para o dev e o testador):** se o campo "Novo item" recebesse `disabled` com o foco dentro dele (logo depois de adicionar o 20º com Enter), o foco se perderia para o topo da página. Por isso, com 20 itens, o campo recebe **`aria-disabled="true"` e `readonly`** (continua focável, o leitor de tela diz "indisponível" e o JS ignora o Enter) e o botão "Adicionar" recebe `disabled` de verdade. Visualmente os dois ficam iguais a um campo desativado (CSS em 14.9). Ao remover um item, os dois voltam.
+- Foco visível: o mesmo contorno azul-céu de 3px em tudo o que é novo (botão do checklist, caixas, `select`, "Adicionar", "Remover").
+- Setas do teclado no `select` trocam a opção (comportamento do navegador); cada troca já preenche "Termina às" (US19).
+
+### 14.7 Leitor de tela
+
+| Parte | O que é lido |
+|---|---|
+| Placa com intervalo | "Das 09:30 às 10:30" |
+| Grupo "Hora de fim" | "Hora de fim, grupo, Preencha um dos dois: o outro se ajusta sozinho." e depois "Termina às", "Duração, caixa de combinação, Sem hora de fim" |
+| Grupo desativado | "Hora de fim, grupo, indisponível, Escolha uma hora para usar a hora de fim." |
+| Item no formulário | "Cartão do convênio" + botão "Remover Cartão do convênio"; item marcado: "Documento com foto (já marcado)" |
+| Botão do checklist | "O que levar (2 de 5), Dentista, botão, recolhido" |
+| Caixas do checklist | lista "O que levar: Dentista", 5 itens; "Cartão do convênio, caixa de seleção, marcada" |
+| Aviso no card | "Conflito: Dentista vai até 10:30." (lido com o card, sem `aria-live`) |
+
+### 14.8 Ícones novos (mesmo padrão da 8.2: `viewBox="0 0 24 24"`, traço 2, `currentColor`, `aria-hidden="true" focusable="false"`)
+
+| Nome | Onde | Miolo |
+|---|---|---|
+| mala | botão "O que levar" | `<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M3 12.5h18"/>` |
+| conflito | aviso "Conflito" | `<rect x="3" y="4" width="12" height="10" rx="2"/><rect x="9" y="10" width="12" height="10" rx="2"/>` |
+| aperto | aviso "Aperto" | `<path d="M6 3h12M6 21h12"/><path d="M7 3v2a5 5 0 0 0 10 0V3M7 21v-2a5 5 0 0 1 10 0v2"/>` |
+| remover | botão "Remover" (formulário) | `<path d="M6 6l12 12M18 6L6 18"/>` |
+
+Reaproveitados: "mais" (Adicionar), "feito" (estado "tudo pronto"), "seta" (abrir/fechar o checklist), "alerta" (erros). Tamanhos: 16px no aviso do card, 18px nos botões, 20px no "Adicionar".
+
+### 14.9 CSS de referência da Entrega 3a
+
+Duas mudanças no `css/style.css`: uma seção nova e um acréscimo no alto contraste. **Nenhum hex novo**: só variáveis, para a 3b (tema claro) trocar os valores num lugar só.
+
+#### 14.9.1 Nova seção "12d": acrescentar logo **depois** da "12c. ETAPA 2b" e **antes** da "13. MOVIMENTO REDUZIDO"
+
+```css
+/* ---------------------------------------------------------
+   12d. ETAPA 3a: O QUE LEVAR, HORA DE FIM, CONFLITO E APERTO
+   Decisões em: design.md, seção 14.
+   Só variáveis (nada de hex): o tema claro da 3b troca os valores.
+   --------------------------------------------------------- */
+
+/* --- Placa com hora de fim: início em cima, fim embaixo --- */
+.compromisso-hora--intervalo {
+  grid-template-rows: 1fr 1fr;            /* uma hora em cada metade da placa */
+  min-height: 3.75rem;                    /* 60px */
+  padding: var(--esp-1) 2px;
+}
+
+.compromisso-hora-fim {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: var(--fs-sm);
+  font-weight: 400;
+  color: var(--cor-texto-suave);          /* 7.9:1 na metade de baixo */
+}
+
+/* --- Aviso de conflito e de aperto (só na lista principal) --- */
+.compromisso-aviso {
+  --aviso-cor: var(--cor-perigo);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--esp-2);
+  margin-block: 2px;
+  padding: 6px var(--esp-2);
+  font-size: var(--fs-sm);
+  line-height: 1.4;
+  color: var(--cor-texto);
+  background: color-mix(in srgb, var(--aviso-cor) 10%, var(--cor-superficie));
+  border-left: 3px solid var(--aviso-cor);
+  border-radius: var(--raio-sm);
+  overflow-wrap: anywhere;
+}
+
+.compromisso-aviso--conflito { --aviso-cor: var(--cor-perigo); }   /* "Conflito:" 6.3:1 */
+.compromisso-aviso--aperto   { --aviso-cor: var(--cor-ambar); }    /* "Aperto:" 8.6:1 */
+
+.compromisso-aviso .icone {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  color: var(--aviso-cor);
+}
+
+.compromisso-aviso-tipo {
+  font-weight: 700;
+  color: var(--aviso-cor);
+}
+
+/* --- "O que levar" no card --- */
+.checklist {
+  grid-column: 1 / -1;                    /* celular: largura toda do card */
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-1);
+  min-width: 0;
+}
+
+@media (min-width: 640px) {
+  .checklist {
+    grid-column: 2;                       /* computador: coluna do texto */
+  }
+}
+
+.checklist-botao {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-2);
+  width: 100%;
+  min-height: 44px;
+  padding: var(--esp-2) var(--esp-3);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: left;
+  color: var(--cor-texto);
+  background: transparent;
+  border: 1px solid var(--cor-borda-campo);
+  border-radius: var(--raio-md);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--transicao), border-color var(--transicao);
+}
+
+@media (min-width: 640px) {
+  .checklist-botao {
+    width: fit-content;
+    max-width: 100%;
+  }
+}
+
+.checklist-botao:hover {
+  background: var(--cor-superficie-2);
+  border-color: var(--cor-texto-suave);
+}
+
+.checklist-botao .icone {
+  width: 18px;
+  height: 18px;
+}
+
+.checklist-icone {
+  color: var(--cor-lilas);                /* 9.0:1 no card */
+}
+
+.checklist-rotulo {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.checklist-contagem {
+  font-family: var(--fonte-mono);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  color: var(--cor-texto-suave);
+}
+
+.checklist-seta {
+  color: var(--cor-texto-suave);
+  transition: transform var(--transicao);
+}
+
+.checklist-botao[aria-expanded="true"] .checklist-seta {
+  transform: rotate(180deg);
+}
+
+/* Tudo marcado: ícone (check) e texto verdes, e o texto diz "tudo pronto" */
+.checklist--pronto .checklist-icone,
+.checklist--pronto .checklist-rotulo {
+  color: var(--cor-sucesso);              /* 12.3:1 no card */
+}
+
+.checklist-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Cada item: a caixa de marcar da 2b, na linha inteira */
+.checklist-item {
+  width: 100%;
+  align-items: flex-start;
+  padding: 11px var(--esp-3);             /* 11 + 22 + 11 = 44px de toque */
+  font-size: var(--fs-base);
+  font-weight: 400;
+  line-height: 1.4;
+  border-radius: var(--raio-md);
+  transition: background-color var(--transicao);
+}
+
+.checklist-item > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.checklist-item:hover {
+  background: var(--cor-superficie-2);
+}
+
+/* Marcado: caixa com check + texto riscado e cinza (três sinais) */
+.checklist-item:has(.marcar-caixa:checked) > span {
+  color: var(--cor-texto-suave);
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+/* --- Formulário: grupo "Hora de fim" --- */
+.grupo-filete {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-3);
+  padding-left: var(--esp-3);
+  border-left: 2px solid var(--cor-borda);   /* enfeite: junta os campos do grupo */
+}
+
+/* Lista de escolha (Duração) com a seta da Agenda */
+.campo-selecao {
+  position: relative;
+}
+
+.campo-selecao select.campo-controle {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 2.75rem;
+  cursor: pointer;
+}
+
+.campo-selecao select.campo-controle[aria-invalid="true"] {
+  padding-right: calc(2.75rem - 1px);     /* a regra de erro troca o padding todo */
+}
+
+.campo-selecao select.campo-controle:disabled {
+  cursor: not-allowed;
+}
+
+.campo-selecao select option {
+  color: var(--cor-texto);
+  background: var(--cor-superficie);
+}
+
+.campo-selecao::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: var(--esp-3);
+  width: 20px;
+  height: 20px;
+  transform: translateY(-50%);
+  pointer-events: none;                   /* o toque "passa" para o select */
+  background: var(--cor-texto-suave);     /* 8.7:1 no campo */
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* Opcional: o campo que o JS ajustou sozinho acende em âmbar e apaga */
+.campo-controle.ajustado {
+  animation: campo-ajustado 900ms ease-out;
+}
+
+@keyframes campo-ajustado {
+  from {
+    border-color: var(--cor-ambar);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--cor-ambar) 35%, transparent);
+  }
+}
+
+/* --- Formulário: grupo "O que levar" --- */
+.itens-lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-2);
+}
+
+.itens-lista:empty {
+  display: none;                          /* sem itens, sem espaço vazio */
+}
+
+.item-form {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--esp-2);
+  min-height: 48px;
+  padding: 1px 1px 1px var(--esp-3);
+  background: var(--cor-fundo);
+  border: 1px solid var(--cor-borda);     /* enfeite: o texto e o botão dizem o que é */
+  border-radius: var(--raio-md);
+}
+
+.item-form-texto {
+  flex: 1;
+  min-width: 0;
+  padding-block: var(--esp-3) var(--esp-2);
+  overflow-wrap: anywhere;
+}
+
+/* Quadradinho lilás antes do texto (o mesmo enfeite do "Agenda▪") */
+.item-form-texto::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin: 0 var(--esp-2) 2px 0;
+  vertical-align: middle;
+  background: var(--cor-lilas);
+  border-radius: 1px;
+}
+
+.item-form--marcado .item-form-texto {
+  color: var(--cor-texto-suave);          /* 8.7:1 */
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+.item-form .botao-item {
+  flex-shrink: 0;
+}
+
+.itens-novo {
+  display: flex;
+  align-items: stretch;
+  gap: var(--esp-2);
+}
+
+.itens-novo .campo-controle {
+  flex: 1;
+}
+
+.botao-adicionar {
+  flex-shrink: 0;
+  min-height: 48px;                       /* mesma altura do campo */
+  padding-inline: var(--esp-3);
+  border-radius: var(--raio-md);          /* cantos de campo: uma peça só */
+}
+
+/* 20 itens: campo e botão com cara de desativado.
+   O campo usa aria-disabled + readonly (não perde o foco, ver 14.6). */
+.itens-novo .campo-controle[aria-disabled="true"],
+.itens-novo .campo-controle[aria-disabled="true"]:hover {
+  color: var(--cor-texto-suave);
+  background: transparent;
+  border-style: dashed;
+  border-color: var(--cor-borda-campo);
+  cursor: not-allowed;
+}
+
+.botao-adicionar:disabled,
+.botao-adicionar:disabled:hover {
+  color: var(--cor-texto-suave);
+  background: transparent;
+  border-style: dashed;
+  border-color: var(--cor-borda-campo);
+  cursor: not-allowed;
+  transform: none;
+}
+```
+
+#### 14.9.2 Seção "14. ALTO CONTRASTE DO WINDOWS": acrescentar dentro do `@media (forced-colors: active)`
+
+```css
+  /* Etapa 3a */
+  .checklist-botao,
+  .compromisso-aviso,
+  .item-form {
+    border: 1px solid CanvasText;
+  }
+
+  .compromisso-aviso {
+    border-left-width: 3px;
+  }
+
+  /* a seta do select é um fundo com máscara: sem isto ela sumiria */
+  .campo-selecao::after {
+    forced-color-adjust: none;
+    background: CanvasText;
+  }
+```
+
+**Movimento reduzido:** nada novo a acrescentar. O giro da seta e o "acender" opcional do campo ajustado já são cortados pela regra geral da seção 13 do CSS.
+
+### 14.10 Contraste conferido (WCAG 2.1 AA, tema escuro)
+
+"Pior ponto" = card de "Anteriores" (sem fundo) sobre o brilho âmbar, ≈`#271C19`. Tarja de conflito = vermelho 10% sobre o card, ≈`#301D2A`. Tarja de aperto = âmbar 10% sobre o card, ≈`#302325`.
+
+| Elemento | Cor / fundo | Razão | Mínimo |
+|---|---|---|---|
+| Hora de início na placa | `#FFB547` / `#231A2E` | 9.5:1 | 4.5:1 |
+| Hora de fim (metade de baixo) | `#B8AAB9` / `#1D1626` | 7.9:1 | 4.5:1 |
+| "Conflito:" | `#FF7B7B` / ≈`#301D2A` | 6.3:1 | 4.5:1 |
+| Texto da tarja de conflito | `#F5EEE6` / ≈`#301D2A` | 13.7:1 | 4.5:1 |
+| "Aperto:" | `#FFB547` / ≈`#302325` | 8.6:1 | 4.5:1 |
+| Texto da tarja de aperto | `#F5EEE6` / ≈`#302325` | 13.1:1 | 4.5:1 |
+| Ícones das tarjas (não-texto) | vermelho / âmbar nas tarjas | 6.3 · 8.6:1 | 3:1 |
+| Botão "O que levar" (texto) | `#F5EEE6` / `#191321` · pior ponto | 15.8 · ≈14:1 | 4.5:1 |
+| "(2 de 5)" e seta | `#B8AAB9` / `#191321` · pior ponto | 8.2 · 7.5:1 | 4.5:1 |
+| Ícone de mala | `#C4A8FF` / `#191321` | 9.0:1 | 3:1 |
+| "tudo pronto" e check | `#8EE6A8` / `#191321` · pior ponto | 12.3 · 11.1:1 | 4.5:1 |
+| Borda do botão "O que levar" | `#8A7A9C` / `#191321` · pior ponto | 4.6 · ≈4.2:1 | 3:1 |
+| Botão "O que levar" e item no hover | `#F5EEE6` / `#231A2E` | 14.5:1 | 4.5:1 |
+| Item do checklist (texto) | `#F5EEE6` / `#191321` | 15.8:1 | 4.5:1 |
+| Item marcado (riscado) | `#B8AAB9` / `#191321` · `#231A2E` (hover) | 8.2 · 7.5:1 | 4.5:1 |
+| Caixa de marcar (borda / marcada) | igual à 13.12 | 4.6 · 10.4:1 | 3:1 |
+| Seta do `select` | `#B8AAB9` / `#0F0B14` | 8.7:1 | 3:1 |
+| Texto do item no formulário | `#F5EEE6` / `#0F0B14` | 16.8:1 | 4.5:1 |
+| Item marcado no formulário | `#B8AAB9` / `#0F0B14` | 8.7:1 | 4.5:1 |
+| "Remover" (normal / hover) | `#B8AAB9` / `#0F0B14` · `#FF7B7B` / `#231A2E` | 8.7 · 6.7:1 | 4.5:1 |
+| Dicas ("Preencha um dos dois...", "Limite de 20 itens.") | `#B8AAB9` / `#191321` | 8.2:1 | 4.5:1 |
+| Erros novos | `#FF7B7B` / `#191321` | 7.2:1 | 4.5:1 |
+| Campo e botão com cara de desativado | `#B8AAB9` / `#191321` | 8.2:1 | isento, mas legível |
+| Foco em tudo o que é novo | `#8FD3FF`, 3px | ≥ 11:1 | 3:1 |
+
+Filete do grupo "Hora de fim", borda dos itens do formulário, quadradinho lilás e o "acender" do campo ajustado são **enfeite**: a informação está sempre no texto.
+
+### 14.11 Conferência da Entrega 3a (para o dev e o testador)
+
+| Requisito | Como o visual atende |
+|---|---|
+| "Termina às" e "Duração" lado a lado, com rótulo, depois da Hora | `fieldset` "Hora de fim" logo depois de Data \| Hora; lado a lado a partir de 480px, um embaixo do outro antes (permitido pela US19) |
+| "Outro" com "Minutos" | `#bloco-duracao-min`, mesmo jeito do "Tempo para sair" |
+| Sem hora: desativado com dica | `disabled` no `fieldset` + `#dica-fim-sem-hora` |
+| Três erros da US19 com as regras da US03 | `.campo-erro` + `aria-invalid` + `aria-describedby`; ordem do foco em 14.6 |
+| Intervalo no card, lido como "das 09:30 às 10:30" | placa de duas metades + `sr-only` "Das" / "às" |
+| Checklist no formulário: adicionar, remover, Enter não salva, 20 itens, 60 caracteres | 14.3.3; `maxlength="60"`; nota do 20º item em 14.6 |
+| Avisos de adicionar e remover sem tirar o foco | `#itens-aviso` (`aria-live="polite"`, escondido da tela) |
+| "O que levar (2 de 5)" / "tudo pronto (5 de 5)" | `.checklist-botao` com `aria-expanded`; `.checklist--pronto` |
+| Caixas com 44px, marcado não só por cor | `.checklist-item` com 44px; check + riscado + cinza |
+| Checklist igual em todas as seções | mesmo HTML; o botão sem fundo combina com o card tracejado de "Anteriores" |
+| Conflito e aperto em texto, com ícone e cor que não são a única forma | "Conflito:" / "Aperto:" em negrito + ícones diferentes; tarja vermelha / âmbar |
+| Aviso sem `aria-live` | `p` comum dentro do card |
+| 360px sem rolagem horizontal | contas da 14.3.4 e 14.4.1; `overflow-wrap: anywhere` nos textos novos |
+| Foco visível e teclado | contorno azul-céu em tudo; tabela 14.6 |
+| Só variáveis CSS (preparo para a 3b) | 14.9 sem nenhum hex novo; tarja usa `--aviso-cor` local |
+| Alto contraste e movimento reduzido | 14.9.2; nada novo anima sozinho |
+
+### 14.12 Decisões aprovadas pelo João (2026-11-06)
+
+O João aprovou as três recomendações: **1A** (horário empilhado na placa), **2A** (conflito vermelho, aperto âmbar) e **3** (todos os textos sugeridos, inclusive o "acender" âmbar). Abaixo, as opções que foram apresentadas:
+
+1. **Como mostrar "09:30 – 10:30" no card.**
+   - **A (recomendo):** na própria placa, empilhado: "09:30" em cima (âmbar) e "–10:30" embaixo (menor, cinza). Usa as duas metades que a placa já tinha, todas as placas continuam com a mesma largura e a coluna do texto não perde espaço a 360px.
+   - B: placa mais larga, numa linha só ("09:30 – 10:30"). Fica igual ao texto dos requisitos, mas a placa passa de 64 para ≈112px no celular e o título perde quase 50px de largura.
+   - C: placa só com "09:30" e uma linha "até 10:30" no texto do card, junto do "Sair às". Placa intacta, mas o fim fica longe do início.
+2. **Cor do aviso de conflito.**
+   - **A (recomendo):** conflito em **vermelho** e aperto em **âmbar**. Dá para diferenciar de longe "não dá" de "dá, mas é corrido".
+   - B: os dois em âmbar, diferentes só pelo texto e pelo ícone. Mais calmo, e o vermelho fica só para erro e excluir.
+   - C: os dois em vermelho. Mais alarmante; aperto não é erro.
+3. **Textos sugeridos (não estão nos requisitos):** a dica "Preencha um dos dois: o outro se ajusta sozinho.", a dica "De 1 a 1439 minutos.", o exemplo "Ex.: guarda-chuva" no campo "Novo item" (trocado para "Ex.: chave" em 2026-11-06 por caber a 320/360px), o "(já marcado)" lido pelo leitor de tela nos itens marcados do formulário (que também aparecem riscados ali) e o "acender" em âmbar do campo que se ajustou sozinho (opcional). Recomendo aprovar todos; qualquer um pode sair sem mudar o resto.

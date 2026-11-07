@@ -448,6 +448,41 @@
           { "titulo": "Glossário", "url": "data/glossario.json" }
         ],
         "imagens": []
+      },
+      {
+        "agente": "product-owner",
+        "resumo": "Etapa 3 \"organizar o tempo\": escreveu com o João as US17 a US23, divididas na Entrega 3a (checklist \"O que levar\", hora de fim e aviso de conflito e aperto) e na Entrega 3b (faixa da semana, tema claro e letra grande), sem mudar a versão dos dados.",
+        "entregaveis": [
+          { "titulo": "Requisitos (Etapa 3)", "url": "docs/projetos/agenda/requisitos.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "artista",
+        "resumo": "Etapa 3, Entrega 3a: desenhou \"Termina às\" e \"Duração\" lado a lado, o checklist \"O que levar\" no formulário e no card, o horário empilhado na placa e as tarjas de conflito (vermelha) e de aperto (âmbar).",
+        "entregaveis": [
+          { "titulo": "Design (seção 14)", "url": "docs/projetos/agenda/design.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "dev",
+        "resumo": "Implementou a Entrega 3a: hora de fim com \"Termina às\" e \"Duração\" que se preenchem sozinhos, checklist \"O que levar\" marcável no card e aviso de conflito e de aperto no card do segundo compromisso. Os dados continuam na versão 2, e a cópia leva os campos novos.",
+        "entregaveis": [
+          { "titulo": "Site publicado", "url": "https://joaosaccucci.github.io/agenda/" },
+          { "titulo": "Datas, conflito e aperto (JS)", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/js/datas.js" },
+          { "titulo": "Tela (JS)", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/js/app.js" },
+          { "titulo": "README", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/README.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "testador",
+        "resumo": "Etapa 3, Entrega 3a: testou 24 situações de conflito e aperto, o limite de 20 itens, a hora de fim, regressões das Entregas 2a e 2b, 320 a 1280px, teclado, contraste AA e localStorage bloqueado e cheio. Aprovado na primeira rodada, com quatro pendências baixas corrigidas pelo dev.",
+        "entregaveis": [
+          { "titulo": "Relatório de teste — Entrega 3a", "url": "docs/projetos/agenda/testes/etapa-3a.md" }
+        ],
+        "imagens": []
       }
     ],
     "linhaDoTempo": [
@@ -469,7 +504,12 @@
       { "data": "2026-11-06", "agente": "dev", "descricao": "Implementação da Entrega 2b, com a migração dos dados para a versão 2." },
       { "data": "2026-11-06", "agente": "testador", "descricao": "Entrega 2b aprovada na primeira rodada, com três pendências baixas." },
       { "data": "2026-11-06", "agente": "dev", "descricao": "Entrega 2b publicada no repositório agenda e no GitHub Pages." },
-      { "data": "2026-11-06", "agente": "professor", "descricao": "4 aulas da Entrega 2b, com exemplo Rodar e quiz, no Módulo 2 da Agenda." }
+      { "data": "2026-11-06", "agente": "professor", "descricao": "4 aulas da Entrega 2b, com exemplo Rodar e quiz, no Módulo 2 da Agenda." },
+      { "data": "2026-11-06", "agente": "product-owner", "descricao": "Requisitos da Etapa 3 (US17 a US23), divididos nas Entregas 3a e 3b." },
+      { "data": "2026-11-06", "agente": "artista", "descricao": "Design da Entrega 3a: hora de fim, O que levar, conflito e aperto (seção 14)." },
+      { "data": "2026-11-06", "agente": "dev", "descricao": "Implementação da Entrega 3a." },
+      { "data": "2026-11-06", "agente": "testador", "descricao": "Entrega 3a aprovada na primeira rodada; as quatro pendências baixas foram corrigidas." },
+      { "data": "2026-11-06", "agente": "dev", "descricao": "Entrega 3a publicada no repositório agenda e no GitHub Pages." }
     ]
   }
 ]

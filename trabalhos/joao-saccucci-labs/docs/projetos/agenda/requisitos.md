@@ -7,7 +7,8 @@ A **Agenda** é um site simples para anotar compromissos. A pessoa abre o site, 
 **Plano de evolução (aprovado pelo João em 2026-11-05):** antes de partir para back-end e banco de dados, a Agenda cresce no próprio navegador, focada em problemas que uma agenda comum não resolve bem.
 - **Etapa 1 (MVP, entregue):** lista por dia, criar, editar, excluir, "Anteriores" e salvar no navegador.
 - **Etapa 2 "nada cai no esquecimento":** cópia e importação dos dados, "Sair às...", "Feito" e pendências, itens "Sem data". Dividida em **Entrega 2a** e **Entrega 2b**.
-- **Etapa 3 "organizar o tempo"** e **Etapa 4 "captura rápida":** ver seção 5.
+- **Etapa 3 "organizar o tempo":** checklist "O que levar", hora de fim com aviso de conflito e de aperto, faixa dos próximos 7 dias, tema claro e letra grande. Dividida em **Entrega 3a** e **Entrega 3b** (seção 2).
+- **Etapa 4 "captura rápida":** ver seção 5.
 
 - Repositório: `github.com/JoaoSaccucci/agenda` (só o código e o README).
 - Site: `https://joaosaccucci.github.io/agenda/`.
@@ -25,7 +26,7 @@ A **Agenda** é um site simples para anotar compromissos. A pessoa abre o site, 
 - Precisa funcionar publicado no GitHub Pages, com caminhos relativos.
 - Nenhum dado sai do navegador: sem envio para a internet, sem notificações do navegador (ver seção 5).
 
-**Direção visual** (quem detalha é o artista): visual **próprio**, mas da mesma família da Labs, com a mesma qualidade e o mesmo "jeito de estúdio". O João quer que a Agenda tenha personalidade própria: o artista tem liberdade para ousar na cor e no clima. O design fica em `docs/projetos/agenda/design.md`. As partes novas da Etapa 2 (janela "Seus dados", faixa de cópia, "Sair às", "Ficou pendente", "Sem data", situação em "Anteriores") seguem o conceito "quadro de partidas ao anoitecer" e são detalhadas pelo artista no mesmo arquivo (Entrega 2a: seção 12 do design).
+**Direção visual** (quem detalha é o artista): visual **próprio**, mas da mesma família da Labs, com a mesma qualidade e o mesmo "jeito de estúdio". O João quer que a Agenda tenha personalidade própria: o artista tem liberdade para ousar na cor e no clima. O design fica em `docs/projetos/agenda/design.md`. As partes novas da Etapa 2 (janela "Seus dados", faixa de cópia, "Sair às", "Ficou pendente", "Sem data", situação em "Anteriores") seguem o conceito "quadro de partidas ao anoitecer" e são detalhadas pelo artista no mesmo arquivo (Entrega 2a: seção 12 do design). As partes novas da Etapa 3 (checklist, hora de fim, avisos de conflito e de aperto, faixa da semana, tema claro, letra grande e o lugar dos botões de aparência) também são detalhadas pelo artista no design. O tema escuro continua sendo o padrão; o tema claro é uma variação do mesmo conceito, não um visual novo.
 
 ---
 
@@ -343,13 +344,175 @@ Os requisitos gerais da Etapa 1 (celular a 360px, teclado, acessibilidade, contr
 
 ---
 
+### Etapa 3 "organizar o tempo"
+
+*(Aprovada pelo João em 2026-11-06.)* Duas entregas, nesta ordem: a **3a** mexe **dentro do compromisso** (checklist "O que levar", hora de fim e avisos de conflito e de aperto); a **3b** mexe na **tela inteira** (faixa dos próximos 7 dias, tema claro e letra grande). O tema claro fica para o fim de propósito: ele precisa dar cor a todas as partes da tela, inclusive às criadas na 3a e na faixa da semana. Cada entrega passa pelo fluxo completo (artista, dev, testador, professor) e tem o seu relatório de teste (`testes/etapa-3a.md` e `testes/etapa-3b.md`).
+
+**Decisões aprovadas pelo João em 2026-11-06**
+1. Divisão: **3a** = checklist "O que levar" + hora de fim, conflito e aperto; **3b** = faixa da semana + tema e letra.
+2. Hora de fim: o formulário tem os **dois** campos ao mesmo tempo, lado a lado: "Termina às" (uma hora) e "Duração" (lista de escolha com 30 min / 1 h / 2 h / Outro, no mesmo padrão do "Tempo para sair"). Um preenche o outro sozinho. Só a duração é guardada (`duracaoMin`).
+3. Aperto: conta como problema a **sobreposição** (um começa antes de o outro acabar) **ou** quando a **hora de sair** para o segundo cai antes do fim do primeiro (usa o "Tempo para sair" do segundo; sem ele, conta 15 minutos).
+4. Checklist: os itens são marcados **direto no card**, sem abrir o formulário.
+5. Faixa da semana: tocar num dia com compromisso leva a lista até esse dia; dia livre não faz nada.
+6. Tema: só **Escuro** (padrão) e **Claro**, por um botão. Letra: **Normal** (padrão) e **Grande**.
+
+**Decisões do PO (informadas ao João)**
+- Os dados continuam na **versão 2**: `itens` e `duracaoMin` já existem nela, com valor padrão em todos os compromissos. Não há migração nova.
+- A hora de fim só existe em compromisso com hora e termina no mesmo dia (até 23:59). Compromisso que passa da meia-noite fica fora do escopo.
+- Um compromisso continua "passando" pela **hora de início**, como antes. A hora de fim não muda a regra de "passou", "Ficou pendente" nem "Sair às".
+- Conflito e aperto aparecem só como texto no card, na lista "Próximos compromissos", e **nunca** impedem de salvar. Compromissos de dia todo e sem data ficam de fora.
+- O checklist tem no máximo 20 itens de até 60 caracteres e funciona em qualquer compromisso, inclusive "Sem data". Marcar todos os itens **não** marca o compromisso como "Feito".
+- Tema e letra ficam em `agenda:preferencias`, são aplicados antes de a página aparecer e **não** vão no arquivo de cópia.
+- O lugar dos botões de aparência fica com a artista, porque o cabeçalho já está cheio a 360px.
+
+#### Entrega 3a: checklist "O que levar", hora de fim, conflito e aperto
+
+**Agenda US17: Checklist "O que levar" no formulário**
+Como usuário, quero anotar dentro do compromisso a lista do que preciso levar, para não sair de casa esquecendo um documento ou um objeto.
+- [ ] O formulário (criar, editar, remarcar e agendar) tem o grupo "O que levar", com título visível (sugestão: `fieldset` + `legend`), depois da Observação.
+- [ ] O grupo tem o campo de texto "Novo item" (rótulo visível, `maxlength="60"`) e o botão "Adicionar".
+- [ ] "Adicionar" (clique, toque ou **Enter** dentro do campo "Novo item") acrescenta o item no fim da lista, com espaços das pontas removidos, limpa o campo e deixa o foco nele. Enter nesse campo **não** salva o formulário (exceção à regra do Enter da US02).
+- [ ] Campo vazio ou só com espaços: "Adicionar" não faz nada, sem mensagem de erro.
+- [ ] Itens com o mesmo texto são permitidos.
+- [ ] Cada item da lista do formulário mostra o texto e o botão "Remover" (nome acessível com o texto do item, ex.: "Remover Cartão do convênio"). Ao remover, o foco vai para o próximo item da lista ou, se não houver, para o campo "Novo item".
+- [ ] Com 20 itens, o campo "Novo item" e o botão "Adicionar" ficam desativados e aparece a dica "Limite de 20 itens." Removendo um item, eles voltam.
+- [ ] Cada adição e remoção é anunciada pelo leitor de tela sem tirar o foco do lugar (ex.: "Cartão do convênio adicionado.", "Cartão do convênio removido."), na região de avisos do próprio formulário.
+- [ ] Ao **Salvar**, se o campo "Novo item" ainda tiver texto, ele é adicionado como item antes de salvar (nada do que foi digitado se perde).
+- [ ] Os itens só são gravados ao **Salvar**. "Cancelar" ou Esc descartam as adições e remoções.
+- [ ] Item novo é salvo com `feito: false`. Editar o compromisso mantém o `feito` dos itens que já existiam.
+- [ ] O checklist funciona com ou sem data e com ou sem hora (inclusive com "Ainda sem data" marcada).
+- [ ] O texto dos itens aparece sempre como texto, nunca como HTML (regra da US01).
+- [ ] A 360px o grupo cabe sem rolagem horizontal; textos longos quebram linha; "Adicionar" e "Remover" têm 44px de área de toque.
+
+**Agenda US18: Marcar os itens do checklist no card**
+Como usuário, quero ir marcando no próprio compromisso o que já separei, para conferir tudo rápido na hora de sair.
+- [ ] Um compromisso com pelo menos um item mostra, no card, o botão "O que levar (2 de 5)" (marcados de total). Com todos marcados: "O que levar: tudo pronto (5 de 5)". Sem itens, nada aparece.
+- [ ] O botão abre e fecha a lista do checklist, com `aria-expanded`, por clique, toque, Enter ou Espaço. A lista começa **fechada** sempre que a página abre e continua aberta quando a tela é redesenhada (a cada minuto ou depois de marcar um item).
+- [ ] Cada item da lista aberta é uma caixa de marcar (`input type="checkbox"`) com o texto do item como rótulo. A área de toque é de pelo menos 44px de altura.
+- [ ] Item marcado aparece riscado **e** com a caixa marcada (não só pela cor).
+- [ ] Marcar ou desmarcar grava na hora: muda o `feito` do item, o `atualizadoEm` do compromisso e `agenda:ultima-mudanca` (US10), e o contador do botão se atualiza.
+- [ ] Depois de marcar, o foco **continua** na mesma caixa. Não aparece aviso flutuante (o próprio leitor de tela anuncia "marcado" ou "desmarcado").
+- [ ] Se a gravação falhar (`localStorage` cheio), a caixa volta ao estado anterior e aparece o aviso "Não foi possível salvar o compromisso." (mesmo texto da US07).
+- [ ] O checklist aparece igual em todas as seções: "Próximos compromissos", "Ficou pendente", "Sem data" e "Anteriores".
+- [ ] Marcar itens não muda o `status` do compromisso, e marcar "Feito" no compromisso não muda os itens.
+- [ ] A 360px a lista não causa rolagem horizontal e textos longos quebram linha.
+
+**Agenda US19: Hora de fim ("Termina às" e "Duração")**
+Como usuário, quero dizer até que horas vai um compromisso, para enxergar quanto tempo ele ocupa no meu dia.
+- [ ] O formulário tem, logo depois do campo Hora, o grupo "Hora de fim" com dois campos lado a lado, cada um com rótulo visível:
+  - **"Termina às"**: campo de hora do próprio navegador (`input type="time"`), vazio por padrão;
+  - **"Duração"**: lista de escolha (`select`) com as opções "Sem hora de fim" (padrão), "30 min", "1 h", "2 h" e "Outro".
+- [ ] "Outro" mostra o campo "Minutos" (com rótulo), que aceita um número inteiro de 1 a 1439.
+- [ ] A 360px os dois campos podem ficar um embaixo do outro (a artista decide), sem rolagem horizontal.
+- [ ] **Um campo preenche o outro**, assim que o valor muda (sem precisar salvar):
+  - mudar "Termina às" para uma hora **depois** da Hora: a Duração passa a ser a diferença. Se for 30, 60 ou 120 minutos, fica marcada a opção "30 min", "1 h" ou "2 h"; senão fica "Outro" com o número de minutos (ex.: 09:00 até 10:30 → "Outro", 90);
+  - apagar "Termina às", ou colocar uma hora igual ou antes da Hora: a Duração volta para "Sem hora de fim";
+  - escolher "30 min", "1 h" ou "2 h", ou digitar um número válido em "Outro": "Termina às" passa a ser Hora + duração (ex.: 09:00 + "1 h" → 10:00). Se o resultado passar de 23:59, "Termina às" fica vazio;
+  - escolher "Sem hora de fim", ou "Outro" com o campo "Minutos" vazio ou inválido: "Termina às" fica vazio.
+- [ ] **Mudar a Hora** (continuando com hora) **mantém a duração** e recalcula "Termina às" (ex.: 09:00 a 10:00, Hora muda para 14:00 → "Termina às" vira 15:00). Se o novo fim passar de 23:59, "Termina às" fica vazio.
+- [ ] **Sem Hora** (campo Hora apagado ou "Ainda sem data" marcada): "Termina às", Duração e "Minutos" ficam vazios e desativados, com a dica "Escolha uma hora para usar a hora de fim." Ao salvar, `duracaoMin: null`. Se a Hora voltar a ser preenchida, os dois campos voltam vazios ("Sem hora de fim").
+- [ ] **Ao salvar**, a duração é decidida assim (o que for guardado é só o `duracaoMin`):
+  - "Termina às" preenchido e depois da Hora: `duracaoMin` = diferença em minutos;
+  - "Termina às" preenchido e igual ou antes da Hora: nada é salvo e aparece, perto de "Termina às", "A hora de fim precisa ser depois da hora de início.";
+  - "Termina às" vazio e Duração com valor que passa de 23:59: nada é salvo e aparece, perto da Duração, "Com essa duração, o compromisso passaria da meia-noite. Escolha uma duração menor.";
+  - "Outro" com "Minutos" vazio, não inteiro ou fora de 1 a 1439: nada é salvo e aparece, perto do campo, "Digite um número de minutos entre 1 e 1439.";
+  - "Sem hora de fim" e "Termina às" vazio: `duracaoMin: null`.
+- [ ] Os três erros seguem as regras de aviso da US03 (`aria-invalid`, `aria-describedby`, foco no primeiro campo com problema, na ordem do formulário, e o que foi digitado não se perde).
+- [ ] **Ao editar**, um compromisso com `duracaoMin` abre com "Termina às" calculado e a Duração na opção certa (30, 60 ou 120 na opção; outro valor em "Outro" com o número).
+- [ ] **No card**, em todas as seções, um compromisso com hora de fim mostra o intervalo no lugar da hora: "09:30 – 10:30". Para leitores de tela, o intervalo é lido como "das 09:30 às 10:30" (sugestão: texto escondido). Sem hora de fim, continua só "09:30".
+- [ ] A hora de fim **não** muda quando o compromisso "passou" (continua valendo a hora de início, seção 3), nem a ordem da lista, nem o "Sair às" (US12).
+
+**Agenda US20: Aviso de conflito e de aperto**
+Como usuário, quero ser avisado quando dois compromissos do mesmo dia se atropelam ou não me dão tempo de ir de um para o outro, para reorganizar antes de virar problema.
+- [ ] A Agenda compara os compromissos **do mesmo dia** que têm hora e `status: "aberto"` (regras completas em "Conflito e aperto", na seção 3). Compromissos de dia todo, sem data, "Feito" e "Não vou fazer" ficam de fora.
+- [ ] **Conflito:** o segundo compromisso começa antes de o primeiro acabar, ou os dois começam no mesmo minuto. O card do segundo mostra, em texto:
+  - "Conflito: Dentista vai até 10:30." (quando o primeiro tem hora de fim);
+  - "Conflito: mesmo horário de Dentista." (quando os dois começam no mesmo minuto).
+- [ ] **Aperto:** não há conflito, mas a hora de sair para o segundo (hora dele menos o "Tempo para sair"; sem "Tempo para sair", menos 15 minutos) cai **antes** do fim do primeiro. O card do segundo mostra, em texto: "Aperto: sair às 10:15, mas Dentista vai até 10:30." Se a hora de sair for exatamente igual ao fim do primeiro, **não** é aperto.
+- [ ] Um compromisso **sem hora de fim** só gera conflito com outro que comece no mesmo minuto; ele nunca gera aperto.
+- [ ] O aviso aparece **só no card do segundo** (o que começa depois; no mesmo minuto, o que vem depois na ordem da US01), e só na lista "Próximos compromissos". O primeiro pode estar em qualquer seção (ex.: já passou, mas ainda não acabou).
+- [ ] Se o segundo tiver problema com mais de um compromisso, aparece **um** aviso só: conflito vem antes de aperto; entre dois do mesmo tipo, vale o primeiro na ordem da US01.
+- [ ] "Conflito" e "Aperto" são texto, com ícone e cor que **não** são a única forma de entender (contraste AA). O texto do título do outro compromisso aparece como texto, nunca como HTML.
+- [ ] O aviso **não** impede de salvar e não abre janela: ele só aparece no card.
+- [ ] Os avisos se atualizam depois de criar, editar, excluir, importar, marcar "Feito", desfazer e na atualização de cada minuto. Eles **não** são anunciados a cada minuto pelo leitor de tela (sem `aria-live` nesse texto).
+- [ ] Mudar o horário ou a duração de um dos dois para resolver o problema faz o aviso sumir na hora.
+- [ ] A 360px o aviso quebra linha sem rolagem horizontal.
+
+#### Entrega 3b: faixa da semana, tema claro e letra grande
+
+**Agenda US21: Faixa dos próximos 7 dias**
+Como usuário, quero ver de relance como está a minha semana, para saber quais dias estão cheios e quais estão livres.
+- [ ] A página tem a faixa "Próximos 7 dias", com título de seção (`h2`), **depois** de "Ficou pendente" e **antes** de "Próximos compromissos".
+- [ ] A faixa mostra 7 dias: hoje e os 6 seguintes, em ordem, como uma lista (`ul`/`li`).
+- [ ] Cada dia mostra, em texto:
+  - o nome: "Hoje", "Amanhã" ou o dia da semana abreviado com o dia do mês (ex.: "Sex 14"; a artista pode ajustar o formato);
+  - a quantidade: "1 compromisso", "3 compromissos" ou "Livre".
+- [ ] A quantidade conta só o que aparece em "Próximos compromissos" naquele dia (com data, `status: "aberto"` e que ainda não passou), **incluindo** os de dia todo. Hoje não conta o que já passou.
+- [ ] Dia livre é diferente do dia ocupado pelo **texto** "Livre", não só pela cor.
+- [ ] **Dia com compromisso** é um botão. Ao tocar (clique, toque, Enter ou Espaço), a página rola até o grupo desse dia na lista "Próximos compromissos" e o foco vai para o título do dia (`h3` com `tabindex="-1"`). Com `prefers-reduced-motion`, a rolagem é sem animação.
+- [ ] O nome acessível do botão diz o dia e a quantidade (ex.: "Hoje, 2 compromissos").
+- [ ] **Dia livre** não é botão, não recebe foco e não faz nada ao ser tocado.
+- [ ] A faixa aparece sempre, mesmo com a lista vazia (aí os 7 dias aparecem como "Livre").
+- [ ] A faixa se atualiza sem recarregar: depois de criar, editar, excluir, importar, marcar "Feito" e desfazer, e a cada minuto (um compromisso que passou sai da contagem; depois da meia-noite, os dias andam um para a frente).
+- [ ] A 360px os 7 dias cabem **sem rolagem horizontal** (podem quebrar em mais de uma linha; a artista decide) e os botões têm 44px de área de toque.
+
+**Agenda US22: Tema claro e escuro**
+Como usuário, quero trocar a Agenda para um tema claro, para ler melhor de dia ou em lugares bem iluminados.
+- [ ] A página tem o botão "Tema claro", que liga e desliga o tema claro e informa o estado com `aria-pressed` ("true" = tema claro ligado). O tema padrão é o **Escuro** (o de hoje).
+- [ ] O lugar do botão é definido pela artista (o cabeçalho já está cheio a 360px). Ele fica visível em todas as situações da tela (inclusive com a lista vazia), sem cobrir compromissos nem botões, e funciona com o teclado.
+- [ ] Ao trocar, a página inteira muda de tema na hora, sem recarregar, e o foco continua no botão.
+- [ ] O tema claro cobre **todas** as partes: cabeçalho, faixas, seções, cards, checklist, avisos de conflito e de aperto, faixa da semana, formulário, todas as janelas, avisos flutuantes, erros e foco.
+- [ ] Nos dois temas, texto, botões, bordas de campo, foco, erros e marcas ("Cobrar", "Conflito", "Aperto", situações) têm contraste AA.
+- [ ] Os campos nativos de data e hora e a barra de rolagem seguem o tema (sugestão: propriedade CSS `color-scheme`).
+- [ ] A escolha é guardada em `agenda:preferencias` (formato na seção 3) e vale ao reabrir a página.
+- [ ] O tema é aplicado **antes** de a página aparecer: ao abrir com o tema claro, a tela nunca pisca no escuro. *(Sugestão: um script pequeno no `head` que lê `agenda:preferencias`.)*
+- [ ] Se `agenda:preferencias` não existir, estiver corrompida ou o `localStorage` estiver indisponível, vale o tema escuro, sem erro no console e sem aviso. Com o `localStorage` indisponível, a troca funciona enquanto a página estiver aberta.
+- [ ] Trocar o tema **não** grava `agenda:ultima-mudanca` (não é mudança nos compromissos) e não aparece no arquivo de cópia (US08).
+
+**Agenda US23: Letra grande**
+Como usuário, quero aumentar o tamanho da letra da Agenda, para ler com conforto sem precisar dar zoom.
+- [ ] A página tem o botão "Letra grande", no mesmo lugar do botão de tema, que liga e desliga a letra grande e informa o estado com `aria-pressed`. O padrão é a letra **Normal**.
+- [ ] Ligada, **todo** o texto da Agenda (inclusive formulário, janelas, avisos e faixa da semana) fica cerca de 25% maior que na letra Normal.
+- [ ] Com a letra grande, a 360px, não há rolagem horizontal e nada fica cortado. *(Exceção à US08: o cabeçalho pode quebrar em duas linhas com a letra grande.)*
+- [ ] A letra grande funciona junto com qualquer um dos dois temas.
+- [ ] A escolha é guardada em `agenda:preferencias`, é aplicada antes de a página aparecer e segue as mesmas regras de falha da US22 (padrão: letra Normal).
+- [ ] O zoom do próprio navegador continua funcionando junto com a letra grande (tamanhos em `rem`, não em `px` fixos para o texto).
+- [ ] Trocar a letra **não** grava `agenda:ultima-mudanca` e não aparece no arquivo de cópia.
+
+### Mudanças em stories anteriores (Etapa 3)
+
+| Story | Entrega | O que muda |
+|---|---|---|
+| US01 | 3a | O card pode mostrar o intervalo "09:30 – 10:30" (US19), o botão "O que levar (2 de 5)" com a lista (US18) e o aviso de conflito ou de aperto (US20). A atualização a cada minuto também atualiza os avisos de conflito e de aperto. |
+| US01 | 3b | A faixa "Próximos 7 dias" (US21) entra entre "Ficou pendente" e "Próximos compromissos". Ordem da página: faixas, "Ficou pendente", "Próximos 7 dias", "Próximos compromissos", "Sem data", "Anteriores". Os títulos de dia da lista principal (`h3`) podem receber o foco pelo código (`tabindex="-1"`). |
+| US02 | 3a | Campos novos: "Termina às" e "Duração" (US19), depois da Hora, e o grupo "O que levar" (US17), depois da Observação. Enter no campo "Novo item" adiciona o item e **não** salva. Item novo salvo com `duracaoMin` e `itens` conforme o formulário. |
+| US03 | 3a | Erros novos da US19 ("A hora de fim precisa ser depois da hora de início.", "Com essa duração, o compromisso passaria da meia-noite. Escolha uma duração menor." e "Digite um número de minutos entre 1 e 1439."), com as mesmas regras. |
+| US04 | 3a | O formulário de edição mostra e salva a hora de fim e o checklist. Os itens já marcados continuam marcados. |
+| US06 | 3a | Os cards de "Anteriores" mostram o intervalo da hora de fim e o checklist, mas nunca o aviso de conflito ou de aperto. |
+| US07 | 3b | Chave nova `agenda:preferencias` (seção 3). Os compromissos continuam na `versao: 2`. |
+| US08 / US09 | 3a | O arquivo de cópia continua na `versao: 2` e passa a levar `duracaoMin` e `itens` preenchidos. Na importação, esses campos são conferidos pelas regras da seção 3; um valor fora da regra vira o padrão (`null` ou `[]`) sem descartar o compromisso. Arquivos da Etapa 2 continuam sendo importados. `agenda:preferencias` **não** vai no arquivo. |
+| US12 | 3a | O "Tempo para sair" do segundo compromisso é usado no aviso de aperto (US20). |
+| US16 | 3a | "Ainda sem data" também desativa e limpa "Termina às" e "Duração". O checklist continua disponível. |
+
+### Requisitos gerais da Etapa 3
+
+Os requisitos gerais das Etapas 1 e 2 valem para **tudo** o que é novo, e também:
+- [ ] "O que levar", "tudo pronto", "Conflito", "Aperto", "Livre" e o estado dos botões "Tema claro" e "Letra grande" são **texto** (ou `aria-pressed` / `aria-expanded`), nunca só cor ou ícone.
+- [ ] O formulário, mais comprido por causa da hora de fim e do checklist, cabe na tela a 360px e rola por dentro.
+- [ ] Tudo o que é novo funciona só com o teclado, com foco visível nos dois temas.
+- [ ] Os compromissos continuam na `versao: 2`: dados salvos pela Etapa 2 abrem sem migração e sem perder nada.
+- [ ] O `localStorage` continua só com chaves `agenda:` (tabela da seção 3) e nunca usa `localStorage.clear()`.
+- [ ] Nada é enviado para a internet.
+
+---
+
 ## 3. Regras e modelo de dados
 
 ### Quando um compromisso "passou"
 - **Com hora:** passou quando o horário atual for **depois** do minuto marcado. Ex.: um compromisso de hoje às 10:00 continua na lista às 10:00 e vai para "Anteriores" às 10:01.
 - **Sem hora (dia todo):** passou a partir da meia-noite do dia seguinte (00:00). Ex.: um compromisso de dia todo em 14/11 fica na lista até 23:59 de 14/11.
 - **Sem data (Etapa 2b):** nunca passa.
-- O compromisso guarda só a hora de início (não tem hora de fim; ela está planejada para a Etapa 3).
+- **Com hora de fim (Etapa 3a):** a regra continua a mesma, pela **hora de início**. A hora de fim não muda quando o compromisso passa.
 - A regra usa o relógio e o fuso do aparelho de quem usa.
 
 ### Onde cada item aparece (Etapa 2b)
@@ -368,6 +531,29 @@ Conferido nesta ordem; vale a primeira linha que bater.
 - Até 15 minutos antes da hora de sair: "Sair às HH:MM" (com " do dia anterior" quando for o caso).
 - De 15 minutos antes até a hora de sair: "Sair em X min" (com menos de 1 minuto: "Sair agora").
 - Depois da hora de sair, até o compromisso passar: "Hora de sair: HH:MM (já passou)".
+
+### Hora de fim (Etapa 3a)
+- Só a duração é guardada: `duracaoMin`. A hora de fim é calculada: **fim = hora + `duracaoMin`**.
+- Só existe com hora. O fim precisa ficar no mesmo dia: hora (em minutos desde 00:00) + `duracaoMin` ≤ 1439 (23:59).
+- No formulário, "Termina às" e "Duração" são duas formas de ver o mesmo valor (US19). Opções da Duração: "Sem hora de fim" (`null`), "30 min" (30), "1 h" (60), "2 h" (120) e "Outro" (qualquer outro valor de 1 a 1439).
+- No card: "HH:MM – HH:MM" (início – fim).
+
+### Conflito e aperto (Etapa 3a)
+Para cada compromisso **B** da lista "Próximos compromissos" que tem hora, a Agenda compara com cada compromisso **A** do **mesmo dia** que:
+- tem hora e `status: "aberto"` (pode estar em qualquer seção: "Próximos", "Ficou pendente" ou "Anteriores" com "Passou");
+- começa antes de B, ou no mesmo minuto mas vem antes de B na ordem da US01.
+
+| Situação | Resultado no card de B |
+|---|---|
+| A e B começam no mesmo minuto | Conflito: "Conflito: mesmo horário de A." |
+| A tem hora de fim e B começa **antes** do fim de A | Conflito: "Conflito: A vai até HH:MM." |
+| A tem hora de fim, não há conflito e a hora de sair de B (hora de B menos `antecedenciaMin` de B, ou menos 15 minutos se for `null`) é **antes** do fim de A | Aperto: "Aperto: sair às HH:MM, mas A vai até HH:MM." |
+| A sem hora de fim (e horário diferente), ou hora de sair de B igual ou depois do fim de A | Nada |
+
+- B começar **exatamente** na hora em que A acaba não é conflito (pode ser aperto, pela hora de sair).
+- B mostra **um** aviso só: conflito antes de aperto; entre dois do mesmo tipo, vale o A que vem primeiro na ordem da US01.
+- Compromissos de dia todo, sem data, "Feito" e "Não vou fazer" nunca entram na comparação.
+- Os nomes "A" e "B" acima são só para explicar: na tela aparece o título do compromisso A.
 
 ### Títulos dos dias
 | Situação | Título |
@@ -390,7 +576,7 @@ Abreviações dos dias: Dom, Seg, Ter, Qua, Qui, Sex, Sáb. "daqui a X dias" con
 | `agenda:lembrete-backup-adiado-ate` | data e hora ISO até quando a faixa de cópia fica escondida (US10) | 2a |
 | `agenda:compromissos-antes-da-importacao` | conteúdo de `agenda:compromissos` logo antes de um "Substituir tudo" (US09) | 2a |
 | `agenda:compromissos-v1` | texto original da versão 1, guardado antes da migração (US11) | 2b |
-| `agenda:preferencias` | **reservada** para tema e tamanho de letra (Etapa 3, I12). Não é usada na Etapa 2. | Etapa 3 |
+| `agenda:preferencias` | tema e tamanho de letra (US22 e US23), formato abaixo | 3b |
 
 ### Versão 1 (Etapa 1 e Entrega 2a)
 
@@ -432,7 +618,7 @@ Abreviações dos dias: Dom, Seg, Ter, Qua, Qui, Sex, Sáb. "daqui a X dias" con
 
 ### Versão 2 (a partir da Entrega 2b)
 
-Já pensada para as Etapas 3 e 4: os campos `duracaoMin` e `itens` são criados agora, vazios, para não precisar de outra migração.
+Já pensada para as Etapas 3 e 4: os campos `duracaoMin` e `itens` foram criados na Entrega 2b, vazios, para não precisar de outra migração. **A Etapa 3 continua na versão 2** e passa a preencher esses dois campos.
 
 ```json
 {
@@ -449,10 +635,13 @@ Já pensada para as Etapas 3 e 4: os campos `duracaoMin` e `itens` são criados 
       "cobrar": false,
       "status": "aberto",
       "concluidoEm": null,
-      "duracaoMin": null,
-      "itens": [],
+      "duracaoMin": 60,
+      "itens": [
+        { "texto": "Cartão do convênio", "feito": true },
+        { "texto": "Documento com foto", "feito": false }
+      ],
       "criadoEm": "2026-11-04T18:20:00.000Z",
-      "atualizadoEm": "2026-11-04T18:20:00.000Z"
+      "atualizadoEm": "2026-11-06T08:10:00.000Z"
     },
     {
       "id": "c-1731590600000-p2zq",
@@ -479,9 +668,24 @@ Já pensada para as Etapas 3 e 4: os campos `duracaoMin` e `itens` são criados 
 - `cobrar`: `true` ou `false`. Só pode ser `true` se `data` tiver valor.
 - `status`: `"aberto"`, `"feito"` ou `"nao-vou-fazer"`. Item sem data é sempre `"aberto"`.
 - `concluidoEm`: data e hora ISO de quando virou "feito" ou "nao-vou-fazer", ou `null`.
-- `duracaoMin`: **reservado para a Etapa 3** (I7). Sempre `null` na Etapa 2.
-- `itens`: **reservado para a Etapa 3** (I5, checklist). Sempre `[]` na Etapa 2.
+- `duracaoMin` *(usado a partir da Etapa 3a, US19)*: inteiro de 1 a 1439 ou `null` (`null` = sem hora de fim). Só pode ter valor se `hora` tiver valor, e hora + `duracaoMin` não pode passar de 23:59. Na Etapa 2 era sempre `null`.
+- `itens` *(usado a partir da Etapa 3a, US17 e US18)*: lista de no máximo 20 objetos `{ "texto": ..., "feito": ... }`, na ordem em que foram adicionados. `texto`: de 1 a 60 caracteres, sem espaços nas pontas. `feito`: `true` ou `false`. Vale para qualquer compromisso, com ou sem data. Na Etapa 2 era sempre `[]`.
 - Ao **ler** dados ou importar arquivos (US07, US09), um campo novo ausente ou com valor fora da regra recebe o valor padrão (`null`, `false`, `"aberto"` ou `[]`), sem descartar o item. O item só é descartado pelas regras de título, data e hora.
+- Regras de leitura dos campos da Etapa 3: `duracaoMin` fora da regra (não inteiro, fora de 1 a 1439, sem hora ou passando de 23:59) vira `null`. `itens` que não seja lista vira `[]`. Dentro da lista, um item sem `texto` válido (vazio ou só espaços) é ignorado; um texto maior que 60 é cortado em 60; `feito` só é `true` se for exatamente `true`; do 21º item em diante, eles são ignorados.
+
+### Preferências (Etapa 3b)
+
+```json
+{
+  "tema": "escuro",
+  "letra": "normal"
+}
+```
+- Guardadas em `agenda:preferencias`, separadas dos compromissos (não mudam a `versao` dos compromissos).
+- `tema`: `"escuro"` (padrão) ou `"claro"`.
+- `letra`: `"normal"` (padrão) ou `"grande"`.
+- Chave ausente, JSON inválido ou valor fora da regra: vale o padrão daquele campo, sem aviso e sem apagar a chave.
+- Não vão no arquivo de cópia (são do aparelho, não dos compromissos) e não gravam `agenda:ultima-mudanca`.
 
 ### Arquivo de cópia (US08 e US09)
 
@@ -493,8 +697,9 @@ Já pensada para as Etapas 3 e 4: os campos `duracaoMin` e `itens` são criados 
   "compromissos": [ "...mesmo formato da versão em uso..." ]
 }
 ```
-- Na Entrega 2a o arquivo sai com `"versao": 1`; a partir da 2b, com `"versao": 2`.
+- Na Entrega 2a o arquivo sai com `"versao": 1`; a partir da 2b, com `"versao": 2`. Na Etapa 3 continua com `"versao": 2`, agora com `duracaoMin` e `itens` preenchidos.
 - Na importação, `app` e `exportadoEm` são opcionais (assim também dá para importar o conteúdo puro de `agenda:compromissos`). O que define o formato é a `versao` e a lista `compromissos`.
+- **Risco aceito (Etapa 3):** como a versão não muda, uma cópia feita na Etapa 3 e importada numa Agenda da Etapa 2 perderia o checklist e a hora de fim sem avisar. Isso só aconteceria com uma versão antiga do site, que não fica publicada.
 
 ---
 
@@ -505,6 +710,8 @@ Já pensada para as Etapas 3 e 4: os campos `duracaoMin` e `itens` são criados 
 | **Etapa 1 (MVP)** | US01 Lista por dia, US02 Criar, US03 Avisos do formulário, US04 Editar, US05 Excluir com confirmação, US06 Anteriores, US07 Salvo no navegador com aviso, além dos requisitos gerais da Etapa 1 |
 | **Etapa 2, Entrega 2a** | US08 Baixar cópia, US09 Importar cópia, US10 Lembrete de cópia, mudanças da US01 e da US07 (cabeçalho, foco no título e chaves novas) e requisitos gerais da Etapa 2 |
 | **Etapa 2, Entrega 2b** | US11 Migração para a versão 2, US12 "Sair às...", US13 Feito e desfazer, US14 "Me cobrar" e "Ficou pendente", US15 Resolver pendência, US16 "Sem data", mudanças nas US01 a US07 e requisitos gerais da Etapa 2 |
+| **Etapa 3, Entrega 3a** | US17 Checklist no formulário, US18 Marcar o checklist no card, US19 Hora de fim, US20 Conflito e aperto, mudanças da Etapa 3a nas stories anteriores e requisitos gerais da Etapa 3 |
+| **Etapa 3, Entrega 3b** | US21 Faixa dos próximos 7 dias, US22 Tema claro e escuro, US23 Letra grande, mudanças da Etapa 3b nas stories anteriores e requisitos gerais da Etapa 3 |
 
 Ordem sugerida dentro da Etapa 1: modelo de dados e US07 (salvar e carregar) → US02 e US03 (formulário) → US01 (lista) → US06 (Anteriores) → US04 (editar) → US05 (excluir) → requisitos gerais → testador escreve `docs/projetos/agenda/testes/etapa-1.md` → commit da agenda e depois da Labs (US31 da Labs) → professor escreve as aulas (US34 da Labs).
 
@@ -512,34 +719,33 @@ Ordem sugerida na Entrega 2a: artista desenha a janela "Seus dados" e a faixa de
 
 Ordem sugerida na Entrega 2b: artista desenha as partes novas → US11 (migração, testada com dados reais da versão 1 e com um arquivo da 2a) → US16 (sem data, porque mexe no formulário e na regra da data) → US13 (feito) → US14 e US15 (pendências) → US12 (sair às) → mudanças nas US01 a US07 → testador escreve `docs/projetos/agenda/testes/etapa-2b.md` → commits → aulas.
 
+Ordem sugerida na Entrega 3a: artista desenha o formulário novo (hora de fim e "O que levar"), o checklist no card e os avisos de conflito e de aperto → regras de leitura de `duracaoMin` e `itens` (seção 3), testadas com dados e um arquivo da Etapa 2 → US19 (hora de fim, porque mexe no formulário e na Hora) → US20 (conflito e aperto, que depende da US19) → US17 (checklist no formulário) → US18 (checklist no card) → mudanças nas stories anteriores → testador escreve `docs/projetos/agenda/testes/etapa-3a.md` → commits → aulas.
+
+Ordem sugerida na Entrega 3b: artista desenha a faixa da semana, a paleta do tema claro (para **todas** as partes, inclusive as da 3a) e o lugar dos botões de aparência → `agenda:preferencias` e o script do `head` → US22 (tema) → US23 (letra) → US21 (faixa da semana, já nos dois temas) → testador escreve `docs/projetos/agenda/testes/etapa-3b.md` (contraste nos dois temas e letra grande a 360px) → commits → aulas.
+
 ---
 
 ## 5. Fora do escopo / evoluções futuras
 
-**Etapa 3 "organizar o tempo"** *(aprovada como direção pelo João em 2026-11-05; requisitos detalhados depois)*
-1. **I5 Checklist "O que levar"** dentro do compromisso (usa o campo `itens`, já reservado).
-2. **I6 Faixa da semana:** os próximos 7 dias com a quantidade de compromissos e os dias livres. É o passo intermediário até o calendário do mês.
-3. **I7 Hora de fim (duração) e aviso de conflito e de "aperto"** entre dois compromissos (usa o campo `duracaoMin`, já reservado). *A "hora de fim", que estava fora do escopo da Etapa 1, foi aprovada como direção para esta etapa.*
-4. **I12 Tema claro e letra maior**, guardados em `agenda:preferencias`.
+**Etapa 3 "organizar o tempo"**: detalhada na seção 2 (US17 a US23), aprovada pelo João em 2026-11-06.
 
 **Etapa 4 "captura rápida"**
-5. **I10 Criar um compromisso escrevendo uma frase** (ex.: "dentista sexta às 9h"), entendida só com regras em JavaScript, **sem** inteligência artificial externa e sem chave de API. A frase vira um rascunho do formulário para a pessoa conferir antes de salvar.
+1. **I10 Criar um compromisso escrevendo uma frase** (ex.: "dentista sexta às 9h"), entendida só com regras em JavaScript, **sem** inteligência artificial externa e sem chave de API. A frase vira um rascunho do formulário para a pessoa conferir antes de salvar.
 
 **Depois (sem etapa definida, na ordem de prioridade atual)**
-6. **Calendário do mês** (era a primeira evolução da lista antiga; o João decidiu fazer as Etapas 2 a 4 antes) e visões de dia e de semana.
-7. **I8 Repetição flexível:** "toda segunda", "todo mês no dia 10" e "a cada N dias depois de feito" (combina com o "Feito" da US13).
-8. **I2 Enviar ao calendário do celular (.ics):** a saída realista para lembrete com o site fechado. Cópia de mão única.
-9. **I4 Painel "Agora" e notificação do navegador.** **Limitação:** sem servidor, só avisa com a aba aberta; no Android precisa de service worker e no iPhone só funciona com o site instalado na tela inicial. Lembrete com o site fechado exige push com servidor.
-10. **I13 Compartilhar um compromisso por link** (dados no próprio endereço, sem servidor; o link é uma cópia e os dados ficam visíveis nele).
-11. Busca por texto.
-12. Categorias com cores.
-13. Arrastar e soltar um compromisso para outro dia ou horário.
-14. Desfazer uma exclusão.
-15. **Agenda 2.0** com back-end em Java (vai precisar de exceção de tecnologia aprovada nos requisitos dela e de outra hospedagem, porque o GitHub Pages só publica sites estáticos).
+2. **Calendário do mês** (era a primeira evolução da lista antiga; o João decidiu fazer as Etapas 2 a 4 antes) e visões de dia e de semana. *(A faixa dos próximos 7 dias, US21, é o passo intermediário.)*
+3. **I8 Repetição flexível:** "toda segunda", "todo mês no dia 10" e "a cada N dias depois de feito" (combina com o "Feito" da US13).
+4. **I2 Enviar ao calendário do celular (.ics):** a saída realista para lembrete com o site fechado. Cópia de mão única.
+5. **I4 Painel "Agora" e notificação do navegador.** **Limitação:** sem servidor, só avisa com a aba aberta; no Android precisa de service worker e no iPhone só funciona com o site instalado na tela inicial. Lembrete com o site fechado exige push com servidor.
+6. **I13 Compartilhar um compromisso por link** (dados no próprio endereço, sem servidor; o link é uma cópia e os dados ficam visíveis nele).
+7. Busca por texto.
+8. Categorias com cores.
+9. Arrastar e soltar um compromisso para outro dia ou horário.
+10. Desfazer uma exclusão.
+11. **Agenda 2.0** com back-end em Java (vai precisar de exceção de tecnologia aprovada nos requisitos dela e de outra hospedagem, porque o GitHub Pages só publica sites estáticos).
 
 **Fora do escopo da Etapa 1**
 - Login, contas, sincronizar entre aparelhos ou guardar os dados fora do navegador.
-- Hora de fim ou duração do compromisso. *(Planejada para a Etapa 3, I7.)*
 - Bibliotecas, frameworks ou etapa de build (inclusive bibliotecas de calendário ou de datas).
 - Notificações do navegador, e-mail ou qualquer envio de dados para a internet.
 - Versão em outros idiomas e formato de hora de 12h (AM/PM).
@@ -552,3 +758,16 @@ Ordem sugerida na Entrega 2b: artista desenha as partes novas → US11 (migraç�
 - Marcar "Feito" em item sem data.
 - Apagar sozinho as cópias de segurança (`agenda:compromissos-v1`, `agenda:compromissos-antes-da-importacao`): elas ficam guardadas.
 - Bibliotecas, frameworks, back-end e testes automatizados (as mesmas restrições da Etapa 1).
+
+**Fora do escopo da Etapa 3**
+- Compromisso que passa da meia-noite (a hora de fim vai no máximo até 23:59 do mesmo dia) e compromisso de vários dias.
+- Hora de fim em compromisso de dia todo ou sem data.
+- Conflito ou aperto com compromissos de dia todo, entre dias diferentes, ou mostrado em "Anteriores", "Ficou pendente" e "Sem data".
+- Bloquear o salvamento por causa de um conflito, ou sugerir outro horário.
+- Considerar o tempo de volta ou o deslocamento entre locais (o aperto usa só o "Tempo para sair" do segundo compromisso).
+- Checklist modelo que se repete, reordenar itens, editar o texto de um item (é só remover e adicionar de novo) e botão de desmarcar todos.
+- Marcar o compromisso como "Feito" sozinho quando todos os itens do checklist estão marcados.
+- Faixa da semana com mais de 7 dias, navegação para outras semanas, ou criar compromisso tocando num dia livre.
+- Tema "igual ao aparelho" (segue o sistema), outros temas ou cores escolhidas pela pessoa, e mais de dois tamanhos de letra.
+- Levar as preferências no arquivo de cópia.
+- Notificações do navegador, bibliotecas, frameworks, back-end e testes automatizados (as mesmas restrições das Etapas 1 e 2).
