@@ -528,6 +528,41 @@
           { "titulo": "Glossário", "url": "data/glossario.json" }
         ],
         "imagens": []
+      },
+      {
+        "agente": "product-owner",
+        "resumo": "Etapa 4 \"captura rápida\": fez 8 perguntas ao João e mais 4 decisões, e escreveu as US24 a US32, divididas na Entrega 4a (criar por frase com título, data e hora) e na Entrega 4b (hora de fim, tempo para sair, \"levar\" e local), com tabelas de frases de exemplo e o resultado esperado de cada uma.",
+        "entregaveis": [
+          { "titulo": "Requisitos (Etapa 4)", "url": "docs/projetos/agenda/requisitos.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "artista",
+        "resumo": "Etapa 4, Entrega 4a: desenhou o painel \"Criar por frase\" num card abaixo da barra \"Aparência\", com botão de contorno, e a tira \"Entendi\" no topo do formulário, com a dica e o aviso de data na mesma cara âmbar.",
+        "entregaveis": [
+          { "titulo": "Design (seção 16)", "url": "docs/projetos/agenda/design.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "dev",
+        "resumo": "Implementou a Entrega 4a: escrever uma frase como \"dentista amanhã às 10h\" abre o formulário já preenchido, com a linha \"Entendi\". A leitura da frase usa expressões regulares numa função sem tela (entenderFrase, em js/frase.js), sem IA e sem servidor. Os dados continuam na versão 2.",
+        "entregaveis": [
+          { "titulo": "Site publicado", "url": "https://joaosaccucci.github.io/agenda/" },
+          { "titulo": "Leitura da frase (JS)", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/js/frase.js" },
+          { "titulo": "Tela (JS)", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/js/app.js" },
+          { "titulo": "README", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/README.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "testador",
+        "resumo": "Etapa 4, Entrega 4a: conferiu com um script próprio as 52 frases da tabela e mais 91 frases difíceis, e fez 1.355 conferências na tela (foco, leitor de tela, contraste, 320 a 1280px, dois temas e duas letras). Aprovado na primeira rodada, com pendências baixas que ficam para a Entrega 4b.",
+        "entregaveis": [
+          { "titulo": "Relatório de teste — Entrega 4a", "url": "docs/projetos/agenda/testes/etapa-4a.md" }
+        ],
+        "imagens": []
       }
     ],
     "linhaDoTempo": [
@@ -560,7 +595,13 @@
       { "data": "2026-11-09", "agente": "dev", "descricao": "Implementação da Entrega 3b." },
       { "data": "2026-11-09", "agente": "testador", "descricao": "Entrega 3b aprovada na primeira rodada, com um problema alto corrigido e pendências baixas." },
       { "data": "2026-11-09", "agente": "dev", "descricao": "Entrega 3b publicada no repositório agenda e no GitHub Pages." },
-      { "data": "2026-11-09", "agente": "professor", "descricao": "4 aulas da Entrega 3b, com exemplo Rodar e quiz, no Módulo 4 da Agenda." }
+      { "data": "2026-11-09", "agente": "professor", "descricao": "4 aulas da Entrega 3b, com exemplo Rodar e quiz, no Módulo 4 da Agenda." },
+      { "data": "2026-11-09", "agente": "product-owner", "descricao": "Conversa com o João sobre a captura rápida (8 perguntas e 4 decisões)." },
+      { "data": "2026-11-09", "agente": "product-owner", "descricao": "Requisitos da Etapa 4 (US24 a US32), divididos nas Entregas 4a e 4b." },
+      { "data": "2026-11-09", "agente": "artista", "descricao": "Design da Entrega 4a: painel Criar por frase e linha Entendi (seção 16)." },
+      { "data": "2026-11-09", "agente": "dev", "descricao": "Implementação da Entrega 4a, com a função entenderFrase." },
+      { "data": "2026-11-09", "agente": "testador", "descricao": "Entrega 4a aprovada na primeira rodada, com pendências baixas para a 4b." },
+      { "data": "2026-11-09", "agente": "dev", "descricao": "Entrega 4a publicada no repositório agenda e no GitHub Pages." }
     ]
   }
 ]

@@ -8,7 +8,7 @@ A **Agenda** é um site simples para anotar compromissos. A pessoa abre o site, 
 - **Etapa 1 (MVP, entregue):** lista por dia, criar, editar, excluir, "Anteriores" e salvar no navegador.
 - **Etapa 2 "nada cai no esquecimento":** cópia e importação dos dados, "Sair às...", "Feito" e pendências, itens "Sem data". Dividida em **Entrega 2a** e **Entrega 2b**.
 - **Etapa 3 "organizar o tempo":** checklist "O que levar", hora de fim com aviso de conflito e de aperto, faixa dos próximos 7 dias, tema claro e letra grande. Dividida em **Entrega 3a** e **Entrega 3b** (seção 2).
-- **Etapa 4 "captura rápida":** ver seção 5.
+- **Etapa 4 "captura rápida":** criar um compromisso escrevendo uma frase ("dentista amanhã às 10h"), que vira um rascunho do formulário para conferir antes de salvar. Dividida em **Entrega 4a** e **Entrega 4b** (seção 2).
 
 - Repositório: `github.com/JoaoSaccucci/agenda` (só o código e o README).
 - Site: `https://joaosaccucci.github.io/agenda/`.
@@ -26,7 +26,7 @@ A **Agenda** é um site simples para anotar compromissos. A pessoa abre o site, 
 - Precisa funcionar publicado no GitHub Pages, com caminhos relativos.
 - Nenhum dado sai do navegador: sem envio para a internet, sem notificações do navegador (ver seção 5).
 
-**Direção visual** (quem detalha é o artista): visual **próprio**, mas da mesma família da Labs, com a mesma qualidade e o mesmo "jeito de estúdio". O João quer que a Agenda tenha personalidade própria: o artista tem liberdade para ousar na cor e no clima. O design fica em `docs/projetos/agenda/design.md`. As partes novas da Etapa 2 (janela "Seus dados", faixa de cópia, "Sair às", "Ficou pendente", "Sem data", situação em "Anteriores") seguem o conceito "quadro de partidas ao anoitecer" e são detalhadas pelo artista no mesmo arquivo (Entrega 2a: seção 12 do design). As partes novas da Etapa 3 (checklist, hora de fim, avisos de conflito e de aperto, faixa da semana, tema claro, letra grande e o lugar dos botões de aparência) também são detalhadas pelo artista no design. O tema escuro continua sendo o padrão; o tema claro é uma variação do mesmo conceito, não um visual novo.
+**Direção visual** (quem detalha é o artista): visual **próprio**, mas da mesma família da Labs, com a mesma qualidade e o mesmo "jeito de estúdio". O João quer que a Agenda tenha personalidade própria: o artista tem liberdade para ousar na cor e no clima. O design fica em `docs/projetos/agenda/design.md`. As partes novas da Etapa 2 (janela "Seus dados", faixa de cópia, "Sair às", "Ficou pendente", "Sem data", situação em "Anteriores") seguem o conceito "quadro de partidas ao anoitecer" e são detalhadas pelo artista no mesmo arquivo (Entrega 2a: seção 12 do design). As partes novas da Etapa 3 (checklist, hora de fim, avisos de conflito e de aperto, faixa da semana, tema claro, letra grande e o lugar dos botões de aparência) também são detalhadas pelo artista no design. O tema escuro continua sendo o padrão; o tema claro é uma variação do mesmo conceito, não um visual novo. As partes novas da Etapa 4 (campo "Criar por frase" e a linha "Entendi" no formulário) também são detalhadas pelo artista, nos dois temas e com a letra grande.
 
 ---
 
@@ -506,6 +506,280 @@ Os requisitos gerais das Etapas 1 e 2 valem para **tudo** o que é novo, e tamb�
 
 ---
 
+### Etapa 4 "captura rápida"
+
+*(Aprovada pelo João em 2026-11-09.)* A pessoa escreve uma frase como "dentista amanhã às 10h" num campo da página e a Agenda abre o formulário já preenchido, como um **rascunho**: nada é salvo sem a pessoa conferir e apertar "Salvar". A frase é entendida só com regras em JavaScript puro (expressões regulares), **sem** inteligência artificial, sem servidor, sem chave de API e sem biblioteca. Duas entregas, nesta ordem: a **4a** cria o campo e entende **título, data e hora**; a **4b** entende o resto do formulário (**hora de fim, tempo para sair, "O que levar" e local**). Cada entrega passa pelo fluxo completo (artista, dev, testador, professor) e tem o seu relatório de teste (`testes/etapa-4a.md` e `testes/etapa-4b.md`).
+
+**Decisões aprovadas pelo João em 2026-11-09**
+1. Lugar: um campo fixo na página, logo abaixo da barra "Aparência", com o botão "Criar". Enter no campo da frase também abre o formulário.
+2. Divisão: **4a** = título, data e hora; **4b** = hora de fim (duração ou "das 10h às 11h"), tempo para sair, "levar RG" para o checklist e local com "no"/"na".
+3. Datas da 4a: "hoje", "amanhã", "depois de amanhã", dias da semana (por extenso e abreviados, ex.: "sexta", "sex"), "dia 15" e "15/11".
+4. Datas relativas: sempre a **próxima no futuro** ("sexta" numa sexta é hoje se a hora ainda não passou, senão a sexta seguinte; "dia 5" que já passou vira o dia 5 do mês seguinte). Regra completa na seção 3.
+5. Horas: "10h", "10h30", "10:30", "às 10" (10:00), "meio-dia", "meia-noite" e "da manhã/da tarde/da noite" ("8 da noite" → 20:00). Formato 24h. A Agenda **não adivinha** a tarde: "às 3" é 03:00.
+6. Sem data e sem hora → "Ainda sem data". Com hora e sem data → **hoje**, se a hora ainda não passou; se já passou, **amanhã** (ajustado pela D1).
+7. No formulário aberto, uma linha no topo mostra o que foi entendido, ex.: "Entendi: Amanhã · 10:00 · título 'Dentista'".
+8. Nada entendido → o formulário abre com a frase inteira no título e a dica "Não encontrei data nem hora. Confira os campos."
+
+**Decisões do PO (informadas ao João)**
+- Os dados continuam na **versão 2**, sem migração e sem chave nova no `localStorage`. A frase **não** é guardada em lugar nenhum (histórico de frases está fora do escopo).
+- **Um número sozinho nunca vira dia nem hora.** Ele só conta junto de "dia", "/", "h", ":", "às" ou "da manhã/tarde/noite" (e, na 4b, dentro de "das ... às ...", "por ..." e "sair ... antes"). Assim "comprar 2 pães", "aula 3" e "Rua 15" continuam no título. Tabela completa na seção 3.
+- **Só sai do título o que virou campo.** Um pedaço que não foi usado (uma segunda data, uma duração sem hora, uma data que não existe) fica no título como foi digitado, para nada sumir sem a pessoa ver.
+- **Dois pedaços do mesmo tipo** (duas datas, duas horas): vale o **primeiro** da frase, da esquerda para a direita. O outro fica no título.
+- **Título vazio** (frase só com data e hora, ex.: "amanhã 10h"): o formulário abre com o erro "Digite um título." da US03 **já visível** e o foco no campo Título.
+- **Data que não existe** ("31/02"): o campo Data abre **vazio** e aparece o aviso "A data 31/02 não existe. Escolha uma data." A Agenda nunca troca sozinha por outra data.
+- **Na 4b, nada fora dos limites é salvo:** hora de fim até 23:59 (US19), tempo para sair de 1 a 720 minutos (US12), checklist com até 20 itens de até 60 caracteres (US17). Valor fora do limite abre o formulário com o erro de sempre já visível; no checklist, que não tem mensagem de erro, o item é cortado em 60 caracteres e o que passar de 20 itens fica de fora, com aviso.
+- **"levar" e "no"/"na" no começo da frase ficam no título** ("Levar o carro na oficina amanhã" → título "Levar o carro").
+- **Riscos aceitos** (a linha "Entendi" mostra o resultado e a pessoa corrige antes de salvar): "1/2" vira a data 01/02 ("comprar 1/2 kg de carne"); " e " separa itens do checklist ("levar pão e manteiga" → dois itens).
+- Para o testador conferir as tabelas com um "agora" fixo, a análise da frase fica numa função sem tela (US25).
+
+**Decisões D1 a D4, aprovadas pelo João em 2026-11-09** (todas na opção recomendada pelo PO)
+- **D1:** hora sem data que **já passou** hoje ("reunião 10h" escrita às 14:00) vai para **amanhã**. Se a hora ainda não passou (inclusive a hora exata de agora, pela regra "quando um compromisso passou"), fica hoje.
+- **D2:** "ter" e "dom" também são palavras comuns ("ter aula", "dom"). Eles só contam como dia da semana com uma palavra de ligação antes ("na ter", "no dom") ou com uma hora logo depois ("ter 10h", "dom às 9").
+- **D3:** "próxima sexta", "esta sexta" e "nesta sexta" valem o mesmo que "sexta" (a próxima no futuro).
+- **D4:** risco aceito: "no"/"na" também aparecem em frases que não são lugar ("pensar na vida amanhã" → local "Vida"); a pessoa vê na linha "Entendi" e corrige antes de salvar.
+
+#### Entrega 4a: campo da frase, título, data e hora
+
+**Agenda US24: Campo "Criar por frase"**
+Como usuário, quero escrever um compromisso numa frase só, do jeito que eu falaria, para anotar rápido sem preencher campo por campo.
+- [ ] A página tem o campo "Criar por frase", logo **abaixo da barra "Aparência"** e antes das faixas (`#faixas`). Ele aparece sempre, em todas as situações da tela (lista vazia, `localStorage` indisponível, com ou sem faixas), e não é fixo (rola com a página).
+- [ ] O campo tem o rótulo visível "Criar por frase", é de texto (`input type="text"`, `maxlength="200"`, `autocomplete="off"`) e mostra o exemplo "Ex.: dentista amanhã às 10h" dentro dele (o exemplo não substitui o rótulo).
+- [ ] A dica "Escreva o que é, o dia e a hora. Você confere antes de salvar." fica perto do campo e ligada a ele por `aria-describedby`.
+- [ ] Ao lado do campo fica o botão "Criar" (a 360px ele pode ir para baixo do campo; a artista decide).
+- [ ] "Criar" (clique, toque, Enter ou Espaço no botão) ou **Enter dentro do campo** abre o formulário já preenchido com o que foi entendido (US25 a US28). **Nada é salvo** nesse momento.
+- [ ] Campo vazio ou só com espaços: "Criar" e Enter não fazem nada, sem mensagem de erro, e o foco fica no campo (mesma regra do "Adicionar" da US17).
+- [ ] O formulário abre no modo de criar, com o título "Novo compromisso". "Salvar" grava do mesmo jeito que o botão "Novo compromisso" (US02), com os mesmos avisos ("Compromisso salvo.", "Compromisso salvo em Anteriores.", "Anotado em Sem data.").
+- [ ] Depois de **Salvar**, o campo da frase fica vazio e o foco volta para ele (pronto para a próxima frase).
+- [ ] Depois de **Cancelar** ou Esc, nada é salvo, a frase **continua** no campo (para a pessoa ajustar e tentar de novo) e o foco volta para ele.
+- [ ] Se a gravação falhar (`localStorage` cheio), vale a US07: o aviso "Não foi possível salvar o compromisso." aparece dentro do formulário, ele continua aberto e a frase continua no campo.
+- [ ] A frase aparece sempre como texto, nunca como HTML (regra da US01), no formulário e na linha "Entendi".
+- [ ] A frase não é guardada: abrir o formulário e cancelar não grava nada no `localStorage` e não muda `agenda:ultima-mudanca`.
+- [ ] O botão "Novo compromisso" continua como antes: formulário vazio, sem a linha "Entendi".
+
+**Agenda US25: Entender a data da frase**
+Como usuário, quero escrever o dia do jeito que eu falo ("amanhã", "sexta", "dia 15"), para não precisar abrir o calendário.
+- [ ] A Agenda reconhece, sem diferença entre maiúsculas e minúsculas e com ou sem acento (regras completas em "Captura rápida", na seção 3):
+  - "hoje", "amanhã" e "depois de amanhã";
+  - os dias da semana por extenso ("segunda", "segunda-feira", "terça", "quarta", "quinta", "sexta", "sábado", "domingo") e abreviados ("seg", "ter", "qua", "qui", "sex", "sáb", "dom", com ou sem ponto), com a regra de "ter" e "dom" da seção 3 (D2);
+  - "dia 15" (dia do mês, de 1 a 31);
+  - "15/11" (dia/mês) e "15/11/2027" (com o ano de 4 dígitos).
+- [ ] As palavras de ligação logo antes da data saem junto com ela ("na sexta", "no dia 15", "para amanhã", "até sexta", "em 15/11", "próxima sexta"; lista na seção 3).
+- [ ] **Sempre a próxima no futuro:** dia da semana, "dia 15" e "15/11" sem ano viram a próxima data que ainda não passou, usando a hora entendida e a regra "quando um compromisso passou" da seção 3. Ex.: numa quinta às 14:00, "quinta 15h" é hoje e "quinta 10h" é a quinta da semana seguinte.
+- [ ] "hoje", "amanhã", "depois de amanhã" e datas com ano são usadas como estão, mesmo se já passaram (ao salvar, o compromisso vai para "Anteriores", como na US02).
+- [ ] **Data que não existe** ("31/02", "31/04", "0/11", "15/13", "29/02/2027"): o campo Data abre vazio, "Ainda sem data" fica desmarcada, o texto fica no título e aparece o aviso "A data 31/02 não existe. Escolha uma data." (com a data como foi digitada). Ao tentar salvar sem escolher, vale o erro "Escolha uma data." da US03.
+- [ ] "dia" com um número fora de 1 a 31 ("dia 32") não é data e fica no título, sem aviso.
+- [ ] Um número sozinho nunca vira data ("aula 3 sexta" → data: sexta; título: "Aula 3").
+- [ ] Com mais de uma data na frase, vale a primeira; as outras ficam no título.
+- [ ] Sem nenhuma data, mas com hora: a Data é **hoje** se a hora ainda não passou e **amanhã** se já passou (decisão 6 e D1). Sem data e sem hora: "Ainda sem data" vem marcada (US16), com a dica da US28.
+- [ ] A análise da frase fica numa função sem tela, que recebe a frase e o "agora" e devolve o resultado (sugestão: `entenderFrase(frase, agora)` num arquivo novo `js/frase.js`, carregado depois de `js/datas.js`). Assim o testador confere as tabelas de frases no console com o "agora" fixo, sem mudar o relógio do computador.
+
+**Agenda US26: Entender a hora da frase**
+Como usuário, quero escrever a hora do jeito que eu falo ("10h", "às 10", "8 da noite"), para não precisar mexer no campo de hora.
+- [ ] A Agenda reconhece, sem diferença entre maiúsculas e minúsculas e com ou sem acento: "10h", "10h30", "10:30", "às 10" e "às 10h" (10:00), "às 10 horas", "meio-dia" (12:00), "meia-noite" (00:00), com ou sem hífen, e um horário com "da manhã", "da tarde" ou "da noite" ("8 da noite" → 20:00; "7h30 da manhã" → 07:30). Tabela de conversão na seção 3.
+- [ ] As palavras de ligação logo antes da hora saem junto com ela ("às", "as", "à", "a", "ao": "às 10h", "ao meio-dia", "à meia-noite").
+- [ ] A hora vai de 0 a 23 e os minutos, sempre com 2 algarismos, de 00 a 59. Fora disso ("25h", "10h75") não é hora e fica no título.
+- [ ] **Sem adivinhar:** "às 3" é 03:00 e "10:30" é 10:30. Para a tarde, a pessoa escreve "15h" ou "3 da tarde". O resultado aparece sempre no formato 24h.
+- [ ] **"as" comum não vira hora:** "as" sem número depois fica no título ("buscar as crianças"). "às N" sem "h", sem ":" e sem "horas" só é hora quando, logo depois do número, vem o fim da frase, uma pontuação, outro pedaço reconhecido (uma data, por exemplo) ou uma destas palavras: "e", "no", "na", "em", "com", "para", "pra", "até". Assim "buscar as 2 crianças" continua inteiro no título.
+- [ ] Um número sozinho nunca vira hora ("comprar 2 pães amanhã" → título "Comprar 2 pães", dia todo).
+- [ ] Com mais de uma hora na frase, vale a primeira; as outras ficam no título.
+- [ ] Sem hora, o compromisso fica de dia todo (Hora vazia, como na US02).
+
+**Agenda US27: O título é o que sobra da frase**
+Como usuário, quero que o resto da frase vire o título, limpo e sem pedaços soltos, para não ter que apagar "amanhã às 10h" do título.
+- [ ] O título é a frase **original** (com os acentos e as maiúsculas que a pessoa digitou) sem os pedaços que viraram campo e sem as palavras de ligação desses pedaços.
+- [ ] Palavras como "às", "no", "na", "dia" e "para" só saem quando fazem parte de um pedaço reconhecido. Em "buscar as crianças" ou "aula para iniciantes" elas ficam.
+- [ ] Pedaços que não foram usados (segunda data, segunda hora, data que não existe, número sozinho) ficam como foram digitados.
+- [ ] Limpeza, nesta ordem (regras na seção 3): espaços repetidos viram um só; sai o espaço antes de vírgula, ponto, ponto e vírgula e dois-pontos; saem do começo e do fim os espaços, os sinais `, . ; : - –` e um "e" solto; o título é cortado em 100 caracteres (limite da US02), sem espaço no fim; a **primeira letra** vira maiúscula e o resto fica como foi digitado.
+- [ ] Ex.: "dentista, amanhã, 10h." → "Dentista"; "DENTISTA amanhã" → "DENTISTA"; "  médico   segunda   9h " → "Médico".
+- [ ] **Título vazio** depois da limpeza (ex.: "amanhã 10h"): o formulário abre com o Título vazio e o erro "Digite um título." **já visível**, com `aria-invalid="true"`, e o foco no campo Título (regras da US03). A data e a hora entendidas continuam preenchidas.
+
+**Agenda US28: Rascunho no formulário com a linha "Entendi"**
+Como usuário, quero ver o formulário preenchido e um resumo do que a Agenda entendeu, para conferir rápido e corrigir antes de salvar.
+- [ ] O formulário abre com Título (US27), Data (US25), Hora (US26) e "Ainda sem data" conforme a decisão 6. Todos os outros campos vêm como no "Novo compromisso" (US02). As regras de sempre continuam: ao marcar ou desmarcar "Ainda sem data", ou ao apagar a Hora, o formulário reage como na US16, US12 e US19.
+- [ ] No topo do formulário, logo abaixo do título "Novo compromisso", aparece a linha que começa com "Entendi:" e mostra, nesta ordem e separados por " · ":
+  - a data, com os títulos de dia da seção 3 ("Hoje", "Amanhã", "Sex, 13/11", "Seg, 15/11/2027"), ou "Ainda sem data", ou "data a escolher" (quando a data não existe);
+  - a hora ("10:00") ou, com data e sem hora, "Dia todo" (sem data, a hora só aparece se foi entendida);
+  - o título, entre aspas simples ("título 'Dentista'"), ou "sem título".
+- [ ] Exemplos: "Entendi: Amanhã · 10:00 · título 'Dentista'"; "Entendi: Ainda sem data · título 'Comprar pão'"; "Entendi: data a escolher · título 'Festa 31/02'".
+- [ ] Sem data e sem hora reconhecidas, aparece também, logo abaixo da linha, a dica "Não encontrei data nem hora. Confira os campos." O título fica com a frase inteira, limpa pelas regras da US27.
+- [ ] Com data que não existe, aparece no mesmo lugar o aviso da US25 ("A data 31/02 não existe. Escolha uma data.") e a dica de "nada entendido" não aparece.
+- [ ] A linha, a dica e o aviso são **texto**, com contraste AA nos dois temas, e quebram linha a 360px sem rolagem horizontal. O que veio da frase aparece como texto, nunca como HTML.
+- [ ] **Leitor de tela:** ao abrir, o leitor lê o título da janela e, logo depois, a linha "Entendi" e a dica ou o aviso (a janela fica ligada a eles por `aria-describedby`, **só** quando foi aberta pela frase). Os separadores " · " não são lidos como "ponto" (sugestão: o "·" com `aria-hidden="true"` e uma vírgula escondida só da tela). Sem `aria-live` nessa linha, para ela não ser lida duas vezes.
+- [ ] O foco vai para o campo Título (regra de sempre) ou, se algum erro já estiver visível ao abrir, para o primeiro campo com erro, na ordem do formulário (US03).
+- [ ] A linha mostra o que foi entendido **na hora de abrir** e não muda quando a pessoa corrige os campos.
+- [ ] A linha só aparece quando o formulário foi aberto pela frase. Em "Novo compromisso", "Editar", "Remarcar" e "Agendar", ela não aparece e a janela não fica ligada a ela.
+
+**Frases de teste da Entrega 4a**
+
+"Agora" fixo: **quinta-feira, 12/11/2026, 14:00**. Datas no formato DD/MM/AAAA. "Hora vazia" = dia todo. "Sem data" = caixa "Ainda sem data" marcada. O testador confere cada linha no formulário aberto (e, se quiser, também no console com a função da US25). Na 4b, todas estas frases continuam com o mesmo resultado.
+
+| # | Frase | Título | Data | Hora | Sem data | O que mais conferir |
+|---|---|---|---|---|---|---|
+| 1 | dentista amanhã às 10h | Dentista | 13/11/2026 | 10:00 | não | Linha: "Entendi: Amanhã · 10:00 · título 'Dentista'" |
+| 2 | DENTISTA AMANHA AS 10 | DENTISTA | 13/11/2026 | 10:00 | não | Sem acento e em maiúsculas; "as 10" no fim da frase é hora |
+| 3 | dentista sexta às 9h | Dentista | 13/11/2026 | 09:00 | não | Linha: "Entendi: Amanhã · 09:00 · título 'Dentista'" |
+| 4 | prova depois de amanhã | Prova | 14/11/2026 | vazia | não | Linha: "Entendi: Sáb, 14/11 · Dia todo · título 'Prova'" |
+| 5 | aula quinta 15h | Aula | 12/11/2026 | 15:00 | não | Quinta hoje, hora ainda não passou |
+| 6 | aula quinta 10h | Aula | 19/11/2026 | 10:00 | não | 10:00 de hoje já passou: quinta seguinte |
+| 7 | aula quinta às 14h | Aula | 12/11/2026 | 14:00 | não | Às 14:00 o compromisso das 14:00 ainda não passou (passa às 14:01) |
+| 8 | aula qui | Aula | 12/11/2026 | vazia | não | Dia todo de hoje nunca "passou" antes da meia-noite |
+| 9 | feira sáb. 8h | Feira | 14/11/2026 | 08:00 | não | Abreviado com ponto |
+| 10 | jogo sabado 16h | Jogo | 14/11/2026 | 16:00 | não | "sabado" sem acento |
+| 11 | missa dom às 9 | Missa | 15/11/2026 | 09:00 | não | "dom" com hora logo depois (D2) |
+| 12 | ter aula de inglês | Ter aula de inglês | vazia | vazia | sim | "ter" sem ligação e sem hora não é dia (D2); dica "Não encontrei data nem hora. Confira os campos." |
+| 13 | academia na ter | Academia | 17/11/2026 | vazia | não | "na ter" conta (D2); "na" sai junto |
+| 14 | médico segunda-feira 9h | Médico | 16/11/2026 | 09:00 | não | Primeira letra maiúscula |
+| 15 | reunião terca 10:30 | Reunião | 17/11/2026 | 10:30 | não | Sem adivinhar tarde |
+| 16 | prova próxima sexta | Prova | 13/11/2026 | vazia | não | "próxima" = a próxima no futuro (D3); "próxima" sai junto |
+| 17 | pagar aluguel dia 15 | Pagar aluguel | 15/11/2026 | vazia | não | |
+| 18 | pagar aluguel dia 5 | Pagar aluguel | 05/12/2026 | vazia | não | Dia 5 já passou: mês seguinte |
+| 19 | pagar luz dia 12 | Pagar luz | 12/11/2026 | vazia | não | Hoje, dia todo |
+| 20 | pagar luz dia 12 às 9h | Pagar luz | 12/12/2026 | 09:00 | não | 09:00 de hoje já passou: mês seguinte |
+| 21 | conta dia 31 | Conta | 31/12/2026 | vazia | não | Novembro não tem dia 31 |
+| 22 | consulta 20/11 | Consulta | 20/11/2026 | vazia | não | |
+| 23 | consulta 10/11 | Consulta | 10/11/2027 | vazia | não | 10/11 já passou: ano seguinte |
+| 24 | formatura 15/11/2027 19h | Formatura | 15/11/2027 | 19:00 | não | Linha: "Entendi: Seg, 15/11/2027 · 19:00 · título 'Formatura'" |
+| 25 | festa 31/02 | Festa 31/02 | vazia | vazia | não | Aviso "A data 31/02 não existe. Escolha uma data."; linha "Entendi: data a escolher · título 'Festa 31/02'"; Salvar mostra "Escolha uma data." |
+| 26 | aniversário 29/02 | Aniversário | 29/02/2028 | vazia | não | Próximo ano em que 29/02 existe |
+| 27 | comprar 2 pães amanhã | Comprar 2 pães | 13/11/2026 | vazia | não | Número sozinho fica no título |
+| 28 | aula 3 sexta | Aula 3 | 13/11/2026 | vazia | não | |
+| 29 | Rua 15 amanhã 10h | Rua 15 | 13/11/2026 | 10:00 | não | |
+| 30 | buscar as crianças amanhã | Buscar as crianças | 13/11/2026 | vazia | não | "as" sem número fica |
+| 31 | buscar as 2 crianças amanhã | Buscar as 2 crianças | 13/11/2026 | vazia | não | Depois do "2" vem "crianças": não é hora |
+| 32 | aula às 3 com o João | Aula com o João | 13/11/2026 | 03:00 | não | Sem adivinhar tarde; com hora e sem data, 03:00 de hoje já passou: amanhã (D1). Linha: "Entendi: Amanhã · 03:00 · título 'Aula com o João'" |
+| 33 | almoço ao meio-dia | Almoço | 13/11/2026 | 12:00 | não | "ao" sai junto; 12:00 de hoje já passou: amanhã (D1) |
+| 34 | plantão amanhã à meia noite | Plantão | 13/11/2026 | 00:00 | não | Sem hífen |
+| 35 | jantar sexta 8 da noite | Jantar | 13/11/2026 | 20:00 | não | |
+| 36 | remédio amanhã 7h30 da manhã | Remédio | 13/11/2026 | 07:30 | não | |
+| 37 | café às 3 da tarde amanhã | Café | 13/11/2026 | 15:00 | não | |
+| 38 | festa sábado 2 da noite | Festa 2 da noite | 14/11/2026 | vazia | não | "2 da noite" não está na tabela de conversão |
+| 39 | reunião 16h | Reunião | 12/11/2026 | 16:00 | não | Com hora e sem data: 16:00 ainda não passou, fica hoje (D1) |
+| 40 | reunião amanhã 10h ou sexta 11h | Reunião ou sexta 11h | 13/11/2026 | 10:00 | não | Vale a primeira data e a primeira hora |
+| 41 | comprar pão | Comprar pão | vazia | vazia | sim | Linha "Entendi: Ainda sem data · título 'Comprar pão'" e a dica "Não encontrei data nem hora. Confira os campos." |
+| 42 | amanhã 10h | (vazio) | 13/11/2026 | 10:00 | não | Linha "... · sem título"; erro "Digite um título." já visível; foco no Título |
+| 43 | reunião 25h amanhã | Reunião 25h | 13/11/2026 | vazia | não | 25h não é hora |
+| 44 | prova dia 32 | Prova dia 32 | vazia | vazia | sim | Sem aviso de data; dica de "nada entendido" |
+| 45 | Dentista, amanhã, 10h. | Dentista | 13/11/2026 | 10:00 | não | Pontuação das pontas sai |
+| 46 | pagar boleto até sexta | Pagar boleto | 13/11/2026 | vazia | não | "até" sai junto com a data |
+| 47 | entregar trabalho para o dia 20 | Entregar trabalho | 20/11/2026 | vazia | não | "para o dia" sai junto |
+| 48 | dentista às 10 horas amanhã | Dentista | 13/11/2026 | 10:00 | não | "horas" sai junto |
+| 49 | ver o amanhecer sábado | Ver o amanhecer | 14/11/2026 | vazia | não | "amanhecer" não é "amanhã" (palavra inteira) |
+| 50 | `<b>oi</b>` amanhã | `<b>oi</b>` | 13/11/2026 | vazia | não | Aparece como texto, com os sinais `<` e `>`, no Título e na linha |
+| 51 | reunião 14h | Reunião | 12/11/2026 | 14:00 | não | Hora sem data igual a agora: às 14:00 ainda não passou, fica hoje (D1) |
+| 52 | plantão meia-noite | Plantão | 13/11/2026 | 00:00 | não | Hora sem data: 00:00 de hoje já passou, vai para amanhã (D1) |
+
+#### Entrega 4b: hora de fim, tempo para sair, "O que levar" e local
+
+**Agenda US29: Hora de fim pela frase**
+Como usuário, quero escrever até que horas vai o compromisso ("das 10h às 11h" ou "por 1h"), para a hora de fim já vir preenchida.
+- [ ] A Agenda reconhece dois jeitos:
+  - **intervalo:** "das 10h às 11h", "das 10 às 11", "das 10h30 às 12h", "das 9h até 10h", "das 9 até as 10" e "das 2 às 4 da tarde". Dentro do "das ... às/até ...", os dois números são horas mesmo sem "h";
+  - **duração:** "por" ou "durante" + tempo: "por 1h", "por 1h30", "por 1 hora", "por 2 horas", "por 45 min", "por 90 minutos", "por meia hora".
+- [ ] **Intervalo:** o primeiro horário vira a **Hora** e o segundo vira "Termina às"; a Duração se ajusta sozinha (US19). O intervalo conta como o pedaço de hora da frase: se uma hora sozinha vier antes dele, vale ela e o intervalo fica no título. Sem data na frase, a regra da D1 usa o primeiro horário do intervalo.
+- [ ] "da manhã", "da tarde" ou "da noite" depois do segundo horário vale para ele e também para o primeiro, se o primeiro não tiver o seu e for menor ou igual ao segundo ("das 2 às 4 da tarde" → 14:00 às 16:00; "das 11 às 1 da tarde" → 11:00 às 13:00).
+- [ ] **Duração:** precisa de uma hora na frase. Com 30, 60 ou 120 minutos, fica marcada a opção "30 min", "1 h" ou "2 h"; com outro valor, "Outro" e o número em "Minutos". "Termina às" é calculado como na US19.
+- [ ] Duração sem hora na frase ("estudar amanhã por 2 horas"): não é usada e fica no título. Os números dentro dela não são lidos de novo como hora.
+- [ ] Intervalo e duração são do mesmo tipo (fim): vale o primeiro da frase.
+- [ ] **Limites (nunca salva inválido):**
+  - fim igual ou antes do início ("das 22h às 2h"): o formulário abre com Hora 22:00, "Termina às" 02:00, Duração "Sem hora de fim" e o erro "A hora de fim precisa ser depois da hora de início." já visível;
+  - duração que passa de 23:59 ("22h por 3 horas"): abre com a Duração em "Outro" e o número (180), "Termina às" vazio e o erro "Com essa duração, o compromisso passaria da meia-noite. Escolha uma duração menor." já visível;
+  - duração de 0 ou acima de 1439 minutos: abre com "Outro", o número e o erro "Digite um número de minutos entre 1 e 1439." já visível.
+- [ ] A linha "Entendi" ganha, logo depois da hora, "até 11:00" (intervalo) ou "duração 90 min" (duração), mesmo quando o valor tem erro.
+
+**Agenda US30: Tempo para sair pela frase**
+Como usuário, quero escrever quanto tempo antes preciso sair ("sair 30 min antes"), para o "Sair às" já vir configurado.
+- [ ] A Agenda reconhece "sair" + tempo + "antes": "sair 30 min antes", "sair 30 minutos antes", "sair 1h antes", "sair 1 hora antes", "sair 1h30 antes", "sair meia hora antes".
+- [ ] 15, 30, 45 ou 60 minutos marcam a opção de mesmo nome no grupo "Tempo para sair"; outro valor marca "Outro" com o número em "Minutos antes" (US12).
+- [ ] Precisa de uma hora na frase. Sem hora, o pedaço não é usado e fica no título (o grupo "Tempo para sair" continua desativado, como na US12). Os números dentro dele não são lidos de novo como hora.
+- [ ] Fora de 1 a 720 minutos ("sair 13h antes" = 780, "sair 0 min antes"): o formulário abre com "Outro", o número e o erro "Digite um número de minutos entre 1 e 720." já visível.
+- [ ] Com mais de um, vale o primeiro.
+- [ ] A linha "Entendi" ganha "sair 30 min antes" (sempre em minutos: "sair 90 min antes").
+
+**Agenda US31: "levar ..." vira o checklist "O que levar"**
+Como usuário, quero escrever o que preciso levar ("levar RG e cartão"), para o checklist já vir montado.
+- [ ] A palavra "levar" seguida de itens enche o checklist "O que levar" (US17): "levar RG", "levar RG e cartão", "levar RG, pedido médico e cartão do convênio".
+- [ ] Os itens vão do "levar" até o começo do próximo pedaço reconhecido (data, hora, intervalo, duração, "sair ... antes" ou local) ou até o fim da frase. Eles são separados por vírgula, ponto e vírgula ou " e ".
+- [ ] Cada item é limpo como o título (espaços e pontuação das pontas), fica com as letras como foram digitadas e é cortado em 60 caracteres. Item vazio é ignorado. Itens iguais são permitidos (US17).
+- [ ] Até 20 itens. Do 21º em diante, eles não entram e aparece, junto da linha "Entendi", o aviso "A lista 'O que levar' aceita até 20 itens. Os outros ficaram de fora."
+- [ ] "levar" no **começo** da frase é a ação do título e não vira checklist ("Levar o carro na oficina amanhã" → título "Levar o carro"). "levar" sem nada depois também fica no título.
+- [ ] Só o primeiro "levar" conta. Funciona com ou sem data e com ou sem hora (US17).
+- [ ] Os itens aparecem na lista do formulário com o botão "Remover", como se tivessem sido adicionados à mão, e ainda podem ser removidos ou complementados antes de salvar. Ao salvar, entram com `feito: false`. "Cancelar" descarta tudo.
+- [ ] A linha "Entendi" ganha "levar 'RG', 'cartão'".
+
+**Agenda US32: Local com "no" ou "na"**
+Como usuário, quero escrever onde vai ser ("na clínica Sorriso"), para o local já vir preenchido.
+- [ ] "no" ou "na" seguido de texto enche o campo Local: "na clínica Sorriso", "no centro", "na casa da vó".
+- [ ] O local vai do "no"/"na" até o começo do próximo pedaço reconhecido ou até o fim da frase.
+- [ ] "no"/"na" que fazem parte de uma data ("na sexta", "no dia 15", "na próxima segunda") são da data, não do local.
+- [ ] "no"/"na" no **começo** da frase não contam (ficam no título). Só o primeiro "no"/"na" conta; outros dentro do local fazem parte dele ("na casa na praia" → "Casa na praia").
+- [ ] O local é limpo como o título: pontuação das pontas sai, a primeira letra vira maiúscula e ele é cortado em 100 caracteres (limite da US02).
+- [ ] "no"/"na" sem texto depois ("reunião na") ficam no título.
+- [ ] *(Risco aceito pelo João, D4)* "no"/"na" também aparecem em frases que não são lugar ("pensar na vida amanhã" → local "Vida"). A linha "Entendi" mostra o local e a pessoa corrige antes de salvar.
+- [ ] A linha "Entendi" ganha "local 'Clínica Sorriso'".
+
+**Ordem da linha "Entendi" com tudo (4b):** data · hora · fim ("até 10:00" ou "duração 90 min") · "sair 30 min antes" · "local '...'" · "levar '...', '...'" · título. Ex.: "Entendi: Amanhã · 09:00 · até 10:00 · sair 30 min antes · local 'Centro' · levar 'RG' · título 'Dentista'".
+
+**Frases de teste da Entrega 4b**
+
+Mesmo "agora" fixo: **quinta-feira, 12/11/2026, 14:00**. O testador também confere de novo a tabela da 4a, que não muda.
+
+| # | Frase | Título | Data | Hora | Fim / Duração | Tempo para sair | Local | O que levar | O que mais conferir |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | reunião amanhã das 10h às 11h | Reunião | 13/11/2026 | 10:00 | 11:00 / "1 h" | Nenhum | vazio | nenhum | Linha: "... · 10:00 · até 11:00 · ..." |
+| 2 | aula sexta das 2 às 4 da tarde | Aula | 13/11/2026 | 14:00 | 16:00 / "2 h" | Nenhum | vazio | nenhum | "da tarde" vale para os dois |
+| 3 | prova sábado das 11 às 1 da tarde | Prova | 14/11/2026 | 11:00 | 13:00 / "2 h" | Nenhum | vazio | nenhum | 11 é maior que 1: "da tarde" só no segundo |
+| 4 | reunião amanhã das 9h30 até 10h | Reunião | 13/11/2026 | 09:30 | 10:00 / "30 min" | Nenhum | vazio | nenhum | |
+| 5 | festa sábado das 22h às 2h | Festa | 14/11/2026 | 22:00 | 02:00 / "Sem hora de fim" | Nenhum | vazio | nenhum | Erro "A hora de fim precisa ser depois da hora de início." já visível; foco em "Termina às" |
+| 6 | treino amanhã 7h por 1h30 | Treino | 13/11/2026 | 07:00 | 08:30 / "Outro" 90 | Nenhum | vazio | nenhum | Linha: "... · duração 90 min · ..." |
+| 7 | call hoje 16h por meia hora | Call | 12/11/2026 | 16:00 | 16:30 / "30 min" | Nenhum | vazio | nenhum | |
+| 8 | show sábado 22h durante 3 horas | Show | 14/11/2026 | 22:00 | vazio / "Outro" 180 | Nenhum | vazio | nenhum | Erro "Com essa duração, o compromisso passaria da meia-noite. Escolha uma duração menor." já visível |
+| 9 | estudar amanhã por 2 horas | Estudar por 2 horas | 13/11/2026 | vazia | desativado | desativado | vazio | nenhum | Duração sem hora fica no título |
+| 10 | dentista amanhã 10h sair 30 min antes | Dentista | 13/11/2026 | 10:00 | vazio | "30 min" | vazio | nenhum | |
+| 11 | entrevista sexta 9h sair 1h30 antes | Entrevista | 13/11/2026 | 09:00 | vazio | "Outro" 90 | vazio | nenhum | "1h30" dentro de "sair ... antes" não vira hora |
+| 12 | viagem sábado 8h sair 13h antes | Viagem | 14/11/2026 | 08:00 | vazio | "Outro" 780 | vazio | nenhum | Erro "Digite um número de minutos entre 1 e 720." já visível |
+| 13 | dentista amanhã sair 30 min antes | Dentista sair 30 min antes | 13/11/2026 | vazia | desativado | desativado | vazio | nenhum | Sem hora: o pedaço fica no título |
+| 14 | dentista amanhã 10h levar RG | Dentista | 13/11/2026 | 10:00 | vazio | Nenhum | vazio | RG | |
+| 15 | exame sexta 7h levar RG, pedido médico e cartão do convênio | Exame | 13/11/2026 | 07:00 | vazio | Nenhum | vazio | RG; pedido médico; cartão do convênio | |
+| 16 | dentista amanhã 10h na clínica Sorriso | Dentista | 13/11/2026 | 10:00 | vazio | Nenhum | Clínica Sorriso | nenhum | |
+| 17 | almoço na casa da vó sábado meio-dia | Almoço | 14/11/2026 | 12:00 | vazio | Nenhum | Casa da vó | nenhum | O local termina onde começa a data |
+| 18 | reunião na sexta 15h | Reunião | 13/11/2026 | 15:00 | vazio | Nenhum | vazio | nenhum | "na sexta" é da data |
+| 19 | levar o carro na oficina amanhã | Levar o carro | 13/11/2026 | vazia | desativado | desativado | Oficina | nenhum | "levar" no começo fica no título |
+| 20 | aula amanhã 10h levar caderno na escola | Aula | 13/11/2026 | 10:00 | vazio | Nenhum | Escola | caderno | A lista termina onde começa o local |
+| 21 | consulta amanhã 9h na clínica levar RG e exames sair 40 min antes | Consulta | 13/11/2026 | 09:00 | vazio | "Outro" 40 | Clínica | RG; exames | |
+| 22 | dentista sexta das 9h às 10h no centro levar RG sair 30 min antes | Dentista | 13/11/2026 | 09:00 | 10:00 / "1 h" | "30 min" | Centro | RG | Linha: "Entendi: Amanhã · 09:00 · até 10:00 · sair 30 min antes · local 'Centro' · levar 'RG' · título 'Dentista'" |
+| 23 | comprar pão levar sacola | Comprar pão | vazia | vazia (sem data: sim) | desativado | desativado | vazio | sacola | Dica "Não encontrei data nem hora. Confira os campos." |
+| 24 | mudança amanhã levar | Mudança levar | 13/11/2026 | vazia | desativado | desativado | vazio | nenhum | "levar" sem itens fica no título |
+| 25 | reunião amanhã 10h no escritório no 3º andar | Reunião | 13/11/2026 | 10:00 | vazio | Nenhum | Escritório no 3º andar | nenhum | Só o primeiro "no" abre o local |
+| 26 | pensar na vida amanhã | Pensar | 13/11/2026 | vazia | desativado | desativado | Vida | nenhum | Risco aceito pelo João (D4) |
+| 27 | mudança sábado levar a, b, c, ... (22 itens de uma letra) | Mudança | 14/11/2026 | vazia | desativado | desativado | vazio | os 20 primeiros | Aviso "A lista 'O que levar' aceita até 20 itens. Os outros ficaram de fora." |
+| 28 | treino das 9h às 10h | Treino | 13/11/2026 | 09:00 | 10:00 / "1 h" | Nenhum | vazio | nenhum | Intervalo sem data: 09:00 de hoje já passou, vai para amanhã (D1) |
+
+### Mudanças em stories anteriores (Etapa 4)
+
+| Story | Entrega | O que muda |
+|---|---|---|
+| US01 | 4a | O campo "Criar por frase" (US24) entra logo abaixo da barra "Aparência". Ordem da página: barra "Aparência", "Criar por frase", faixas, "Ficou pendente", "Próximos 7 dias", "Próximos compromissos", "Sem data", "Anteriores". |
+| US02 | 4a | O formulário também abre pela frase (US24), já preenchido e com a linha "Entendi" (US28). Nesse caso o foco volta para o campo da frase ao fechar, e o campo só é limpo depois de salvar. |
+| US03 | 4a / 4b | Quando o formulário abre pela frase, erros podem aparecer **já ao abrir** (4a: "Digite um título."; 4b: os erros da US12 e da US19), com as mesmas regras, e o foco vai para o primeiro campo com erro. "Escolha uma data." continua aparecendo só ao tentar salvar. |
+| US12, US17, US19 | 4b | "Tempo para sair", "O que levar" e a hora de fim podem vir preenchidos pela frase, como se a pessoa tivesse preenchido à mão. Tudo continua editável antes de salvar. |
+| US16 | 4a | "Ainda sem data" pode vir marcada pela frase (sem data e sem hora). |
+| US22, US23 | 4a | O tema claro e a letra grande cobrem também o campo "Criar por frase" e a linha "Entendi" (com a dica e os avisos). |
+
+### Requisitos gerais da Etapa 4
+
+Os requisitos gerais das Etapas 1, 2 e 3 valem para **tudo** o que é novo, e também:
+- [ ] A 360px, o campo "Criar por frase" e o botão "Criar" cabem sem rolagem horizontal (o botão pode ir para baixo do campo). O campo tem letra de pelo menos 16px, e o campo e o botão têm 44px de área de toque.
+- [ ] Com a letra grande, a 360px, o campo, o botão e a linha "Entendi" continuam sem rolagem horizontal e sem nada cortado.
+- [ ] Teclado: o Tab chega ao campo da frase logo depois dos botões "Tema claro" e "Letra grande", e ao botão "Criar" logo depois do campo. Foco visível nos dois temas.
+- [ ] Leitor de tela: o campo tem o nome "Criar por frase" e a dica ligada a ele; ao abrir o formulário pela frase, a linha "Entendi" é lida (US28).
+- [ ] Contraste AA nos dois temas para o campo, o botão, a linha "Entendi", a dica e os avisos.
+- [ ] "Entendi", "Ainda sem data", "Dia todo", "data a escolher", a dica e os avisos são **texto**, nunca só cor ou ícone.
+- [ ] A frase é entendida só com JavaScript puro (expressões regulares e funções próprias), sem biblioteca, sem inteligência artificial e sem servidor. Nada é enviado para a internet.
+- [ ] Qualquer frase de até 200 caracteres abre o formulário sem demora perceptível e sem erro no console, inclusive frases só com pontuação, com emoji ou com `<script>`.
+- [ ] Os compromissos continuam na `versao: 2`, sem chave nova. O `localStorage` continua só com chaves `agenda:` e nunca usa `localStorage.clear()`.
+
+---
+
 ## 3. Regras e modelo de dados
 
 ### Quando um compromisso "passou"
@@ -554,6 +828,103 @@ Para cada compromisso **B** da lista "Próximos compromissos" que tem hora, a Ag
 - B mostra **um** aviso só: conflito antes de aperto; entre dois do mesmo tipo, vale o A que vem primeiro na ordem da US01.
 - Compromissos de dia todo, sem data, "Feito" e "Não vou fazer" nunca entram na comparação.
 - Os nomes "A" e "B" acima são só para explicar: na tela aparece o título do compromisso A.
+
+### Captura rápida (Etapa 4)
+
+A Etapa 4 **não muda o formato dos dados**: continua na versão 2, sem chave nova no `localStorage`. A frase não é guardada; ela só preenche o formulário.
+
+**Como a frase é lida**
+1. Para comparar, maiúsculas e acentos são ignorados: "AMANHA" = "amanhã", "sabado" = "sábado", "terca" = "terça", "as" = "às". O título, o local e os itens guardam o texto **como foi digitado**.
+2. Cada pedaço é procurado como **palavra inteira**: "amanhã" não é achado dentro de "amanhecer", e "dia 1" não é achado dentro de "dia 10".
+3. Na mesma posição, vale o pedaço **mais comprido** ("depois de amanhã" em vez de "amanhã"; "às 8 da noite" inteiro em vez de só "às 8"; "segunda-feira" inteiro).
+4. **Ordem de busca (4b):** primeiro os pedaços compostos ("das ... às ...", "por ...", "sair ... antes"), depois as datas e as horas sozinhas, por último os pedaços de texto livre ("levar ..." e "no/na ..."). Um trecho que já faz parte de um pedaço não é lido de novo (o "1h30" de "sair 1h30 antes" não vira hora).
+5. **Tipos:** data; hora (inclui o intervalo da 4b); fim (intervalo ou duração, 4b); tempo para sair (4b); levar (4b); local (4b). Com dois pedaços do mesmo tipo, vale o **primeiro** da frase; o outro fica no título.
+6. Os pedaços de texto livre ("levar ..." e "no/na ...") vão até o começo do próximo pedaço reconhecido ou até o fim da frase.
+7. **Só sai do título o que virou campo.** Pedaço não usado (segundo do mesmo tipo, duração ou "sair" sem hora, data que não existe) fica no título como foi digitado.
+
+**Quando um número conta como dia ou hora**
+
+| Escrito | Vira | Exemplo |
+|---|---|---|
+| "dia" + número de 1 a 31 | dia do mês | "dia 15", "dia 05" |
+| número/número, com ou sem /ano de 4 dígitos | dia/mês (e ano) | "15/11", "15/11/2027" |
+| número + "h", com ou sem minutos | hora | "10h", "10h30" |
+| número + ":" + minutos | hora | "10:30" |
+| "às"/"as" + número, com ou sem "h" ou "horas" | hora (sem "h", ":" ou "horas", só com a regra da palavra seguinte, abaixo) | "às 10", "às 10 horas" |
+| número (com ou sem "h"/minutos) + "da manhã", "da tarde" ou "da noite" | hora (tabela de conversão abaixo) | "8 da noite", "7h30 da manhã" |
+| *(4b)* "das" + número + "às"/"até"/"até as" + número | intervalo (hora e fim) | "das 10 às 11" |
+| *(4b)* "por"/"durante" + número + "h", "hora(s)", "min" ou "minuto(s)", ou "meia hora" | duração | "por 1h30", "por 45 min" |
+| *(4b)* "sair" + número + unidade (como na duração) + "antes" | tempo para sair | "sair 30 min antes" |
+| qualquer outro número | continua no título | "2 pães", "aula 3", "Rua 15", "dia 32", "25h" |
+
+- **Regra da palavra seguinte** ("às N" sem "h", sem ":" e sem "horas"): só é hora se, logo depois do número, vier o fim da frase, uma pontuação, outro pedaço reconhecido ou uma destas palavras: "e", "no", "na", "em", "com", "para", "pra", "até". "dentista às 10 amanhã" é hora; "buscar as 2 crianças" não é.
+
+**Palavras de ligação que saem junto com o pedaço**
+- Logo antes de uma **data** (no máximo uma destas, colada na data): "no", "na", "em", "para", "pra", "até", "para o", "pra o", "até o", "para a", "até a", "nesta", "neste", "esta", "este", "próxima", "próximo", "na próxima", "no próximo".
+- A palavra "dia" de "dia 15" e de "dia 15/11".
+- Logo antes de uma **hora**: "às", "as", "à", "a", "ao". Logo depois de "às N": "horas" ou "hora".
+- Fora de um pedaço reconhecido, essas palavras ficam no título.
+
+**Dias da semana**
+
+| Dia | Por extenso | Abreviado |
+|---|---|---|
+| segunda | "segunda", "segunda-feira", "segunda feira" | "seg" |
+| terça | "terça", "terça-feira", "terça feira" | "ter" (com a regra abaixo) |
+| quarta | "quarta", "quarta-feira", "quarta feira" | "qua" |
+| quinta | "quinta", "quinta-feira", "quinta feira" | "qui" |
+| sexta | "sexta", "sexta-feira", "sexta feira" | "sex" |
+| sábado | "sábado" | "sáb" |
+| domingo | "domingo" | "dom" (com a regra abaixo) |
+
+- Abreviados com ou sem ponto ("sex.").
+- *(D2, aprovado pelo João em 2026-11-09)* "ter" e "dom" também são palavras comuns. Eles só contam como dia quando vêm logo depois de uma palavra de ligação de data ("na ter", "no dom") ou logo antes de uma hora reconhecida ("ter 10h", "dom às 9"). Os outros abreviados contam sempre.
+- *(D3, aprovado pelo João em 2026-11-09)* "próxima sexta", "esta sexta" e "nesta sexta" valem o mesmo que "sexta".
+
+**Sempre a próxima no futuro**
+- "hoje", "amanhã" e "depois de amanhã": hoje, hoje + 1 e hoje + 2, mesmo se a hora já passou.
+- **Dia da semana:** o primeiro dia com esse nome a partir de hoje. Se for hoje e o compromisso, com a hora entendida, já tiver passado (regra "quando um compromisso passou"), é o da semana seguinte (hoje + 7). Sem hora, o dia de hoje ainda não passou.
+- **"dia N":** neste mês, se ainda não passou (mesma regra); senão, no mês seguinte. Se o mês escolhido não tem o dia N (dia 31 em novembro, dia 30 em fevereiro), vai para o próximo mês que tem.
+- **"D/M" sem ano:** neste ano, se ainda não passou; senão, no ano seguinte. "29/02" vai para o próximo ano em que 29/02 existe e ainda não passou.
+- **"D/M/AAAA":** usada como está, mesmo no passado.
+- **Data que não existe:** dia 0 ou maior que o último dia do mês em qualquer ano ("31/02", "30/02", "31/04", "0/11"), mês 0 ou maior que 12 ("15/13"), ou data com ano que não existe nesse ano ("29/02/2027"). O campo Data abre vazio, o texto fica no título e aparece o aviso "A data D/M não existe. Escolha uma data." (com a data como foi digitada). Se a frase tiver outra data válida, vale ela e não há aviso.
+- **Hora sem data** *(D1, aprovado pelo João em 2026-11-09)*: **hoje**, se o compromisso com essa hora ainda não passou (regra "quando um compromisso passou": às 14:00, "14h" ainda é hoje); senão, **amanhã**. Ex.: às 14:00, "reunião 16h" → hoje; "reunião 10h" → amanhã; "plantão meia-noite" → amanhã às 00:00. Vale também para o primeiro horário do intervalo da 4b.
+- Data com data inexistente e hora (ex.: "festa 31/02 20h"): a regra acima **não** vale; o campo Data fica vazio, como em "Data que não existe".
+
+**Horas: tabela de conversão**
+
+| Escrito | Vira |
+|---|---|
+| "10h", "10H", "às 10h" | 10:00 |
+| "10h30", "10:30", "às 10:30", "às 10h30" | 10:30 |
+| "às 10", "as 10", "às 10 horas" | 10:00 (com a regra da palavra seguinte) |
+| "meio-dia", "meio dia", "ao meio-dia" | 12:00 |
+| "meia-noite", "meia noite", "à meia-noite" | 00:00 |
+| N "da manhã", N de 1 a 11 | N ("7 da manhã" → 07:00) |
+| 12 "da tarde" | 12:00 |
+| N "da tarde", N de 1 a 11 | N + 12 ("3 da tarde" → 15:00) |
+| N "da noite", N de 6 a 11 | N + 12 ("8 da noite" → 20:00) |
+| N de 13 a 23 + "da tarde" ou "da noite" | N ("15h da tarde" → 15:00; o "da tarde" sai junto) |
+| qualquer outra combinação ("2 da noite", "12 da manhã", "15h da manhã") | "da ..." não é entendido; vale só o que a tabela já reconhece sem ele |
+
+- N pode ter minutos: "7h30 da manhã" → 07:30, "8:15 da noite" → 20:15.
+- Minutos sempre com 2 algarismos (00 a 59). Hora de 0 a 23.
+
+**Limpeza do título, do local e dos itens**
+1. Tirar os pedaços que viraram campo (com as palavras de ligação deles).
+2. Espaços repetidos viram um só.
+3. Sai o espaço antes de `,` `.` `;` `:`.
+4. Saem do começo e do fim: espaços, os sinais `, . ; : - –` e um "e" solto (repetindo até não sobrar nenhum).
+5. Cortar no limite: título e local em 100 caracteres, item em 60 (sem espaço no fim).
+6. Título e local: a primeira letra vira maiúscula; o resto fica como foi digitado. Itens ficam como foram digitados.
+
+**Linha "Entendi"**
+- Formato: "Entendi: " + as partes separadas por " · ", nesta ordem: data · hora · fim · tempo para sair · local · levar · título. Só aparecem as partes que existem.
+- Data: título de dia (tabela "Títulos dos dias", abaixo), "Ainda sem data" ou "data a escolher".
+- Hora: "HH:MM"; com data e sem hora, "Dia todo".
+- Fim (4b): "até HH:MM" (intervalo) ou "duração N min" (duração). Tempo para sair (4b): "sair N min antes". Local (4b): "local '...'". Levar (4b): "levar '...', '...'".
+- Título: "título '...'" ou "sem título".
+- Abaixo da linha, quando for o caso: a dica "Não encontrei data nem hora. Confira os campos." (sem nenhum pedaço de data e de hora), o aviso de data que não existe e o aviso de mais de 20 itens.
 
 ### Títulos dos dias
 | Situação | Título |
@@ -618,7 +989,7 @@ Abreviações dos dias: Dom, Seg, Ter, Qua, Qui, Sex, Sáb. "daqui a X dias" con
 
 ### Versão 2 (a partir da Entrega 2b)
 
-Já pensada para as Etapas 3 e 4: os campos `duracaoMin` e `itens` foram criados na Entrega 2b, vazios, para não precisar de outra migração. **A Etapa 3 continua na versão 2** e passa a preencher esses dois campos.
+Já pensada para as Etapas 3 e 4: os campos `duracaoMin` e `itens` foram criados na Entrega 2b, vazios, para não precisar de outra migração. **A Etapa 3 continua na versão 2** e passa a preencher esses dois campos. A Etapa 4 também continua na versão 2, sem campo novo.
 
 ```json
 {
@@ -712,6 +1083,8 @@ Já pensada para as Etapas 3 e 4: os campos `duracaoMin` e `itens` foram criados
 | **Etapa 2, Entrega 2b** | US11 Migração para a versão 2, US12 "Sair às...", US13 Feito e desfazer, US14 "Me cobrar" e "Ficou pendente", US15 Resolver pendência, US16 "Sem data", mudanças nas US01 a US07 e requisitos gerais da Etapa 2 |
 | **Etapa 3, Entrega 3a** | US17 Checklist no formulário, US18 Marcar o checklist no card, US19 Hora de fim, US20 Conflito e aperto, mudanças da Etapa 3a nas stories anteriores e requisitos gerais da Etapa 3 |
 | **Etapa 3, Entrega 3b** | US21 Faixa dos próximos 7 dias, US22 Tema claro e escuro, US23 Letra grande, mudanças da Etapa 3b nas stories anteriores e requisitos gerais da Etapa 3 |
+| **Etapa 4, Entrega 4a** | US24 Campo "Criar por frase", US25 Entender a data, US26 Entender a hora, US27 O título é o que sobra, US28 Rascunho com a linha "Entendi", mudanças da Etapa 4a nas stories anteriores e requisitos gerais da Etapa 4 |
+| **Etapa 4, Entrega 4b** | US29 Hora de fim pela frase, US30 Tempo para sair pela frase, US31 "levar" vira o checklist, US32 Local com "no"/"na", mudanças da Etapa 4b nas stories anteriores e requisitos gerais da Etapa 4 |
 
 Ordem sugerida dentro da Etapa 1: modelo de dados e US07 (salvar e carregar) → US02 e US03 (formulário) → US01 (lista) → US06 (Anteriores) → US04 (editar) → US05 (excluir) → requisitos gerais → testador escreve `docs/projetos/agenda/testes/etapa-1.md` → commit da agenda e depois da Labs (US31 da Labs) → professor escreve as aulas (US34 da Labs).
 
@@ -723,6 +1096,10 @@ Ordem sugerida na Entrega 3a: artista desenha o formulário novo (hora de fim e 
 
 Ordem sugerida na Entrega 3b: artista desenha a faixa da semana, a paleta do tema claro (para **todas** as partes, inclusive as da 3a) e o lugar dos botões de aparência → `agenda:preferencias` e o script do `head` → US22 (tema) → US23 (letra) → US21 (faixa da semana, já nos dois temas) → testador escreve `docs/projetos/agenda/testes/etapa-3b.md` (contraste nos dois temas e letra grande a 360px) → commits → aulas.
 
+Ordem sugerida na Entrega 4a: artista desenha o campo "Criar por frase" e a linha "Entendi" (dois temas, letra grande, 360px) → função de análise sem tela (US25, US26 e US27), conferida no console com a tabela da 4a → US24 (campo e botão) → US28 (rascunho no formulário, foco e leitor de tela) → testador escreve `docs/projetos/agenda/testes/etapa-4a.md` (as 52 frases, uma por uma, e a acessibilidade) → commits → aulas (bom momento para o professor ensinar expressões regulares).
+
+Ordem sugerida na Entrega 4b: artista ajusta a linha "Entendi" para as partes novas e o aviso de mais de 20 itens → pedaços compostos (US29 e US30), com a regra de "trecho já usado não é lido de novo" → pedaços de texto livre (US32 local, depois US31 levar) → testador escreve `docs/projetos/agenda/testes/etapa-4b.md` (tabela da 4b e de novo a tabela da 4a) → commits → aulas.
+
 ---
 
 ## 5. Fora do escopo / evoluções futuras
@@ -730,7 +1107,7 @@ Ordem sugerida na Entrega 3b: artista desenha a faixa da semana, a paleta do tem
 **Etapa 3 "organizar o tempo"**: detalhada na seção 2 (US17 a US23), aprovada pelo João em 2026-11-06.
 
 **Etapa 4 "captura rápida"**
-1. **I10 Criar um compromisso escrevendo uma frase** (ex.: "dentista sexta às 9h"), entendida só com regras em JavaScript, **sem** inteligência artificial externa e sem chave de API. A frase vira um rascunho do formulário para a pessoa conferir antes de salvar.
+1. **I10 Criar um compromisso escrevendo uma frase**: detalhada na seção 2 (US24 a US32), aprovada pelo João em 2026-11-09. Entendida só com regras em JavaScript, **sem** inteligência artificial externa e sem chave de API. A frase vira um rascunho do formulário para a pessoa conferir antes de salvar.
 
 **Depois (sem etapa definida, na ordem de prioridade atual)**
 2. **Calendário do mês** (era a primeira evolução da lista antiga; o João decidiu fazer as Etapas 2 a 4 antes) e visões de dia e de semana. *(A faixa dos próximos 7 dias, US21, é o passo intermediário.)*
@@ -771,3 +1148,16 @@ Ordem sugerida na Entrega 3b: artista desenha a faixa da semana, a paleta do tem
 - Tema "igual ao aparelho" (segue o sistema), outros temas ou cores escolhidas pela pessoa, e mais de dois tamanhos de letra.
 - Levar as preferências no arquivo de cópia.
 - Notificações do navegador, bibliotecas, frameworks, back-end e testes automatizados (as mesmas restrições das Etapas 1 e 2).
+
+**Fora do escopo da Etapa 4**
+- Histórico de frases, sugestões enquanto digita ou completar a frase sozinho. A frase não é guardada.
+- Inteligência artificial, servidor, chave de API ou biblioteca de datas ou de linguagem.
+- Salvar direto, sem passar pelo formulário (a frase sempre vira rascunho).
+- Nomes de mês ("15 de novembro"), datas relativas longas ("semana que vem", "daqui a 3 dias", "mês que vem", "fim de semana") e partes do dia sem número ("hoje à noite", "amanhã de manhã").
+- "da madrugada", "meio-dia e meia", "10 e meia", números por extenso ("dez horas") e o formato de 12h com AM/PM.
+- Adivinhar a tarde ("às 3" continua 03:00) e corrigir erros de digitação ("amanh", "sextaa").
+- Repetição pela frase ("toda segunda": ver I8), mais de um compromisso numa frase só e frases em outros idiomas.
+- Na 4b: local com "em", "nos" ou "nas"; intervalo sem "das" ("10h-11h", "de 10 a 11"); compromisso que passa da meia-noite pela frase; "Me cobrar" e observação pela frase.
+- Usar a frase para editar, remarcar ou agendar um compromisso que já existe.
+- Ditado por voz como função da Agenda (o ditado do teclado do celular funciona, porque escreve no campo como texto).
+- Testes automatizados no repositório (o testador confere as tabelas à mão ou no console).

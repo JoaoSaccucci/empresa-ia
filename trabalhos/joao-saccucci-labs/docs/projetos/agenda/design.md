@@ -4897,3 +4897,554 @@ As 6 decisões abaixo foram aprovadas pelo João em 2026-11-09, nas opções rec
 4. **A letra grande aumenta também os espaços** (tudo cresce 25%, como um "zoom" só da Agenda), não só as letras. Com ela, no celular: o cabeçalho fica em 2 linhas (de até ≈650px de largura), os botões de aparência ficam um embaixo do outro, "Tempo para sair" passa a ter 2 colunas e o "Adicionar" desce para baixo do campo "Novo item".
 5. **Faixa da semana em grade de plaquinhas:** 2 por linha no celular, com "Hoje" ocupando a linha toda; 4 por linha no computador (4 + 3). Nome no formato "Qua 12"; dia livre tracejado, sem fundo e escrito "Livre". (Sete numa linha só não cabe: "3 compromissos" não entra numa coluna de 1/7 da tela nem no computador.)
 6. **Ilustração no tema claro:** na lista vazia, a lua vira **sol** e as estrelas somem. O quadro continua escuro. O ícone do cabeçalho e o favicon **não mudam** nos dois temas (são a marca).
+
+---
+
+## 16. Etapa 4 — Entrega 4a (criar por frase)
+
+Cobre a **Agenda US24** (campo "Criar por frase"), a **US28** (rascunho no formulário com a linha "Entendi") e a parte visual das **US25 a US27** (o que elas mostram na tela: a data, a hora e o título já preenchidos, o aviso de data que não existe e o erro "Digite um título." já visível). Também as mudanças da 4a nas stories anteriores (US01: ordem da página; US02: foco volta para o campo da frase; US03: erro já visível ao abrir; US16: "Ainda sem data" pode vir marcada; US22 e US23: tema claro e letra grande cobrem as partes novas). Tudo **se soma** às seções 1 a 15. Nada do que já existe muda de cor, de tamanho ou de lugar. A 4b (hora de fim, sair, levar e local na linha "Entendi") fica para depois.
+
+### 16.1 Ideia visual
+
+**O guichê de informações da estação.** A pessoa chega no balcão e diz, do jeito dela, aonde quer ir ("dentista amanhã às 10h"). O atendente repete o que entendeu antes de imprimir o bilhete: "Entendi: Amanhã · 10:00 · título 'Dentista'". Só depois de conferir a pessoa embarca (aperta "Salvar").
+
+- **Painel "Criar por frase" = o guichê.** Um card baixo, logo abaixo da barra "Aparência", com um balãozinho de fala âmbar ao lado do rótulo. O campo é o mesmo campo "afundado" do formulário (fundo mais escuro que o card), e o botão "Criar" é de contorno, colado no campo, como o "Adicionar" do "O que levar" (uma peça só).
+- **Linha "Entendi" = o canhoto do bilhete.** Uma tira no topo do formulário, com fundo levemente âmbar e uma **faixa âmbar de 4px à esquerda** (o canhoto). "Entendi:" em âmbar e negrito; a hora em mono âmbar, como na placa de hora; "Ainda sem data" e "data a escolher" em lilás, a cor do "sem hora/sem data" da Agenda inteira. Quando há algo para conferir (nada entendido ou data que não existe), uma segunda linha aparece **dentro da mesma tira**, separada por um tracejado, com o ícone de alerta.
+- Nada se mexe sozinho: o painel não anima, a tira aparece junto com a janela (que já tem a entrada curta de 180ms).
+
+### 16.2 Reaproveitado x novo
+
+| Parte | Reaproveita | Novo (e por quê) |
+|---|---|---|
+| Campo da frase | `.campo-controle` (48px, 16px, fundo `--cor-fundo`, borda 3:1, foco, `::placeholder` AA), `.campo-dica` | `.frase` (o painel), `.frase-rotulo`, `.frase-linha` (campo + botão), exemplo em 14px (decisão 3) |
+| Botão "Criar" | `.btn .btn-secundario` (contorno, hover, apertado, foco) | `.botao-criar` (cantos de campo e 48px, como o `.botao-adicionar`) |
+| Linha "Entendi" | lugar do `.janela-subtitulo` (logo abaixo do título da janela), `.sr-only`, ícone "alerta" | `.entendi`, `.entendi-linha`, `.entendi-rotulo`, `.entendi-valor` (`--hora`, `--sem-data`), `.entendi-sep`, `.entendi-nota` |
+| Erro "Digite um título." já visível | `.campo-erro` + `aria-invalid` da US03 (seção 6.5), sem mudança nenhuma | — |
+| Data vazia, "Ainda sem data" marcada | estados de sempre (seções 13 e 14) | — |
+| Tema claro e letra grande | todas as variáveis (15.6) e a escala em `rem` (15.7) | **nenhuma** regra extra de tema; a letra grande é resolvida pela quebra abaixo de 480px (16.3) |
+| Ícones | "alerta" (8.2) | "frase" (balão de fala) e "criar" (seta para a direita), 16.8 |
+
+### 16.3 Onde fica cada coisa
+
+**Ordem da página (US01 da 4a):** cabeçalho · barra "Aparência" · **"Criar por frase"** · faixas (`#faixas`) · "Ficou pendente" · "Próximos 7 dias" · "Próximos compromissos" · "Sem data" · "Anteriores" · rodapé.
+
+O painel fica **dentro do `<main>`, entre a `.aparencia` e o `#faixas`**. Não é fixo (rola com a página), aparece **sempre** (lista vazia, `localStorage` indisponível, com ou sem faixas), e, como vem antes das faixas que aparecem e somem, fica sempre no mesmo lugar. É um controle, não uma seção: **não tem título `h2`** (a ordem dos títulos da página não muda).
+
+**Dentro do painel, de cima para baixo:** rótulo (com o balãozinho) → dica → linha com o campo e o botão. A dica fica **entre o rótulo e o campo**, e não embaixo do botão: no celular o botão desce para baixo do campo, e a dica ficaria longe do campo que ela explica.
+
+```
+320 a 479px, letra normal (360px = 328px úteis; painel com 302px por dentro)
++--------------------------------------+
+| [ic] Agenda▪          (≡)  [+ Novo]  |  cabeçalho (igual)
++--------------------------------------+
+| [(o ) Tema claro ] [(o ) Letra grande]|  barra "Aparência" (igual)
+|                                      |
+| +----------------------------------+ |  painel: card, raio 16px
+| | (balão) Criar por frase          | |  rótulo 16px 600, balão âmbar
+| | Escreva o que é, o dia e a hora. | |  dica 14px suave (2 linhas)
+| | Você confere antes de salvar.    | |
+| | +------------------------------+ | |
+| | | Ex.: dentista amanhã às 10h  | | |  campo 48px, largura toda
+| | +------------------------------+ | |
+| | +------------------------------+ | |
+| | |           Criar  ->          | | |  botão de contorno, largura toda, 48px
+| | +------------------------------+ | |
+| +----------------------------------+ |
+|                                      |
+| (faixas, se houver)                  |
+| PRÓXIMOS 7 DIAS ...                  |
+```
+
+```
+>= 480px (letra normal e grande): campo e botão na mesma linha
++------------------------------------------------------------------+
+| [ic] Agenda▪                 [(≡) Seus dados] [+ Novo compromisso]|
++------------------------------------------------------------------+
+                              [(o ) Tema claro] [(o ) Letra grande]
+  +--------------------------------------------------------------+
+  | (balão) Criar por frase                                      |
+  | Escreva o que é, o dia e a hora. Você confere antes de salvar.|
+  | +----------------------------------------------+ +---------+ |
+  | | Ex.: dentista amanhã às 10h                  | | Criar ->| |
+  | +----------------------------------------------+ +---------+ |
+  +--------------------------------------------------------------+
+  (faixas, se houver)
+  PRÓXIMOS 7 DIAS
+```
+
+```
+360px com LETRA GRANDE (320px úteis; painel com 288px por dentro)
++--------------------------------------+
+| [ic] Agenda▪                         |
+|                      (≡)  [+ Novo]   |  cabeçalho em 2 linhas (15.7)
++--------------------------------------+
+| [(o ) Tema claro                   ] |
+| [(o ) Letra grande                 ] |
+| +----------------------------------+ |
+| | (balão) Criar por frase          | |  20px
+| | Escreva o que é, o dia e a       | |  17.5px, 3 linhas
+| | hora. Você confere antes de      | |
+| | salvar.                          | |
+| | [ Ex.: dentista amanhã às 10h  ] | |  exemplo em 17.5px: cabe (contas abaixo)
+| | [          Criar  ->           ] | |
+| +----------------------------------+ |
+```
+
+| Largura | Campo e botão | Exemplo dentro do campo |
+|---|---|---|
+| 320 a 479px (normal e grande) | um embaixo do outro, os dois na largura toda (`flex-direction: column`) | cabe inteiro |
+| ≥ 480px (normal e grande) | lado a lado: o campo estica, o botão fica do tamanho do texto, à direita | cabe inteiro |
+| ≥ 640px | igual, com o painel com 16px de espaço interno (como o card do compromisso) | cabe inteiro |
+
+**Contas** (exemplo "Ex.: dentista amanhã às 10h" ≈ 12.7em na Space Grotesk; com a decisão 3 ele usa `--fs-sm`: ≈178px na letra normal e ≈223px na grande):
+
+| Situação | Largura do campo | Espaço para o texto (− 24px ou 30px de espaço interno e 2px de borda) | Exemplo | Cabe? |
+|---|---|---|---|---|
+| 320px, normal | 288 − 2 − 24 = **262px** | 236px | 178px | sim |
+| 360px, normal | 328 − 2 − 24 = **302px** | 276px | 178px | sim |
+| 360px, grande | 320 − 2 − 30 = **288px** | 256px | 223px | sim |
+| 480px, normal | 422 − 8 − botão 102 = **312px** | 286px | 178px | sim |
+| 480px, grande | 408 − 10 − botão 122 = **276px** | 244px | 223px | sim |
+| 320px, grande (fora dos requisitos, que pedem 360px) | 248px | 216px | 223px | o "h" final pode ficar escondido até a pessoa digitar; sem rolagem da página |
+
+O botão "Criar" (ícone 20 + vão 8 + "Criar" ≈ 40 + espaço interno 2 × 16 + bordas 2) tem ≈102px na letra normal e ≈122px na grande. Abaixo de 480px ele ocupa a largura toda; nada causa rolagem horizontal.
+
+### 16.4 HTML de referência: o painel (US24)
+
+```html
+<!-- Etapa 4a (US24): "Criar por frase". Logo DEPOIS da barra "Aparência"
+     e ANTES do #faixas. Não é fixo e aparece sempre.
+     É um <form> de propósito: Enter dentro do campo "envia" o formulário
+     sozinho (sem código de tecla), e o botão "Criar" é o type="submit".
+     O JavaScript cancela o envio (preventDefault) e abre o rascunho. -->
+<form class="frase" id="form-frase" novalidate>
+  <label class="frase-rotulo" for="campo-frase">
+    <svg class="icone" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 5h16v11H10l-6 4z"/><path d="M8.5 10.5h.01M12 10.5h.01M15.5 10.5h.01"/></svg>
+    Criar por frase
+  </label>
+  <p class="campo-dica" id="frase-dica">Escreva o que é, o dia e a hora. Você confere antes de salvar.</p>
+  <div class="frase-linha">
+    <input class="campo-controle" id="campo-frase" name="frase" type="text"
+           maxlength="200" autocomplete="off" enterkeyhint="go"
+           placeholder="Ex.: dentista amanhã às 10h" aria-describedby="frase-dica">
+    <button class="btn btn-secundario botao-criar" type="submit" id="botao-criar">
+      Criar
+      <svg class="icone" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+</form>
+```
+
+- **Rótulo visível** "Criar por frase" ligado pelo `for`; o ícone é decorativo (`aria-hidden`), então o nome do campo é exatamente "Criar por frase".
+- **Exemplo** no `placeholder`; ele **não** substitui o rótulo nem a dica (os dois continuam visíveis com o campo preenchido).
+- **Dica** ligada por `aria-describedby="frase-dica"`: o leitor de tela lê "Criar por frase, editar texto, Escreva o que é, o dia e a hora. Você confere antes de salvar."
+- `enterkeyhint="go"`: no teclado do celular, a tecla Enter aparece como "Ir". É só o rótulo da tecla; o comportamento é o do Enter.
+- **O botão "Criar" nunca fica desativado** (US24: com o campo vazio ele "não faz nada", e um botão desativado não recebe foco nem explica por quê). Com o campo vazio ou só com espaços, o JS não abre nada e põe o foco no campo (`campoFrase.focus()`): assim, mesmo quem clicou no botão volta para o campo, como pede a US24.
+- O texto do botão vem **antes** da seta (a seta aponta para "seguir"). O nome acessível é "Criar".
+
+### 16.5 HTML de referência: a linha "Entendi" no formulário (US28)
+
+Fica no `#form-compromisso`, **logo depois** do `#janela-subtitulo` (os dois nunca aparecem juntos: o subtítulo é só do "Remarcar", a linha é só da frase).
+
+```html
+<h2 class="janela-titulo" id="janela-titulo">Novo compromisso</h2>
+<p class="janela-subtitulo" id="janela-subtitulo" hidden>...</p>
+
+<!-- Etapa 4a (US28): só aparece quando o formulário foi aberto pela frase.
+     SEM aria-live: quem lê é o aria-describedby da janela, uma vez, ao abrir.
+     O JavaScript monta a linha com textContent (nunca innerHTML). -->
+<div class="entendi" id="entendi" hidden>
+  <p class="entendi-linha" id="entendi-linha"><!-- partes (abaixo) --></p>
+  <p class="entendi-nota" id="entendi-nota" hidden>
+    <svg class="icone" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5h.01"/></svg>
+    <span id="entendi-nota-texto"></span>
+  </p>
+</div>
+```
+
+**A linha montada** (exemplo da frase 1, "dentista amanhã às 10h"):
+
+```html
+<p class="entendi-linha" id="entendi-linha"><span class="entendi-rotulo">Entendi:</span> <span class="entendi-valor">Amanhã</span><span class="sr-only">,</span><span class="entendi-sep" aria-hidden="true">&nbsp;· </span><span class="entendi-valor entendi-valor--hora">10:00</span><span class="sr-only">,</span><span class="entendi-sep" aria-hidden="true">&nbsp;· </span>título '<span class="entendi-valor">Dentista</span>'<span class="sr-only">.</span></p>
+```
+
+Na tela: **Entendi:** Amanhã · `10:00` · título '**Dentista**'. O leitor de tela lê: "Entendi: Amanhã, 10:00, título 'Dentista'."
+
+| Parte (US28) | Texto | Classe |
+|---|---|---|
+| rótulo | "Entendi:" | `.entendi-rotulo` (âmbar, 700) |
+| data com dia | "Hoje", "Amanhã", "Sex, 13/11", "Seg, 15/11/2027" (títulos de dia da seção 3 dos requisitos, **sem** "daqui a X dias") | `.entendi-valor` |
+| sem data | "Ainda sem data" | `.entendi-valor .entendi-valor--sem-data` (lilás) |
+| data que não existe | "data a escolher" | `.entendi-valor .entendi-valor--sem-data` (lilás) |
+| hora | "10:00" | `.entendi-valor .entendi-valor--hora` (mono âmbar) |
+| com data e sem hora | "Dia todo" | `.entendi-valor` (texto, sem cor própria) |
+| sem data e sem hora | (a hora não aparece) | — |
+| título | `título '` + valor + `'` | o valor em `.entendi-valor`; "título" e as aspas em texto comum |
+| sem título | "sem título" | `.entendi-valor` |
+
+- **Separador:** `<span class="entendi-sep" aria-hidden="true">&nbsp;· </span>` (espaço **inseparável** antes do "·" e espaço comum depois). Assim, quando a linha quebra, o "·" fica no fim da linha de cima e nunca começa uma linha. Antes de cada separador, uma vírgula só para o leitor de tela (`<span class="sr-only">,</span>`), para ele não ler "ponto". No fim da linha, um ponto escondido (`<span class="sr-only">.</span>`) dá a pausa antes da nota.
+- **A nota** (`#entendi-nota`) usa o **mesmo** elemento para as duas mensagens (decisão 2). O JS troca só o texto do `#entendi-nota-texto` e o `hidden`:
+  - sem nenhum pedaço de data e de hora: "Não encontrei data nem hora. Confira os campos.";
+  - data que não existe: "A data 31/02 não existe. Escolha uma data." (com a data como foi digitada). Nesse caso a dica de "nada entendido" **não** aparece (uma nota por vez).
+- A linha mostra o que foi entendido **na hora de abrir** e não muda depois.
+
+**Sugestão para montar a linha** (só `textContent` e `createTextNode`; nenhum `innerHTML`):
+
+```js
+// partes: lista de { texto, classe, antes, depois } na ordem da US28.
+// Ex.: [{ texto: "Amanhã" }, { texto: "10:00", classe: "entendi-valor--hora" },
+//       { antes: "título '", texto: "Dentista", depois: "'" }]
+function montarLinhaEntendi(linha, partes) {
+  linha.replaceChildren();
+  const rotulo = document.createElement("span");
+  rotulo.className = "entendi-rotulo";
+  rotulo.textContent = "Entendi:";
+  linha.append(rotulo, " ");
+
+  partes.forEach(function (parte, posicao) {
+    if (posicao > 0) {
+      const virgula = document.createElement("span");
+      virgula.className = "sr-only";
+      virgula.textContent = ",";
+      const sep = document.createElement("span");
+      sep.className = "entendi-sep";
+      sep.setAttribute("aria-hidden", "true");
+      sep.textContent = " · ";          // espaço inseparável + · + espaço
+      linha.append(virgula, sep);
+    }
+    if (parte.antes) linha.append(document.createTextNode(parte.antes));
+    const valor = document.createElement("span");
+    valor.className = "entendi-valor" + (parte.classe ? " " + parte.classe : "");
+    valor.textContent = parte.texto;          // o título vem da frase: SEMPRE textContent
+    linha.append(valor);
+    if (parte.depois) linha.append(document.createTextNode(parte.depois));
+  });
+
+  const ponto = document.createElement("span");
+  ponto.className = "sr-only";
+  ponto.textContent = ".";
+  linha.append(ponto);
+}
+```
+
+**Abrir e fechar** (o que o `app.js` faz com a janela; resumo para o dev):
+
+| Como o formulário abriu | `#entendi` | `aria-describedby` da janela | Foco ao abrir | Foco ao fechar |
+|---|---|---|---|---|
+| pela frase | `hidden` tirado; linha e nota montadas | `janelaCompromisso.setAttribute("aria-describedby", "entendi")` | campo Título; com o erro "Digite um título." visível, também o Título (é o primeiro campo com erro, US03) | **sempre** o `#campo-frase` (Salvar: campo limpo antes; Cancelar/Esc: a frase continua) |
+| "Novo compromisso", "Editar", "Remarcar", "Agendar" | `hidden`; linha esvaziada | `removeAttribute("aria-describedby")` | como antes | como antes |
+
+Fazer as duas coisas **toda vez** que o formulário abre (e não só ao fechar): assim a linha de uma frase antiga nunca aparece num "Editar" aberto depois.
+
+### 16.6 Estados
+
+**Campo da frase**
+
+| Estado | Visual |
+|---|---|
+| Vazio | exemplo "Ex.: dentista amanhã às 10h" em cinza suave (14px, decisão 3); borda `--cor-borda-campo` |
+| Hover | borda `--cor-texto-suave` (regra de sempre do `.campo-controle`) |
+| Foco | contorno de 3px `--cor-foco` afastado 2px + borda `--cor-foco` (azul-céu no escuro, azul escuro no claro) |
+| Com texto | texto 16px (20px na letra grande) na cor do texto; o exemplo some |
+| Depois de Cancelar/Esc | a frase continua lá, com o foco |
+| Depois de Salvar | vazio, com o foco |
+| `localStorage` indisponível | igual (o painel aparece sempre; a faixa de problema vem logo abaixo dele) |
+| Erro | **não existe**: campo vazio não mostra mensagem (US24) |
+
+**Botão "Criar"**
+
+| Estado | Visual |
+|---|---|
+| Normal | contorno `--cor-borda-campo`, texto na cor do texto, seta de 20px, 48px de altura, cantos de 10px (como o campo) |
+| Hover | fundo `--cor-superficie-2`, borda `--cor-texto-suave` (regra do `.btn-secundario`) |
+| Apertado | desce 1px e encolhe 2% (regra do `.btn:active`) |
+| Foco | contorno de 3px `--cor-foco` |
+| Campo vazio | **igual ao normal** (nunca desativado): ao apertar, nada abre e o foco vai para o campo |
+
+**Formulário aberto pela frase**
+
+| Situação (exemplo da tabela dos requisitos) | Linha "Entendi" | Nota | Campos |
+|---|---|---|---|
+| tudo entendido (#1) | "Entendi: Amanhã · 10:00 · título 'Dentista'" | — | Título, Data, Hora preenchidos; foco no Título |
+| data sem hora (#4) | "Entendi: Sáb, 14/11 · Dia todo · título 'Prova'" | — | Hora vazia (dica "Deixe em branco..." de sempre) |
+| nada entendido (#41) | "Entendi: Ainda sem data · título 'Comprar pão'" | "Não encontrei data nem hora. Confira os campos." | "Ainda sem data" marcada; Data, Hora, "Hora de fim", "Tempo para sair" e "Me cobrar" desativados, como na US16 |
+| data que não existe (#25) | "Entendi: data a escolher · título 'Festa 31/02'" | "A data 31/02 não existe. Escolha uma data." | Data **vazia**, "Ainda sem data" desmarcada; "Escolha uma data." só aparece ao tentar salvar |
+| sem título (#42) | "Entendi: Amanhã · 10:00 · sem título" | — | Título vazio **com o erro "Digite um título." já visível** (borda vermelha de 2px, fundo avermelhado, ícone e texto: seção 6.5), `aria-invalid="true"`; foco no Título |
+| `<b>oi</b>` (#50) | `Entendi: Amanhã · Dia todo · título '<b>oi</b>'`, com os sinais `<` e `>` visíveis | — | Título com o texto como foi digitado |
+
+### 16.7 Teclado
+
+| Ação | Resultado e foco |
+|---|---|
+| Tab desde o topo | "Seus dados" → "Novo compromisso" → "Tema claro" → "Letra grande" → **campo da frase** → **"Criar"** → faixas (se houver) → "Ficou pendente" → faixa da semana → lista |
+| **Enter dentro do campo**, com texto | abre o formulário pela frase (envio do `<form>`; o JS chama `preventDefault()`); foco no Título |
+| Enter, Espaço, clique ou toque em "Criar", com texto | o mesmo |
+| Enter ou "Criar" com o campo vazio ou só com espaços | nada abre, sem mensagem; o foco fica no campo (ou volta para ele, se estava no botão) |
+| "Salvar" no formulário | grava como na US02 (avisos de sempre no aviso flutuante); o campo da frase é **limpo** e recebe o foco |
+| "Cancelar" ou Esc | nada é salvo; a **frase continua** no campo, que recebe o foco |
+| Falha ao gravar (`localStorage` cheio) | o formulário continua aberto com o aviso "Não foi possível salvar o compromisso." dentro dele (US07); a frase continua no campo |
+
+Enter **dentro do formulário** continua com a regra de sempre (Enter num campo de uma linha salva; no "Novo item", adiciona). Nada muda nisso.
+
+### 16.8 Ícones novos
+
+Mesma receita da seção 8.2 (`class="icone"`, `viewBox="0 0 24 24"`, traço `currentColor` de 2px, `aria-hidden="true" focusable="false"`):
+
+| Nome | Onde | Miolo |
+|---|---|---|
+| frase (balão de fala com três pontinhos) | rótulo "Criar por frase" (âmbar) | `<path d="M4 5h16v11H10l-6 4z"/><path d="M8.5 10.5h.01M12 10.5h.01M15.5 10.5h.01"/>` |
+| criar (seta para a direita) | botão "Criar" (depois do texto) | `<path d="M5 12h14M13 6l6 6-6 6"/>` |
+
+A nota da linha "Entendi" usa o ícone "alerta" que já existe.
+
+### 16.9 Leitor de tela
+
+| Momento | O que é lido |
+|---|---|
+| Tab chega ao campo | "Criar por frase, editar texto, Escreva o que é, o dia e a hora. Você confere antes de salvar." (o exemplo pode ser lido também, como dica do campo) |
+| Tab chega ao botão | "Criar, botão" |
+| O formulário abre pela frase | "Novo compromisso, caixa de diálogo, Entendi: Amanhã, 10:00, título 'Dentista'." e depois o campo com o foco: "Título (obrigatório), editar texto, Dentista" |
+| … nada entendido | "… Entendi: Ainda sem data, título 'Comprar pão'. Não encontrei data nem hora. Confira os campos." |
+| … data que não existe | "… Entendi: data a escolher, título 'Festa 31/02'. A data 31/02 não existe. Escolha uma data." |
+| … sem título | "… Entendi: Amanhã, 10:00, sem título." e "Título (obrigatório), editar texto, inválido, Digite um título." |
+| Depois de Salvar | o aviso flutuante de sempre ("Compromisso salvo.") e "Criar por frase, editar texto" (o foco voltou) |
+| Depois de Cancelar | "Criar por frase, editar texto, dentista amanhã às 10h" |
+
+- **Sem `aria-live`** no painel, na linha e na nota. A linha é lida **uma vez**, como descrição da janela (`aria-describedby="entendi"`), no momento em que ela abre. Uma região viva aqui faria o leitor repetir a linha logo depois da descrição.
+- `#entendi` aponta para a tira inteira: com a nota escondida (`hidden`), ela fica fora da leitura; com a nota visível, ela é lida logo depois da linha.
+- Os "·" são `aria-hidden` e as vírgulas escondidas dão as pausas.
+
+### 16.10 CSS de referência da Entrega 4a
+
+Duas mudanças no `css/style.css`: uma seção nova antes do movimento reduzido e um acréscimo no alto contraste. **Só variáveis** (nenhuma cor solta): o tema claro e a letra grande já valem sozinhos.
+
+#### 16.10.1 Nova seção "12f": acrescentar logo **depois** da "12e. ETAPA 3b" e **antes** da "13. MOVIMENTO REDUZIDO"
+
+```css
+/* ---------------------------------------------------------
+   12f. ETAPA 4a: CRIAR POR FRASE E A LINHA "ENTENDI"
+   Decisões em: design.md, seção 16.
+   Só variáveis: vale nos dois temas e com a letra grande.
+   Contrastes conferidos em design.md, 16.11.
+   --------------------------------------------------------- */
+
+/* --- Painel "Criar por frase" (o "guichê"): logo abaixo da
+       barra "Aparência", antes das faixas. Não é fixo. --- */
+.frase {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-2);
+  margin-bottom: var(--esp-5);
+  padding: var(--esp-3);
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);       /* enfeite: o rótulo diz o que é */
+  border-radius: var(--raio-lg);
+}
+
+@media (min-width: 640px) {
+  .frase {
+    padding: var(--esp-4);                  /* como o card do compromisso */
+  }
+}
+
+.frase-rotulo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--esp-2);
+  width: fit-content;
+  font-size: var(--fs-base);
+  font-weight: 600;
+}
+
+.frase-rotulo .icone {
+  color: var(--cor-ambar);                  /* balão: 10.4:1 escuro · 6.7:1 claro */
+}
+
+/* A dica fica colada no rótulo (o gap do painel já separa do campo) */
+.frase .campo-dica {
+  margin-top: calc(-1 * var(--esp-1));
+}
+
+/* Campo + botão. Celular: um embaixo do outro, os dois na largura toda. */
+.frase-linha {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-2);
+}
+
+/* Exemplo em 14px (17.5px na letra grande): cabe inteiro a 360px
+   também com a letra grande (contas em design.md, 16.3). */
+.frase-linha .campo-controle::placeholder {
+  font-size: var(--fs-sm);
+}
+
+.botao-criar {
+  min-height: 48px;                         /* mesma altura do campo */
+  border-radius: var(--raio-md);            /* cantos de campo: uma peça só */
+}
+
+/* A partir de 480px: lado a lado, o campo estica e o botão fica à direita */
+@media (min-width: 480px) {
+  .frase-linha {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .frase-linha .campo-controle {
+    flex: 1 1 0;
+  }
+
+  .botao-criar {
+    flex: 0 0 auto;
+  }
+}
+
+/* --- Linha "Entendi" no formulário (o "canhoto do bilhete") ---
+   Só aparece quando o formulário abriu pela frase. Sem aria-live. */
+.entendi {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-2);
+  margin-top: calc(-1 * var(--esp-1));      /* encosta no título da janela */
+  padding: var(--esp-3) var(--esp-4) var(--esp-3) var(--esp-3);
+  background: color-mix(in srgb, var(--cor-ambar) 8%, var(--cor-superficie));
+  border-left: 4px solid var(--cor-ambar);  /* enfeite: o texto diz tudo */
+  border-radius: var(--raio-md);
+  overflow-wrap: anywhere;                  /* título longo ou sem espaço quebra */
+}
+
+.entendi-linha {
+  font-size: var(--fs-base);
+  line-height: 1.5;
+}
+
+.entendi-rotulo {
+  font-weight: 700;
+  color: var(--cor-ambar);                  /* 9.0:1 escuro · 6.0:1 claro */
+}
+
+.entendi-valor {
+  font-weight: 600;
+}
+
+/* A hora com a cara da placa: mono, âmbar, números de largura fixa */
+.entendi-valor--hora {
+  font-family: var(--fonte-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--cor-ambar);
+}
+
+/* "Ainda sem data" e "data a escolher": o lilás do "sem data" da Agenda */
+.entendi-valor--sem-data {
+  color: var(--cor-lilas);                  /* 7.8:1 escuro · 6.7:1 claro */
+}
+
+.entendi-sep {
+  color: var(--cor-texto-suave);
+}
+
+/* Nota: "Não encontrei data nem hora..." ou "A data 31/02 não existe..." */
+.entendi-nota {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--esp-2);
+  padding-top: var(--esp-2);
+  font-size: var(--fs-sm);
+  border-top: 1px dashed color-mix(in srgb, var(--cor-ambar) 40%, transparent);   /* enfeite */
+}
+
+.entendi-nota .icone {
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  color: var(--cor-ambar);
+}
+```
+
+#### 16.10.2 Seção "14. ALTO CONTRASTE DO WINDOWS": acrescentar dentro do `@media (forced-colors: active)`
+
+```css
+  /* Etapa 4a */
+  .frase,
+  .entendi {
+    border: 1px solid CanvasText;
+  }
+
+  .entendi {
+    border-left-width: 4px;
+  }
+```
+
+**Movimento reduzido:** nada novo. O painel não anima, e a tira "Entendi" aparece junto com a janela (a entrada da janela já é cortada pela regra geral da seção 13 do CSS).
+
+**Tema claro e letra grande:** nenhuma regra extra. O painel e a tira usam só variáveis (redefinidas em 15.6) e tamanhos em `rem` (crescem com o `125%` de 15.7). A quebra do campo e do botão abaixo de 480px vale para os dois tamanhos de letra.
+
+### 16.11 Contraste conferido (WCAG 2.1 AA)
+
+Fórmula de luminância relativa da WCAG 2.1, como na seção 2.1. O painel tem fundo próprio (`--cor-superficie`), então o brilho âmbar do fundo da página **não** chega no texto dele. Fundo da tira "Entendi" = âmbar 8% sobre a superfície (`color-mix` em sRGB): **≈`#2B2024`** no escuro e **≈`#F6EEE3`** no claro.
+
+| Elemento | Escuro: cor / fundo | Razão | Claro: cor / fundo | Razão | Mínimo |
+|---|---|---|---|---|---|
+| Rótulo "Criar por frase" | `#F5EEE6` / `#191321` | 15.8:1 | `#23182B` / `#FFFCF7` | 16.6:1 | 4.5:1 |
+| Dica do campo | `#B8AAB9` / `#191321` | 8.2:1 | `#5B4C63` / `#FFFCF7` | 7.7:1 | 4.5:1 |
+| Texto digitado | `#F5EEE6` / `#0F0B14` | 16.8:1 | `#23182B` / `#F7F1E8` | 15.1:1 | 4.5:1 |
+| Exemplo (`placeholder`) | `#B8AAB9` / `#0F0B14` | 8.7:1 | `#5B4C63` / `#F7F1E8` | 7.0:1 | 4.5:1 |
+| Texto do botão "Criar" | `#F5EEE6` / `#191321` | 15.8:1 | `#23182B` / `#FFFCF7` | 16.6:1 | 4.5:1 |
+| "Criar" no hover | `#F5EEE6` / `#231A2E` | 14.5:1 | `#23182B` / `#EFE6DA` | 13.7:1 | 4.5:1 |
+| "Entendi:" e a hora | `#FFB547` / ≈`#2B2024` | 9.0:1 | `#8A4A00` / ≈`#F6EEE3` | 6.0:1 | 4.5:1 |
+| Data, "Dia todo", título, "sem título", texto da nota | `#F5EEE6` / ≈`#2B2024` | 13.7:1 | `#23182B` / ≈`#F6EEE3` | 14.8:1 | 4.5:1 |
+| "Ainda sem data" / "data a escolher" | `#C4A8FF` / ≈`#2B2024` | 7.8:1 | `#6436B5` / ≈`#F6EEE3` | 6.7:1 | 4.5:1 |
+| Separador "·" | `#B8AAB9` / ≈`#2B2024` | 7.1:1 | `#5B4C63` / ≈`#F6EEE3` | 6.9:1 | (enfeite) |
+| **Não-texto:** borda do campo e do botão | `#8A7A9C` / `#191321` · `#0F0B14` | 4.6 · 4.9:1 | `#7D7088` / `#FFFCF7` · `#F7F1E8` | 4.5 · 4.1:1 | 3:1 |
+| **Não-texto:** balão do rótulo | `#FFB547` / `#191321` | 10.4:1 | `#8A4A00` / `#FFFCF7` | 6.7:1 | 3:1 |
+| **Não-texto:** ícone de alerta da nota | `#FFB547` / ≈`#2B2024` | 9.0:1 | `#8A4A00` / ≈`#F6EEE3` | 6.0:1 | 3:1 |
+| **Não-texto:** foco (3px) | `#8FD3FF` / `#191321` · `#0F0B14` | 11.2 · 11.9:1 | `#0B5FC0` / `#FFFCF7` · `#F7F1E8` | 6.0 · 5.5:1 | 3:1 |
+| Erro "Digite um título." já visível | igual à 2.1 (7.2:1) | — | igual à 15.13 (6.4:1) | — | 4.5:1 |
+
+A borda do painel (`--cor-borda`), a faixa âmbar de 4px da tira e o tracejado acima da nota são **enfeite**: a informação está sempre no texto. A **letra grande** não muda nenhuma cor; só aumenta o texto (e texto maior só melhora a leitura).
+
+### 16.12 Conferência da Entrega 4a (para o dev e o testador)
+
+| Requisito | Como o visual atende |
+|---|---|
+| Campo abaixo da barra "Aparência", antes de `#faixas`, sempre visível, não fixo | `form.frase` entre `.aparencia` e `#faixas` (16.3); sem `position: sticky` |
+| Rótulo visível "Criar por frase"; `type="text"`, `maxlength="200"`, `autocomplete="off"` | `label.frase-rotulo` com `for`; atributos em 16.4 |
+| Exemplo "Ex.: dentista amanhã às 10h" dentro do campo, sem substituir o rótulo | `placeholder`; rótulo e dica continuam visíveis |
+| Dica perto do campo, ligada por `aria-describedby` | `#frase-dica` entre o rótulo e o campo |
+| Botão "Criar" ao lado (pode descer a 360px) | lado a lado a partir de 480px; abaixo disso, embaixo do campo, na largura toda |
+| Enter no campo e "Criar" abrem o formulário; nada é salvo | `<form>` com `type="submit"`; o JS cancela o envio e abre o rascunho |
+| Campo vazio: nada acontece, sem mensagem, foco no campo | botão nunca desativado; o JS foca o campo (16.4) |
+| Formulário "Novo compromisso"; Salvar como na US02 | mesma janela; a única diferença visual é a tira "Entendi" |
+| Depois de Salvar: campo vazio e foco nele; Cancelar/Esc: frase fica e foco nele | tabela de 16.5 e 16.7 |
+| Linha "Entendi" logo abaixo do título, na ordem data · hora · título, com " · " | `.entendi` depois do `#janela-subtitulo`; partes na tabela de 16.5 |
+| Dica de "nada entendido" e aviso de data que não existe logo abaixo da linha (um por vez) | `#entendi-nota` dentro da tira, um texto por vez |
+| Linha, dica e aviso em texto, AA nos dois temas, quebram a 360px | 16.11; `overflow-wrap: anywhere`; separador com espaço inseparável |
+| Texto da frase nunca vira HTML | montagem só com `textContent` (sugestão em 16.5); testar a frase #50 |
+| Leitor lê o título da janela e depois a linha; `aria-describedby` só pela frase; "·" não lido; sem `aria-live` | 16.5 (abrir e fechar) e 16.9 |
+| Foco no Título ou no primeiro campo com erro | "Digite um título." já visível na frase #42 → foco no Título |
+| A linha não muda quando a pessoa corrige os campos | a linha é montada só ao abrir |
+| A linha só aparece pela frase | `hidden` + `removeAttribute("aria-describedby")` em toda abertura que não é pela frase |
+| 360px: campo e botão sem rolagem; campo com 16px; 44px de toque | 16.3; campo e botão com 48px; campo com `--fs-base` |
+| Letra grande a 360px: campo, botão e linha sem rolagem e sem nada cortado | contas de 16.3 (exemplo em 17.5px cabe em 256px); a tira quebra linha |
+| Tab: "Tema claro" → "Letra grande" → campo → "Criar"; foco visível nos dois temas | ordem do HTML (16.7); `--cor-foco` nos dois temas (16.11) |
+| "Entendi", "Ainda sem data", "Dia todo", "data a escolher", dica e avisos são texto | cor e faixa âmbar são só reforço |
+| Alto contraste e movimento reduzido | 16.10.2; nada novo anima |
+
+**Roteiro rápido para o testador (além das 52 frases):** a 360px e a 320px, com a letra normal e a grande, nos dois temas, conferir o painel (exemplo inteiro, botão embaixo do campo, nada cortado) e abrir o formulário com as frases #1, #25, #41 e #42 (a tira quebra linha sem rolagem; a nota aparece dentro da tira). Com o leitor de tela (NVDA ou Narrador), abrir pela frase e ouvir a linha **uma vez só**; depois abrir "Novo compromisso" e "Editar" e confirmar que a linha não aparece e não é lida. Conferir que "Criar" com o campo só com espaços não abre nada e deixa o foco no campo.
+
+### 16.13 Decisões aprovadas pelo João em 2026-11-09
+
+As 4 decisões abaixo foram aprovadas pelo João em 2026-11-09, todas na opção A (a recomendada): botão "Criar" de contorno; a dica e o aviso de data que não existe com a mesma cara âmbar; o exemplo do campo um pouco menor; o campo dentro de um card.
+
+1. **Cara do botão "Criar".**
+   - **A (recomendo):** botão de **contorno**, colado no campo, como o "Adicionar" do "O que levar". O botão âmbar cheio continua sendo só o "Novo compromisso" lá em cima, e o topo da página não fica com dois botões âmbar grandes um embaixo do outro no celular.
+   - B: âmbar cheio (botão principal). Chama mais atenção, mas compete com o "+ Novo" do cabeçalho.
+2. **Cor da nota dentro da linha "Entendi".**
+   - **A (recomendo):** a dica "Não encontrei data nem hora. Confira os campos." e o aviso "A data 31/02 não existe. Escolha uma data." com a **mesma cara**: ícone de alerta âmbar e texto normal, dentro da tira. Os dois querem dizer "confira", e ainda não é um erro (o erro vermelho "Escolha uma data." só aparece se a pessoa tentar salvar).
+   - B: o aviso de data que não existe em vermelho (ícone e texto), e só a dica em âmbar. Mais forte, mas o vermelho na Agenda é reservado para erro de verdade e para excluir.
+3. **Exemplo dentro do campo um pouco menor que o texto digitado** (14px no lugar de 16px; 17.5px no lugar de 20px na letra grande).
+   - **A (recomendo):** menor. É o que garante que "Ex.: dentista amanhã às 10h" aparece inteiro a 360px com a letra grande (os requisitos pedem "nada cortado"). O texto que a pessoa digita continua com 16px (sem zoom no celular).
+   - B: mesmo tamanho do texto digitado. Fica mais uniforme, mas com a letra grande a 360px o fim do exemplo ("10h") pode ficar escondido.
+4. **O campo dentro de um painel (card) ou solto na página.**
+   - **A (recomendo):** dentro de um card baixo, com fundo próprio: separa a "captura" da lista e deixa o texto longe do brilho âmbar do fundo (contraste igual em qualquer ponto da tela).
+   - B: solto, como um campo comum logo abaixo da barra "Aparência". Ocupa ≈24px a menos de altura no celular, mas se mistura com as faixas e com a faixa da semana logo abaixo.
