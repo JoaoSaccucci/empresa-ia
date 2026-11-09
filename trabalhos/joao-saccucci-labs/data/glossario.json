@@ -95,5 +95,17 @@
   { "termo": "Object.hasOwn", "traducao": "objeto: tem como próprio?", "explicacao": "Confere se uma chave foi colocada no próprio objeto, sem contar o que vem herdado do protótipo. Devolve true ou false." },
   { "termo": "aria-pressed", "traducao": "ARIA: pressionado", "explicacao": "Atributo de um botão que liga e desliga. \"true\" é ligado e \"false\" é desligado; o leitor de tela anuncia o estado." },
   { "termo": "aria-live", "traducao": "ARIA: ao vivo", "explicacao": "Faz o leitor de tela anunciar sozinho o que muda dentro de uma área. Numa área grande, como uma lista inteira, atrapalha mais do que ajuda." },
-  { "termo": "closest", "traducao": "o mais próximo", "explicacao": "Procura, a partir do próprio elemento e subindo pelos pais, o primeiro que combina com um seletor. Devolve null se não achar." }
+  { "termo": "closest", "traducao": "o mais próximo", "explicacao": "Procura, a partir do próprio elemento e subindo pelos pais, o primeiro que combina com um seletor. Devolve null se não achar." },
+  { "termo": "trim", "traducao": "aparar", "explicacao": "Devolve o texto sem os espaços do começo e do fim. Não muda o texto original." },
+  { "termo": "splice", "traducao": "emendar", "explicacao": "Tira (ou coloca) itens numa posição da lista e muda a própria lista. splice(2, 1) tira 1 item da posição 2." },
+  { "termo": "referência", "traducao": "reference", "explicacao": "O \"endereço\" de um objeto ou de uma lista. Duas variáveis com a mesma referência apontam para o mesmo dado: mudar por uma muda pela outra." },
+  { "termo": "preventDefault", "traducao": "impedir o padrão", "explicacao": "Método do evento que cancela o que o navegador faria sozinho, como enviar o formulário quando a pessoa aperta Enter." },
+  { "termo": "Object.assign", "traducao": "objeto: atribuir", "explicacao": "Copia os campos de um ou mais objetos para o primeiro. Object.assign({}, a, { x: 1 }) cria um objeto novo com tudo de a e o x trocado." },
+  { "termo": "imutabilidade", "traducao": "immutability", "explicacao": "Não alterar um dado depois de criado: para mudar, cria-se uma versão nova. Facilita desfazer e comparar o antes e o depois." },
+  { "termo": "filter", "traducao": "filtrar", "explicacao": "Cria uma lista nova só com os itens que passam no teste. Não muda a lista original." },
+  { "termo": "delegação de eventos", "traducao": "event delegation", "explicacao": "Ouvir um evento no elemento pai, em vez de em cada filho. Funciona até para filhos criados depois, porque o evento sobe até o pai." },
+  { "termo": "fonte única da verdade", "traducao": "single source of truth", "explicacao": "Guardar cada informação num lugar só e calcular o resto a partir dela. Assim dois valores nunca discordam." },
+  { "termo": "includes", "traducao": "inclui", "explicacao": "Confere se uma lista (ou um texto) tem um certo valor. Devolve true ou false." },
+  { "termo": "for...of", "traducao": "para cada ... de", "explicacao": "Laço que passa por cada item de uma lista. Dentro dele, return, break e continue funcionam, ao contrário do forEach." },
+  { "termo": "continue", "traducao": "continuar", "explicacao": "Dentro de um laço, pula o resto desta volta e segue para o próximo item." }
 ]

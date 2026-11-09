@@ -41,6 +41,13 @@
       "numero": 2,
       "titulo": "Entrega 2b: Sair às, Feito e pendências",
       "resumo": "Mudar o formato dos dados sem perder nada, decidir em qual seção cada item aparece, fazer contas com datas e atualizar a tela a cada minuto."
+    },
+    {
+      "id": "agenda-m3",
+      "projeto": "agenda",
+      "numero": 3,
+      "titulo": "Entrega 3a: O que levar, hora de fim, conflito e aperto",
+      "resumo": "Editar uma cópia que só vale ao Salvar, gravar na hora com volta atrás, guardar um valor só para dois campos e procurar conflito e aperto com prioridade."
     }
   ],
   "aulas": [
@@ -286,6 +293,42 @@
       "arquivo": "aulas/agenda/modulo-2/aula-04.md",
       "tempoLeitura": 6,
       "resumo": "Um setTimeout que cai na virada do minuto, um resumo em texto para saber se algo mudou de seção e o visibilitychange para a aba que volta a aparecer."
+    },
+    {
+      "id": "agenda-m3-aula-01",
+      "titulo": "Uma lista de rascunho que só vale ao Salvar",
+      "modulo": "agenda-m3",
+      "numero": 1,
+      "arquivo": "aulas/agenda/modulo-3/aula-01.md",
+      "tempoLeitura": 6,
+      "resumo": "Copiar os itens do O que levar para um rascunho com map, mexer nele com trim, push e splice e só gravar ao Salvar: Cancelar não toca no compromisso."
+    },
+    {
+      "id": "agenda-m3-aula-02",
+      "titulo": "Gravar na hora e voltar atrás se der errado",
+      "modulo": "agenda-m3",
+      "numero": 2,
+      "arquivo": "aulas/agenda/modulo-3/aula-02.md",
+      "tempoLeitura": 6,
+      "resumo": "Marcar o checklist no card: montar uma versão nova com map e Object.assign sem mexer na antiga e, se o localStorage falhar, voltar para ela."
+    },
+    {
+      "id": "agenda-m3-aula-03",
+      "titulo": "Dois campos, um valor só: \"Termina às\" e \"Duração\"",
+      "modulo": "agenda-m3",
+      "numero": 3,
+      "arquivo": "aulas/agenda/modulo-3/aula-03.md",
+      "tempoLeitura": 6,
+      "resumo": "Guardar só a duração, transformar horas em minutos desde 00:00 e fazer um campo preencher o outro sem entrar em loop."
+    },
+    {
+      "id": "agenda-m3-aula-04",
+      "titulo": "Conflito ou aperto: procurar com prioridade",
+      "modulo": "agenda-m3",
+      "numero": 4,
+      "arquivo": "aulas/agenda/modulo-3/aula-04.md",
+      "tempoLeitura": 7,
+      "resumo": "Um for...of que para no primeiro conflito e guarda só o primeiro aperto, as comparações com < e por que o forEach não serve aqui."
     }
   ]
 }

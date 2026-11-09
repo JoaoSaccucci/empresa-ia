@@ -483,6 +483,15 @@
           { "titulo": "Relatório de teste — Entrega 3a", "url": "docs/projetos/agenda/testes/etapa-3a.md" }
         ],
         "imagens": []
+      },
+      {
+        "agente": "professor",
+        "resumo": "Etapa 3, Entrega 3a: 4 aulas curtas sobre o que mudou: editar o \"O que levar\" num rascunho que só vale ao Salvar, gravar o checklist na hora com volta atrás se falhar, guardar um valor só para \"Termina às\" e \"Duração\" e procurar conflito e aperto com prioridade. Cada aula tem exemplo com Rodar e quiz, e cita o código da Agenda por link fixo.",
+        "entregaveis": [
+          { "titulo": "Aulas — Agenda, Módulo 3", "url": "aulas.html#agenda-m3" },
+          { "titulo": "Glossário", "url": "data/glossario.json" }
+        ],
+        "imagens": []
       }
     ],
     "linhaDoTempo": [
@@ -509,7 +518,8 @@
       { "data": "2026-11-06", "agente": "artista", "descricao": "Design da Entrega 3a: hora de fim, O que levar, conflito e aperto (seção 14)." },
       { "data": "2026-11-06", "agente": "dev", "descricao": "Implementação da Entrega 3a." },
       { "data": "2026-11-06", "agente": "testador", "descricao": "Entrega 3a aprovada na primeira rodada; as quatro pendências baixas foram corrigidas." },
-      { "data": "2026-11-06", "agente": "dev", "descricao": "Entrega 3a publicada no repositório agenda e no GitHub Pages." }
+      { "data": "2026-11-06", "agente": "dev", "descricao": "Entrega 3a publicada no repositório agenda e no GitHub Pages." },
+      { "data": "2026-11-09", "agente": "professor", "descricao": "4 aulas da Entrega 3a, com exemplo Rodar e quiz, no Módulo 3 da Agenda." }
     ]
   }
 ]

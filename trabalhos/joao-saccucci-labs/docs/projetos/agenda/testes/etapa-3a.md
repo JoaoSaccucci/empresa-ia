@@ -173,3 +173,111 @@ Nenhum problema de gravidade alta. Seguem as observações de gravidade **baixa*
 3. **Conflito:** crie dois compromissos hoje, um das 14:00 às 15:00 e outro às 14:30, e veja o aviso vermelho no segundo. Mude o segundo para 15:10 e veja virar o aviso âmbar de aperto.
 4. **Leitor de tela** (NVDA ou TalkBack): ouvir "O que levar (2 de 5), Dentista, botão, recolhido", "Das 10:30 às 11:30", "Cartão do convênio adicionado." e o "marcado"/"desmarcado" das caixas.
 5. **Depois do push:** abrir `https://joaosaccucci.github.io/agenda/` e conferir que não há erro no console.
+
+## Aulas do Módulo 3 — 2026-11-09
+
+- **O que foi testado:** as 4 aulas novas da Agenda na Labs (`aulas/agenda/modulo-3/aula-01.md` a `aula-04.md`) e as mudanças em `data/aulas.json` (módulo `agenda-m3` e 4 aulas), `data/glossario.json` (12 termos novos: trim, splice, referência, preventDefault, Object.assign, imutabilidade, filter, delegação de eventos, fonte única da verdade, includes, for...of e continue) e `data/projetos.json` (trabalho do professor da 3a e linha do tempo da Agenda). O teste foi feito antes do commit da Labs, do mesmo jeito que as aulas da 2b, e seguiu o guia `docs/guias/aulas.md` e a regra do João de que nenhum exercício manda mexer no código de um projeto.
+- **Onde:** Edge headless, com o site da Labs servido por um servidor local (marked e highlight.js carregados pelo CDN), a 1280px, 360px e 320px, nos temas escuro e claro ("papel"). Os links fixos foram comparados com o commit `297ffa3cf92dc2ca0e41dfe17ac72858441826b2` no repositório local da Agenda (`git show 297ffa3:js/app.js` e `js/datas.js`). Esse commit está em `origin/main`, e a página dele no GitHub respondeu 200.
+
+### Resultado
+
+**Aprovado com pendências.** Foram 201 conferências automáticas, mais dois roteiros curtos (progresso e rolagem). As 6 falhas do roteiro eram do script ou de um comportamento antigo da Labs, e conferi uma por uma (veja "Como foi testado"). Todos os exemplos rodam e mostram exatamente o que o texto diz. Os exercícios de "Para praticar" e as respostas dos quizzes batem com o código, e os links fixos apontam para as linhas certas. Corrigi dois detalhes de texto (problemas 2 e 3). Fica **uma pendência média já conhecida**: o balão de `[[map]]` mostra a explicação do `Map` (problema 1). Ela não é deste módulo e não impede o commit.
+
+### Verificações
+
+| Área | Resultado | Observação |
+|---|---|---|
+| Celular a 360px e 320px | Passou | Sem rolagem horizontal nas 4 aulas (antes e depois de Rodar), em `aulas.html#agenda-m3` e em `detalhe-projeto.html?id=agenda`. A tabela da aula 3 fica dentro do `.tabela-rolagem` (288px a 320px, com `tabindex="0"` e nome "Tabela"). As linhas longas de código (a mais longa é a L7 da aula 2) rolam dentro do próprio bloco (`overflow-x: auto`), que termina em 303px a 320px. |
+| Teclado | Passou | O Tab passa por: Rodar, Editar, Console, tabela rolável (aula 3), termos do glossário, links fixos, alternativas do quiz e checklist. O foco aparece em todos. Cada balão abre com Enter e fecha com Esc, e o foco fica no termo. O quiz responde com Enter, e o "Tentar de novo" funciona com Espaço. Os botões "Agenda" e "João Saccucci Labs" de `aulas.html` trocam com Enter e Espaço. |
+| Acessibilidade | Passou | Os componentes são os mesmos da Labs. O aviso do Rodar conta certo ("2", "2", "3" e "3 linhas no console"). Depois de responder, as 3 alternativas ficam com `aria-disabled="true"` e as 3 explicações aparecem. |
+| Contraste | Passou | Medido nas cores calculadas, nos dois temas (escuro / claro): termo do glossário 16,7 / 15,3; código no texto 15,6 / 13,9; texto 7,9 / 6,7; rótulo do Linha por linha 14,8 / 5,3; célula da tabela 16,7 / 15,3. Tudo acima de 4,5. |
+| Erros | Passou | Sem erro no console nas 4 aulas, em `aulas.html`, no detalhe da Agenda, em 2 aulas da Labs da amostra e com um id que não existe (`agenda-m3-aula-09` mostra "Aula não encontrada." e "Ver todas as aulas"). O Console dos exemplos também ficou sem erro. O único 404 foi o `/favicon.ico` que o navegador pede na raiz do servidor de teste. |
+
+### Conferências
+
+**1. `aulas.html`, progresso e vitrine**
+- [x] No botão "Agenda" aparece o "Módulo 3 — Entrega 3a: O que levar, hora de fim, conflito e aperto", logo depois do Módulo 2, com as 4 aulas (3.1 a 3.4; `tempoLeitura` 6, 6, 6 e 7) e os links `aula.html?id=agenda-m3-aula-01` a `-04`. São 12 cards da Agenda e 19 da Labs.
+- [x] Progresso: no começo, "Agenda, 0 de 12 concluídas" e "0 de 4 concluídas" em cada módulo. Depois de marcar a 3.1 e a 3.4 como concluídas, aparece "Agenda, 2 de 12 concluídas" e, no Módulo 3, "2 de 4 concluídas". Os Módulos 1 e 2 continuam em 0 de 4, e a Labs em 0 de 19.
+- [x] `detalhe-projeto.html?id=agenda` mostra o trabalho do professor da 3a ("Aulas — Agenda, Módulo 3" → `aulas.html#agenda-m3` e o Glossário) e a nova linha da linha do tempo (2026-11-09). Os links dos Módulos 1 e 2 continuam lá. Clicando no link do Módulo 3 e depois no card 3.4, a aula 3.4 abre.
+
+**2. Cada aula em `aula.html`** (as 4 passaram em tudo)
+- [x] Têm Em resumo (2 linhas), Erro comum, Dica "Para ir além (opcional)" e Em entrevista.
+- [x] O glossário funciona com todos os termos: trim, push, splice, referência, map, early return, preventDefault (aula 1); localStorage, map, Object.assign, referência, imutabilidade, filter, length, delegação de eventos (aula 2); fonte única da verdade, Date, includes, split (aula 3); for...of, continue, Map, aria-live (aula 4). Nenhum `[[` ou `]]` sobra na página.
+  - `[[for...of]]` e `[[Object.assign]]` (com ponto) viram balão normalmente.
+  - O `[[preventDefault]]` entre dois trechos de código da aula 1 fica certo: `<code>evento.</code>`, o botão do termo e `<code>()</code>`, nessa ordem e sem espaço sobrando.
+  - Os 12 termos novos não repetem nenhum termo que já existia, nem ignorando maiúsculas. O único par repetido continua sendo `map`/`Map` (problema 1).
+- [x] O código aparece colorido. Há 1 exemplo com Rodar por aula, com 14, 15, 15 e 14 linhas.
+- [x] O Linha por linha está ligado ao exemplo e cita as linhas certas. Conferi cada item com o código: aula 1 (L1, 2–4, 6, 7, 8, 10–11, 12, 13–14); aula 2 (L1, 2, 4, 5–9, 7, 8, 10, 11–12, 14–15); aula 3 (L1–4, 5–8, 9–11, 12–13, 14–15); aula 4 (L1, 3, 4, 5, 6, 7, 8, 9, 11, 13–14).
+- [x] O Rodar mostra exatamente o que o texto diz, e conferi cada número calculado pelo professor:
+  - Aula 1: `Rascunho: [{"texto":"Cartão do convênio","feito":false}]` e `Compromisso, sem Salvar: [{"texto":"RG","feito":true}]`.
+  - Aula 2: `Não foi possível salvar o compromisso.` e `RG marcado? false`.
+  - Aula 3: `Duração: 90 min` (630 − 540), `Com 1 h, termina às 10:00` (600) e `23:30 + 1 h: passa da meia-noite, fica vazio` (1410 + 60 = 1470, que passa de 1439).
+  - Aula 4: `11:00 -> Conflito: Dentista vai até 11:30.`, `11:40 -> Aperto: Dentista vai até 11:30.` (sair às 11:25: 685 < 690) e `11:45 -> null` (690 não é menor que 690).
+- [x] Editar abre o código num campo de texto, o código editado roda, e Restaurar volta ao original.
+- [x] Quizzes: as aulas 1 a 3 têm 2 e a aula 4 tem 3, todos com 3 alternativas e **exatamente uma certa**. Testei cada quiz duas vezes, em páginas limpas. Clicando na certa, aparece "Certa!". Respondendo uma errada com Enter, aparece "Errada. A resposta certa é a B.". Nos dois casos as 3 explicações aparecem e o quiz trava, e o "Tentar de novo" limpa a resposta. Conferi as respostas certas contra o código:
+  - `rascunho = compromisso.itens` seguido de `splice` tira o RG do compromisso também;
+  - 10:30 − 09:00 = 90, que vai para "Outro";
+  - o Café às 11:30 dá aperto (675 < 690, e 690 < 690 é falso);
+  - aperto no primeiro A e conflito no segundo dá conflito.
+
+**3. Navegação**
+- [x] A 2.4 agora leva à 3.1, a 3.1 volta para a 2.4, e a 3.4 não tem "próxima".
+- [x] Amostra da Labs (a primeira e a última aula): abrem sem erro, e nenhum link de navegação leva para a Agenda.
+
+**4. Links fixos** (todos com o hash completo `297ffa3cf92dc2ca0e41dfe17ac72858441826b2`, nenhum com `/blob/main/`)
+- [x] Aula 1: `app.js#L1132-L1137` (o comentário da 3a e a cópia dos itens com `map` na `abrirFormulario`), `app.js#L1575-L1595` (a `adicionarItem` e a `removerItem` inteiras), `app.js#L1281-L1288` (o texto pendente de "Novo item" na `salvarFormulario`) e `app.js#L2146-L2155` (o `keydown` com `isComposing` e `preventDefault`).
+- [x] Aula 2: `app.js#L1613-L1638` (a `marcarItemDoChecklist` inteira), `app.js#L505-L533` (a `textosDoChecklist` e a `preencherBotaoDoChecklist` inteiras) e `app.js#L2077-L2083` (o comentário e o ouvinte de `change` na área principal).
+- [x] Aula 3: `datas.js#L238-L247` (a `minutosDoDia` e a `horaDosMinutos`, com os comentários), `datas.js#L254-L259` (a `horaDeFim`, com o comentário), `app.js#L1437-L1474` (a `aoMudarFim`, a `aoMudarDuracao` e a `aoMudarHora`) e `app.js#L1488-L1506` (a `avaliarHoraDeFim`).
+- [x] Aula 4: `datas.js#L262-L302` (o comentário e a `avisoDeHorario` inteira), `app.js#L461-L479` (a `calcularAvisosDeHorario` inteira) e `app.js#L484-L500` (a `criarAvisoDeHorario` inteira).
+- Em todos os links, a função citada termina na última linha do intervalo. Alguns começam no comentário logo acima da função, o que ajuda a leitura.
+
+**5. Conteúdo**
+- [x] As explicações batem com o código da Agenda:
+  - o rascunho é uma cópia feita com `map` ao abrir, e vira `[]` num compromisso novo;
+  - `trim`, `push` e `splice` estão na `adicionarItem` e na `removerItem`;
+  - a `marcarItemDoChecklist` guarda `listaAntes`, monta o compromisso novo com `Object.assign` e, se falhar, volta a lista e faz `caixa.checked = !caixa.checked`;
+  - o contador usa `filter(...).length`;
+  - a Duração escolhe a opção com `OPCOES_DE_DURACAO.includes(String(minutos))`;
+  - `ULTIMO_MINUTO_DO_DIA` é 1439, e um fim vazio, igual ou antes da Hora deixa a Duração em "Sem hora de fim" (a opção de valor vazio);
+  - a `avisoDeHorario` usa `for...of`, `continue` e `<`, e só guarda o primeiro aperto;
+  - a hora de sair aparece com `(sairB + 1440) % 1440` (00:05 − 15 → 23:50);
+  - a tarja não tem `aria-live`, e o título entra como texto.
+- [x] **Nenhum exercício manda mexer no código da Agenda ou da Labs.** Todos os itens de "Para praticar" mexem no exemplo da aba Aulas. Rodei cada item com o editor do próprio exemplo, e as linhas citadas são as certas:
+  - Aula 1: com `const rascunho = compromisso.itens;`, "Compromisso, sem Salvar" mostra só o Cartão do convênio (o RG sumiu). Com `adicionar("RG")` depois da linha 11, o rascunho fica com o Cartão e um RG novo (`feito: false`).
+  - Aula 2: com `return true`, aparecem "Salvo." e "RG marcado? true". Trocando as linhas 5 a 9 por `compromissos[0].itens[indice].feito = marcado;`, aparece o erro, mas "RG marcado? true".
+  - Aula 3: com "09:30" na linha 10, "Duração: 30 min" (opção "30 min"). Com "14:00" na linha 9, "Duração: -210 min" e "termina às 15:00". `horaDosMinutos(1439)` dá "23:59".
+  - Aula 4: com o Café antes do Dentista, às 11:00 continua o conflito com o Dentista (o aperto com o Café fica guardado, mas o conflito vence). Com `<=` e "11:30", aparece "Conflito: Dentista vai até 11:30."; com `<`, "Aperto: Dentista vai até 11:30.". Com `sair: 5`, às 11:40 dá `null` (695 não é menor que 690).
+- [x] Tamanho: de 698 a 858 palavras fora do código, `tempoLeitura` 6 ou 7, 2 ou 3 itens em "Para praticar" e quiz nas 4 aulas.
+
+### Problemas encontrados
+
+**1. Glossário: `[[map]]` mostra a explicação do `Map`** (status: pendente, já conhecida)
+- **Onde:** `js/aula.js`, linha 241 (`termos.set(String(item.termo).toLowerCase(), item)`), com `map` (linha 15) e `Map` (linha 80) no `glossario.json`. Afeta as aulas 3.1 e 3.2 deste módulo.
+- **Passos:** abrir `aula.html?id=agenda-m3-aula-01`, ir até "L2–4" do Linha por linha e abrir o termo "map".
+- **Esperado:** "mapear — Cria uma lista nova transformando cada item da lista original."
+- **Obtido:** "mapa — Estrutura que guarda um valor para cada chave, como um id…". Na aula 3.1 isso aparece logo ao lado de "map cria uma lista nova", o que confunde. Na aula 3.4, o `[[Map]]` mostra o certo.
+- **Gravidade:** média, mas não é deste módulo: é a observação B do relatório `docs/testes/etapa-7.md`, que já afetava as aulas do Módulo 2. Sugestão para o dev, numa próxima etapa: buscar primeiro o termo exato e só depois ignorar maiúsculas, ou trocar um dos termos.
+
+**2. Aula 3, Linha por linha (L14–15): mensagem de erro incompleta** (status: corrigido por mim)
+- **Obtido:** a aula citava "Com essa duração, o compromisso passaria da meia-noite.". O texto real da Agenda (`index.html`, linha 199, no commit `297ffa3`) continua com "Escolha uma duração menor.".
+- **Gravidade:** baixa. **Correção:** acrescentei a segunda frase na citação.
+
+**3. Aula 1, "Em entrevista": `{ ...}` parece o operador de espalhar** (status: corrigido por mim)
+- **Obtido:** "por exemplo com `map` devolvendo `{ ...}` novos". Escrito como código, `{ ...}` parece a sintaxe de espalhar (`{ ...item }`), que ainda não foi ensinada, e a frase fica difícil de repetir numa entrevista.
+- **Gravidade:** baixa. **Correção:** "por exemplo com `map` devolvendo objetos novos, como `{ texto: item.texto, feito: item.feito }`", que é o que o exemplo da aula faz.
+
+### Observações (gravidade baixa, nenhuma impede a aprovação)
+
+- **A. Rolagem até `aulas.html#agenda-m3` em telas estreitas.** A rolagem suave para antes do ponto certo: o título do módulo fica a 348px do topo a 320px e a 295px a 360px (o esperado era cerca de 88px, a margem do cabeçalho). O módulo aparece na tela e dá para ler o título, então o link funciona. Isso não é deste módulo: o `#agenda-m2` também para a 162px a 320px. Parece que a posição é calculada antes de a página terminar de se ajustar. Fica para o dev olhar numa próxima etapa da Labs.
+- **B. Linha longa na aula 2.** A L7 do exemplo (o `map` dos itens com o operador ternário) tem mais de 100 caracteres e, no celular, só aparece rolando o bloco de código. Funciona, mas quebrar em duas linhas deixaria mais fácil de ler (o Linha por linha teria de ser renumerado).
+- **Conferir à mão (João):** depois do commit da Labs, abrir uma aula do Módulo 3 no GitHub Pages e clicar num link fixo, para ver se o GitHub abre com as linhas destacadas.
+
+### Como foi testado
+
+- **No navegador (Edge headless, por script):** tudo o que está marcado acima. Os exercícios de "Para praticar" foram rodados com o editor do próprio exemplo. Cada quiz foi respondido em páginas limpas: uma vez com clique na certa e outra com Enter numa errada.
+- **As 6 falhas do roteiro, que não eram das aulas:**
+  - 4 vezes "foco sem contorno" em `modo-foco`: era o `body`, depois de o Tab passar do último link da página e voltar ao começo (igual à 2b);
+  - "404 em aulas.html": era o `/favicon.ico`;
+  - "aulas.html#agenda-m3 a 320px não leva ao módulo": o meu limite era 300px, e o módulo parou a 348px (observação A).
+- **Só por leitura:** a conferência do conteúdo com o código da Agenda no commit `297ffa3` e a contagem de palavras.
+- Os scripts e os prints ficaram fora do projeto. Nenhum navegador nem servidor ficou aberto no fim. Não mexi no código da Agenda nem nos JSON. Nas aulas, fiz só as duas correções acima (`aula-01.md`, linha 61, e `aula-03.md`, linha 50).
