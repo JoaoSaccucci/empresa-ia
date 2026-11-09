@@ -519,6 +519,15 @@
           { "titulo": "Relatório de teste — Entrega 3b", "url": "docs/projetos/agenda/testes/etapa-3b.md" }
         ],
         "imagens": []
+      },
+      {
+        "agente": "professor",
+        "resumo": "Etapa 3, Entrega 3b: 4 aulas curtas sobre o que mudou: trocar o tema inteiro com variáveis CSS e um atributo no <html>, aplicar a preferência no <head> antes de a página aparecer (sem piscar e sem quebrar com valor estranho), aumentar a letra com rem e 125% na raiz e montar a faixa da semana, levando o foco até o dia com tabindex=\"-1\". Cada aula tem exemplo com Rodar e quiz, e cita o código da Agenda por link fixo.",
+        "entregaveis": [
+          { "titulo": "Aulas — Agenda, Módulo 4", "url": "aulas.html#agenda-m4" },
+          { "titulo": "Glossário", "url": "data/glossario.json" }
+        ],
+        "imagens": []
       }
     ],
     "linhaDoTempo": [
@@ -550,7 +559,8 @@
       { "data": "2026-11-09", "agente": "artista", "descricao": "Design da Entrega 3b: faixa da semana, tema claro e letra grande (seção 15)." },
       { "data": "2026-11-09", "agente": "dev", "descricao": "Implementação da Entrega 3b." },
       { "data": "2026-11-09", "agente": "testador", "descricao": "Entrega 3b aprovada na primeira rodada, com um problema alto corrigido e pendências baixas." },
-      { "data": "2026-11-09", "agente": "dev", "descricao": "Entrega 3b publicada no repositório agenda e no GitHub Pages." }
+      { "data": "2026-11-09", "agente": "dev", "descricao": "Entrega 3b publicada no repositório agenda e no GitHub Pages." },
+      { "data": "2026-11-09", "agente": "professor", "descricao": "4 aulas da Entrega 3b, com exemplo Rodar e quiz, no Módulo 4 da Agenda." }
     ]
   }
 ]

@@ -107,5 +107,16 @@
   { "termo": "fonte única da verdade", "traducao": "single source of truth", "explicacao": "Guardar cada informação num lugar só e calcular o resto a partir dela. Assim dois valores nunca discordam." },
   { "termo": "includes", "traducao": "inclui", "explicacao": "Confere se uma lista (ou um texto) tem um certo valor. Devolve true ou false." },
   { "termo": "for...of", "traducao": "para cada ... de", "explicacao": "Laço que passa por cada item de uma lista. Dentro dele, return, break e continue funcionam, ao contrário do forEach." },
-  { "termo": "continue", "traducao": "continuar", "explicacao": "Dentro de um laço, pula o resto desta volta e segue para o próximo item." }
+  { "termo": "continue", "traducao": "continuar", "explicacao": "Dentro de um laço, pula o resto desta volta e segue para o próximo item." },
+  { "termo": "variável CSS", "traducao": "CSS variable / custom property", "explicacao": "Um nome que começa com -- e guarda um valor do CSS, como --cor-fundo: #0F0B14. As regras leem esse valor com var(--cor-fundo). Mudar o valor muda todas as regras que usam a variável." },
+  { "termo": "color-scheme", "traducao": "esquema de cores", "explicacao": "Propriedade do CSS que diz se a página é clara (light) ou escura (dark). Os campos nativos, como data e hora, e a barra de rolagem acompanham." },
+  { "termo": "documentElement", "traducao": "elemento do documento", "explicacao": "document.documentElement é a tag <html>, a raiz da página. Ela já existe quando um script do <head> roda, antes de o <body> ser lido." },
+  { "termo": "setAttribute", "traducao": "definir atributo", "explicacao": "Põe um atributo num elemento ou troca o valor dele: el.setAttribute(\"data-tema\", \"claro\"). O valor vira sempre texto. Para tirar o atributo, use removeAttribute." },
+  { "termo": "IIFE", "traducao": "função chamada na hora (Immediately Invoked Function Expression)", "explicacao": "Uma função escrita entre parênteses e chamada logo em seguida: (function () { ... })();. As variáveis criadas dentro dela não vazam para o resto da página." },
+  { "termo": "rem", "traducao": "em da raiz (root em)", "explicacao": "Unidade do CSS que se mede pelo tamanho da letra do <html>. Com a raiz em 16px, 1rem = 16px e 0.875rem = 14px. Mudando a raiz, tudo o que está em rem muda junto." },
+  { "termo": "tabindex", "traducao": "índice de tabulação", "explicacao": "Atributo que controla o foco pelo teclado. tabindex=\"-1\" deixa o elemento receber foco pelo código sem entrar na ordem do Tab; \"0\" coloca na ordem do Tab. Evite números positivos." },
+  { "termo": "focus", "traducao": "foco / focar", "explicacao": "elemento.focus() leva o foco do teclado para o elemento: o próximo Tab continua dali, e o leitor de tela anuncia o que está nele. Com { preventScroll: true }, não rola a página." },
+  { "termo": "scrollIntoView", "traducao": "rolar até ficar à vista", "explicacao": "Método que rola a página até o elemento aparecer. Com { behavior: \"smooth\" } a rolagem é animada; com \"auto\", ela pula direto." },
+  { "termo": "prefers-reduced-motion", "traducao": "prefere movimento reduzido", "explicacao": "Preferência do sistema de quem pediu menos animação. O CSS lê com @media (prefers-reduced-motion: reduce), e o JavaScript com matchMedia(\"(prefers-reduced-motion: reduce)\").matches." },
+  { "termo": "aria-label", "traducao": "ARIA: rótulo", "explicacao": "Dá a um elemento o nome que o leitor de tela anuncia, no lugar do texto de dentro. Útil quando o nome precisa juntar partes, como \"Hoje, 2 compromissos\"." }
 ]

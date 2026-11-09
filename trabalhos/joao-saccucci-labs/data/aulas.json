@@ -49,6 +49,14 @@
       "titulo": "Entrega 3a: O que levar, hora de fim, conflito e aperto",
       "resumo": "Editar uma cópia que só vale ao Salvar, gravar na hora com volta atrás, guardar um valor só para dois campos e procurar conflito e aperto com prioridade."
     }
+,
+    {
+      "id": "agenda-m4",
+      "projeto": "agenda",
+      "numero": 4,
+      "titulo": "Entrega 3b: faixa da semana, tema claro e letra grande",
+      "resumo": "Trocar o tema inteiro com variáveis CSS e um atributo no <html>, aplicar a preferência antes de a página aparecer, aumentar tudo com rem e 125% na raiz e levar o foco até o dia escolhido na faixa da semana."
+    }
   ],
   "aulas": [
     {
@@ -329,6 +337,42 @@
       "arquivo": "aulas/agenda/modulo-3/aula-04.md",
       "tempoLeitura": 7,
       "resumo": "Um for...of que para no primeiro conflito e guarda só o primeiro aperto, as comparações com < e por que o forEach não serve aqui."
+    },
+    {
+      "id": "agenda-m4-aula-01",
+      "titulo": "Um atributo no <html> troca o tema inteiro",
+      "modulo": "agenda-m4",
+      "numero": 1,
+      "arquivo": "aulas/agenda/modulo-4/aula-01.md",
+      "tempoLeitura": 6,
+      "resumo": "Todas as cores em variáveis CSS, um bloco :root[data-tema=\"claro\"] que redefine essas variáveis, o color-scheme e por que uma cor escrita direto não acompanha o tema."
+    },
+    {
+      "id": "agenda-m4-aula-02",
+      "titulo": "Aplicar o tema antes de a página aparecer",
+      "modulo": "agenda-m4",
+      "numero": 2,
+      "arquivo": "aulas/agenda/modulo-4/aula-02.md",
+      "tempoLeitura": 7,
+      "resumo": "Um script pequeno no <head>, dentro de uma IIFE e de um try, que lê a preferência salva, só aceita \"claro\" e \"grande\" e põe o atributo no <html> antes da primeira pintura."
+    },
+    {
+      "id": "agenda-m4-aula-03",
+      "titulo": "Letra grande: tudo em rem e 125% na raiz",
+      "modulo": "agenda-m4",
+      "numero": 3,
+      "arquivo": "aulas/agenda/modulo-4/aula-03.md",
+      "tempoLeitura": 6,
+      "resumo": "O que é rem, por que 125% respeita a letra do navegador e 20px não, o que cresce e o que fica em px, e os ajustes para caber a 360px."
+    },
+    {
+      "id": "agenda-m4-aula-04",
+      "titulo": "A faixa da semana: contar por dia e levar o foco até lá",
+      "modulo": "agenda-m4",
+      "numero": 4,
+      "arquivo": "aulas/agenda/modulo-4/aula-04.md",
+      "tempoLeitura": 7,
+      "resumo": "Contar compromissos por data com || 0, montar 7 dias com new Date(ano, mês, dia + i) e levar o foco ao título do dia com tabindex=\"-1\", scrollIntoView e focus."
     }
   ]
 }
