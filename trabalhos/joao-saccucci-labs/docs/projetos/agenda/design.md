@@ -4084,3 +4084,816 @@ O João aprovou as três recomendações: **1A** (horário empilhado na placa), 
    - B: os dois em âmbar, diferentes só pelo texto e pelo ícone. Mais calmo, e o vermelho fica só para erro e excluir.
    - C: os dois em vermelho. Mais alarmante; aperto não é erro.
 3. **Textos sugeridos (não estão nos requisitos):** a dica "Preencha um dos dois: o outro se ajusta sozinho.", a dica "De 1 a 1439 minutos.", o exemplo "Ex.: guarda-chuva" no campo "Novo item" (trocado para "Ex.: chave" em 2026-11-06 por caber a 320/360px), o "(já marcado)" lido pelo leitor de tela nos itens marcados do formulário (que também aparecem riscados ali) e o "acender" em âmbar do campo que se ajustou sozinho (opcional). Recomendo aprovar todos; qualquer um pode sair sem mudar o resto.
+
+---
+
+## 15. Etapa 3 — Entrega 3b (faixa da semana, tema claro e letra grande)
+
+Cobre a **Agenda US21** (faixa dos próximos 7 dias), a **US22** (tema claro e escuro), a **US23** (letra grande) e as mudanças da 3b nas stories anteriores (US01: ordem da página e `h3` com `tabindex="-1"`; US07: chave `agenda:preferencias`). Tudo **se soma** às seções 1 a 14. O tema **escuro continua exatamente como está**: nada do que já existe muda de cor nele.
+
+### 15.1 Ideia visual
+
+O mesmo **quadro de partidas**, agora também **de manhã**:
+- **Tema claro = a estação com a luz do dia.** Papel creme no fundo, cards quase brancos, tinta ameixa no texto. O âmbar vira **caramelo escuro** (a cor da tinta das tabelas de horário impressas), o lilás vira **violeta**, o azul do foco fica mais escuro. O clima é o mesmo; só a luz muda. O próprio quadro da ilustração continua escuro (os painéis de horário são escuros também de dia), mas a lua vira **sol**.
+- **Faixa da semana = o painel "próximas partidas" da semana.** Sete **plaquinhas** de duas metades (o mesmo desenho da placa de hora): o nome do dia em cima, a quantidade embaixo. Dia com compromisso é uma plaquinha "acesa" (fundo de duas metades, contorno, número em âmbar). Dia livre é uma plaquinha **vazia e tracejada**, escrito "Livre".
+- **Botões de aparência = os interruptores da cabine.** "Tema claro" e "Letra grande" são botões com uma **chavinha** desenhada: desligada, a bolinha fica à esquerda; ligada, a bolinha vai para a direita e o trilho fica âmbar. A posição da bolinha mostra o estado sem depender da cor.
+
+### 15.2 Reaproveitado x novo
+
+| Parte | Reaproveita | Novo (e por quê) |
+|---|---|---|
+| Botões "Tema claro" e "Letra grande" | `.btn .btn-secundario` (pílula, 44px, contorno 3:1, foco) | `.aparencia` (a barra que segura os dois), `.botao-aparencia`, `--tema`, `--letra` e `.aparencia-chave` (a chavinha) |
+| Faixa da semana | `.secao-titulo` (rótulo mono do `h2`), placa de duas metades (`--cor-superficie-2` / `--cor-placa-baixo`), quadradinho âmbar do "Hoje" (`.dia--hoje`), `.sr-only` | `.semana`, `.semana-lista`, `.semana-dia` (`--hoje`, `--livre`), `.semana-botao`, `.semana-placa`, `.semana-nome`, `.semana-quantidade`, `.semana-numero` |
+| Tema claro | **todas** as variáveis da seção 2 (redefinidas em 15.6) | `:root[data-tema="claro"]` + 6 ajustes do que não é variável (fundo da página, linhas do fundo, cabeçalho, fundo das janelas, check da caixa marcada, ilustração) |
+| Letra grande | todos os tamanhos já estão em `rem` (seção 9) | `:root[data-letra="grande"] { font-size: 125%; }` + 5 ajustes para caber a 360px (15.7) |
+| Sem "piscar" | — | script pequeno no `<head>` (15.5) |
+| Ícones | — | nenhum ícone novo (a chavinha é feita em CSS) |
+
+### 15.3 Onde fica cada coisa
+
+**Ordem da página (US01 da 3b):** cabeçalho · **barra "Aparência"** · faixas (`#faixas`) · "Ficou pendente" · **"Próximos 7 dias"** · "Próximos compromissos" · "Sem data" · "Anteriores" · rodapé.
+
+**Lugar dos botões de aparência (decisão 1):** o cabeçalho não tem espaço (a 360px ele já usa ≈294px dos 328px; dois botões de 44px a mais dariam ≈398px, e no computador os textos também não cabem ao lado de "Seus dados" e "Novo compromisso"). Por isso os dois botões ficam numa **barra própria, logo abaixo do cabeçalho, no topo do `<main>`, antes das faixas**. Ela **não é fixa** (não gruda no topo): nunca cobre compromissos nem botões, aparece em todas as situações (lista vazia, com faixas, com janela fechada) e fica sempre no mesmo lugar, porque vem **antes** das faixas que aparecem e somem. É um controle, não uma seção de conteúdo: a ordem das seções da US01 não muda.
+
+```
+360px (328px úteis), letra normal
++--------------------------------------+
+| [ic] Agenda▪          (≡)  [+ Novo]  |  cabeçalho fixo (igual)
++--------------------------------------+
+| [(o ) Tema claro ] [(o ) Letra grande]|  barra "Aparência" (não fixa), 44px
+|                                      |
+| (faixas, se houver)                  |
+| ┃ FICOU PENDENTE (1)  ...            |  (se houver)
+|                                      |
+| PRÓXIMOS 7 DIAS                      |  h2, rótulo mono 12px
+| +----------------------------------+ |
+| | ▪ Hoje                           | |  "Hoje" ocupa a linha toda (só < 640px)
+| |----------------------------------| |  placa de duas metades = botão
+| | 2 compromissos                   | |  "2" em mono âmbar
+| +----------------------------------+ |
+| +---------------+ +---------------+  |
+| | Amanhã        | | Ter 11        |  |
+| |---------------| ¦               ¦  |  Ter 11 = livre: tracejado, sem fundo,
+| | 1 compromisso | ¦ Livre         ¦  |  tudo em cinza, não é botão
+| +---------------+ +- - - - - - - -+  |
+| +---------------+ +---------------+  |
+| | Qua 12        | | Qui 13        |  |
+| | 3 compromissos| | Livre         |  |
+| +---------------+ +---------------+  |
+| +---------------+ +---------------+  |
+| | Sex 14        | | Sáb 15        |  |
+| +---------------+ +---------------+  |
+|                                      |
+| PRÓXIMOS COMPROMISSOS                |
+| ▪ Hoje                               |
+| ...                                  |
+```
+
+```
+≥ 640px (coluna de até 760px; 592 a 712px úteis)
++------------------------------------------------------------------+
+| [ic] Agenda▪                 [(≡) Seus dados] [+ Novo compromisso]|
++------------------------------------------------------------------+
+                              [(o ) Tema claro] [(o ) Letra grande]   <- à direita
+  PRÓXIMOS 7 DIAS
+  +--------------+ +--------------+ +- - - - - - -+ +--------------+
+  | ▪ Hoje       | | Amanhã       | ¦ Ter 11       ¦ | Qua 12       |
+  | 2 compromissos| | 1 compromisso| ¦ Livre        ¦ | 3 compromissos|
+  +--------------+ +--------------+ +- - - - - - -+ +--------------+
+  +--------------+ +- - - - - - -+ +--------------+
+  | Qui 13 ...   | ¦ Sex 14 ...   ¦ | Sáb 15 ...   |                    <- 4 + 3
+  PRÓXIMOS COMPROMISSOS
+```
+
+```
+360px com LETRA GRANDE (o cabeçalho pode quebrar em 2 linhas: exceção da US23)
++--------------------------------------+
+| [ic] Agenda▪                         |
+|                      (≡)  [+ Novo]   |  2ª linha, à direita
++--------------------------------------+
+| [(o ) Tema claro                   ] |  os dois botões não cabem lado a lado:
+| [( o) Letra grande                 ] |  um embaixo do outro, largura toda
+| PRÓXIMOS 7 DIAS                      |
+| +----------------------------------+ |
+| | ▪ Hoje / 2 compromissos          | |
+| +----------------------------------+ |
+| +----------------+ +---------------+ |  continua 2 por linha (cada uma ≈155px)
+```
+
+| Largura | Barra "Aparência" | Faixa da semana |
+|---|---|---|
+| 320px | normal: os dois botões **um embaixo do outro** (≈310px não cabem em 288px) | 2 por linha ("Hoje" na linha toda); letra grande: **1 por linha** |
+| 360 a 639px | lado a lado, dividindo a largura (letra grande: um embaixo do outro) | 2 por linha, "Hoje" na linha toda (4 linhas) |
+| ≥ 640px | lado a lado, à direita, cada um do tamanho do texto | grade automática de colunas de no mínimo 8.75rem: **4 por linha** (4 + 3) com letra normal; 3 por linha com letra grande |
+
+### 15.4 Botões "Tema claro" e "Letra grande" (US22 e US23)
+
+```html
+<!-- no <main>, ANTES do #faixas -->
+<div class="aparencia" role="group" aria-label="Aparência">
+  <button class="btn btn-secundario botao-aparencia botao-aparencia--tema" type="button" id="botao-tema" aria-pressed="false">
+    <span class="aparencia-chave" aria-hidden="true"></span>
+    <span>Tema claro</span>
+  </button>
+  <button class="btn btn-secundario botao-aparencia botao-aparencia--letra" type="button" id="botao-letra" aria-pressed="false">
+    <span class="aparencia-chave" aria-hidden="true"></span>
+    <span>Letra grande</span>
+  </button>
+</div>
+```
+
+- **O texto não muda** ("Tema claro" e "Letra grande" nos dois estados). O estado é dito pelo `aria-pressed` ("true" = ligado). O leitor de tela ouve "Tema claro, botão de alternância, não pressionado" / "pressionado".
+- **Visual:** botão secundário (contorno, pílula, 44px), texto 14px 600, e antes do texto a **chavinha**: trilho de 32 × 18px com borda de 2px `--cor-borda-campo` e bolinha de 10px `--cor-texto-suave` à esquerda.
+  **Ligado:** trilho cheio de âmbar, bolinha `--cor-sobre-cor` **à direita**, e a borda do botão fica âmbar. Três sinais (posição, preenchimento, borda), nenhum depende só da cor.
+- **A chavinha segue o atributo do `<html>`, não o `aria-pressed`.** O script do `<head>` (15.5) liga o tema antes de a página aparecer, mas o `app.js` só roda no fim do `<body>`. Se o desenho dependesse do `aria-pressed`, a chavinha apareceria "desligada" por um instante com o tema claro já ligado. Por isso o CSS usa `:root[data-tema="claro"] .botao-aparencia--tema` (e o mesmo para a letra), e o `app.js` só sincroniza o `aria-pressed` ao começar e a cada troca. **Regra para o dev:** uma única função muda o atributo do `<html>` e o `aria-pressed` juntos; os dois nunca podem ficar diferentes.
+- **Ao tocar:** a página troca na hora, sem recarregar, e o **foco fica no botão** (o botão não é redesenhado, só muda o atributo).
+- **Troca sem "fade" (opcional, recomendado):** vários elementos têm `transition` de cor (180ms) e mudariam "em ondas". O JS pode pôr a classe `trocando-tema` no `<html>`, trocar o atributo e tirar a classe dois quadros depois (`requestAnimationFrame` dentro de `requestAnimationFrame`). O CSS (15.12.2) desliga as transições só durante a troca.
+
+**Contas a 360px** (328px úteis, letra normal): chavinha 32 + vão 8 + "Tema claro" ≈81 + espaço interno 2 × 12 + bordas 2 ≈ **147px**; "Letra grande" ≈97 → **163px**; 147 + 8 + 163 = **318px**. Cabem lado a lado. A 320px (288px úteis) e com a letra grande a 360px, cada botão ocupa uma linha (`flex-wrap`), sem rolagem horizontal.
+
+### 15.5 Sem "piscar": o script do `<head>`
+
+O `<html>` recebe `data-tema="claro"` e/ou `data-letra="grande"`. **Sem atributo = escuro e normal** (os padrões). O script abaixo vai no `<head>`, **logo depois das duas `<meta>` de cor e antes das fontes e do `style.css`**. Ele roda antes de qualquer pintura da tela, então a página já aparece no tema certo.
+
+```html
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0F0B14">
+<!-- Etapa 3b: tema e letra ANTES de a página aparecer (a tela nunca pisca no tema errado).
+     Qualquer problema (sem localStorage, JSON inválido, valor estranho) = padrão, sem aviso. -->
+<script>
+  (function () {
+    try {
+      const preferencias = JSON.parse(localStorage.getItem("agenda:preferencias"));
+      if (preferencias && preferencias.letra === "grande") {
+        document.documentElement.setAttribute("data-letra", "grande");
+      }
+      if (preferencias && preferencias.tema === "claro") {
+        document.documentElement.setAttribute("data-tema", "claro");
+        document.querySelector('meta[name="color-scheme"]').setAttribute("content", "light");
+        document.querySelector('meta[name="theme-color"]').setAttribute("content", "#F7F1E8");
+      }
+    } catch (erro) {
+      // Fica o padrão (escuro e normal). Sem console.error: a US22 pede "sem erro no console".
+    }
+  })();
+</script>
+```
+
+- `JSON.parse(null)` devolve `null` (chave ausente): cai no padrão sem erro. Um número ou texto no lugar do objeto também cai no padrão (`preferencias.tema` fica `undefined`).
+- Só `"claro"` e `"grande"` ligam alguma coisa: qualquer outro valor vale o padrão **daquele campo** (seção 3 dos requisitos). A chave **não** é apagada.
+- O `app.js` usa a **mesma regra** ao trocar: muda o atributo do `<html>`, o `aria-pressed`, as duas `<meta>` (`color-scheme`: `"light"`/`"dark"`; `theme-color`: `#F7F1E8`/`#0F0B14`) e grava `{ "tema": ..., "letra": ... }` em `agenda:preferencias` (com `try/catch`: sem `localStorage`, a troca continua valendo até fechar a página). **Não** grava `agenda:ultima-mudanca`.
+- `color-scheme` no CSS (15.12.1) faz os campos nativos de data e hora, o `select` aberto e a barra de rolagem seguirem o tema.
+
+### 15.6 Tema claro: a paleta completa
+
+Todas as variáveis da seção 2, redefinidas em `:root[data-tema="claro"]`. Fórmula de luminância relativa da WCAG 2.1, como na seção 2.1. "Pior ponto" = o brilho âmbar do canto de cima no tema claro (âmbar 16% sobre o fundo, ≈`#F8E7CE`), onde ficam a barra "Aparência" e os cards sem fundo de "Anteriores".
+
+| Token | Escuro (seção 2) | **Claro** | Uso no claro | Contraste (claro) |
+|---|---|---|---|---|
+| `--cor-fundo` | `#0F0B14` | **`#F7F1E8`** | fundo da página e dos campos (papel creme) | — |
+| `--cor-superficie` | `#191321` | **`#FFFCF7`** | cards, janelas, estado vazio | — |
+| `--cor-superficie-2` | `#231A2E` | **`#EFE6DA`** | hover, metade de cima das placas, aviso flutuante | — |
+| `--cor-placa-baixo` | `#1D1626` | **`#E8DDCF`** | metade de baixo das placas | — |
+| `--cor-borda` | `#3A2F48` | **`#DDD1C3`** | só enfeite (como no escuro) | não precisa |
+| `--cor-borda-campo` | `#8A7A9C` | **`#7D7088`** | campos, botões de contorno, caixas, chavinha | 4.5 · 4.1 · 3.7 · 3.8:1 (superfície · fundo · superfície-2 · pior ponto) |
+| `--cor-texto` | `#F5EEE6` | **`#23182B`** | texto principal (tinta ameixa) | 16.6 · 15.1 · 13.7 · 12.7 · 14.0:1 |
+| `--cor-texto-suave` | `#B8AAB9` | **`#5B4C63`** | texto secundário | 7.7 · 7.0 · 6.4 · 5.9 · 6.5:1 |
+| `--cor-ambar` | `#FFB547` | **`#8A4A00`** | horas, "Hoje", "Aperto:", botão principal (caramelo) | 6.7 · 6.1 · 5.6 · 5.1 · 5.7:1 |
+| `--cor-ambar-claro` | `#FFC970` | **`#6F3B00`** | hover do botão principal (no claro, o hover **escurece**) | texto creme sobre ele 8.7:1 |
+| `--cor-lilas` | `#C4A8FF` | **`#6436B5`** | "Dia todo", "Sem data", local, links, "Não vou fazer" | 7.5 · 6.8 · 6.2 · 5.7 · 6.3:1 |
+| `--cor-foco` | `#8FD3FF` | **`#0B5FC0`** | **só** o contorno de foco (continua a única coisa azul) | 6.0 · 5.5 · 5.0 · 5.1:1 |
+| `--cor-perigo` | `#FF7B7B` | **`#B42318`** | erros, "Conflito:", excluir | 6.4 · 5.9 · 5.3 · 5.4:1 |
+| `--cor-perigo-claro` | `#FF9A9A` | **`#8E1B12`** | hover do "Excluir" cheio (no claro, **escurece**) | texto creme sobre ele 8.6:1 |
+| `--cor-sucesso` | `#8EE6A8` | **`#1D6B3B`** | "Feito", "tudo pronto", barrinha do aviso | 6.4 · 5.8 · 5.3 · 5.4:1 |
+| `--cor-sobre-cor` | `#1A1205` | **`#FFF8EE`** | texto sobre âmbar e sobre perigo (botões cheios) | 6.5:1 no âmbar · 6.2:1 no perigo |
+| `--sombra` | `0 12px 32px rgba(0,0,0,.5)` | **`0 12px 32px rgba(35, 24, 43, 0.18)`** | janelas, aviso flutuante | — |
+| `--brilho-ambar` | `0 0 22px rgba(255,181,71,.35)` | **`0 4px 16px rgba(138, 74, 0, 0.28)`** | hover do botão principal | — |
+
+**A regra do botão cheio muda de lado (decisão 3):** no escuro, o botão âmbar é claro e o texto é escuro. No claro, um âmbar claro **não** serve como cor de texto (o `#FFB547` dá só ≈1.8:1 no papel creme), e o âmbar é usado ao mesmo tempo como texto (horas) e como fundo (botão principal, "Sair em X min", opção marcada, caixa marcada). Por isso o âmbar do claro é **escuro** e o `--cor-sobre-cor` vira **creme**: o botão principal fica caramelo com texto creme (6.5:1). Uma variável só, e todos os usos continuam certos.
+
+**O que não é variável e precisa de ajuste no claro** (CSS em 15.12.2):
+
+| Onde | No escuro (fixo no CSS) | No claro |
+|---|---|---|
+| Brilhos do fundo (`body`) | âmbar 10% e lilás 7% | âmbar **16%** e lilás **12%** (no creme, 10% quase não aparece) |
+| Linhas do fundo (`body::before`) | creme 2.5% (somem no claro) | ameixa **3.5%** |
+| Cabeçalho | `rgba(15, 11, 20, 0.82)` | `rgba(247, 241, 232, 0.88)` (o fundo creme a 88%) |
+| Fundo atrás das janelas (`::backdrop`) | `rgba(8, 5, 12, 0.72)` | `rgba(35, 24, 43, 0.45)` (escurece sem "apagar" a página). Valor escrito direto, **sem** `var()`: em navegadores antigos o `::backdrop` não herda variáveis |
+| Check da caixa marcada | SVG com traço `#1A1205` | SVG com traço `#FFF8EE` (o escuro sobre o caramelo daria 2.7:1, abaixo de 3:1) |
+| Ilustração da lista vazia | lua minguante (círculo da cor do card por cima) e duas estrelas | **sol**: o círculo de sombra e as estrelas somem (decisão 6). O quadro continua escuro (é um objeto, como os painéis de verdade) |
+| `<meta name="theme-color">` | `#0F0B14` | `#F7F1E8` (pelo script e pelo `app.js`) |
+| Ícone do cabeçalho e favicon | — | **não mudam**: são a marca, um "azulejo" escuro com o próprio fundo, legível nos dois temas |
+
+Para a ilustração, o dev acrescenta duas classes na constante `ILUSTRACAO_VAZIO` do `app.js` (o resto do SVG não muda):
+
+```html
+<circle class="vazio-lua-sombra" cx="136" cy="15" r="10" fill="#191321"/>
+<circle class="vazio-estrela" cx="108" cy="12" r="1.5" fill="#F5EEE6" opacity=".6"/>
+<circle class="vazio-estrela" cx="150" cy="38" r="1.2" fill="#F5EEE6" opacity=".5"/>
+```
+
+### 15.7 Letra grande: a escala
+
+**Como:** `:root[data-letra="grande"] { font-size: 125%; }`. Todo tamanho de letra da Agenda já está em `rem` (seção 9: variáveis `--fs-*`, e o aviso flutuante em `0.9375rem`), então **todo** o texto cresce 25% de uma vez: página, formulário, janelas, avisos, faixa da semana. Usar `125%` (e não `20px`) respeita o tamanho de letra que a pessoa escolheu no navegador, e o zoom do navegador continua funcionando por cima.
+
+**Também crescem 25%** (decisão 4): os espaços (`--esp-*`), a largura da placa de hora (`4rem` → 80px), as caixas de marcar (`1.375rem` → 27.5px), a chavinha e as larguras mínimas em `rem`. Assim o desenho continua com as mesmas proporções, só maior. **Não crescem** (estão em `px`): ícones, bordas, raios, a altura mínima de toque (44px) e os pontos de quebra (`@media` em `px`).
+
+| Token | Normal | **Grande** | Uso |
+|---|---|---|---|
+| `--fs-xs` | 12px | **15px** | rótulos mono, "DIA TODO", selos |
+| `--fs-sm` | 14px | **17.5px** | local, observação, botões do card, dicas, erros, botões de aparência, quantidade da semana |
+| aviso flutuante | 15px | **18.75px** | `.status` |
+| `--fs-base` | 16px | **20px** | corpo, campos, nome do dia na semana |
+| `--fs-md` | 17px | **21.25px** | título do compromisso, hora |
+| `--fs-lg` | 20px | **25px** | título do dia, títulos das janelas |
+| `--fs-xl` | 22 a 28px | **27.5 a 35px** | `h1` "Agenda" |
+| `--esp-1` a `--esp-8` | 4 · 8 · 12 · 16 · 24 · 32 · 48 · 64 | **5 · 10 · 15 · 20 · 30 · 40 · 60 · 80** | espaços |
+
+**Ajustes para caber a 360px com a letra grande** (CSS em 15.12.2):
+
+| Parte | Problema com 125% | Ajuste |
+|---|---|---|
+| Cabeçalho | marca ≈150 + "Seus dados" 44 + "+ Novo" ≈118 + vãos ≈ 337px > 320px úteis (e quebra até ≈650px de largura) | `flex-wrap: wrap` no `.cabecalho-conteudo` **só com a letra grande** (exceção da US23): marca na 1ª linha, botões na 2ª, à direita. `scroll-padding-top` passa de 80px para `8rem` (160px), para o título do dia e o foco não ficarem atrás do cabeçalho de 2 linhas |
+| Todos os `.btn` | `white-space: nowrap` faria "Baixar cópia agora" e "Novo compromisso" passarem da largura | `white-space: normal` com a letra grande: o texto do botão quebra em 2 linhas se precisar |
+| "Tempo para sair" | 3 colunas de ≈80px; "✓ 60 min" precisa de ≈98px | 2 colunas abaixo de 480px (3 linhas de opções) |
+| "Novo item" + "Adicionar" | o campo ficaria com ≈90px e o exemplo "Ex.: chave" cortado | `flex-wrap`: no celular o "Adicionar" desce para baixo do campo, na largura toda; na janela larga continuam na mesma linha |
+| Faixa da semana a 320px | 2 colunas de ≈135px; "compromissos" (17.5px) + espaço interno ≈148px | 1 por linha abaixo de 360px (só com a letra grande) |
+
+Conferido o resto a 360px com a letra grande (container de 320px úteis, porque a margem lateral também cresce para 20px): card 320 − 2 × 15 = 290 → placa 80 + vão 15 → **195px** para o texto, que quebra linha; "09:30" mono 21px ≈ 64px + 10 cabe na placa de 80px; "–10:30" ≈ 69px cabe; botões do card quebram linha (`flex-wrap` já existe); janela `min(100% − 2.5rem, 32rem)` = 320px, 260px por dentro; "Cancelar" e "Salvar" (base `6rem` = 120px cada) cabem lado a lado; campo de minutos (`7rem` = 140px) + "min" cabe.
+
+### 15.8 Faixa "Próximos 7 dias" (US21)
+
+Fica entre `#secao-pendentes` e a seção `.proximos`, **sempre** visível (com a lista vazia, os 7 dias aparecem "Livre").
+
+```html
+<section class="semana" id="secao-semana" aria-labelledby="titulo-semana">
+  <h2 class="secao-titulo" id="titulo-semana">Próximos 7 dias</h2>
+  <!-- O JavaScript monta os 7 <li> (hoje e os 6 seguintes, em ordem). -->
+  <ul class="semana-lista" id="lista-semana">
+
+    <!-- Dia COM compromisso: botão -->
+    <li class="semana-dia semana-dia--hoje">
+      <button class="semana-botao" type="button" data-acao="ir-para-dia" data-data="2026-11-09" aria-label="Hoje, 2 compromissos">
+        <span class="semana-nome">Hoje</span>
+        <span class="semana-quantidade"><span class="semana-numero">2</span> compromissos</span>
+      </button>
+    </li>
+
+    <li class="semana-dia">
+      <button class="semana-botao" type="button" data-acao="ir-para-dia" data-data="2026-11-10" aria-label="Amanhã, 1 compromisso">
+        <span class="semana-nome">Amanhã</span>
+        <span class="semana-quantidade"><span class="semana-numero">1</span> compromisso</span>
+      </button>
+    </li>
+
+    <!-- Dia LIVRE: não é botão, não recebe foco -->
+    <li class="semana-dia semana-dia--livre">
+      <div class="semana-placa">
+        <span class="semana-nome">Ter 11</span><span class="sr-only">,</span>
+        <span class="semana-quantidade">Livre</span>
+      </div>
+    </li>
+
+    <!-- Hoje livre: as duas classes -->
+    <!-- <li class="semana-dia semana-dia--hoje semana-dia--livre"> ... -->
+  </ul>
+</section>
+```
+
+**Textos**
+| Situação | Nome (em cima) | Quantidade (embaixo) | Nome acessível do botão |
+|---|---|---|---|
+| hoje | "Hoje" | "2 compromissos" | "Hoje, 2 compromissos" |
+| amanhã | "Amanhã" | "1 compromisso" | "Amanhã, 1 compromisso" |
+| outro dia | dia da semana abreviado + dia do mês: "Qua 12" (abreviações da seção 3: Dom, Seg, Ter, Qua, Qui, Sex, Sáb) | "3 compromissos" | "Qua 12, 3 compromissos" |
+| dia livre | igual | "Livre" | — (não é botão; o leitor de tela lê "Ter 11, Livre" como item de lista) |
+
+- O nome acessível vem de `aria-label` e começa com o texto visível (bom para comando de voz), pelo mesmo motivo do botão "Feito" (13.4.3): um `sr-only` com vírgula ganharia um espaço antes dela.
+- O formato "Qua 12" (sem vírgula e sem o mês) é o do exemplo dos requisitos: cabe na plaquinha. A lista principal continua com "Qua, 12/11 · daqui a 3 dias".
+
+**Visual**
+- **Dia com compromisso** (`.semana-botao`): plaquinha de duas metades (`--cor-superficie-2` em cima, `--cor-placa-baixo` embaixo), contorno `--cor-borda-campo` (é um botão: borda 3:1), cantos de 10px, no mínimo 56px de altura (acima dos 44px de toque), texto à esquerda. Nome em 16px 700 branco na metade de cima; quantidade em 14px cinza suave na de baixo, com o **número** em mono 600 âmbar. Hover: fundo `--cor-superficie-2` inteiro e borda `--cor-texto-suave`. Apertado: encolhe 2%.
+- **Dia livre** (`.semana-placa`): sem fundo, borda **tracejada** decorativa (`--cor-borda`), nome e "Livre" em cinza suave. A diferença está no **texto** "Livre"; o tracejado e a falta de fundo são reforço. Não tem hover nem cursor de mão.
+- **Hoje:** nome em âmbar com o quadradinho âmbar antes (o mesmo do título "Hoje" da lista). No celular, a plaquinha de "Hoje" ocupa a **linha toda** (assim 1 + 2 + 2 + 2 = 7, sem um dia sobrando sozinho no fim). Se hoje estiver livre, continua tracejada, só com o nome em âmbar.
+- **Sem animação** (a faixa é redesenhada a cada minuto, como a lista).
+
+**Ao tocar num dia com compromisso** (clique, toque, Enter ou Espaço: é um `<button>` de verdade):
+1. O JS acha o título do dia na lista principal: `document.getElementById("proximos-dia-" + data)` (o id que o `criarDia` já cria).
+2. Rola até ele: `titulo.scrollIntoView({ behavior: reduzir ? "auto" : "smooth", block: "start" })`, com `reduzir = matchMedia("(prefers-reduced-motion: reduce)").matches`. O `scroll-padding-top` do `html` já deixa o título abaixo do cabeçalho fixo.
+3. Põe o foco nele: `titulo.focus({ preventScroll: true })`. Para isso, **todo `h3` da lista "Próximos compromissos" ganha `tabindex="-1"`** no `criarDia` (só na seção `proximos`; em "Anteriores", não).
+4. Foco visível: com o teclado, o título ganha o contorno azul de sempre; com o mouse ou o toque, não aparece contorno (`:focus:not(:focus-visible)`, igual ao `#titulo-proximos`). A rolagem já mostra onde a pessoa chegou.
+
+**Atualização** (a cada minuto e depois de criar, editar, excluir, importar, Feito e Desfazer): a faixa é montada de novo junto com a lista. Para não incomodar o leitor de tela e o foco:
+- **Sem `aria-live`** na faixa (ela muda a cada minuto).
+- Se o foco estava num botão da faixa, ele volta para o botão com o mesmo `data-data`. Se esse dia virou "Livre" (sem botão), o foco vai para o próximo dia com botão; se não houver nenhum, para o título "Próximos compromissos" (`#titulo-proximos`, que já tem `tabindex="-1"`).
+
+**Contas**
+| Largura | Conta | Cabe? |
+|---|---|---|
+| 360px, normal | 2 colunas: (328 − 8) / 2 = **160px**; "3 compromissos" 14px ≈ 109 + 24 de espaço interno = 133 | sim, numa linha |
+| 320px, normal | (288 − 8) / 2 = **140px**; 133 | sim |
+| 360px, grande | (320 − 10) / 2 = **155px**; "compromissos" 17.5px ≈ 118 + 30 = 148 | sim (o "3 compromissos" quebra em 2 linhas) |
+| 320px, grande | 1 coluna de 280px | sim |
+| ≥ 640px, normal | colunas de no mínimo 8.75rem (140px): 592px → 4 colunas (4 × 140 + 3 × 8 = 584); 712px → 4 (5 colunas dariam 732) | 4 + 3 |
+| ≥ 640px, grande | mínimo 175px: 580px e 700px → 3 colunas (≈186px e ≈227px) | 3 + 3 + 1 |
+
+Segurança: `overflow-wrap: anywhere` na quantidade e `min-width: 0` nas colunas. Se uma fonte do sistema for mais larga que a Space Grotesk, a palavra quebra dentro da plaquinha, mas a página nunca rola para o lado.
+
+### 15.9 Teclado e foco
+
+| Ação | Foco |
+|---|---|
+| Tab desde o topo | "Seus dados" → "Novo compromisso" → **"Tema claro"** → **"Letra grande"** → faixas (se houver) → "Ficou pendente" → **dias com compromisso da faixa da semana** (os livres são pulados) → lista principal |
+| Enter ou Espaço em "Tema claro" / "Letra grande" | troca na hora; o foco **fica** no botão |
+| Enter ou Espaço num dia da semana | rola até o dia e o foco vai para o `h3` dele (contorno azul) |
+| Tab depois de chegar ao `h3` | segue para o primeiro botão do primeiro compromisso daquele dia |
+| A faixa é redesenhada | o foco volta para o mesmo dia (ou o próximo com botão, ou `#titulo-proximos`) |
+
+Foco visível nos **dois temas**: contorno de 3px na cor `--cor-foco` (azul-céu no escuro, azul escuro no claro), em tudo o que é novo.
+
+### 15.10 Leitor de tela
+
+| Parte | O que é lido |
+|---|---|
+| Barra | "Aparência, grupo" |
+| Botões | "Tema claro, botão de alternância, não pressionado" / "pressionado"; idem "Letra grande" |
+| Faixa | "Próximos 7 dias, título nível 2", "lista, 7 itens" |
+| Dia com compromisso | "Hoje, 2 compromissos, botão" |
+| Dia livre | "Ter 11, Livre" |
+| Depois de tocar num dia | "Hoje, título nível 3" (o foco chega no título) |
+
+### 15.11 Ícones e ilustração
+
+Nenhum ícone novo. A chavinha é CSS puro (um `span` e o `::after`), assim ela segue o tema pelas variáveis. A única mudança em SVG é a da ilustração da lista vazia (classes `vazio-lua-sombra` e `vazio-estrela`, em 15.6).
+
+### 15.12 CSS de referência da Entrega 3b
+
+Quatro mudanças no `css/style.css`: uma seção nova logo depois das variáveis, uma seção nova antes do movimento reduzido, e acréscimos no movimento reduzido e no alto contraste.
+
+#### 15.12.1 Nova seção "1b": acrescentar logo **depois** da "1. VARIÁVEIS" e **antes** do "2. RESET"
+
+```css
+/* ---------------------------------------------------------
+   1b. TEMA CLARO E LETRA GRANDE (Etapa 3b)
+   Decisões em: design.md, seção 15.
+   O <html> recebe data-tema="claro" e/ou data-letra="grande"
+   (script do <head> e app.js). Sem atributo = escuro e normal.
+   Contrastes conferidos em design.md, 15.6 e 15.13.
+   --------------------------------------------------------- */
+:root[data-tema="claro"] {
+  color-scheme: light;           /* data, hora, select e barra de rolagem claros */
+
+  /* Fundos ("a estação de manhã": papel creme) */
+  --cor-fundo: #F7F1E8;
+  --cor-superficie: #FFFCF7;
+  --cor-superficie-2: #EFE6DA;
+  --cor-placa-baixo: #E8DDCF;
+
+  /* Bordas: a decorativa continua só enfeite; a de campo tem 3.7:1 ou mais */
+  --cor-borda: #DDD1C3;
+  --cor-borda-campo: #7D7088;
+
+  /* Texto (tinta ameixa) */
+  --cor-texto: #23182B;          /* 15.1:1 no fundo */
+  --cor-texto-suave: #5B4C63;    /* 7.0:1 no fundo */
+
+  /* Destaques: escuros, porque também são cor de texto */
+  --cor-ambar: #8A4A00;          /* caramelo: 6.1:1 no fundo */
+  --cor-ambar-claro: #6F3B00;    /* hover do botão principal: no claro, escurece */
+  --cor-lilas: #6436B5;          /* 6.8:1 no fundo */
+  --cor-foco: #0B5FC0;           /* SÓ o contorno de foco: 5.5:1 no fundo */
+  --cor-perigo: #B42318;         /* 5.9:1 no fundo */
+  --cor-perigo-claro: #8E1B12;   /* hover do Excluir cheio: no claro, escurece */
+  --cor-sucesso: #1D6B3B;        /* 5.8:1 no fundo */
+  --cor-sobre-cor: #FFF8EE;      /* texto creme sobre âmbar (6.5:1) e perigo (6.2:1) */
+
+  /* Sombras mais leves (no claro, a sombra preta a 50% fica "suja") */
+  --sombra: 0 12px 32px rgba(35, 24, 43, 0.18);
+  --brilho-ambar: 0 4px 16px rgba(138, 74, 0, 0.28);
+}
+
+/* Letra grande: tudo em rem cresce 25%. Em % (e não em px) para
+   respeitar a letra escolhida no navegador e o zoom. */
+:root[data-letra="grande"] {
+  font-size: 125%;
+  scroll-padding-top: 8rem;      /* o cabeçalho pode ter 2 linhas */
+}
+```
+
+#### 15.12.2 Nova seção "12e": acrescentar logo **depois** da "12d. ETAPA 3a" e **antes** da "13. MOVIMENTO REDUZIDO"
+
+```css
+/* ---------------------------------------------------------
+   12e. ETAPA 3b: APARÊNCIA, FAIXA DA SEMANA, TEMA CLARO E LETRA GRANDE
+   Decisões em: design.md, seção 15.
+   --------------------------------------------------------- */
+
+/* --- Barra "Aparência": logo abaixo do cabeçalho, não fixa --- */
+.aparencia {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--esp-2);
+  margin-bottom: var(--esp-5);
+}
+
+.botao-aparencia {
+  flex: 1 1 auto;                         /* celular: dividem a largura */
+  padding-inline: var(--esp-3);
+  font-size: var(--fs-sm);
+}
+
+@media (min-width: 640px) {
+  .botao-aparencia {
+    flex: 0 0 auto;                       /* computador: à direita, do tamanho do texto */
+  }
+}
+
+/* A chavinha: trilho de 32 x 18px e bolinha de 10px (em rem: cresce com a letra) */
+.aparencia-chave {
+  position: relative;
+  flex-shrink: 0;
+  width: 2rem;
+  height: 1.125rem;
+  border: 2px solid var(--cor-borda-campo);   /* 4.9:1 escuro · 4.1:1 claro */
+  border-radius: var(--raio-pill);
+  transition: background-color var(--transicao), border-color var(--transicao);
+}
+
+.aparencia-chave::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  width: 0.625rem;
+  height: 0.625rem;
+  background: var(--cor-texto-suave);
+  border-radius: 50%;
+  transform: translateY(-50%);
+  transition: transform var(--transicao);
+}
+
+/* Ligado. Segue o atributo do <html> (aplicado no <head>), e não o
+   aria-pressed (sincronizado só quando o app.js roda): assim a chave
+   nunca aparece no estado errado ao abrir a página. */
+:root[data-tema="claro"] .botao-aparencia--tema,
+:root[data-letra="grande"] .botao-aparencia--letra {
+  border-color: var(--cor-ambar);
+}
+
+:root[data-tema="claro"] .botao-aparencia--tema .aparencia-chave,
+:root[data-letra="grande"] .botao-aparencia--letra .aparencia-chave {
+  background: var(--cor-ambar);
+  border-color: var(--cor-ambar);
+}
+
+:root[data-tema="claro"] .botao-aparencia--tema .aparencia-chave::after,
+:root[data-letra="grande"] .botao-aparencia--letra .aparencia-chave::after {
+  background: var(--cor-sobre-cor);
+  /* largura do trilho - 2 bordas - 2 folgas - bolinha */
+  transform: translate(calc(1.375rem - 8px), -50%);
+}
+
+/* --- Faixa "Próximos 7 dias" --- */
+.semana {
+  margin-bottom: var(--esp-6);
+}
+
+.semana-lista {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--esp-2);
+}
+
+.semana-dia {
+  display: flex;                          /* a plaquinha estica até a altura da linha */
+  min-width: 0;
+}
+
+/* Celular: "Hoje" na linha toda (1 + 2 + 2 + 2 = 7) */
+@media (max-width: 639.98px) {
+  .semana-dia--hoje {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 640px) {
+  .semana-lista {
+    grid-template-columns: repeat(auto-fill, minmax(8.75rem, 1fr));   /* 4 por linha */
+  }
+}
+
+.semana-botao,
+.semana-placa {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+  min-height: 3.5rem;                     /* 56px: acima dos 44px de toque */
+  padding: var(--esp-2) var(--esp-3);
+  text-align: left;
+  line-height: 1.25;
+  border-radius: var(--raio-md);
+}
+
+/* Dia com compromisso: a placa de duas metades, com contorno de botão */
+.semana-botao {
+  color: var(--cor-texto);
+  background: linear-gradient(to bottom, var(--cor-superficie-2) 50%, var(--cor-placa-baixo) 50%);
+  border: 1px solid var(--cor-borda-campo);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--transicao), border-color var(--transicao),
+              transform var(--transicao);
+}
+
+.semana-botao:hover {
+  background: var(--cor-superficie-2);
+  border-color: var(--cor-texto-suave);
+}
+
+.semana-botao:active {
+  transform: scale(0.98);
+}
+
+/* Dia livre: vazio e tracejado. O que diz "livre" é o texto. */
+.semana-placa {
+  color: var(--cor-texto-suave);
+  border: 1px dashed var(--cor-borda);    /* enfeite */
+}
+
+.semana-nome {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--esp-2);
+  font-size: var(--fs-base);
+  font-weight: 700;
+}
+
+.semana-quantidade {
+  max-width: 100%;
+  font-size: var(--fs-sm);
+  color: var(--cor-texto-suave);
+  overflow-wrap: anywhere;                /* segurança: nunca rola para o lado */
+}
+
+.semana-numero {
+  font-family: var(--fonte-mono);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--cor-ambar);
+}
+
+/* Hoje: nome âmbar com o quadradinho (o mesmo do título "Hoje") */
+.semana-dia--hoje .semana-nome {
+  color: var(--cor-ambar);
+}
+
+.semana-dia--hoje .semana-nome::before {
+  content: "";
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  background: currentColor;
+  border-radius: 2px;
+}
+
+/* Títulos dos dias recebem o foco pelo código (tabindex="-1"):
+   contorno só para quem está no teclado. */
+.proximos .dia-titulo:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* --- Tema claro: o que não é variável --- */
+:root[data-tema="claro"] body {
+  background-image:
+    radial-gradient(ellipse 70% 45% at 100% 0%, rgba(255, 181, 71, 0.16), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 0% 100%, rgba(196, 168, 255, 0.12), transparent 70%);
+}
+
+:root[data-tema="claro"] body::before {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(35, 24, 43, 0.035) 0 1px,
+    transparent 1px 56px
+  );
+}
+
+:root[data-tema="claro"] .cabecalho {
+  background: rgba(247, 241, 232, 0.88);
+}
+
+/* Sem var() de propósito: navegadores antigos não passam variáveis para o ::backdrop */
+:root[data-tema="claro"] .janela::backdrop {
+  background: rgba(35, 24, 43, 0.45);
+}
+
+/* Check creme sobre o caramelo (o escuro daria só 2.7:1) */
+:root[data-tema="claro"] .marcar-caixa:checked {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFF8EE' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E");
+}
+
+/* Ilustração da lista vazia: de dia, a lua vira sol e as estrelas somem */
+:root[data-tema="claro"] .vazio-lua-sombra,
+:root[data-tema="claro"] .vazio-estrela {
+  display: none;
+}
+
+/* Opcional: durante a troca de tema, nada "desbota" aos poucos */
+:root.trocando-tema *,
+:root.trocando-tema *::before,
+:root.trocando-tema *::after {
+  transition: none !important;
+}
+
+/* --- Letra grande: ajustes para caber a 360px --- */
+:root[data-letra="grande"] .cabecalho-conteudo {
+  flex-wrap: wrap;                        /* exceção da US23: pode ter 2 linhas */
+  row-gap: var(--esp-2);
+  padding-block: var(--esp-2);
+}
+
+:root[data-letra="grande"] .cabecalho-acoes {
+  margin-left: auto;                      /* na 2ª linha, os botões ficam à direita */
+}
+
+:root[data-letra="grande"] .btn {
+  white-space: normal;                    /* texto longo quebra dentro do botão */
+  text-align: center;
+}
+
+:root[data-letra="grande"] .itens-novo {
+  flex-wrap: wrap;
+}
+
+:root[data-letra="grande"] .itens-novo .campo-controle {
+  flex: 1 1 10rem;
+}
+
+:root[data-letra="grande"] .botao-adicionar {
+  flex: 1 0 auto;                         /* no celular desce e ocupa a largura toda */
+}
+
+@media (max-width: 479.98px) {
+  :root[data-letra="grande"] .escolhas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 359.98px) {
+  :root[data-letra="grande"] .semana-lista {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+```
+
+#### 15.12.3 Seção "13. MOVIMENTO REDUZIDO": acrescentar dentro do `@media (prefers-reduced-motion: reduce)`
+
+```css
+  /* Etapa 3b (a chavinha já fica sem transição pela regra geral) */
+  .semana-botao:active {
+    transform: none;
+  }
+```
+
+A rolagem até o dia é sem animação pelo próprio JS (`behavior: "auto"`, 15.8).
+
+#### 15.12.4 Seção "14. ALTO CONTRASTE DO WINDOWS": acrescentar dentro do `@media (forced-colors: active)`
+
+```css
+  /* Etapa 3b */
+  .semana-botao {
+    border: 1px solid ButtonText;
+  }
+
+  .semana-placa {
+    border: 1px dashed CanvasText;
+  }
+
+  .aparencia-chave {
+    border-color: ButtonText;
+  }
+
+  /* a bolinha é um fundo: sem isto ela sumiria */
+  .aparencia-chave::after {
+    forced-color-adjust: none;
+    background: ButtonText;
+  }
+
+  :root[data-tema="claro"] .botao-aparencia--tema .aparencia-chave,
+  :root[data-letra="grande"] .botao-aparencia--letra .aparencia-chave {
+    forced-color-adjust: none;
+    background: Highlight;
+    border-color: Highlight;
+  }
+
+  :root[data-tema="claro"] .botao-aparencia--tema .aparencia-chave::after,
+  :root[data-letra="grande"] .botao-aparencia--letra .aparencia-chave::after {
+    background: HighlightText;
+  }
+```
+
+No alto contraste o estado continua claro também pela posição da bolinha e pelo `aria-pressed`.
+
+### 15.13 Contraste conferido (WCAG 2.1 AA)
+
+#### Partes novas no tema escuro
+
+"Pior ponto" = brilho âmbar do canto de cima no escuro, ≈`#271C19` (seção 2.1).
+
+| Elemento | Cor / fundo | Razão | Mínimo |
+|---|---|---|---|
+| Texto dos botões de aparência | `#F5EEE6` / `#0F0B14` · ≈`#271C19` | 16.8 · ≈14:1 | 4.5:1 |
+| Borda dos botões e trilho desligado | `#8A7A9C` / `#0F0B14` · ≈`#271C19` | 4.9 · 4.2:1 | 3:1 |
+| Bolinha desligada | `#B8AAB9` / `#0F0B14` | 8.7:1 | 3:1 |
+| Trilho ligado e borda do botão ligado | `#FFB547` / `#0F0B14` | 11.0:1 | 3:1 |
+| Bolinha ligada | `#1A1205` / `#FFB547` | 10.5:1 | 3:1 |
+| Nome do dia (com compromisso) | `#F5EEE6` / `#231A2E` | 14.5:1 | 4.5:1 |
+| "Hoje" (com compromisso) | `#FFB547` / `#231A2E` | 9.5:1 | 4.5:1 |
+| Quantidade | `#B8AAB9` / `#1D1626` · `#231A2E` | 7.9 · 7.5:1 | 4.5:1 |
+| Número da quantidade | `#FFB547` / `#1D1626` | 10.0:1 | 4.5:1 |
+| Borda do botão do dia | `#8A7A9C` / `#0F0B14` · ≈`#271C19` | 4.9 · 4.2:1 | 3:1 |
+| Dia livre: nome e "Livre" | `#B8AAB9` / `#0F0B14` · ≈`#271C19` | 8.7 · 7.5:1 | 4.5:1 |
+| "Hoje" livre | `#FFB547` / `#0F0B14` · ≈`#271C19` | 11.0 · 9.4:1 | 4.5:1 |
+| Foco | `#8FD3FF`, 3px | ≥ 11:1 | 3:1 |
+
+#### Tema claro (todas as partes)
+
+Fundos: fundo `#F7F1E8` · superfície `#FFFCF7` · superfície-2 / metade de cima da placa `#EFE6DA` · metade de baixo `#E8DDCF` · pior ponto ≈`#F8E7CE`. Misturas (`color-mix` em sRGB, como no CSS): faixa de alerta ≈`#F1E7D9`, faixa de erro ≈`#F6E2DC`, faixa de lembrete ≈`#F0E8F0`, faixa de sucesso ≈`#E4EBE0`, painel "Ficou pendente" ≈`#EFE5D8`, tarja de conflito ≈`#F8E6E1`, tarja de aperto ≈`#F3EADE`, campo com erro ≈`#F2E1D7`.
+
+| Elemento | Cor / fundo | Razão | Mínimo |
+|---|---|---|---|
+| Texto principal | `#23182B` / superfície · fundo · superfície-2 · placa de baixo · pior ponto | 16.6 · 15.1 · 13.7 · 12.7 · 14.0:1 | 4.5:1 |
+| Texto nas faixas e tarjas | `#23182B` / alerta · erro · tarja de conflito · campo com erro | 13.9 · 13.6 · 14.1 · 13.4:1 | 4.5:1 |
+| Texto suave (local, dicas, quantidade, hora de fim) | `#5B4C63` / superfície · fundo · superfície-2 · placa de baixo · pior ponto | 7.7 · 7.0 · 6.4 · 5.9 · 6.5:1 | 4.5:1 |
+| Texto suave nas faixas | `#5B4C63` / alerta · lembrete · painel pendente | 6.5 · 6.6 · 6.3:1 | 4.5:1 |
+| Âmbar como texto (horas, "Hoje", "Sair às", números, "Cobrar") | `#8A4A00` / superfície · fundo · placa de cima · placa de baixo · pior ponto | 6.7 · 6.1 · 5.6 · 5.1 · 5.7:1 | 4.5:1 |
+| "Aperto:" e título "Ficou pendente" | `#8A4A00` / tarja de aperto · painel pendente | 5.8 · 5.5:1 | 4.5:1 |
+| Destaque âmbar na faixa ("42 dias") | `#8A4A00` / faixa de alerta | 5.6:1 | 4.5:1 |
+| Lilás ("DIA TODO", "SEM DATA", links, "Não vou fazer") | `#6436B5` / superfície · fundo · placa de cima · faixa de lembrete · pior ponto | 7.5 · 6.8 · 6.2 · 6.4 · 6.3:1 | 4.5:1 |
+| Perigo (erros, "Conflito:", Excluir no hover) | `#B42318` / superfície · superfície-2 · tarja de conflito | 6.4 · 5.3 · 5.5:1 | 4.5:1 |
+| Sucesso ("Feito", "tudo pronto", ícone) | `#1D6B3B` / superfície · superfície-2 · pior ponto · faixa de sucesso | 6.4 · 5.3 · 5.4 · 5.4:1 | 4.5:1 |
+| Botão principal, "Sair em X min", opção marcada | `#FFF8EE` / `#8A4A00` | 6.5:1 | 4.5:1 |
+| Botão principal no hover | `#FFF8EE` / `#6F3B00` | 8.7:1 | 4.5:1 |
+| Botão "Excluir" / "Substituir" cheio | `#FFF8EE` / `#B42318` · hover `#8E1B12` | 6.2 · 8.6:1 | 4.5:1 |
+| **Não-texto:** borda de campo, botão de contorno, caixa, "O que levar", botão do dia, trilho | `#7D7088` / superfície · fundo · superfície-2 · pior ponto | 4.5 · 4.1 · 3.7 · 3.8:1 | 3:1 |
+| **Não-texto:** borda do campo com erro (2px) | `#B42318` / campo com erro · superfície | 5.2 · 6.4:1 | 3:1 |
+| **Não-texto:** foco (3px) | `#0B5FC0` / fundo · superfície · superfície-2 · pior ponto | 5.5 · 6.0 · 5.0 · 5.1:1 | 3:1 |
+| **Não-texto:** botão principal contra o fundo | `#8A4A00` / `#F7F1E8` | 6.1:1 | 3:1 |
+| **Não-texto:** caixa marcada e check | `#8A4A00` / fundo · check `#FFF8EE` / `#8A4A00` | 6.1 · 6.5:1 | 3:1 |
+| **Não-texto:** chavinha ligada (trilho / bolinha) | `#8A4A00` / fundo · `#FFF8EE` / `#8A4A00` | 6.1 · 6.5:1 | 3:1 |
+| **Não-texto:** bolinha desligada | `#5B4C63` / fundo | 7.0:1 | 3:1 |
+| **Não-texto:** ícones das tarjas e das faixas | perigo / âmbar / lilás / sucesso nas suas faixas | ≥ 5.2:1 | 3:1 |
+| **Não-texto:** seta do `select` | `#5B4C63` / `#F7F1E8` | 7.0:1 | 3:1 |
+| Campo e botão com cara de desativado | `#5B4C63` / superfície | 7.7:1 | isento, mas legível |
+
+`--cor-borda` (`#DDD1C3`) continua **só** para enfeite (cards, divisórias, dia livre), como no escuro. Selos ("Cobrar", "Feito"...) têm borda de enfeite (`currentColor` a 55%): o que informa é o texto, que tem os contrastes acima.
+
+### 15.14 Conferência da Entrega 3b (para o dev e o testador)
+
+| Requisito | Como o visual atende |
+|---|---|
+| Faixa "Próximos 7 dias" com `h2`, entre "Ficou pendente" e "Próximos compromissos" | `section.semana` com `h2.secao-titulo` (15.8); ordem em 15.3 |
+| 7 dias em `ul`/`li`, hoje e os 6 seguintes | `ul.semana-lista` com 7 `li.semana-dia` |
+| Nome e quantidade em texto; "Livre" não só pela cor | "Hoje" / "Amanhã" / "Qua 12" + "3 compromissos" / "1 compromisso" / "Livre"; livre tracejado e sem fundo como reforço |
+| Dia com compromisso é botão; rola e foca o `h3` (`tabindex="-1"`); sem animação com movimento reduzido | `button.semana-botao` + passos em 15.8; `h3` da lista principal com `tabindex="-1"` |
+| Nome acessível "Hoje, 2 compromissos" | `aria-label` que começa pelo texto visível |
+| Dia livre não é botão nem recebe foco | `div.semana-placa`, sem `tabindex` |
+| Faixa sempre visível, também com a lista vazia | fora do `#lista-proximos`; 7 × "Livre" |
+| Atualiza sem recarregar e sem perder o foco | montada junto com a lista; regra do foco em 15.8; sem `aria-live` |
+| 360px sem rolagem horizontal; botões com 44px | 2 colunas de 160px (contas em 15.8); plaquinhas de 56px |
+| Botão "Tema claro" com `aria-pressed`; padrão escuro | 15.4; sem atributo no `<html>` = escuro |
+| Lugar do botão: visível sempre, sem cobrir nada, com teclado | barra "Aparência" no topo do `<main>`, não fixa (15.3) |
+| Troca na hora, foco fica no botão | só muda o atributo do `<html>`; o botão não é redesenhado |
+| Tema claro em **todas** as partes | todas as variáveis redefinidas (15.6) + os 6 ajustes do que não é variável; o CSS das seções 12 a 14 já usa só variáveis |
+| Contraste AA nos dois temas (texto, botões, bordas, foco, erros, marcas) | 2.1, 12, 13, 14.10 (escuro) e 15.13 (claro e partes novas) |
+| Campos nativos e barra de rolagem seguem o tema | `color-scheme: light` em `:root[data-tema="claro"]` + `<meta name="color-scheme">` |
+| Tema aplicado antes de a página aparecer | script do `<head>`, antes do CSS (15.5) |
+| Preferência ausente, corrompida ou sem `localStorage` = escuro e normal, sem erro | `try/catch` sem `console.error`; só "claro" e "grande" ligam algo |
+| Botão "Letra grande" no mesmo lugar, com `aria-pressed`; padrão normal | 15.4 |
+| Todo o texto ≈25% maior | `font-size: 125%` no `<html>`; todos os tamanhos em `rem` (escala em 15.7) |
+| Letra grande a 360px sem rolagem e sem nada cortado; cabeçalho pode ter 2 linhas | ajustes da tabela de 15.7 |
+| Letra grande nos dois temas | atributos independentes no `<html>` |
+| Zoom do navegador junto com a letra grande | `125%` (relativo) e tamanhos em `rem` |
+| Foco visível nos dois temas | `--cor-foco` redefinida (5.0:1 ou mais no claro) |
+| Nada só por cor ("Livre", estado dos botões) | texto "Livre"; `aria-pressed` + posição da bolinha |
+| Alto contraste e movimento reduzido | 15.12.3 e 15.12.4 |
+
+**Roteiro rápido para o testador (além dos critérios):** abrir com `agenda:preferencias` = `{"tema":"claro","letra":"grande"}` e recarregar várias vezes (nunca pode aparecer escuro por um instante, nem a chavinha desligada); repetir com o `localStorage` bloqueado e com `agenda:preferencias` = `abc` (abre escuro e normal, console limpo, e a troca funciona até fechar a página); conferir a 360px com a letra grande o formulário inteiro ("Tempo para sair" em 2 colunas, "Adicionar" embaixo do campo), a janela "Seus dados" e a faixa de lembrete; com o tema claro, abrir os campos de data e hora (calendário e relógio claros), a lista vazia (sol, sem lua) e a confirmação de exclusão (fundo atrás da janela escurecido, não preto).
+
+### 15.15 Decisões aprovadas pelo João em 2026-11-09
+
+As 6 decisões abaixo foram aprovadas pelo João em 2026-11-09, nas opções recomendadas (na decisão 1, a opção A).
+
+1. **Lugar dos botões "Tema claro" e "Letra grande".**
+   - **A (recomendo):** uma barra "Aparência" logo abaixo do cabeçalho, no topo do conteúdo, antes dos avisos. Não fica grudada no topo (não ocupa espaço o tempo todo no celular) e está sempre no mesmo lugar.
+   - B: no rodapé. Não ocupa espaço no topo, mas com uma lista comprida fica longe, e quem precisa da letra grande teria que rolar a página toda para achar.
+   - C: uma segunda linha dentro do cabeçalho fixo. Sempre à mão, mas ocupa ≈52px da tela do celular o tempo todo.
+2. **Cara dos botões:** texto fixo ("Tema claro", "Letra grande") com uma **chavinha** que liga (a bolinha vai para a direita e o trilho fica âmbar), sem ícone de sol ou de letra, para os dois caberem lado a lado a 360px.
+3. **Paleta do tema claro "de manhã":** papel creme, tinta ameixa, e o âmbar vira **caramelo escuro**. Consequência: no tema claro o botão principal ("Novo compromisso", "Salvar") fica **caramelo com texto creme**, e não âmbar claro com texto escuro. O âmbar claro não tem contraste para ser cor de texto num fundo claro, e a Agenda usa a mesma cor para as horas e para o botão.
+4. **A letra grande aumenta também os espaços** (tudo cresce 25%, como um "zoom" só da Agenda), não só as letras. Com ela, no celular: o cabeçalho fica em 2 linhas (de até ≈650px de largura), os botões de aparência ficam um embaixo do outro, "Tempo para sair" passa a ter 2 colunas e o "Adicionar" desce para baixo do campo "Novo item".
+5. **Faixa da semana em grade de plaquinhas:** 2 por linha no celular, com "Hoje" ocupando a linha toda; 4 por linha no computador (4 + 3). Nome no formato "Qua 12"; dia livre tracejado, sem fundo e escrito "Livre". (Sete numa linha só não cabe: "3 compromissos" não entra numa coluna de 1/7 da tela nem no computador.)
+6. **Ilustração no tema claro:** na lista vazia, a lua vira **sol** e as estrelas somem. O quadro continua escuro. O ícone do cabeçalho e o favicon **não mudam** nos dois temas (são a marca).

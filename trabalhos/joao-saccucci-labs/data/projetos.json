@@ -492,6 +492,33 @@
           { "titulo": "Glossário", "url": "data/glossario.json" }
         ],
         "imagens": []
+      },
+      {
+        "agente": "artista",
+        "resumo": "Etapa 3, Entrega 3b: desenhou a faixa \"Próximos 7 dias\" em plaquinhas, o tema claro \"de manhã\" (fundo creme, texto ameixa e caramelo no lugar do âmbar, com contraste AA conferido), a letra grande como um zoom de 125% e a barra \"Aparência\" com duas chavinhas.",
+        "entregaveis": [
+          { "titulo": "Design (seção 15)", "url": "docs/projetos/agenda/design.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "dev",
+        "resumo": "Implementou a Entrega 3b: faixa \"Próximos 7 dias\" que leva até o dia na lista, botões \"Tema claro\" e \"Letra grande\" guardados no navegador e um script no começo da página que evita o tema errado aparecer por um instante. Os dados continuam na versão 2, e a cópia não leva as preferências.",
+        "entregaveis": [
+          { "titulo": "Site publicado", "url": "https://joaosaccucci.github.io/agenda/" },
+          { "titulo": "Tela (JS)", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/js/app.js" },
+          { "titulo": "Folha de estilo", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/css/style.css" },
+          { "titulo": "README", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/README.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "testador",
+        "resumo": "Etapa 3, Entrega 3b: fez cerca de 380 conferências novas (faixa da semana, preferências, contraste medido nos dois temas, alto contraste e movimento reduzido) e repetiu os roteiros das Entregas 2a, 2b e 3a no tema claro com letra grande. Aprovado com um problema alto corrigido (aviso de erro coberto com a letra grande) e duas pendências baixas, uma delas corrigida pelo dev.",
+        "entregaveis": [
+          { "titulo": "Relatório de teste — Entrega 3b", "url": "docs/projetos/agenda/testes/etapa-3b.md" }
+        ],
+        "imagens": []
       }
     ],
     "linhaDoTempo": [
@@ -519,7 +546,11 @@
       { "data": "2026-11-06", "agente": "dev", "descricao": "Implementação da Entrega 3a." },
       { "data": "2026-11-06", "agente": "testador", "descricao": "Entrega 3a aprovada na primeira rodada; as quatro pendências baixas foram corrigidas." },
       { "data": "2026-11-06", "agente": "dev", "descricao": "Entrega 3a publicada no repositório agenda e no GitHub Pages." },
-      { "data": "2026-11-09", "agente": "professor", "descricao": "4 aulas da Entrega 3a, com exemplo Rodar e quiz, no Módulo 3 da Agenda." }
+      { "data": "2026-11-09", "agente": "professor", "descricao": "4 aulas da Entrega 3a, com exemplo Rodar e quiz, no Módulo 3 da Agenda." },
+      { "data": "2026-11-09", "agente": "artista", "descricao": "Design da Entrega 3b: faixa da semana, tema claro e letra grande (seção 15)." },
+      { "data": "2026-11-09", "agente": "dev", "descricao": "Implementação da Entrega 3b." },
+      { "data": "2026-11-09", "agente": "testador", "descricao": "Entrega 3b aprovada na primeira rodada, com um problema alto corrigido e pendências baixas." },
+      { "data": "2026-11-09", "agente": "dev", "descricao": "Entrega 3b publicada no repositório agenda e no GitHub Pages." }
     ]
   }
 ]
