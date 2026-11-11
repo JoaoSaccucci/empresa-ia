@@ -563,6 +563,15 @@
           { "titulo": "Relatório de teste — Entrega 4a", "url": "docs/projetos/agenda/testes/etapa-4a.md" }
         ],
         "imagens": []
+      },
+      {
+        "agente": "professor",
+        "resumo": "Etapa 4, Entrega 4a: 4 aulas curtas sobre como a Agenda entende uma frase: expressões regulares com grupos e exec (a regex confere a forma, o calendário confere se a data existe), comparar sem acento e sem maiúsculas guardando o texto original, procurar exatamente numa posição com a flag y, o lastIndex e o lookahead, e a função pura entenderFrase, que recebe o \"agora\" para ser testada com uma tabela de frases. Cada aula tem exemplo com Rodar e quiz, e cita o código da Agenda por link fixo.",
+        "entregaveis": [
+          { "titulo": "Aulas — Agenda, Módulo 5", "url": "aulas.html#agenda-m5" },
+          { "titulo": "Glossário", "url": "data/glossario.json" }
+        ],
+        "imagens": []
       }
     ],
     "linhaDoTempo": [
@@ -601,7 +610,8 @@
       { "data": "2026-11-09", "agente": "artista", "descricao": "Design da Entrega 4a: painel Criar por frase e linha Entendi (seção 16)." },
       { "data": "2026-11-09", "agente": "dev", "descricao": "Implementação da Entrega 4a, com a função entenderFrase." },
       { "data": "2026-11-09", "agente": "testador", "descricao": "Entrega 4a aprovada na primeira rodada, com pendências baixas para a 4b." },
-      { "data": "2026-11-09", "agente": "dev", "descricao": "Entrega 4a publicada no repositório agenda e no GitHub Pages." }
+      { "data": "2026-11-09", "agente": "dev", "descricao": "Entrega 4a publicada no repositório agenda e no GitHub Pages." },
+      { "data": "2026-11-11", "agente": "professor", "descricao": "4 aulas da Entrega 4a, com exemplo Rodar e quiz, no Módulo 5 da Agenda." }
     ]
   }
 ]

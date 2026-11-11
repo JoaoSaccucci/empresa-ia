@@ -48,14 +48,20 @@
       "numero": 3,
       "titulo": "Entrega 3a: O que levar, hora de fim, conflito e aperto",
       "resumo": "Editar uma cópia que só vale ao Salvar, gravar na hora com volta atrás, guardar um valor só para dois campos e procurar conflito e aperto com prioridade."
-    }
-,
+    },
     {
       "id": "agenda-m4",
       "projeto": "agenda",
       "numero": 4,
       "titulo": "Entrega 3b: faixa da semana, tema claro e letra grande",
       "resumo": "Trocar o tema inteiro com variáveis CSS e um atributo no <html>, aplicar a preferência antes de a página aparecer, aumentar tudo com rem e 125% na raiz e levar o foco até o dia escolhido na faixa da semana."
+    },
+    {
+      "id": "agenda-m5",
+      "projeto": "agenda",
+      "numero": 5,
+      "titulo": "Entrega 4a: criar compromisso por frase",
+      "resumo": "Achar data e hora numa frase com expressões regulares, comparar sem acento e sem maiúsculas, procurar exatamente numa posição com a flag y e testar uma função pura que recebe o \"agora\"."
     }
   ],
   "aulas": [
@@ -373,6 +379,42 @@
       "arquivo": "aulas/agenda/modulo-4/aula-04.md",
       "tempoLeitura": 7,
       "resumo": "Contar compromissos por data com || 0, montar 7 dias com new Date(ano, mês, dia + i) e levar o foco ao título do dia com tabindex=\"-1\", scrollIntoView e focus."
+    },
+    {
+      "id": "agenda-m5-aula-01",
+      "titulo": "Expressões regulares: um molde para achar pedaços do texto",
+      "modulo": "agenda-m5",
+      "numero": 1,
+      "arquivo": "aulas/agenda/modulo-5/aula-01.md",
+      "tempoLeitura": 7,
+      "resumo": "O que são \\d, {1,2}, ?, | e os grupos, a diferença entre test e exec, e por que a regex aceita 31/02: ela confere a forma, e o calendário confere se a data existe."
+    },
+    {
+      "id": "agenda-m5-aula-02",
+      "titulo": "Comparar sem acento e sem maiúsculas, guardando o original",
+      "modulo": "agenda-m5",
+      "numero": 2,
+      "arquivo": "aulas/agenda/modulo-5/aula-02.md",
+      "tempoLeitura": 6,
+      "resumo": "normalize(\"NFD\"), replace e toLowerCase para \"AMANHÃ\" virar \"amanha\", e por que a Agenda procura na cópia, mas corta o título da frase original, com as duas do mesmo tamanho."
+    },
+    {
+      "id": "agenda-m5-aula-03",
+      "titulo": "Procurar exatamente aqui: a flag y, o lastIndex e a palavra inteira",
+      "modulo": "agenda-m5",
+      "numero": 3,
+      "arquivo": "aulas/agenda/modulo-5/aula-03.md",
+      "tempoLeitura": 7,
+      "resumo": "Ler a frase posição por posição com a flag y e o lastIndex, o lookahead (?!...) para \"ter\" não ser achado em \"terminar\" e a armadilha da regex com g que dá true e depois false."
+    },
+    {
+      "id": "agenda-m5-aula-04",
+      "titulo": "Uma função pura que recebe o \"agora\"",
+      "modulo": "agenda-m5",
+      "numero": 4,
+      "arquivo": "aulas/agenda/modulo-5/aula-04.md",
+      "tempoLeitura": 7,
+      "resumo": "Por que entenderFrase(frase, agora) recebe o momento atual, o laço de 0 a 7 que acha a próxima sexta com getDay e como testar com uma tabela de casos e um \"agora\" fixo."
     }
   ]
 }

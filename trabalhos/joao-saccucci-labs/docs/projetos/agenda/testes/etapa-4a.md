@@ -169,3 +169,229 @@ Nenhum problema de gravidade alta. Pendências:
 1. No celular, escrever "dentista amanhã às 10h" e tocar em "Ir" no teclado: o formulário abre preenchido.
 2. Com o NVDA ou o Narrador, abrir pela frase e ouvir "Novo compromisso, caixa de diálogo, Entendi: Amanhã, 10:00, título Dentista" **uma vez só**, sem "ponto". Depois abrir "Novo compromisso" e "Editar" e confirmar que a linha não é lida.
 3. Escrever "festa 31/02", tocar em "Criar" e conferir o aviso dentro da tira.
+
+## Aulas do Módulo 5 — 2026-11-11
+
+- **O que foi testado:** as 4 aulas novas da Agenda na Labs (`aulas/agenda/modulo-5/aula-01.md` a `aula-04.md`) e as mudanças nestes arquivos:
+  - `data/aulas.json`: módulo `agenda-m5` e 4 aulas (e a vírgula solta que foi tirada entre `agenda-m3` e `agenda-m4`);
+  - `data/glossario.json`: 9 termos novos (expressão regular, exec, normalize, replace, toLowerCase, lastIndex, lookahead, função pura e getDay);
+  - `data/projetos.json`: trabalho do professor da 4a e linha do tempo da Agenda;
+  - `README.md` da raiz: 39 aulas.
+
+  O teste foi feito antes do commit da Labs, do mesmo jeito que o das aulas do Módulo 4 (relatório `etapa-3b.md`). Segui o guia `docs/guias/aulas.md` e a regra do João de que nenhum exercício manda mexer no código de um projeto. Desta vez **não corrigi nada nas aulas**: só descrevo os problemas e a correção sugerida.
+- **Onde:** no Edge headless, com perfil temporário, controlado por script. O site da Labs foi servido por um servidor local, com marked e highlight.js carregados pelo CDN. Testei a 1280px, 360px e 320px, nos temas escuro e claro ("papel"). Comparei os links fixos com o repositório local da Agenda, que está no commit `48ba5def7ca4d5d6fad01f42271b787fbd74a611`, sem nenhuma mudança. Esse commit está em `origin/main`, e as páginas de `js/frase.js`, `js/datas.js` e `js/app.js` nesse commit responderam 200 no GitHub.
+
+### Resultado
+
+**Reprovado.** Volta para o professor por **um** problema de gravidade alta, que tem uma correção pequena: na aula 5.2, a faixa dos acentos da regex está escrita com os próprios caracteres invisíveis (U+0300 e U+036F), e não com o texto `̀-ͯ`. Na tela, o `replace` aparece quase como `replace(/[-]/g, "")`. Assim o João não consegue ler nem digitar a parte central da aula, e a Dica "Para ir além" diz o contrário do que a aula mostra (problema 1).
+
+Todo o resto passou:
+- os 6 exemplos rodam e o Console mostra exatamente o que o texto diz, linha por linha;
+- os 10 quizzes funcionam, e a resposta marcada como certa está certa;
+- os 17 links fixos usam o commit `48ba5de` e mostram o que o texto diz;
+- os exercícios só mexem no exemplo da aba Aulas.
+
+Também há dois detalhes de texto de gravidade baixa (problemas 2 e 3).
+
+### Verificações
+
+| Área | Resultado | Observação |
+|---|---|---|
+| Celular a 360px e 320px | Passou | Sem rolagem horizontal nas 4 aulas (antes e depois de Rodar os 6 exemplos), em `aulas.html#agenda-m5` e em `detalhe-projeto.html?id=agenda`. A tabela da aula 5.1 (385px) fica dentro do `.tabela-rolagem` (com `tabindex="0"` e nome "Tabela") e rola por dentro. Os blocos de código terminam dentro da tela e rolam por dentro. |
+| Teclado | Passou | O Tab passa por Rodar, Editar, a tabela rolável, os termos do glossário, os links fixos, as alternativas do quiz e o checklist, com foco visível em todos. Cada balão abre com Enter e fecha com Esc, e o foco fica no termo. O quiz responde com Enter, e o "Tentar de novo" funciona com Espaço. Os botões "Agenda" e "João Saccucci Labs" de `aulas.html` trocam com Enter e Espaço. (O roteiro acusou "foco sem contorno" no `body` quando o Tab passa do fim da página e volta ao começo. É o mesmo comportamento antigo das aulas dos Módulos 3 e 4, e não é das aulas.) |
+| Acessibilidade | Passou | Os componentes são os mesmos da Labs. O aviso do Rodar conta certo ("3", "5", "5", "5", "2" e "5 linhas no console"). Depois de responder, as alternativas ficam com `aria-disabled="true"`, e todas as explicações aparecem. O título da aba segue o padrão (`Aula 5.4 · Uma função pura que recebe o "agora" \| João Saccucci Labs`). O sumário tem as seções de cada aula. A faixa invisível da aula 5.2 também atrapalha o leitor de tela (problema 1). |
+| Contraste | Passou | Medido nas cores calculadas, nos dois temas (escuro / claro): termo do glossário 16,7 / 15,3; código no texto 15,6 / 13,9; texto 7,9 / 6,7; rótulo do Linha por linha 14,8 / 5,3; célula da tabela (aula 5.1) 16,7 / 15,3. Tudo acima de 4,5. |
+| Erros | Passou | Sem erro no console nas 4 aulas, em `aulas.html`, no detalhe da Agenda, em 3 aulas de amostra (a primeira e a última da Labs e a 3.1 da Agenda) e com um id que não existe (`agenda-m5-aula-09` mostra "Aula não encontrada." e "Ver todas as aulas"). O único 404 foi o `/favicon.ico`, que o navegador pede na raiz do servidor de teste. Os 3 JSON alterados são válidos. |
+
+### Conferências
+
+**1. `aulas.html`, progresso e vitrine**
+- [x] No botão "Agenda" aparece o "Módulo 5 — Entrega 4a: criar compromisso por frase", logo depois do Módulo 4. Ele tem as 4 aulas (5.1 a 5.4, `tempoLeitura` 7, 6, 7 e 7) e os links `aula.html?id=agenda-m5-aula-01` a `-04`. São 20 cards da Agenda e 19 da Labs.
+- [x] Progresso: no começo, aparecem "Agenda, 0 de 20 concluídas" e "0 de 4 concluídas" em cada um dos 5 módulos. Depois de marcar a 5.1 e a 5.4 como concluídas, aparecem "Agenda, 2 de 20 concluídas" e, no Módulo 5, "2 de 4 concluídas". Os Módulos 1 a 4 continuam em 0 de 4, e a Labs em 0 de 19.
+- [x] O `aulas.html#agenda-m5` mostra o módulo na tela a 1280px, 360px e 320px.
+- [x] O `detalhe-projeto.html?id=agenda` (a 1280px e a 360px) mostra:
+  - o trabalho do professor da 4a ("Etapa 4, Entrega 4a: 4 aulas curtas…", com "Aulas — Agenda, Módulo 5" → `aulas.html#agenda-m5` e o Glossário);
+  - a linha nova da linha do tempo ("4 aulas da Entrega 4a, com exemplo Rodar e quiz, no Módulo 5 da Agenda.");
+  - os links dos Módulos 1 a 4, que continuam lá.
+
+  Clicando no link do Módulo 5 e depois no card 5.4, a aula 5.4 abre.
+- [x] README da raiz: 39 aulas está certo (19 da Labs e 20 da Agenda).
+
+**2. Cada aula em `aula.html`**
+- [x] Têm Em resumo (2 linhas), Erro comum, Dica "Para ir além (opcional)" e Em entrevista. A 5.1 também tem uma caixa Palavra nova.
+- [x] O glossário funciona com todos os termos, e nenhum `[[` ou `]]` sobra no texto. Os únicos `[[` da página são os da tabela dentro do código da aula 5.4 (`[[5, false, "13/11"], …]`), que é JavaScript de verdade. Termos de cada aula:
+  - aula 1: expressão regular, exec, null, forEach, early return, join;
+  - aula 2: normalize, replace, toLowerCase, slice, trim;
+  - aula 3: lastIndex, lookahead, Map;
+  - aula 4: função pura, localStorage, getDay, Date, continue.
+  - Os 9 termos novos mostram a explicação certa. Nenhum repete um termo que já existia, nem ignorando maiúsculas. O único par repetido continua sendo `map`/`Map`.
+  - `replace` e `exec` não colidem com nada. O glossário só marca o que está entre `[[ ]]`, então "exec" dentro de "executar" e "replace" no código não viram balão.
+  - **`Map` da aula 3 mostra a explicação certa** ("mapa — Estrutura que guarda um valor para cada chave…"). Como o `aula.js` busca em minúsculas e o `Map` vem depois do `map` no `glossario.json`, o `[[Map]]` acerta. A pendência continua para quem escrever `[[map]]` (observação B).
+- [x] O código aparece colorido. Há 6 exemplos com Rodar (2 na 5.1, 1 na 5.2, 2 na 5.3 e 1 na 5.4), com 10, 4, 12, 12, 3 e 15 linhas. Todos têm até 15 linhas e não dependem do código da Agenda.
+- [x] O Linha por linha está ligado a cada exemplo e cita as linhas certas. Conferi cada item com o código:
+  - 5.1: L1, 2, 3–4, 5–8, 9 e L1, 2–3;
+  - 5.2: L1–3, 4, 5, 6, 8–9, 10, 11, 12;
+  - 5.3: L1, 2–6, 7, 8, 9, 10, 11, 12 e L1, 2, 3;
+  - 5.4: L1, 2–3, 4, 5, 6, 9, 10, 11–14, 15.
+- [x] O Rodar mostra exatamente o que o texto diz, linha por linha:
+  - 5.1 (exemplo 1): `consulta 15/11 -> achou 15/11 | dia 15 | mês 11 | posição 9`, `festa 31/02 às 20h -> achou 31/02 | dia 31 | mês 02 | posição 6` e `comprar 2 pães -> nenhuma data`;
+  - 5.1 (exemplo 2): `sexta true`, `Sexta-feira true`, `SEXTA-FEIRA true`, `sextas false` e `sexta- false`;
+  - 5.2: `amanha sabado terca-feira`, `true`, `1 2`, `medico amanha | posição 7` e `Título: Médico`;
+  - 5.3 (exemplo 1): `não achou`, `não achou`, `achou, termina em 15`, `0` e `12`;
+  - 5.3 (exemplo 2): `true 12` e `false 0`;
+  - 5.4: `5 false -> 13/11 ok`, `4 false -> 12/11 ok`, `4 true -> 19/11 ok`, `0 false -> 15/11 ok` e `7/1`. 12/11/2026 e 31/12/2026 são mesmo quintas-feiras.
+- [x] Editar abre o código num campo de texto, o código editado roda, e Restaurar volta ao original (nos 6 exemplos).
+- [x] Quizzes: a 5.1 e a 5.2 têm 2, e a 5.3 e a 5.4 têm 3. Todos têm 3 alternativas, menos o segundo da 5.3, que tem 2 (o guia aceita de 2 a 5). Cada um tem **exatamente uma certa**: a B em todos, menos o primeiro da 5.2 (C) e o segundo da 5.2 (A).
+  - Testei cada quiz duas vezes, em páginas limpas. Clicando na certa, aparece "Certa!". Respondendo uma errada com Enter, aparece "Errada. A resposta certa é a …". Nos dois casos, todas as explicações aparecem e o quiz trava. O "Tentar de novo" limpa a resposta.
+  - Conferi as respostas certas:
+    - `achado[2]` de "festa 31/02" é o texto "02";
+    - o "2" sozinho não tem a forma de nenhuma data (a regex da Agenda pede "dia 2" ou "2/…");
+    - `simplificar("AÇÃO")` dá "acao";
+    - com `y`, `lastIndex = 1` e "terminar na ter", o `exec` devolve `null`;
+    - o lookahead não entra no pedaço;
+    - "ter aula" não vira terça pela regra D2 (`frase.js`, linhas 134 a 138);
+    - "aula quinta 10h" com o "agora" de quinta, 14:00, dá 19/11;
+    - a função que grava no `localStorage` é a que não é pura.
+
+**3. Navegação**
+- [x] A 4.4 agora leva à 5.1, a 5.1 volta para a 4.4, e a 5.4 não tem "próxima".
+
+**4. Links fixos** (17 links, todos com o hash completo `48ba5def7ca4d5d6fad01f42271b787fbd74a611` e nenhum com `/blob/main/`)
+- [x] Aula 1:
+  - `frase.js#L81-L94`: a `EXPRESSAO_DATA` inteira, com o comentário do número de cada grupo e a flag `y`;
+  - `#L129-L162`: os ramos da `dataEm` (relativa, dia da semana, "dia 15", "15/11") e a conferência com a `diasNoMes`. O aviso "A data 31/02 não existe." está no `app.js`, linha 1814;
+  - `#L73-L84`: a lista `LIGACOES_DE_DATA`, com as compridas antes das curtas, e o `new RegExp` com `join("|")` e `"\\s+"`. É verdade que a Agenda não usa a flag `i`.
+- [x] Aula 2:
+  - `frase.js#L25-L41`: o comentário e a `prepararFrase` inteira, letra por letra, com `if (simples.length !== 1) simples = letra;`;
+  - `#L435-L437`: o começo da `entenderFrase`, com `acharPecas(prepararFrase(texto))`;
+  - `#L405-L415`: a `tirarPecas` inteira, que corta a frase original.
+- [x] Aula 3:
+  - `frase.js#L349-L365`: a `acharPecas` inteira (pula para o fim do pedaço ou anda uma letra);
+  - `#L46-L56`: a `comecoDePalavra`;
+  - `#L329-L347`: a `pecaEm`, com `contexto.memoria` e "fica com a mais comprida" (`data.fim >= hora.fim`);
+  - `#L64-L66`: a `FIM_DE_PALAVRA`, com `(?![a-z0-9]|[/:]\\d)`;
+  - `#L121-L124`: o `EXPRESSAO_DATA.lastIndex = posicao` e o `exec`;
+  - `#L134-L138`: a regra D2 do "ter"/"dom". O `contexto.memoria` é mesmo um `Map` (linha 352).
+- [x] Aula 4:
+  - `frase.js#L425-L470`: o comentário com tudo o que a função devolve e a `entenderFrase` inteira;
+  - `#L181-L190`: o laço `somar <= 7` da `resolverData`, com `getDay` e `passou`;
+  - `datas.js#L80-L96`: o comentário e a `compromissoPassou` inteira;
+  - `app.js#L1851-L1862`: a `criarPelaFrase`, que lê `new Date()` uma vez e passa o mesmo `agora` para a `entenderFrase` e para o formulário;
+  - `frase.js#L1-L18`: o comentário do topo, com o exemplo de chamada com um "agora" fixo.
+
+**5. Conteúdo**
+- [x] As afirmações batem com o código da Agenda no commit `48ba5de`, menos as dos problemas 1 a 3. Exemplos:
+  - a cópia simplificada tem o mesmo tamanho da original;
+  - "DENTISTA amanhã" dá "DENTISTA", porque a `limparTitulo` só põe a primeira letra em maiúscula;
+  - o objeto devolvido tem `titulo`, `data`, `hora`, `semData`, `dataInexistente` e `nadaEntendido`;
+  - o testador conferiu as 52 frases com quinta, 12/11/2026, 14:00 (relatório da 4a, acima).
+- [x] As aulas citadas existem: a 4.4 da Agenda (`new Date(ano, mês, dia + i)`), e a 5.2 e a 5.3, que são deste módulo.
+- [x] **Nenhum exercício manda mexer no código da Agenda ou da Labs.** Todos os itens de "Para praticar" mexem no exemplo da aba Aulas. Rodei cada um no editor do próprio exemplo:
+  - 5.1:
+    - com `"reunião 5/1/2027"`, aparece `achou 5/1 | dia 5 | mês 1 | posição 8`, e o ano some, como a pergunta quer mostrar;
+    - com `\d` no lugar de `\d{1,2}`, "consulta 15/11" acha `5/1` (posição 10), e "festa 31/02" acha `1/0`.
+  - 5.2:
+    - `simplificar("Próxima SEXTA")` dá `proxima sexta`;
+    - sem o `.normalize("NFD")`, aparecem `amanhã sábado terça-feira`, `false`, `médico amanhã | posição -1` e `Título: Médico AMANH`, o título errado que a pergunta pede para explicar.
+  - 5.3:
+    - sem o lookahead, só a linha 8 muda (`achou, termina em 3`);
+    - com `"academia na ter 10h"`, `acharEm(frase, 12)` dá `achou, termina em 15`.
+  - 5.4:
+    - `[6, false, "14/11"]` dá ok;
+    - com o "agora" de sexta, 13/11, 9:00, só a linha `4 false` dá "FALHOU, esperado 12/11" (o erro está na tabela, não na função).
+- [x] Tamanho:
+  - de cerca de 700 a 980 palavras fora do código;
+  - `tempoLeitura` de 6 ou 7;
+  - 2 itens em "Para praticar" em cada aula;
+  - quiz nas 4 aulas.
+- [ ] **Aula 5.2 legível na tela e no GitHub**: falhou (problema 1).
+
+### Problemas encontrados
+
+**1. Aula 5.2: a faixa dos acentos está escrita com caracteres invisíveis** (gravidade: **alta**; status: pendente, volta para o professor)
+- **Onde:** `aula-02.md`, em 6 lugares:
+  - linha 14, 3 vezes: no `replace`, no "de … a …" e no fim do mesmo item;
+  - linha 25: o exemplo;
+  - linha 54: a Dica "Para ir além";
+  - linha 57: o Em entrevista.
+- **Passos:** abrir `aula.html?id=agenda-m5-aula-02` (ou o `.md` no GitHub) e ler o passo 2 de "O conceito" e a Dica "Para ir além".
+- **Esperado:** a regex aparece legível, como `/[̀-ͯ]/g`. O texto "de … a …" mostra os dois códigos (`̀` e `ͯ`). A Dica explica que o `frase.js` usa os caracteres invisíveis e que o exemplo usa a forma legível.
+- **Obtido:** o arquivo tem os próprios caracteres U+0300 e U+036F (acentos "soltos", sem letra para ficar em cima), e não o texto `̀-ͯ`. Conferi byte a byte: não há nenhum `̀` no arquivo.
+  - Na página, a regex aparece quase como `/[-]/g`, e o "de … a …" mostra duas caixinhas quase vazias.
+  - A Dica diz "Escrever [a faixa], como no exemplo, dá o mesmo resultado e é mais fácil de ler". Só que aparece um borrão, e o exemplo usa a mesma forma ilegível do `frase.js` (linha 36). A frase contradiz o que a aula mostra.
+  - A resposta de "Em entrevista" também fica impossível de ler e de repetir.
+  - O Rodar funciona e dá a saída certa, porque os caracteres estão lá. Mas o João não consegue ler nem digitar a parte central da aula (o passo 2 dos três), e o leitor de tela também não lê a faixa.
+- **Correção sugerida:** trocar os caracteres invisíveis pelo texto `̀-ͯ` nos 6 lugares:
+  - na linha 14, `(/[̀-ͯ]/g, "")` e "de `̀` a `ͯ`";
+  - na linha 25, `.replace(/[̀-ͯ]/g, "")`;
+  - na linha 54, "Escrever `̀-ͯ`, como no exemplo…";
+  - na linha 57, `replace(/[̀-ͯ]/g, "")`.
+
+  A saída do Rodar não muda. Conferi em Node: continua `amanha sabado terca-feira`, e `simplificar("AÇÃO")` continua `acao`. O exemplo continua com 12 linhas. Depois de salvar, vale conferir se o editor não trocou o `̀` de volta pelo caractere.
+
+**2. Aula 5.1: a pergunta do segundo quiz está confusa** (gravidade: baixa; status: pendente)
+- **Onde:** `aula-01.md`, linha 92.
+- **Passos:** ler a pergunta "Por que a Agenda não diz "Amanhã" quando alguém escreve "comprar 2 pães amanhã" com o 2 virando data?".
+- **Esperado:** a pergunta deixa claro que o assunto é o "2" não virar data.
+- **Obtido:** na frase "comprar 2 pães amanhã", a Agenda **diz** "Amanhã" (o "amanhã" é achado), então a pergunta parece afirmar o contrário. A resposta certa e as explicações estão corretas.
+- **Correção sugerida:** "Em "comprar 2 pães amanhã", por que o 2 não vira data (e fica no título)?".
+
+**3. Aula 5.3, Dica "Para ir além": a regra do "às 10" está simplificada e o link não mostra essa regra** (gravidade: baixa; status: pendente)
+- **Onde:** `aula-03.md`, linha 65.
+- **Passos:** ler "'às 10' só é hora se depois vier outro pedaço" e abrir o link `frase.js#L134-L138`.
+- **Esperado:** o texto descreve a regra e o link mostra as duas regras citadas.
+- **Obtido:**
+  - pela `horaConfirmadaDepois` (linhas 244 a 258), "às 10" também é hora no fim da frase, antes de uma pontuação ou antes de uma das `PALAVRAS_DEPOIS_DA_HORA`, e não só antes de outro pedaço. Só o caso do "outro pedaço" chama a `pecaEm` mais adiante, e é por isso que ele importa para a memória. Mas, do jeito que está escrito, a regra parece mais rígida do que é;
+  - o link `#L134-L138` mostra só a regra D2 do "ter"/"dom".
+- **Correção sugerida:** "'às 10' só é hora se depois vier o fim da frase, uma pontuação, certas palavras ou outro pedaço", com um link fixo para `frase.js#L244-L258`. O link da regra D2 continua para o "ter".
+
+### Observações (gravidade baixa, nenhuma impede a aprovação depois da correção do problema 1)
+
+- **A. Foco no `body` no fim do Tab.** É o mesmo comportamento antigo das aulas dos Módulos 3 e 4, e não é destas aulas.
+- **B. Glossário `map`/`Map` no `js/aula.js`.** Continua pendente para uma etapa da Labs. Nesta entrega, o `[[Map]]` da 5.3 mostra a explicação certa porque o `Map` vem depois do `map` no `glossario.json`. Um `[[map]]` numa aula futura ainda mostraria "mapa".
+- **C. "Acrescente na linha 6" (5.2, Para praticar).** Dá para entender como "logo depois da linha 6" ou "como nova linha 6". Os dois jeitos funcionam e dão `proxima sexta`. É só um detalhe de redação.
+- **Conferir à mão (João):** depois do commit da Labs, abrir a aula 5.1 no GitHub Pages e clicar num link fixo (por exemplo, `frase.js#L81-L94`), para ver se o GitHub abre com as linhas destacadas.
+
+### Como foi testado
+
+- **No navegador (Edge headless, por script):** 204 conferências automáticas e um roteiro curto de progresso. As 6 falhas do roteiro foram conferidas uma por uma, e nenhuma é das aulas:
+  - 4 vezes "foco sem contorno" em `modo-foco`: é o `body` depois que o Tab passa do fim da página (observação A);
+  - "console de `aulas.html` com 404": era o `/favicon.ico`;
+  - "sobrou `[[` na aula 5.4": era o `[[5, false, …` do código da tabela, dentro do bloco de código. Nenhum `[[termo]]` do texto sobrou.
+
+  Rodei os exercícios de "Para praticar" no editor do próprio exemplo. Respondi cada quiz em páginas limpas, uma vez com clique na certa e outra com Enter numa errada. Tirei um print da faixa invisível da aula 5.2 (passo 2 e Dica) para confirmar o problema 1.
+- **Em Node:** rodei os 6 exemplos fora do site, e a saída foi igual à do Rodar. Contei as palavras e procurei os `[[termos]]` de cada aula no `glossario.json`. Também conferi os bytes da aula 5.2.
+- **Só por leitura:** a conferência do conteúdo com o código da Agenda no commit `48ba5de`.
+- Os scripts e os prints ficaram na pasta temporária, fora do projeto. Nenhum navegador nem servidor de teste ficou aberto no fim. Não mexi nas aulas, nos JSON nem no código da Agenda, e não fiz commit.
+
+### Rodada 2 — 2026-11-11
+
+- **O que foi testado de novo:** as correções do professor para os 3 problemas da rodada 1. Rodei de novo o roteiro inteiro das 4 aulas, com as mesmas 204 conferências. Ele está igual ao da rodada 1, só com o link novo da aula 5.3 na lista.
+
+**Resultado: Aprovado com pendências.** Os 3 problemas foram corrigidos, e nada mais mudou. Ficam só as observações A, B e C da rodada 1, todas de gravidade baixa e anteriores a estas aulas.
+
+- [x] **Problema 1 (alta): corrigido.**
+  - Conferi o `aula-02.md` byte a byte, e não sobrou nenhum caractere de U+0300 a U+036F. No lugar deles está o texto `̀-ͯ`, com a barra invertida comum (0x5C), nos lugares da rodada 1:
+    - linha 14: no `replace` e no "de `̀` a `ͯ`";
+    - linha 25: o exemplo;
+    - linha 54: a Dica;
+    - linha 57: o Em entrevista.
+  - No site, a faixa aparece legível: `(/[̀-ͯ]/g, "")`, "de `̀` a `ͯ`". O roteiro não achou nenhum código com acento solto na página.
+  - O Rodar dá a mesma saída de antes: `amanha sabado terca-feira`, `true`, `1 2`, `medico amanha | posição 7` e `Título: Médico`. O exemplo continua com 12 linhas.
+  - Os dois exercícios de "Para praticar" dão o mesmo resultado da rodada 1.
+  - Agora a Dica "Para ir além" ("como no exemplo… é mais fácil de ler") está certa.
+- [x] **Problema 2 (baixa): corrigido.** A pergunta agora é "Em "comprar 2 pães amanhã", por que o 2 não vira data?". O quiz continua com a B certa e funciona com clique e com Enter.
+- [x] **Problema 3 (baixa): corrigido.**
+  - A Dica diz que "às 10" só é hora se depois vier "o fim da frase, uma pontuação, uma palavra como "no" ou "com" ou outro pedaço reconhecido". Isso confere com o código:
+    - `"no"` e `"com"` estão em `PALAVRAS_DEPOIS_DA_HORA` (`frase.js`, linha 227: "e", "no", "na", "em", "com", "para", "pra", "ate"). O "da" não está nessa lista e não aparece no texto;
+    - a pontuação é a `PONTUACAO` (linha 230).
+  - O link fixo novo `frase.js#L244-L258` usa o commit `48ba5de` e mostra o comentário e a `horaConfirmadaDepois` inteira.
+  - O link da regra D2 (`#L134-L138`) continua para o "ter".
+  - Agora a aula 5.3 tem 7 links fixos, e as aulas somam 18. Nenhum usa `/blob/main/`.
+- **O que não mudou:** as 6 falhas do roteiro são as mesmas da rodada 1, e nenhuma é das aulas:
+  - 4 vezes "foco sem contorno" no `body`, no fim do Tab;
+  - o `/favicon.ico`;
+  - o `[[5, false, …` dentro do código da aula 5.4.
+
+  Celular a 360px e 320px, teclado, contraste e console continuam passando. O id que não existe continua mostrando "Aula não encontrada.". O progresso, a vitrine e a navegação 4.4 → 5.1 continuam funcionando.
+- **Como foi testado:** no Edge headless, por script, e em Node para os exemplos e os bytes. Os scripts ficaram na pasta temporária, nenhum navegador ficou aberto, não mexi nas aulas e não fiz commit.
