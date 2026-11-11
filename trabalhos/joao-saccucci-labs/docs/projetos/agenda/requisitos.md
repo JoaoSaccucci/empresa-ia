@@ -704,7 +704,7 @@ Como usuário, quero escrever o que preciso levar ("levar RG e cartão"), para o
 - [ ] "levar" no **começo** da frase é a ação do título e não vira checklist ("Levar o carro na oficina amanhã" → título "Levar o carro"). "levar" sem nada depois também fica no título.
 - [ ] Só o primeiro "levar" conta. Funciona com ou sem data e com ou sem hora (US17).
 - [ ] Os itens aparecem na lista do formulário com o botão "Remover", como se tivessem sido adicionados à mão, e ainda podem ser removidos ou complementados antes de salvar. Ao salvar, entram com `feito: false`. "Cancelar" descarta tudo.
-- [ ] A linha "Entendi" ganha "levar 'RG', 'cartão'".
+- [ ] A linha "Entendi" ganha "levar 'RG', 'cartão'". Com até 4 itens, mostra todos; com 5 ou mais, mostra os 3 primeiros e "e mais N itens" (ex.: "levar 'toalha', 'garrafa', 'fone' e mais 2 itens"). A lista inteira fica no checklist do formulário. *(Decisão 1 da seção 17.11 do design, aprovada pelo João em 2026-11-11.)*
 
 **Agenda US32: Local com "no" ou "na"**
 Como usuário, quero escrever onde vai ser ("na clínica Sorriso"), para o local já vir preenchido.
@@ -716,6 +716,19 @@ Como usuário, quero escrever onde vai ser ("na clínica Sorriso"), para o local
 - [ ] "no"/"na" sem texto depois ("reunião na") ficam no título.
 - [ ] *(Risco aceito pelo João, D4)* "no"/"na" também aparecem em frases que não são lugar ("pensar na vida amanhã" → local "Vida"). A linha "Entendi" mostra o local e a pessoa corrige antes de salvar.
 - [ ] A linha "Entendi" ganha "local 'Clínica Sorriso'".
+
+**Correções da Entrega 4a que entram na 4b** (pendências baixas do relatório `testes/etapa-4a.md`, aprovadas pelo João em 2026-11-09):
+- [ ] "para ter aula" não vira terça: antes de "ter"/"dom", só contam como ligação "na", "no", "nesta", "neste", "próxima" e "próximo".
+- [ ] "vitamina E" fica com o "E" no título: só é tirado um "e" colado a um pedaço reconhecido.
+- [ ] Ano com 2 dígitos é entendido como 20AA: "15/11/27" vira 15/11/2027 (com a mesma conferência de data inexistente). Antes ficava tudo no título.
+- [ ] Ano com menos de 4 algarismos válidos (< 1000, ex.: "15/11/0050") vira data inexistente, com o aviso de data, em vez de virar 1950.
+
+**Decisões do João depois do teste da 4b (2026-11-11), todas na opção recomendada:**
+- [ ] Só o "e" **minúsculo** é ligação: ele sai do título, do local e dos itens quando está colado a um pedaço reconhecido, e é o único separador de itens além de vírgula e ponto e vírgula. O "E" maiúsculo é sempre texto: "reunião e amanhã" → título "Reunião"; "levar vitamina E" → item "vitamina E"; "na ala E amanhã" → local "Ala E".
+- [ ] Ano depois de "dia/mês/" com 1 ou 3 algarismos, ou com 4 e menor que 1000, vira data que não existe (aviso de data, campo Data vazio): "15/11/202" → "A data 15/11/202 não existe.". Ano com 2 algarismos = 20AA; com 4 e ≥ 1000 = como escrito.
+- [ ] Intervalo com período fora da tabela (ex.: "2 da noite"): a mesma regra nas duas metades — o período é ignorado e fica no título, e o intervalo vale com as horas. "das 2 da noite às 4" → 02:00 às 04:00; "das 1 às 2 da noite" → 01:00 às 02:00.
+- [ ] Intervalo junto com duração: vale o intervalo, e a duração fica no título.
+- [ ] Se o primeiro horário do intervalo tem um período (mesmo fora da tabela), o período do segundo não passa para ele: "das 2 da noite às 4 da manhã" → 02:00 às 04:00. *(Decisão do dev, aceita pelo testador.)*
 
 **Ordem da linha "Entendi" com tudo (4b):** data · hora · fim ("até 10:00" ou "duração 90 min") · "sair 30 min antes" · "local '...'" · "levar '...', '...'" · título. Ex.: "Entendi: Amanhã · 09:00 · até 10:00 · sair 30 min antes · local 'Centro' · levar 'RG' · título 'Dentista'".
 

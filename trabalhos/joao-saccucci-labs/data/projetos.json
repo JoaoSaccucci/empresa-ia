@@ -572,6 +572,33 @@
           { "titulo": "Glossário", "url": "data/glossario.json" }
         ],
         "imagens": []
+      },
+      {
+        "agente": "artista",
+        "resumo": "Etapa 4, Entrega 4b: estendeu a tira \"Entendi\" para hora de fim, \"sair X min antes\", local e \"levar\" (com 5 itens ou mais, mostra 3 e \"e mais N itens\"), sem cor nova e sem quebrar no meio das partes a 320px. Desenhou o \"Ver exemplos\" recolhido no painel e a nota dos 20 itens, e definiu os erros já visíveis ao abrir o formulário.",
+        "entregaveis": [
+          { "titulo": "Design (seção 17)", "url": "docs/projetos/agenda/design.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "dev",
+        "resumo": "Implementou a Entrega 4b: a frase agora entende intervalo (\"das 10h às 11h\"), duração (\"por 1h30\"), tempo para sair (\"sair 30 min antes\"), \"levar RG e cartão\" (vira o checklist) e local (\"na clínica\"). Também corrigiu as pendências da 4a (\"para ter aula\", \"vitamina E\", ano com 2 dígitos vira 20AA e ano inválido vira aviso). A função entenderFrase continua pura, e os dados continuam na versão 2.",
+        "entregaveis": [
+          { "titulo": "Site publicado", "url": "https://joaosaccucci.github.io/agenda/" },
+          { "titulo": "Leitura da frase (JS)", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/js/frase.js" },
+          { "titulo": "Tela (JS)", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/js/app.js" },
+          { "titulo": "README", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/README.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "testador",
+        "resumo": "Etapa 4, Entrega 4b: conferiu 281 frases pelas regras (as tabelas da 4a e da 4b, as correções e frases difíceis próprias) e cerca de 3.300 conferências na tela. Reprovou na rodada 2 por um \"e-mail\" que perdia o \"e\" no título; aprovado na rodada 3, com pendências baixas.",
+        "entregaveis": [
+          { "titulo": "Relatório de teste — Entrega 4b", "url": "docs/projetos/agenda/testes/etapa-4b.md" }
+        ],
+        "imagens": []
       }
     ],
     "linhaDoTempo": [
@@ -611,7 +638,12 @@
       { "data": "2026-11-09", "agente": "dev", "descricao": "Implementação da Entrega 4a, com a função entenderFrase." },
       { "data": "2026-11-09", "agente": "testador", "descricao": "Entrega 4a aprovada na primeira rodada, com pendências baixas para a 4b." },
       { "data": "2026-11-09", "agente": "dev", "descricao": "Entrega 4a publicada no repositório agenda e no GitHub Pages." },
-      { "data": "2026-11-11", "agente": "professor", "descricao": "4 aulas da Entrega 4a, com exemplo Rodar e quiz, no Módulo 5 da Agenda." }
+      { "data": "2026-11-11", "agente": "professor", "descricao": "4 aulas da Entrega 4a, com exemplo Rodar e quiz, no Módulo 5 da Agenda." },
+      { "data": "2026-11-11", "agente": "artista", "descricao": "Design da Entrega 4b: tira Entendi completa, Ver exemplos e nota dos 20 itens (seção 17)." },
+      { "data": "2026-11-11", "agente": "product-owner", "descricao": "Decisões do João depois do teste da 4b: \"e\" minúsculo, ano inválido e intervalo com período." },
+      { "data": "2026-11-11", "agente": "dev", "descricao": "Implementação da Entrega 4b, com as correções da 4a." },
+      { "data": "2026-11-11", "agente": "testador", "descricao": "Entrega 4b reprovada na rodada 2 (\"e-mail\" cortado) e aprovada na rodada 3, com pendências baixas." },
+      { "data": "2026-11-11", "agente": "dev", "descricao": "Entrega 4b publicada no repositório agenda e no GitHub Pages." }
     ]
   }
 ]

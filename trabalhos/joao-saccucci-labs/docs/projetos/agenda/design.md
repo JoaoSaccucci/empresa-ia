@@ -5448,3 +5448,399 @@ As 4 decisões abaixo foram aprovadas pelo João em 2026-11-09, todas na opção
 4. **O campo dentro de um painel (card) ou solto na página.**
    - **A (recomendo):** dentro de um card baixo, com fundo próprio: separa a "captura" da lista e deixa o texto longe do brilho âmbar do fundo (contraste igual em qualquer ponto da tela).
    - B: solto, como um campo comum logo abaixo da barra "Aparência". Ocupa ≈24px a menos de altura no celular, mas se mistura com as faixas e com a faixa da semana logo abaixo.
+
+---
+
+## 17. Etapa 4 — Entrega 4b (fim, sair, levar e local pela frase)
+
+Cobre a parte visual das **Agenda US29** (hora de fim pela frase), **US30** (tempo para sair), **US31** ("levar ..." vira o checklist) e **US32** (local com "no"/"na"), e as mudanças da 4b nas US03, US12, US17 e US19 (campos que já vêm preenchidos e erros já visíveis ao abrir). Tudo **se soma** às seções 1 a 16. A 4b é quase toda lógica (`js/frase.js`): no visual, só **três** coisas mudam:
+
+1. a tira "Entendi" ganha as partes novas (17.3), com uma regra para a lista do "levar" não ficar enorme;
+2. a tira ganha uma segunda nota, o aviso de mais de 20 itens (17.4);
+3. o painel "Criar por frase" ganha um "Ver exemplos" recolhido (17.7), para a pessoa descobrir o que a frase entende.
+
+Nenhuma cor nova, nenhum ícone novo, nenhum campo novo no formulário. Os campos preenchidos pela frase aparecem **exatamente** como se a pessoa tivesse preenchido à mão (17.6).
+
+### 17.1 Ideia visual
+
+O guichê da 4a agora **repete o bilhete inteiro**: "Entendi: Amanhã · 09:00 · até 10:00 · sair 30 min antes · local 'Centro' · levar 'RG' · título 'Dentista'". O canhoto fica mais comprido, mas continua sendo **uma linha de texto corrido** que quebra sozinha, com a mesma cara: os tempos (horas e minutos) em mono âmbar, como na placa de hora; o resto em texto normal. Quem olha a tira acha rápido "quando" (os números âmbar no começo) e "o quê" (os textos entre aspas no fim).
+
+### 17.2 Reaproveitado x novo
+
+| Parte | Reaproveita | Novo (e por quê) |
+|---|---|---|
+| Partes de tempo na tira ("até 10:00", "duração 90 min", "sair 30 min antes") | `.entendi-valor` + `.entendi-valor--hora` (mono âmbar) | — |
+| Partes de texto ("local '...'", "levar '...'") | `.entendi-valor` (600), aspas em texto comum, como o título da 4a | `.entendi-mais` ("e mais 17 itens", texto suave) |
+| Separador e leitura | `.entendi-sep` + vírgula `sr-only` (16.5) | — |
+| Aviso de mais de 20 itens | `.entendi-nota` + ícone "alerta" (16.5) | um segundo elemento `#entendi-nota-itens` (pode aparecer junto com a nota da 4a) |
+| Campos preenchidos | todos os estados das seções 13, 14 e 15 (opção marcada, "Outro" com minutos, itens com "Remover", campo com erro) | **nada** (17.6) |
+| Exemplos no painel | `.frase` (16.10), seta da "Anteriores" (`.anteriores-seta`) | `.frase-exemplos`, `.frase-exemplos-botao`, `.frase-exemplos-lista` (17.7) |
+
+### 17.3 A tira "Entendi" com tudo
+
+#### 17.3.1 Ordem e texto de cada parte
+
+Ordem fixa dos requisitos: **data · hora · fim · sair · local · levar · título**. Parte que não foi entendida **não aparece** (nem o separador dela). Separador entre todas as partes: o mesmo da 4a (`&nbsp;· ` com `aria-hidden`, e uma vírgula `sr-only` antes).
+
+| Parte (US) | Texto na tira | Como montar (`antes` / `texto` / `depois`, ver 17.3.4) | Visual |
+|---|---|---|---|
+| data, hora (4a) | iguais à 16.5 | iguais | iguais |
+| fim por intervalo (US29) | "até 11:00" | `antes: "até "` · `texto: "11:00"` · classe `entendi-valor--hora` | "até" normal, "11:00" mono âmbar |
+| fim por duração (US29) | "duração 90 min" | `antes: "duração "` · `texto: "90 min"` · classe `entendi-valor--hora` | "duração" normal, "90 min" mono âmbar |
+| tempo para sair (US30) | "sair 30 min antes" (sempre em minutos: "sair 90 min antes") | `antes: "sair "` · `texto: "30 min"` · `depois: " antes"` · classe `entendi-valor--hora` | "30 min" mono âmbar |
+| local (US32) | "local 'Clínica Sorriso'" | `antes: "local '"` · `texto` · `depois: "'"` | valor 600 na cor do texto (igual ao título) |
+| levar (US31) | "levar 'RG', 'cartão'" | lista de itens (17.3.3) | cada item 600 na cor do texto, entre aspas, separados por ", " |
+| título (4a) | "título 'Dentista'" ou "sem título" | igual à 16.5 | igual |
+
+Os espaços marcados como " " na tabela são **espaços inseparáveis** (` ` no JS). Assim "até 11:00", "duração 90 min", "sair 30 min antes", "local '" e "levar '" nunca se partem no meio: a tira quebra só **entre** as partes (depois do "·") ou dentro de um texto longo (local, item, título). Se mesmo assim uma parte não couber numa linha (só acontece abaixo de 360px com a letra grande), o `overflow-wrap: anywhere` que a `.entendi` já tem quebra onde precisar: nunca há rolagem para o lado.
+
+**Valor com erro** ("das 22h às 2h", "22h por 3 horas", "sair 13h antes"): a tira mostra o valor **como entendido** ("até 02:00", "duração 180 min", "sair 780 min antes"), com a **mesma** cara das outras partes. O erro vermelho aparece no campo, como em qualquer erro do formulário (17.6). A tira diz "o que eu entendi"; o campo diz "o que precisa corrigir" (decisão 4).
+
+**Local e título** usam a cor do texto, e não o lilás: na tira, o lilás quer dizer "falta data" ("Ainda sem data", "data a escolher"), e não pode ganhar um segundo sentido.
+
+#### 17.3.2 Exemplos montados
+
+| Frase (tabela da 4b) | Tira |
+|---|---|
+| #1 reunião amanhã das 10h às 11h | **Entendi:** Amanhã · `10:00` · até `11:00` · título '**Reunião**' |
+| #6 treino amanhã 7h por 1h30 | **Entendi:** Amanhã · `07:00` · duração `90 min` · título '**Treino**' |
+| #12 viagem sábado 8h sair 13h antes | **Entendi:** Sáb, 14/11 · `08:00` · sair `780 min` antes · título '**Viagem**' |
+| #15 exame sexta 7h levar RG, pedido médico e cartão do convênio | **Entendi:** Amanhã · `07:00` · levar '**RG**', '**pedido médico**', '**cartão do convênio**' · título '**Exame**' |
+| #22 dentista sexta das 9h às 10h no centro levar RG sair 30 min antes | **Entendi:** Amanhã · `09:00` · até `10:00` · sair `30 min` antes · local '**Centro**' · levar '**RG**' · título '**Dentista**' |
+| #23 comprar pão levar sacola | **Entendi:** Ainda sem data · levar '**sacola**' · título '**Comprar pão**' + nota "Não encontrei data nem hora. Confira os campos." |
+| #26 pensar na vida amanhã | **Entendi:** Amanhã · Dia todo · local '**Vida**' · título '**Pensar**' |
+| #27 mudança sábado levar a, b, ... (22 itens) | **Entendi:** Sáb, 14/11 · Dia todo · levar '**a**', '**b**', '**c**' e mais 17 itens · título '**Mudança**' + nota "A lista 'O que levar' aceita até 20 itens. Os outros ficaram de fora." |
+
+(`código` = mono âmbar; **negrito** = `.entendi-valor`.)
+
+#### 17.3.3 A lista do "levar" na tira (decisão 1)
+
+O checklist aceita até 20 itens de até 60 caracteres: listar tudo na tira daria até ≈1.200 caracteres, uma tela inteira de texto antes do primeiro campo. Como os itens **já aparecem todos** no grupo "O que levar" do formulário (com "Remover"), a tira mostra só o começo:
+
+| Itens que entraram no checklist | Na tira |
+|---|---|
+| 1 a 4 | todos: "levar 'RG', 'exames', 'cartão', 'pedido'" |
+| 5 ou mais | os 3 primeiros + "e mais N itens": "levar 'a', 'b', 'c' e mais 17 itens" |
+
+- Com 4 itens mostra os 4 (trocar o 4º por "e mais 1 item" não economiza nada). Assim "e mais" é sempre plural (N ≥ 2).
+- A contagem usa os itens que **entraram** (no máximo 20). Os que ficaram de fora são ditos pela nota (17.4).
+- "e mais 17 itens" fica em `.entendi-mais` (texto suave): é uma contagem, não um item. O espaço antes do "e" é comum (pode quebrar ali) e os outros são inseparáveis: " e mais 17 itens".
+- Itens longos (até 60 caracteres) quebram linha normalmente.
+
+#### 17.3.4 Montar a linha: extensão da função da 16.5
+
+A função `montarLinhaEntendi` da 16.5 já aceita `antes`, `texto`, `classe` e `depois`: fim, sair e local entram sem mudar nada nela. Só o "levar" precisa de um caso novo (uma parte com **vários** valores). Sugestão, dentro do `partes.forEach`, logo depois do separador:
+
+```js
+// 4b: parte com vários valores (só o "levar"). parte.itens = textos que
+// entraram no checklist (até 20). Mostra todos se forem até 4; senão,
+// os 3 primeiros e "e mais N itens" (design, 17.3.3). Sempre textContent.
+if (parte.itens) {
+  const mostrar = parte.itens.length <= 4 ? parte.itens : parte.itens.slice(0, 3);
+  linha.append(document.createTextNode("levar "));
+  mostrar.forEach(function (item, i) {
+    if (i > 0) linha.append(document.createTextNode(", "));
+    const valor = document.createElement("span");
+    valor.className = "entendi-valor";
+    valor.textContent = item;
+    linha.append("'", valor, "'");
+  });
+  const resto = parte.itens.length - mostrar.length;
+  if (resto > 0) {
+    const mais = document.createElement("span");
+    mais.className = "entendi-mais";
+    mais.textContent = "e mais " + resto + " itens";
+    linha.append(" ", mais);   // o espaço comum antes do "e" é onde a linha pode quebrar
+  }
+  return;   // dentro do forEach: pula para a próxima parte
+}
+```
+
+Partes de exemplo para a frase #22:
+
+```js
+[
+  { texto: "Amanhã" },
+  { texto: "09:00", classe: "entendi-valor--hora" },
+  { antes: "até ", texto: "10:00", classe: "entendi-valor--hora" },
+  { antes: "sair ", texto: "30 min", classe: "entendi-valor--hora", depois: " antes" },
+  { antes: "local '", texto: "Centro", depois: "'" },
+  { itens: ["RG"] },
+  { antes: "título '", texto: "Dentista", depois: "'" }
+]
+```
+
+#### 17.3.5 Tamanho da tira (contas)
+
+Janela a 360px: 320px; por dentro, ≈272px (letra normal) e ≈260px (grande, 15.7). Texto da tira = isso menos 12 + 4 + 16px (normal) ou 15 + 4 + 20px (grande): **≈240px** e **≈221px**. Space Grotesk a 16px ≈ 8,3px por caractere (≈29 por linha); a 20px ≈ 10,4px (≈21 por linha).
+
+| Frase | Caracteres | 360px normal | 360px grande |
+|---|---|---|---|
+| #1 (4a, 1 parte de tempo) | ≈45 | 2 linhas · ≈72px de tira | 3 linhas · ≈120px |
+| #22 (tudo, 1 item) | ≈103 | 4 a 5 linhas · ≈144px | 5 a 6 linhas · ≈210px |
+| #21 (local + 2 itens + sair) | ≈100 | 4 a 5 linhas | 5 a 6 linhas |
+| #27 (20 itens, com a regra 17.3.3) | ≈75 + nota de 2 a 3 linhas | ≈190px | ≈280px |
+| #27 **sem** a regra (todos os 20) | ≈170 + nota | ≈280px | ≈400px |
+
+Com a regra do "levar", o pior caso da 4b com a letra grande a 360px (≈280px) ainda deixa o campo Título visível logo abaixo numa tela de 640px de altura. A janela já rola por dentro (seção 11): nada é cortado em nenhum caso. O tamanho da letra da tira **não** diminui (continua `--fs-base`): ela é o resumo que a pessoa precisa ler, inclusive com a letra grande.
+
+### 17.4 A segunda nota: mais de 20 itens (US31)
+
+O aviso "A lista 'O que levar' aceita até 20 itens. Os outros ficaram de fora." pode aparecer **junto** com uma nota da 4a (ex.: "comprar pão levar a, b, ... (22)" = nada de data e hora **e** itens demais). Por isso ele ganha um elemento próprio, logo depois do `#entendi-nota`, com a mesma cara (ícone de alerta âmbar e texto normal, como decidido na 16.13, decisão 2):
+
+```html
+<div class="entendi" id="entendi" hidden>
+  <p class="entendi-linha" id="entendi-linha"></p>
+  <p class="entendi-nota" id="entendi-nota" hidden>
+    <!-- svg "alerta" (igual) -->
+    <span id="entendi-nota-texto"></span>
+  </p>
+  <!-- Etapa 4b (US31): só aparece quando a frase tinha mais de 20 itens no "levar". -->
+  <p class="entendi-nota" id="entendi-nota-itens" hidden>
+    <!-- svg "alerta" (o mesmo da nota de cima) -->
+    <span>A lista 'O que levar' aceita até 20 itens. Os outros ficaram de fora.</span>
+  </p>
+</div>
+```
+
+- Ordem: primeiro a nota da 4a (data), depois a dos itens. Cada nota tem o seu tracejado em cima (já vem da `.entendi-nota`): com as duas, a tira fica linha · nota · nota, cada bloco separado.
+- O texto é fixo no HTML (não vem da frase). O JS só tira e põe o `hidden`, **toda vez** que o formulário abre (como a 16.5 manda fazer com o resto da tira).
+- O aviso não é erro: nada impede de salvar. Os 20 itens que entraram estão no formulário; a pessoa pode remover algum e acrescentar à mão o que ficou de fora.
+
+### 17.5 Leitor de tela
+
+Nada muda na regra da 4a (16.9): a janela continua ligada à tira inteira por `aria-describedby="entendi"`, **sem** `aria-live`, lida uma vez ao abrir. As notas escondidas ficam fora da leitura sozinhas.
+
+| Frase | O que é lido ao abrir |
+|---|---|
+| #22 | "Novo compromisso, caixa de diálogo, Entendi: Amanhã, 09:00, até 10:00, sair 30 min antes, local 'Centro', levar 'RG', título 'Dentista'." |
+| #15 | "… levar 'RG', 'pedido médico', 'cartão do convênio', título 'Exame'." (as vírgulas visíveis entre os itens já dão a pausa) |
+| #27 | "… levar 'a', 'b', 'c' e mais 17 itens, título 'Mudança'. A lista 'O que levar' aceita até 20 itens. Os outros ficaram de fora." |
+| #5 (fim antes do início) | "… Entendi: Sáb, 14/11, 22:00, até 02:00, título 'Festa'." e depois o campo com o foco: "Termina às, 02:00, inválido, A hora de fim precisa ser depois da hora de início." |
+
+- **O checklist preenchido pela frase não é anunciado item por item.** O `#itens-aviso` (região viva do grupo "O que levar", 14.6) só fala quando a pessoa aperta "Adicionar" ou "Remover". Ao abrir pela frase, o JS monta a lista **sem** escrever no `#itens-aviso`; senão o leitor leria "RG adicionado. Exames adicionado..." por cima da descrição da janela (com 20 itens, vinte avisos).
+- "min" é lido como está ("30 min"), igual ao card ("Sair às") e às opções "30 min" do grupo.
+
+### 17.6 Campos preenchidos no formulário
+
+**Sem destaque novo** (decisão 3). Os campos que vieram da frase têm a **mesma** cara dos preenchidos à mão. A tira no topo já é o resumo do que foi preenchido, e uma marca em cada campo ("veio da frase") não diria nada que a tira não diga. Além disso, a marca precisaria sumir quando a pessoa mexe no campo, mais estado para o JS cuidar.
+
+O que a pessoa vê em cada caso (tudo já existe; nenhum CSS novo):
+
+| Veio da frase | Como aparece |
+|---|---|
+| Intervalo "das 10h às 11h" | Hora 10:00; "Termina às" 11:00; Duração "1 h" (o JS preenche como na US19) |
+| Duração "por 1h30" | Hora 07:00; Duração "Outro" com o bloco "Minutos" aberto e 90; "Termina às" 08:30 |
+| "sair 30 min antes" | plaquinha "30 min" marcada (âmbar cheio + check) no "Tempo para sair" |
+| "sair 40 min antes" | plaquinha "Outro" marcada, bloco "Minutos antes" aberto com 40 |
+| "levar RG e exames" | dois itens na lista do "O que levar", cada um com "Remover"; campo "Novo item" vazio |
+| 20 itens | lista com 20; "Novo item" e "Adicionar" desativados e a dica "Limite de 20 itens." (14.6) |
+| "na clínica Sorriso" | campo Local com "Clínica Sorriso" |
+| duração ou "sair" **sem hora** (#9, #13) | o pedaço fica no título; "Hora de fim" e "Tempo para sair" desativados com as dicas de sempre ("Escolha uma hora para usar...") |
+
+#### 17.6.1 Erros já visíveis ao abrir (US29 e US30)
+
+Os três casos usam o erro de sempre (seção 6.5 e 14: borda vermelha de 2px, fundo avermelhado, ícone e texto, `aria-invalid="true"`, `aria-describedby` com a dica e o erro), **já visível** quando a janela aparece, como o "Digite um título." da 4a:
+
+| Frase | Campo com erro | Estado dos outros |
+|---|---|---|
+| fim antes do início (#5, "das 22h às 2h") | "Termina às" (02:00): "A hora de fim precisa ser depois da hora de início." | Duração "Sem hora de fim" |
+| duração passa da meia-noite (#8, "22h por 3 horas") | Duração ("Outro"): "Com essa duração, o compromisso passaria da meia-noite. Escolha uma duração menor." | bloco "Minutos" aberto com 180; "Termina às" vazio |
+| duração 0 ou mais de 1439 | "Minutos" da duração: "Digite um número de minutos entre 1 e 1439." | Duração "Outro" |
+| sair fora de 1 a 720 (#12, "sair 13h antes") | "Minutos antes": "Digite um número de minutos entre 1 e 720." | plaquinha "Outro" marcada |
+
+- **Foco ao abrir:** no **primeiro** campo com erro, na ordem do formulário: Título → Termina às → Duração → Minutos (duração) → Minutos antes. Sem erro, no Título (4a).
+- **Rolagem:** o `focus()` rola a janela até o campo; a tira pode sair de vista lá em cima, e está tudo bem: o leitor de tela já leu a tira (descrição da janela) e quem enxerga vê o campo vermelho com a mensagem. Usar `campo.focus()` simples (o `scroll-padding` da `.janela`, 13.11.2, já deixa o campo longe da barra de botões).
+- Os erros somem com as regras de sempre (ao corrigir o campo ou ao tentar salvar de novo).
+
+### 17.7 Painel "Criar por frase": "Ver exemplos" (decisão 2)
+
+O exemplo dentro do campo ("Ex.: dentista amanhã às 10h") e a dica **não mudam**: são textos fixos da US24, e um exemplo maior não caberia a 360px com a letra grande (contas da 16.3). Para a pessoa descobrir o que a 4b entende, o painel ganha, **depois** do campo e do botão, um "Ver exemplos" recolhido (`<details>` do próprio HTML: abre e fecha sem JavaScript, com Enter, Espaço, clique ou toque, e o leitor de tela diz "recolhido"/"expandido").
+
+```
+360px, recolhido (só +44px no painel)
++----------------------------------+
+| (balão) Criar por frase          |
+| Escreva o que é, o dia e a hora. |
+| Você confere antes de salvar.    |
+| [ Ex.: dentista amanhã às 10h  ] |
+| [          Criar  ->           ] |
+| Ver exemplos  v                  |  lilás 14px 600, linha de 44px
++----------------------------------+
+
+aberto
+| Ver exemplos  ^                  |
+|  • dentista amanhã às 10h na     |  14px, cor do texto
+|    clínica Sorriso               |
+|  • reunião sexta das 14h às      |
+|    15h30                         |
+|  • treino sábado 7h por 1h       |
+|  • consulta dia 20 9h sair 40    |
+|    min antes                     |
+|  • exame sexta 7h levar RG e     |
+|    pedido médico                 |
++----------------------------------+
+```
+
+```html
+<!-- Etapa 4b: exemplos do que a frase entende. Logo DEPOIS da .frase-linha,
+     ainda dentro do form.frase. <details> abre e fecha sem JavaScript.
+     Começa fechado sempre que a página abre. -->
+<details class="frase-exemplos">
+  <summary class="frase-exemplos-botao">
+    Ver exemplos
+    <svg class="icone frase-exemplos-seta" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6"/></svg>
+  </summary>
+  <ul class="frase-exemplos-lista">
+    <li>dentista amanhã às 10h na clínica Sorriso</li>
+    <li>reunião sexta das 14h às 15h30</li>
+    <li>treino sábado 7h por 1h</li>
+    <li>consulta dia 20 9h sair 40 min antes</li>
+    <li>exame sexta 7h levar RG e pedido médico</li>
+  </ul>
+</details>
+```
+
+- Cada exemplo mostra **uma** novidade (local, intervalo, duração, sair, levar), todos com data e hora (o fim e o "sair" precisam de hora). O testador confere que cada um, copiado para o campo, preenche o que promete.
+- Os exemplos são só texto (não são botões e não preenchem o campo): mais simples, e o "Criar" continua sendo o único jeito de abrir o formulário.
+- **Tab:** campo → "Criar" → **"Ver exemplos"** → faixas... O requisito "o Tab chega ao botão Criar logo depois do campo" continua valendo.
+- O `summary` não é botão de envio: Enter nele só abre e fecha, nunca abre o formulário.
+- A seta é a mesma da "Anteriores" e gira 180° quando aberto.
+- A ≥ 480px a lista fica do mesmo jeito (um exemplo por linha; os mais longos cabem numa linha só a partir de ≈520px).
+
+### 17.8 CSS de referência da Entrega 4b
+
+#### 17.8.1 Nova seção "12g": acrescentar logo **depois** da "12f. ETAPA 4a" e **antes** da "13. MOVIMENTO REDUZIDO"
+
+```css
+/* ---------------------------------------------------------
+   12g. ETAPA 4b: TIRA "ENTENDI" COMPLETA E "VER EXEMPLOS"
+   Decisões em: design.md, seção 17.
+   Só variáveis: vale nos dois temas e com a letra grande.
+   --------------------------------------------------------- */
+
+/* "e mais 17 itens" na tira: é contagem, não item */
+.entendi-mais {
+  color: var(--cor-texto-suave);            /* 7.1:1 escuro · 6.9:1 claro (fundo da tira) */
+}
+
+/* --- "Ver exemplos" no painel "Criar por frase" --- */
+.frase-exemplos-botao {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--esp-1);
+  width: fit-content;
+  min-height: 44px;                         /* área de toque */
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--cor-lilas);                  /* a cor dos links: ≈8.6:1 escuro · 7.5:1 claro */
+  cursor: pointer;
+  list-style: none;                         /* tira o triângulo do navegador */
+  border-radius: var(--raio-md);
+}
+
+.frase-exemplos-botao::-webkit-details-marker {
+  display: none;                            /* Safari antigo */
+}
+
+.frase-exemplos-botao:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.frase-exemplos-seta {
+  width: 18px;
+  height: 18px;
+  transition: transform var(--transicao);
+}
+
+.frase-exemplos[open] .frase-exemplos-seta {
+  transform: rotate(180deg);
+}
+
+.frase-exemplos-lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-1);
+  margin: 0 0 var(--esp-1);
+  padding-left: var(--esp-5);
+  font-size: var(--fs-sm);
+  line-height: 1.45;
+  color: var(--cor-texto);
+  list-style: disc;
+}
+
+.frase-exemplos-lista li::marker {
+  color: var(--cor-lilas);
+}
+
+/* O gap da .frase já dá 8px entre a linha do campo e o "Ver exemplos".
+   A linha do summary tem 44px; puxamos 4px para o painel não crescer à toa. */
+.frase-exemplos {
+  margin-top: calc(-1 * var(--esp-1));
+}
+```
+
+- O contorno de foco do `summary` vem da regra geral de `:focus-visible` (3px `--cor-foco`), como em todo o resto.
+- **Movimento reduzido:** a seta usa `var(--transicao)`, que a seção 13 do CSS já zera. Nada a acrescentar.
+- **Alto contraste:** nada a acrescentar (texto e `summary` usam as cores do sistema sozinhos; a seta é `currentColor`).
+- **Tema claro e letra grande:** nenhuma regra extra (só variáveis e `rem`).
+
+#### 17.8.2 HTML e JS (resumo para o dev)
+
+| Onde | O que muda |
+|---|---|
+| `index.html`, dentro do `#entendi` | acrescentar o `p#entendi-nota-itens` (17.4) depois do `#entendi-nota` |
+| `index.html`, dentro do `form.frase` | acrescentar o `details.frase-exemplos` (17.7) depois da `.frase-linha` |
+| `app.js`, `montarLinhaEntendi` | caso `parte.itens` (17.3.4); fim, sair e local usam `antes`/`depois` com ` ` |
+| `app.js`, ao abrir o formulário | tirar/pôr o `hidden` do `#entendi-nota-itens` **toda vez** (pela frase e nos outros modos); montar o checklist **sem** escrever no `#itens-aviso`; focar o primeiro campo com erro na ordem de 17.6.1 |
+
+### 17.9 Contraste conferido (WCAG 2.1 AA)
+
+Nada de cor nova: as partes novas da tira usam as combinações já conferidas na 16.11 (fundo da tira ≈`#2B2024` escuro e ≈`#F6EEE3` claro).
+
+| Elemento | Escuro | Razão | Claro | Razão | Mínimo |
+|---|---|---|---|---|---|
+| "até", "duração", "sair", "antes", "local", "levar", aspas, valores de local e itens | `#F5EEE6` / ≈`#2B2024` | 13.7:1 | `#23182B` / ≈`#F6EEE3` | 14.8:1 | 4.5:1 |
+| "11:00", "90 min", "30 min" (mono âmbar) | `#FFB547` / ≈`#2B2024` | 9.0:1 | `#8A4A00` / ≈`#F6EEE3` | 6.0:1 | 4.5:1 |
+| "e mais 17 itens" | `#B8AAB9` / ≈`#2B2024` | 7.1:1 | `#5B4C63` / ≈`#F6EEE3` | 6.9:1 | 4.5:1 |
+| Nota dos 20 itens (texto e ícone) | igual à nota da 4a | 13.7 · 9.0:1 | igual | 14.8 · 6.0:1 | 4.5 · 3:1 |
+| "Ver exemplos" e a seta | `#C4A8FF` / `#191321` | ≈8.6:1 | `#6436B5` / `#FFFCF7` | 7.5:1 | 4.5:1 |
+| Exemplos da lista | `#F5EEE6` / `#191321` | 15.8:1 | `#23182B` / `#FFFCF7` | 16.6:1 | 4.5:1 |
+| Erros já visíveis ao abrir | iguais à 2.1 e à 15.13 | — | — | — | 4.5:1 |
+
+### 17.10 Conferência da Entrega 4b (para o dev e o testador)
+
+| Requisito | Como o visual atende |
+|---|---|
+| Tira ganha "até 11:00" / "duração 90 min" logo depois da hora, mesmo com erro (US29) | 17.3.1; valor com erro mostrado como entendido |
+| Tira ganha "sair 30 min antes", sempre em minutos (US30) | 17.3.1 |
+| Tira ganha "levar 'RG', 'cartão'" (US31) | 17.3.1 e 17.3.3 (até 4 itens: todos; 5 ou mais: 3 + "e mais N itens", decisão 1) |
+| Tira ganha "local 'Clínica Sorriso'" (US32) | 17.3.1 |
+| Ordem data · hora · fim · sair · local · levar · título, com " · " | 17.3.1; separador da 16.5 |
+| Aviso dos 20 itens junto da linha "Entendi" | `#entendi-nota-itens` (17.4), pode aparecer com a nota da 4a |
+| Campos preenchidos como se fossem à mão, editáveis | nenhum destaque, estados de sempre (17.6) |
+| Erros da US12 e da US19 já visíveis ao abrir; foco no primeiro | 17.6.1 |
+| Texto da frase nunca vira HTML (local e itens também) | só `textContent` (17.3.4) |
+| Leitor de tela: tira lida uma vez, "·" não lido, checklist não anunciado item por item | 17.5 |
+| 360px, letra normal e grande, dois temas: tira sem rolagem para o lado | espaços inseparáveis só dentro das partes curtas + `overflow-wrap: anywhere` (17.3.1); contas em 17.3.5 |
+
+**Roteiro rápido para o testador (além das 28 frases da 4b e das 52 da 4a):** a 360px e a 320px, com a letra normal e a grande, nos dois temas, abrir pelas frases #15, #21, #22, #23 e #27 (a tira quebra só entre as partes ou dentro de textos longos; "até 10:00" e "sair 30 min antes" nunca se partem; com #27, "e mais 17 itens" e as duas notas quando for o caso). Com #5, #8 e #12, conferir o erro já visível e o foco no campo certo. Com o leitor de tela, abrir #15 e #27 e confirmar que a tira é lida uma vez e que **não** há "adicionado" para cada item. Abrir "Ver exemplos" com o teclado (Enter e Espaço), copiar cada exemplo para o campo e conferir que ele preenche o que promete. Abrir "Novo compromisso" depois de #27 e confirmar que nenhuma nota aparece.
+
+### 17.11 Decisões para o João confirmar
+
+1. **A lista do "levar" na tira "Entendi".**
+   - **A (recomendo):** até 4 itens, mostra todos; com 5 ou mais, os 3 primeiros e "e mais N itens". A lista inteira já está no formulário, logo abaixo, e a tira não vira um parágrafo enorme (com 20 itens e a letra grande, ela teria ≈400px de altura no celular).
+   - B: todos os itens, como está escrito na US31. Mais completo, mas com muitos itens a tira empurra o formulário para fora da tela.
+2. **Mostrar o que a frase entende no painel.**
+   - **A (recomendo):** um "Ver exemplos" recolhido, logo abaixo do campo, com 5 frases de exemplo. Fechado, ocupa uma linha só; o exemplo e a dica da US24 não mudam.
+   - B: uma segunda dica sempre visível ("Também entendo 'das 10h às 11h', 'por 1h', 'sair 30 min antes', 'levar RG' e 'na clínica'."). Mais fácil de ver, mas deixa o painel 3 a 5 linhas mais alto no topo da página do celular.
+   - C: não mudar nada no painel (a pessoa descobre só pelas aulas ou testando).
+3. **Destaque nos campos preenchidos pela frase.**
+   - **A (recomendo):** nenhum. Os campos ficam iguais aos preenchidos à mão; a tira "Entendi" é o resumo.
+   - B: uma etiqueta pequena "da frase" no rótulo de cada campo preenchido, que some quando a pessoa mexe nele. Ajuda a achar o que veio da frase num formulário comprido, mas é mais código e mais coisa na tela.
+4. **Valor com erro na tira** (ex.: "até 02:00" numa festa que começa às 22:00).
+   - **A (recomendo):** a tira mostra o valor normal, e o erro vermelho fica só no campo (com o foco nele). O vermelho continua reservado para erro de verdade, num lugar só.
+   - B: a parte com erro fica vermelha também na tira. Avisa mais cedo, mas o mesmo erro aparece em dois lugares e a tira deixa de ser só "o que eu entendi".
+
+**Decididas pelo João em 2026-11-11:** opção A nas quatro (1. "levar" com até 4 itens, senão 3 + "e mais N itens"; 2. "Ver exemplos" recolhido; 3. nenhum destaque nos campos; 4. erro só no campo, a tira mostra o valor normal). A US31 foi ajustada no requisitos.md.
