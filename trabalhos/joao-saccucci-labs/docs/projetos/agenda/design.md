@@ -5758,7 +5758,9 @@ aberto
   transform: rotate(180deg);
 }
 
-.frase-exemplos-lista {
+/* "ul." na frente (corrigido na Entrega 5, ver 18.5): o reset ul[class]
+   da seção 2 é mais forte que uma classe sozinha. */
+ul.frase-exemplos-lista {
   display: flex;
   flex-direction: column;
   gap: var(--esp-1);
@@ -5844,3 +5846,159 @@ Nada de cor nova: as partes novas da tira usam as combinações já conferidas n
    - B: a parte com erro fica vermelha também na tira. Avisa mais cedo, mas o mesmo erro aparece em dois lugares e a tira deixa de ser só "o que eu entendi".
 
 **Decididas pelo João em 2026-11-11:** opção A nas quatro (1. "levar" com até 4 itens, senão 3 + "e mais N itens"; 2. "Ver exemplos" recolhido; 3. nenhum destaque nos campos; 4. erro só no campo, a tira mostra o valor normal). A US31 foi ajustada no requisitos.md.
+
+---
+
+## 18. Entrega 5 (acabamento)
+
+Requisitos: US35 (letra grande e telas pequenas), US36 (`testes.html`) e US37 (imagem no README), na seção "Etapa 5" do [requisitos](requisitos.md). Nenhuma cor nova, nenhum ícone novo e nenhuma mudança no conceito: são ajustes de medida, uma página de apoio e uma imagem.
+
+### 18.1 "1 compromisso" numa linha só (US35, problema 2 do `etapa-3b.md`)
+
+**Causa (contas com o CSS real):** a 360px com a letra grande, o container tem 320px úteis e a faixa tem 2 colunas: (320 − 10) / 2 = **155px**. A plaquinha tira 15px de cada lado (`padding: var(--esp-2) var(--esp-3)`, que cresce com a letra) e 1px de borda de cada lado: sobram **123px**. "1 compromisso" a 17.5px (o "1" em mono + espaço + "compromisso") mede ≈124px: não cabe por 1 ou 2px, e o número fica sozinho em cima.
+
+**Decisão:** no celular (abaixo de 640px) e só com a letra grande, o espaço interno dos lados da plaquinha passa a ser **8px fixos** (em `px` de propósito: não cresce com a letra). Sobram 155 − 16 − 2 = **137px**, uma folga de ≈13px para "1 compromisso". "3 compromissos" (≈133px) pode caber ou quebrar, e as duas coisas estão certas (a 15.8 já aceitava a quebra no plural).
+
+O que **não** muda (design 15.8 mantido): a plaquinha de duas metades, o texto alinhado à esquerda, a altura mínima de `3.5rem` (70px com a letra grande, acima dos 44px de toque), as cores e os contrastes (15.13), o "Hoje" na linha toda e a coluna única abaixo de 360px. Vale para o dia com compromisso e para o dia livre (`.semana-placa`), para os textos dos dois continuarem alinhados. O espaço de 8px ainda deixa o texto longe do canto arredondado (10px de raio).
+
+### 18.2 "Sem hora de fim" inteiro a 320px (US35, observação A do `etapa-4b.md`)
+
+**Causa:** a 320px com a letra grande, a janela tem 320 − 40 = 280px; tirando as bordas (2) e o espaço interno da janela (2 × 30), sobram 218px. O filete da "Hora de fim" tira mais 15 + 2 → o `select` tem **201px**. Dentro dele, 15px à esquerda, 55px à direita (`2.75rem`, reservados para a seta) e 2px de borda: o texto tem só **129px**. "Sem hora de fim" a 20px mede ≈147px, então aparece "Sem hora de f…".
+
+**Decisão:** só abaixo de 360px e só com a letra grande, três medidas em `px` fixos:
+- filete da "Hora de fim": recuo de 15px → **8px** (a linha de 2px continua, só chega mais perto);
+- `select` da Duração: espaço interno **10px** à esquerda e **38px** à direita (com erro, 9px e 37px, para compensar a borda de 2px);
+- seta do `select`: a **8px** da borda direita (antes 15px). Ela ocupa de 8 a 28px da borda, e o texto termina a 39px: 11px de folga, nunca encosta.
+
+Resultado: `select` com 208px e **158px** para o texto, folga de ≈11px para "Sem hora de fim". A letra continua em 20px (não diminuímos a letra de quem pediu letra grande), e o texto da opção continua o da US19. A 360px nada muda (lá já sobravam ≈169px).
+
+### 18.3 CSS de referência da Entrega 5
+
+Nova seção **"12h"**, logo **depois** da "12g. ETAPA 4b" e **antes** da "13. MOVIMENTO REDUZIDO":
+
+```css
+/* ---------------------------------------------------------
+   12h. ETAPA 5: LETRA GRANDE EM TELAS PEQUENAS
+   Decisões em: design.md, seção 18.
+   Medidas em px de propósito: não crescem com a letra.
+   --------------------------------------------------------- */
+
+/* Faixa da semana no celular: 8px dos lados (antes 15px com a letra
+   grande). A 360px sobram 137px: "1 compromisso" (≈124px) cabe numa linha. */
+@media (max-width: 639.98px) {
+  :root[data-letra="grande"] .semana-botao,
+  :root[data-letra="grande"] .semana-placa {
+    padding-inline: 8px;
+  }
+}
+
+/* Duração abaixo de 360px: "Sem hora de fim" (≈147px) tinha só 129px.
+   Com estas medidas, o texto tem 158px. */
+@media (max-width: 359.98px) {
+  :root[data-letra="grande"] .grupo-filete {
+    padding-left: 8px;
+  }
+
+  :root[data-letra="grande"] .campo-selecao select.campo-controle {
+    padding-left: 10px;
+    padding-right: 38px;                  /* seta de 20px a 8px da borda + 10px de folga */
+  }
+
+  :root[data-letra="grande"] .campo-selecao select.campo-controle[aria-invalid="true"] {
+    padding-left: 9px;                    /* a borda de erro tem 2px */
+    padding-right: 37px;
+  }
+
+  :root[data-letra="grande"] .campo-selecao::after {
+    right: 8px;
+  }
+}
+```
+
+- O `:root[data-letra="grande"]` na frente deixa as regras mais fortes que as da 12d (`.campo-selecao select.campo-controle[aria-invalid="true"]`), sem `!important`.
+- Tema claro, movimento reduzido e alto contraste: nada a acrescentar (só medidas).
+- **Para o testador:** medir a 360px (dois temas) que "1 compromisso" e "Livre" ficam numa linha em todos os dias, e a 320px que a Duração mostra "Sem hora de fim", "30 min" e "Outro" inteiros, também com o erro da duração visível. A 1280px e com a letra normal, nada pode ter mudado.
+
+### 18.4 `testes.html` (US36): CSS mínimo próprio, tema claro fixo
+
+**Decisão: não reaproveita o `css/style.css`.** Ele traz o cabeçalho grudado, o fundo com brilhos, as fontes do Google e o tema escuro por variáveis, que dependem do script do `<head>` (`agenda:preferencias`). A página de testes não pode ler o `localStorage` e precisa abrir até pelo `file://`. Por isso ela fica com o padrão do navegador e um `<style>` curto dentro do próprio `testes.html`: **fundo branco e texto quase preto**, fontes do sistema, sem fonte externa. É uma ferramenta de quem mantém o site, não uma tela da Agenda, então pode (e deve) ser simples.
+
+**Estrutura (de cima para baixo):**
+1. `<h1>` "Testes da frase".
+2. **Resumo** em parágrafo, em negrito, 1.25rem: "80 de 80 frases passaram." ou "78 de 80 frases passaram. 2 falharam.".
+3. Uma linha pequena: "Agora fixo: quinta-feira, 12/11/2026, 14:00. Esperados copiados das tabelas da 4a e da 4b dos requisitos."
+4. `<h2>` "Falhas". Sem falhas: o parágrafo "Nenhuma falha.". Com falhas: uma `<ol class="falhas">`; cada `<li class="falha">` tem:
+   - um `<h3>` "Falhou: 4b #22" (o "Falhou" é texto, não só cor);
+   - a frase num `<code>`;
+   - uma `<dl>`: para cada campo errado, `<dt>` com o nome do campo ("Título", "Data", "Fim"…) e dois `<dd>`: "Esperado: …" e "Obtido: …", com o valor em `<code>`. Valor sem conteúdo aparece como "(vazio)"; erro da função aparece como "Erro: <mensagem>".
+5. `<details>` com `<summary>` "Passaram (78)", **recolhido**. Dentro, uma `<ol class="passaram">` com uma linha por frase: "4a #1" e a frase em `<code>`.
+
+Não é tabela de propósito: com frases de até 70 caracteres e esperado + obtido, uma tabela rolaria para o lado a 360px. A lista empilha tudo e quebra as linhas.
+
+```css
+/* testes.html: só isto, num <style> no <head> */
+body {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 1rem;
+  font: 1rem/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: #1A1A1A;                     /* 17.4:1 no branco */
+  background: #FFFFFF;
+  overflow-wrap: anywhere;            /* frase longa quebra a 360px */
+}
+code {
+  font-family: ui-monospace, Consolas, "Courier New", monospace;
+  white-space: pre-wrap;              /* espaços do título ficam visíveis */
+  background: #F0F0F0;                /* texto 15.3:1 */
+  padding: 0 0.25em;
+  border-radius: 4px;
+}
+.resumo { font-size: 1.25rem; font-weight: 700; }
+.falha {
+  margin-bottom: 1rem;
+  padding-left: 0.75rem;
+  border-left: 4px solid #B42318;     /* enfeite: o texto "Falhou" é o que diz (6.6:1) */
+}
+.falha h3 { color: #B42318; font-size: 1.125rem; }   /* 6.6:1 no branco */
+dd { margin-left: 1rem; }
+summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-weight: 700; }
+:focus-visible { outline: 3px solid #0B5FC0; outline-offset: 2px; }   /* o azul do foco da Agenda: 6.2:1 */
+```
+
+- `<meta name="viewport" content="width=device-width, initial-scale=1.0">`, `lang="pt-BR"` e o `noindex` da US36.
+- **Favicon:** `<link rel="icon" href="favicon.svg" type="image/svg+xml">`, para o navegador não pedir o `/favicon.ico` (que daria 404 no GitHub Pages).
+- Sem `color-scheme: dark`: com cores fixas, o contraste é o mesmo em qualquer navegador.
+
+### 18.5 Correção no design da 4b
+
+Na 17.8.1, o seletor da lista de exemplos passou a ser `ul.frase-exemplos-lista` (problema 1 do `etapa-4b.md`). O `style.css` já estava assim. Agora o design e o código dizem a mesma coisa.
+
+### 18.6 Print do README (US37)
+
+| Item | Decisão |
+|---|---|
+| Tema e letra | **Escuro** (o padrão e a identidade da Agenda) e letra **normal** |
+| Janela | área da página com **1280 × 1100 px**, escala **1x** (sem tela "retina", que dobraria o tamanho do arquivo). Só a página, sem a moldura do navegador: Edge headless com perfil temporário (sem abas, sem favoritos, sem barra de endereço) |
+| Arquivo | `readme/agenda-computador.png`, PNG sem redimensionar (redimensionar borra o texto) |
+| Limite de 500 KB | se passar, recortar **no centro** para 960 × 1100 (o conteúdo tem 760px e continua inteiro, com o cabeçalho). Se ainda passar, cortar a altura logo abaixo do primeiro card de "Amanhã" |
+| Estado da tela | sem aviso flutuante, sem faixa de lembrete (gravar `agenda:ultimo-backup` com o "agora" antes do print), sem "Ficou pendente", sem foco visível e sem o mouse em cima de nada. "Ver exemplos" fechado |
+| Relógio | parado às **14:00** de qualquer dia (como o testador já faz), com as datas dos compromissos contadas a partir desse dia (D) |
+
+**O que aparece, de cima para baixo:** cabeçalho; barra "Aparência" (desligada); "Criar por frase" com a frase **digitada** no campo, sem abrir o formulário: `almoço com a turma sábado 12h na cantina` (mostra para que serve o campo); a faixa "Próximos 7 dias"; a lista com "Hoje" e "Amanhã".
+
+**Compromissos fictícios** (nenhum nome de pessoa, telefone ou endereço real):
+
+| Dia | Hora | Título | Detalhes |
+|---|---|---|---|
+| D (Hoje) | 15:00 – 16:00 | Reunião do TCC | local "Biblioteca, sala 3"; tempo para sair 15 min ("Sair às 14:45"); "O que levar": "Notebook" (marcado) e "Roteiro da apresentação" → "O que levar (1 de 2)" |
+| D (Hoje) | 19:00 | Aula de Estrutura de Dados | local "Bloco B" |
+| D+1 (Amanhã) | Dia todo | Pagar a mensalidade da faculdade | "Me cobrar" ligado (selo "Cobrar") |
+| D+1 (Amanhã) | 09:30 – 10:30 | Dentista | local "Clínica Sorriso"; sair 30 min |
+| D+3 | 19:00 – 21:00 | Prova de Banco de Dados | local "Sala 204"; observação "Estudar normalização e JOINs." |
+| D+5 | 08:00 | Corrida no parque | — |
+
+A faixa da semana fica com dias com compromisso e dias "Livre" misturados (Hoje 2, Amanhã 2, D+2 Livre, D+3 1, D+4 Livre, D+5 1, D+6 Livre), e não há conflito nem aperto (as tarjas vermelha e âmbar chamariam mais atenção que o resto). Texto alternativo: o da US37 ("Agenda no tema escuro: campo Criar por frase, faixa dos próximos 7 dias e compromissos agrupados por dia").
+
+### 18.7 Decisões para o João
+
+Nenhuma. As três escolhas visuais (como caber os dois textos, o CSS da `testes.html` e como fazer o print) seguem decisões que o João já tomou (US35 entregou à artista a forma de resolver; a US36 pede "o mais simples"; a US37 já fixou "print PNG do computador com dados fictícios").

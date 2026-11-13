@@ -601,6 +601,40 @@
         "imagens": []
       },
       {
+        "agente": "product-owner",
+        "resumo": "Etapa 5 \"entrega de acabamento\", a última da Agenda antes do próximo projeto: reuniu as pendências baixas ainda abertas nos relatórios, escreveu as US33 a US37 (pontuação com o \"e\" de ligação, Esc rápido, letra grande em telas pequenas, página de testes da frase e imagem no README) e fez 4 perguntas ao João.",
+        "entregaveis": [
+          { "titulo": "Requisitos (Etapa 5)", "url": "docs/projetos/agenda/requisitos.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "artista",
+        "resumo": "Etapa 5: ajustes de espaço para \"1 compromisso\" caber numa linha e \"Sem hora de fim\" aparecer inteiro com a letra grande no celular, o visual simples da página de testes e o roteiro do print do README, com dados fictícios.",
+        "entregaveis": [
+          { "titulo": "Design (seção 18)", "url": "docs/projetos/agenda/design.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "dev",
+        "resumo": "Implementou a Etapa 5: a página testes.html, que confere sozinha as 80 frases dos requisitos com um \"agora\" fixo (80 de 80), a pontuação que fica quando o \"e\" de ligação sai, os ajustes de CSS da letra grande e o README com a linha \"Testes\" e um print da Agenda.",
+        "entregaveis": [
+          { "titulo": "Página de testes", "url": "https://joaosaccucci.github.io/agenda/testes.html" },
+          { "titulo": "Testes da frase (JS)", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/js/testes-frase.js" },
+          { "titulo": "README", "url": "https://github.com/JoaoSaccucci/agenda/blob/main/README.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "testador",
+        "resumo": "Etapa 5: conferiu os 80 esperados da testes.html contra as tabelas dos requisitos, provocou falhas numa cópia para ver a página acusar, comparou o frase.js antigo e o novo em 40.000 frases e registrou a conferência manual do Esc feita pelo João. Aprovado na primeira rodada.",
+        "entregaveis": [
+          { "titulo": "Relatório de teste — Etapa 5", "url": "docs/projetos/agenda/testes/etapa-5.md" }
+        ],
+        "imagens": []
+      },
+      {
         "agente": "professor",
         "resumo": "Etapa 4, Entrega 4b: 4 aulas curtas sobre o que a frase passou a entender: converter todo tempo para minutos para fazer conta e comparar horários, quebrar o \"levar\" em lista com split, map, filter e slice, os valores falsy e por que a Agenda usa !== null para não esconder uma duração 0, e ordenar com sort e uma função de comparação. Cada aula tem exemplo com Rodar e quiz, e cita o código da Agenda por link fixo.",
         "entregaveis": [
@@ -653,7 +687,12 @@
       { "data": "2026-11-11", "agente": "dev", "descricao": "Implementação da Entrega 4b, com as correções da 4a." },
       { "data": "2026-11-11", "agente": "testador", "descricao": "Entrega 4b reprovada na rodada 2 (\"e-mail\" cortado) e aprovada na rodada 3, com pendências baixas." },
       { "data": "2026-11-11", "agente": "dev", "descricao": "Entrega 4b publicada no repositório agenda e no GitHub Pages." },
-      { "data": "2026-11-13", "agente": "professor", "descricao": "4 aulas da Entrega 4b, com exemplo Rodar e quiz, no Módulo 6 da Agenda." }
+      { "data": "2026-11-13", "agente": "professor", "descricao": "4 aulas da Entrega 4b, com exemplo Rodar e quiz, no Módulo 6 da Agenda." },
+      { "data": "2026-11-13", "agente": "product-owner", "descricao": "Requisitos da Etapa 5, entrega de acabamento (US33 a US37), com as 4 decisões do João." },
+      { "data": "2026-11-13", "agente": "artista", "descricao": "Design da Etapa 5: letra grande em telas pequenas, página de testes e print do README (seção 18)." },
+      { "data": "2026-11-13", "agente": "dev", "descricao": "Implementação da Etapa 5, com a página testes.html (80 de 80)." },
+      { "data": "2026-11-13", "agente": "testador", "descricao": "Etapa 5 aprovada na primeira rodada; o João conferiu o Esc rápido à mão (5 de 5)." },
+      { "data": "2026-11-13", "agente": "dev", "descricao": "Etapa 5 publicada no repositório agenda e no GitHub Pages." }
     ]
   }
 ]

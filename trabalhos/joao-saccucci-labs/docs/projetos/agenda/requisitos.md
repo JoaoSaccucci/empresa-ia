@@ -9,6 +9,7 @@ A **Agenda** é um site simples para anotar compromissos. A pessoa abre o site, 
 - **Etapa 2 "nada cai no esquecimento":** cópia e importação dos dados, "Sair às...", "Feito" e pendências, itens "Sem data". Dividida em **Entrega 2a** e **Entrega 2b**.
 - **Etapa 3 "organizar o tempo":** checklist "O que levar", hora de fim com aviso de conflito e de aperto, faixa dos próximos 7 dias, tema claro e letra grande. Dividida em **Entrega 3a** e **Entrega 3b** (seção 2).
 - **Etapa 4 "captura rápida":** criar um compromisso escrevendo uma frase ("dentista amanhã às 10h"), que vira um rascunho do formulário para conferir antes de salvar. Dividida em **Entrega 4a** e **Entrega 4b** (seção 2).
+- **Etapa 5 "entrega de acabamento":** última entrega antes do próximo projeto. Fecha pendências baixas dos relatórios, cria a página de testes automáticos da frase (`testes.html`) e põe uma imagem do site no README. Uma entrega só (seção 2).
 
 - Repositório: `github.com/JoaoSaccucci/agenda` (só o código e o README).
 - Site: `https://joaosaccucci.github.io/agenda/`.
@@ -793,6 +794,83 @@ Os requisitos gerais das Etapas 1, 2 e 3 valem para **tudo** o que é novo, e ta
 
 ---
 
+### Etapa 5 "entrega de acabamento"
+
+*(Escopo aprovado pelo João em 2026-11-13.)* Última entrega da Agenda antes do próximo projeto. Não há função nova para quem usa o site. A Etapa 5 fecha pendências baixas dos relatórios de teste, cria uma página de testes automáticos da frase e coloca uma imagem do site no README. É uma entrega só (**Entrega 5**), com o fluxo completo (artista só no que for visual, dev, testador e professor) e o relatório `testes/etapa-5.md`.
+
+**Decisões do João (2026-11-13)**
+- **Pontuação e o "e":** opção A. Sai só o "e"; a vírgula, o ponto e vírgula ou o traço ficam (US33).
+- **Outras pendências:** opção B. Entram as quatro da lista e mais o "Sem hora de f…" cortado a 320px com letra grande (US35). As de comportamento das Entregas 2a e 2b ficam fora (seção 5).
+- **Imagem do README:** opção A. Um print PNG do computador, feito pela equipe, com dados fictícios (US37).
+- **Link da página de testes:** opção A. Só no README, numa linha "Testes"; o site continua sem link (US36 e US37).
+
+**Decisões do PO (informadas ao João)**
+- Os dados continuam na **versão 2**, sem chave nova no `localStorage`.
+- **Exceção à regra "sem testes automatizados no repositório"** (fora do escopo das Etapas 1 a 4): entra **uma** página de testes, só da `entenderFrase`, em JavaScript puro, sem biblioteca, sem Node e sem etapa de build. Ela não substitui o teste do testador nem o relatório.
+- Os resultados esperados da página são **copiados das tabelas destes requisitos**, nunca do que o código devolve hoje.
+- A pendência do `#erro-salvar` a 320 × 568 aparece como **resolvida** nos relatórios `etapa-2b.md`, `etapa-3a.md` e `etapa-3b.md`. Na Etapa 5 ela só é conferida de novo, porque o formulário ficou mais comprido na Etapa 4 (US35).
+
+**Agenda US33: A pontuação fica quando o "e" de ligação sai**
+Como usuário, quero que a pontuação que eu escrevi continue no título quando a Agenda tira um "e" de ligação, para o título sair do jeito que eu escrevi.
+- [ ] Quando um "e" de ligação sai (regra das "Decisões do João depois do teste da 4b"), sai **só** a palavra "e" e os espaços dela. A vírgula, o ponto e vírgula ou o traço que estavam antes ou depois dele ficam, e depois vale a limpeza de sempre (seção 3, "Limpeza do título, do local e dos itens").
+- [ ] "reunião amanhã 10h, e conversar" → título "Reunião, conversar". Hoje dá "Reunião conversar" (observação G do `testes/etapa-4b.md`).
+- [ ] Continuam iguais (rodada 3 do `etapa-4b.md`): "reunião amanhã e, depois" → "Reunião, depois"; "reunião, e amanhã" → "Reunião"; "reunião e amanhã" → "Reunião"; "reunião amanhã e" → "Reunião"; "reunião – e – amanhã" → "Reunião"; "comprar vitamina E amanhã" → "Comprar vitamina E"; "responder amanhã e-mail do chefe" → "Responder e-mail do chefe"; "festa na casa do João e amanhã 20h" → local "Casa do João".
+- [ ] A mesma regra vale para o local e para os itens do "levar".
+- [ ] As 80 frases das tabelas da 4a e da 4b continuam com o mesmo resultado (conferido pela página da US36).
+
+**Agenda US34: Esc logo depois de abrir pela frase**
+Como usuário de teclado, quero que o Esc devolva o foco ao campo da frase mesmo quando eu aperto rápido, para continuar escrevendo sem procurar onde o foco foi parar.
+- [ ] **Conferência manual do João** (observação F do `etapa-4b.md`), no Edge ou no Chrome do computador: recarregar a página; abrir o formulário pela frase e fechar com Esc; abrir **de novo** (a segunda abertura depois de carregar) e apertar Esc o mais rápido possível. Repetir 5 vezes, recarregando a página antes de cada uma.
+- [ ] Esperado em todas: o foco volta para o campo "Criar por frase", a frase continua no campo e nada é salvo.
+- [ ] Se em alguma vez o foco for para "Novo compromisso" (ou outro lugar), vira problema para o dev. Depois da correção, o testador repete o roteiro da observação F (Esc cerca de 60 ms depois de abrir, 60 aberturas) sem nenhuma falha.
+- [ ] Se nas 5 vezes o foco voltar certo, a observação F é fechada no `etapa-5.md` como "corrida do teste automático", sem mudança no código.
+- [ ] O Esc de "Novo compromisso", "Editar", "Remarcar" e "Agendar" continua igual (o foco volta para o botão que abriu).
+
+**Agenda US35: Letra grande e telas pequenas**
+Como usuário com a letra grande no celular, quero que os textos curtos não se partam de um jeito estranho e que nenhum aviso fique escondido, para ler a Agenda de relance.
+- [ ] Faixa "Próximos 7 dias", a 360px com a letra grande, nos dois temas: "1 compromisso" fica numa linha só (o número não fica sozinho em cima). "3 compromissos" pode quebrar, como previa o design 15.8. *(Problema 2 do `etapa-3b.md`. Como resolver fica com a artista, ex.: menos espaço interno na plaquinha com a letra grande.)*
+- [ ] A 320px com a letra grande, a lista "Duração" mostra "Sem hora de fim" inteiro, sem "…" (observação A do `etapa-4b.md`).
+- [ ] **Conferência do `#erro-salvar`** (observação 5 do `etapa-2a.md`): com o `localStorage` cheio, "Não foi possível salvar o compromisso." aparece **inteiro, acima** da barra Cancelar/Salvar a 320 × 568 e a 360 × 640, com a letra normal e a grande, nos dois temas, com o formulário aberto por "Novo compromisso" e pela frase #22 da 4b (o formulário mais comprido, com a linha "Entendi"). Se aparecer coberto em algum caso, o dev corrige (ex.: folga de rolagem medida pela altura real da barra).
+- [ ] Continuam valendo: sem rolagem horizontal, nada cortado e 44px de área de toque a 320, 360 e 1280px, nos 2 temas × 2 letras.
+
+**Agenda US36: Página de testes da frase (`testes.html`)**
+Como estudante que mantém a Agenda, quero abrir uma página que confere sozinha as frases dos requisitos, para saber em segundos se uma mudança no `frase.js` quebrou alguma coisa.
+- [ ] O repositório `agenda` ganha o arquivo `testes.html` na raiz (e, se o dev quiser, um `js/testes-frase.js`). HTML, CSS e JavaScript puros, sem biblioteca, sem `fetch`, sem Node e sem build.
+- [ ] Ela carrega os **mesmos** `js/datas.js` e `js/frase.js` do site, por caminho relativo (nada de cópia do código), e não carrega o `app.js`. Funciona no GitHub Pages (`https://joaosaccucci.github.io/agenda/testes.html`), no Live Server e aberta direto do disco (`file://`).
+- [ ] Usa o "agora" fixo **quinta-feira, 12/11/2026, 14:00**, no relógio local (`new Date(2026, 10, 12, 14, 0)`), passado para `entenderFrase(frase, agora)`. O resultado não depende do dia em que a página é aberta.
+- [ ] Roda **todas** as frases das tabelas "Frases de teste da Entrega 4a" (52) e "Frases de teste da Entrega 4b" (28): 80 no total. A #27 da 4b é escrita por inteiro (22 itens de uma letra, de "a" a "v").
+- [ ] Para cada frase, confere cada coluna que tem valor na tabela: Título, Data, Hora e "Sem data"; na 4b, também Fim/Duração, Tempo para sair, Local e O que levar. Quando "O que mais conferir" traz a linha "Entendi", um aviso ("A data 31/02 não existe. Escolha uma data.", "A lista 'O que levar' aceita até 20 itens. Os outros ficaram de fora.") ou a dica "Não encontrei data nem hora. Confira os campos.", confere esse texto também. A comparação é do texto exato.
+- [ ] O que é só da tela (foco, erro "já visível", campo desativado) fica de fora: a página confere o que a `entenderFrase` devolve. "vazio", "vazia" e "desativado" contam como "sem valor".
+- [ ] Os esperados ficam escritos na própria página (uma lista de casos), copiados das tabelas destes requisitos. Quando uma tabela mudar, a lista muda junto, no mesmo commit.
+- [ ] No topo, logo depois do título, um resumo em texto: "80 de 80 frases passaram." ou "78 de 80 frases passaram. 2 falharam.". Passou e falhou são texto, não só cor.
+- [ ] Logo abaixo, a lista das que falharam. Cada uma mostra a tabela e o número (ex.: "4b #22"), a frase e, para cada campo errado, o esperado e o obtido. Sem falhas, aparece "Nenhuma falha.". As que passaram aparecem depois (podem ficar recolhidas).
+- [ ] Se a `entenderFrase` der erro numa frase, a página não para: aquela frase conta como falha, com a mensagem do erro, e as outras continuam.
+- [ ] A página não lê nem grava o `localStorage` (nenhuma chave muda) e não envia nada para a internet.
+- [ ] **Não aparece para quem usa o site:** o `index.html` não tem link para ela, e ela tem `<meta name="robots" content="noindex">`. Só abre quem souber o endereço ou quem seguir o link do README (US37).
+- [ ] `lang="pt-BR"`, um `h1` ("Testes da frase"), legível a 360px sem rolagem horizontal (frases longas quebram linha), contraste AA, console sem erros e nenhum 404. O visual é simples: a artista só diz se a página reaproveita o `css/style.css` ou fica com o padrão do navegador.
+- [ ] Com o `frase.js` da Etapa 5 (com a US33), o resumo dá **80 de 80**. O testador confere também que a página **acusa** falha: numa cópia fora de `trabalhos/`, troca um esperado e vê a frase aparecer na lista de falhas, com o esperado e o obtido.
+
+**Agenda US37: Imagem da Agenda no README**
+Como recrutador que abre o repositório, quero ver no README como a Agenda é, para entender o projeto sem precisar abrir o site.
+- [ ] O `README.md` da Agenda mostra, perto do topo (depois da descrição curta e do link do site), um print PNG da Agenda funcionando no computador.
+- [ ] A imagem fica no repositório `agenda`, numa pasta só dela (sugestão: `readme/`), com caminho relativo, para aparecer no GitHub. O `index.html` não carrega essa imagem.
+- [ ] Só dados **fictícios** (ex.: "Dentista", "Prova de Banco de Dados", "Reunião do TCC"): nenhum nome, telefone, endereço ou compromisso real. Sem abas, favoritos ou outra coisa pessoal do navegador.
+- [ ] Mostra pelo menos o campo "Criar por frase", a faixa "Próximos 7 dias" e a lista com compromissos de mais de um dia.
+- [ ] Tem texto alternativo em português que descreve o que aparece (ex.: "Agenda no tema escuro: campo Criar por frase, faixa dos próximos 7 dias e compromissos agrupados por dia").
+- [ ] Tamanho: PNG até 500 KB.
+- [ ] Feita com a versão final da Etapa 5 (depois das US33 a US36).
+- [ ] O README continua seguindo a US36 dos requisitos da Labs. Ele ganha uma linha "Testes", curta, que diz o que a página confere e o endereço dela.
+
+### Requisitos gerais da Etapa 5
+
+Os requisitos gerais das Etapas 1 a 4 continuam valendo, e também:
+- [ ] Regressão: as 80 frases das tabelas da 4a e da 4b dão o mesmo resultado no formulário aberto (testador) e na `testes.html` (80 de 80).
+- [ ] Os compromissos continuam na `versao: 2`, sem chave nova. O `localStorage` continua só com chaves `agenda:` e nunca usa `localStorage.clear()`.
+- [ ] Só HTML, CSS e JavaScript puros. Nada é enviado para a internet.
+- [ ] Nenhum dado pessoal no repositório (imagem, casos de teste e README).
+
+---
+
 ## 3. Regras e modelo de dados
 
 ### Quando um compromisso "passou"
@@ -1098,6 +1176,7 @@ Já pensada para as Etapas 3 e 4: os campos `duracaoMin` e `itens` foram criados
 | **Etapa 3, Entrega 3b** | US21 Faixa dos próximos 7 dias, US22 Tema claro e escuro, US23 Letra grande, mudanças da Etapa 3b nas stories anteriores e requisitos gerais da Etapa 3 |
 | **Etapa 4, Entrega 4a** | US24 Campo "Criar por frase", US25 Entender a data, US26 Entender a hora, US27 O título é o que sobra, US28 Rascunho com a linha "Entendi", mudanças da Etapa 4a nas stories anteriores e requisitos gerais da Etapa 4 |
 | **Etapa 4, Entrega 4b** | US29 Hora de fim pela frase, US30 Tempo para sair pela frase, US31 "levar" vira o checklist, US32 Local com "no"/"na", mudanças da Etapa 4b nas stories anteriores e requisitos gerais da Etapa 4 |
+| **Etapa 5, Entrega 5** | US33 Pontuação e o "e" de ligação, US34 Esc logo depois de abrir pela frase, US35 Letra grande e telas pequenas, US36 Página de testes da frase, US37 Imagem no README e requisitos gerais da Etapa 5 |
 
 Ordem sugerida dentro da Etapa 1: modelo de dados e US07 (salvar e carregar) → US02 e US03 (formulário) → US01 (lista) → US06 (Anteriores) → US04 (editar) → US05 (excluir) → requisitos gerais → testador escreve `docs/projetos/agenda/testes/etapa-1.md` → commit da agenda e depois da Labs (US31 da Labs) → professor escreve as aulas (US34 da Labs).
 
@@ -1112,6 +1191,8 @@ Ordem sugerida na Entrega 3b: artista desenha a faixa da semana, a paleta do tem
 Ordem sugerida na Entrega 4a: artista desenha o campo "Criar por frase" e a linha "Entendi" (dois temas, letra grande, 360px) → função de análise sem tela (US25, US26 e US27), conferida no console com a tabela da 4a → US24 (campo e botão) → US28 (rascunho no formulário, foco e leitor de tela) → testador escreve `docs/projetos/agenda/testes/etapa-4a.md` (as 52 frases, uma por uma, e a acessibilidade) → commits → aulas (bom momento para o professor ensinar expressões regulares).
 
 Ordem sugerida na Entrega 4b: artista ajusta a linha "Entendi" para as partes novas e o aviso de mais de 20 itens → pedaços compostos (US29 e US30), com a regra de "trecho já usado não é lido de novo" → pedaços de texto livre (US32 local, depois US31 levar) → testador escreve `docs/projetos/agenda/testes/etapa-4b.md` (tabela da 4b e de novo a tabela da 4a) → commits → aulas.
+
+Ordem sugerida na Entrega 5: João faz a conferência manual da US34 (se falhar, entra para o dev) → artista ajusta a faixa da semana com a letra grande (US35) → dev cria a `testes.html` (US36) e confere 80 de 80 com o `frase.js` de hoje → US33, já protegida pela página → US35 → testador escreve `docs/projetos/agenda/testes/etapa-5.md` → US37 (imagem tirada da versão final) → commits (agenda e depois Labs) → aulas (bom momento para o professor ensinar testes automáticos com a `testes.html`).
 
 ---
 
@@ -1173,4 +1254,17 @@ Ordem sugerida na Entrega 4b: artista ajusta a linha "Entendi" para as partes no
 - Na 4b: local com "em", "nos" ou "nas"; intervalo sem "das" ("10h-11h", "de 10 a 11"); compromisso que passa da meia-noite pela frase; "Me cobrar" e observação pela frase.
 - Usar a frase para editar, remarcar ou agendar um compromisso que já existe.
 - Ditado por voz como função da Agenda (o ditado do teclado do celular funciona, porque escreve no campo como texto).
-- Testes automatizados no repositório (o testador confere as tabelas à mão ou no console).
+- Testes automatizados no repositório (o testador confere as tabelas à mão ou no console). *(Na Etapa 5 entrou a exceção da `testes.html`, só para a frase: US36.)*
+
+**Fora do escopo da Etapa 5**
+- Testes automáticos de outras partes da Agenda (`app.js`, `armazenamento.js`, `copia.js`), testes em Node, GitHub Actions ou qualquer biblioteca de testes.
+- Funções novas para quem usa o site e mudanças nas regras da frase além da US33.
+- Pendências baixas que ficam registradas para uma etapa futura (origem entre parênteses):
+  - com o `localStorage` 100% cheio, a Agenda abre vazia e com o aviso de "indisponível" (`etapa-2b.md`, problema 1);
+  - com a gravação bloqueada, os avisos de sucesso continuam aparecendo (`etapa-2b.md`, problema 2);
+  - com dados `versao: 3`, a cópia sai como `versao: 2` (`etapa-2b.md`, problema 3; hipotético);
+  - "Juntar" que não mudou nada grava `agenda:ultima-mudanca` (`etapa-2a.md`, observação 4);
+  - "Substituir" que falha troca `agenda:compromissos-antes-da-importacao` (`etapa-2a.md`, observação 2);
+  - espaço antes das vírgulas na descrição da linha "Entendi" na árvore de acessibilidade (`etapa-4a.md`, observação A; `etapa-4b.md`, observação B);
+  - frases que seguem as regras mas surpreendem ("Pagar até a", "Show e meia", "Aula de às 11h", "Dentista por volta das") (`etapa-4a.md`, observação B; `etapa-4b.md`, observação C);
+  - "Cancelar" e "Salvar" empilhados com a letra grande no celular: corrigir a conta do design 15.7 (`etapa-3b.md`, observação A).
