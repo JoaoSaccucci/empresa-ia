@@ -308,3 +308,184 @@ Nenhum problema de gravidade alta. Pendências:
 ![Computador no tema escuro, frase "responder amanhã e-mail do chefe": tira "Entendi: Amanhã · Dia todo · título 'Responder e-mail do chefe'" e o campo Título "Responder e-mail do chefe", com o "e" de volta](img/etapa-4b-r3-desktop-escuro-e-mail.png)
 
 - **Como foi testado:** usei os mesmos scripts das rodadas 1 e 2, na pasta temporária, mais as frases da rodada 3. Nenhum navegador nem servidor ficou aberto. Não mexi no código e não fiz commit.
+
+## Aulas do Módulo 6 — 2026-11-13
+
+- **O que foi testado:** as 4 aulas novas da Agenda na Labs (`aulas/agenda/modulo-6/aula-01.md` a `aula-04.md`) e as mudanças nestes arquivos:
+  - `data/aulas.json`: módulo `agenda-m6` e 4 aulas;
+  - `data/glossario.json`: 3 termos novos (falsy, Boolean e função de comparação);
+  - `data/projetos.json`: trabalho do professor da 4b e linha do tempo da Agenda;
+  - `README.md` da raiz: 43 aulas.
+
+  O teste foi feito antes do commit da Labs, do mesmo jeito que o das aulas do Módulo 5 (relatório `etapa-4a.md`). Segui o guia `docs/guias/aulas.md` e a regra do João de que nenhum exercício manda mexer no código de um projeto. **Não corrigi nada nas aulas**: só descrevo os problemas e a correção sugerida.
+- **Onde:** no Edge headless, com perfil temporário, controlado por script. O site da Labs foi servido por um servidor local, com marked e highlight.js carregados pelo CDN. Testei a 1280px, 360px e 320px, nos temas escuro e claro ("papel"). Comparei os links fixos com o repositório local da Agenda, que está no commit `82a924620f02ffdf84c28af3ecfb5a9103c676d2`, sem nenhuma mudança. Esse commit está em `origin/main`.
+
+### Resultado
+
+**Reprovado.** Volta para o professor por **um** problema de gravidade alta, com correção pequena: na aula 6.2, o termo `[[map]]` abre o balão do `Map` ("mapa — Estrutura que guarda um valor para cada chave…"), e não o do `map` ("mapear — Cria uma lista nova…"). É a pendência conhecida do glossário (observação B do Módulo 5) acontecendo de verdade, e justo num dos três passos centrais da aula (problema 1).
+
+Todo o resto passou:
+- os 8 exemplos rodam e o Console mostra exatamente o que o texto diz, linha por linha, com o anúncio certo;
+- os 12 quizzes funcionam, e a resposta marcada como certa está certa;
+- os 18 links fixos usam o commit `82a9246` e mostram o que o texto diz;
+- os exercícios só mexem no exemplo da aba Aulas.
+
+Também há dois detalhes de texto de gravidade baixa (problemas 2 e 3).
+
+### Verificações
+
+| Área | Resultado | Observação |
+|---|---|---|
+| Celular a 360px e 320px | Passou | Sem rolagem horizontal nas 4 aulas (antes e depois de Rodar os 8 exemplos), em `aulas.html#agenda-m6` e em `detalhe-projeto.html?id=agenda`. Os blocos de código terminam dentro da tela e rolam por dentro. O balão do glossário cabe na tela a 360px (de 16 a 344px). |
+| Teclado | Passou | O Tab passa por Rodar, Editar, os termos do glossário, os links fixos, as alternativas do quiz e o checklist, com foco visível em todos. Cada balão abre com Enter e fecha com Esc, e o foco fica no termo. O quiz responde com Enter, e o "Tentar de novo" funciona com Espaço. Os botões "Agenda" e "João Saccucci Labs" de `aulas.html` trocam com Enter e Espaço. (O roteiro acusou de novo o "foco sem contorno" no `body` no fim do Tab, que é a observação A antiga. A aula 6.1 não tem nenhum termo de glossário, então o roteiro também acusou "Tab não achou glossário" nela; não é erro.) |
+| Acessibilidade | Passou, menos o problema 1 | Os componentes são os mesmos da Labs. O aviso do Rodar conta certo ("6", "5", "4", "3", "3", "10", "4" e "2 linhas no console"). Depois de responder, as alternativas ficam com `aria-disabled="true"`, e todas as explicações aparecem. O título da aba segue o padrão (`Aula 6.4 · Ordenar com sort e uma função de comparação \| João Saccucci Labs`). O sumário tem as 5 seções de cada aula. O leitor de tela também lê a explicação errada do `map` (problema 1). |
+| Contraste | Passou | Medido nas cores calculadas, nos dois temas (escuro / claro): termo do glossário 16,7 / 15,3; código no texto 15,6 / 13,9; texto 7,9 / 6,7; rótulo do Linha por linha 14,8 / 5,3. Tudo acima de 4,5. |
+| Erros | Passou | Sem erro no console nas 4 aulas, em `aulas.html`, no detalhe da Agenda, em 3 aulas de amostra (a primeira e a última da Labs e a 5.1 da Agenda) e com um id que não existe (`agenda-m6-aula-09` mostra "Aula não encontrada." e "Ver todas as aulas"). O único 404 foi o `/favicon.ico`, que o navegador pede na raiz do servidor de teste. Os 4 JSON de `data/` são válidos. |
+| Caracteres invisíveis | Passou | Conferi os 4 `.md` caractere por caractere: nenhum de U+0300 a U+036F, U+200B a U+200F, U+202A a U+202E, U+2060, U+FEFF nem espaço sem quebra (U+00A0). Nenhum `\r`. |
+
+### Conferências
+
+**1. `aulas.html`, progresso e vitrine**
+- [x] No botão "Agenda" aparece o "Módulo 6 — Entrega 4b: a frase entende mais", logo depois do Módulo 5. Ele tem as 4 aulas (6.1 a 6.4, `tempoLeitura` 6, 7, 7 e 7) e os links `aula.html?id=agenda-m6-aula-01` a `-04`. São 24 cards da Agenda e 19 da Labs.
+- [x] Progresso: no começo, aparecem "Agenda, 0 de 24 concluídas" e "0 de 4 concluídas" em cada um dos 6 módulos. Depois de marcar a 6.1 e a 6.4 como concluídas, aparecem "Agenda, 2 de 24 concluídas" e, no Módulo 6, "2 de 4 concluídas". Os Módulos 1 a 5 continuam em 0 de 4, e a Labs em 0 de 19.
+- [x] O `aulas.html#agenda-m6` mostra o módulo na tela a 1280px, 360px e 320px.
+- [x] O `detalhe-projeto.html?id=agenda` (a 1280px e a 360px) mostra o trabalho do professor da 4b ("Etapa 4, Entrega 4b: 4 aulas curtas…", com "Aulas — Agenda, Módulo 6" → `aulas.html#agenda-m6` e o Glossário), a linha nova da linha do tempo ("4 aulas da Entrega 4b, com exemplo Rodar e quiz, no Módulo 6 da Agenda.") e os links dos Módulos 1 a 5. Clicando no link do Módulo 6 e depois no card 6.4, a aula 6.4 abre.
+- [x] README da raiz: 43 aulas está certo (19 da Labs e 24 da Agenda).
+
+**2. Cada aula em `aula.html`**
+- [x] Têm Em resumo (2 linhas), Erro comum, Dica "Para ir além (opcional)" e Em entrevista.
+- [ ] **Glossário com o balão certo em todos os termos**: falhou no `map` da 6.2 (problema 1). Termos de cada aula:
+  - aula 1: nenhum (o guia não exige);
+  - aula 2: split, array, expressão regular, **map**, filter, slice, trim, splice;
+  - aula 3: falsy, Boolean;
+  - aula 4: sort, função de comparação, localeCompare.
+  - Os 3 termos novos mostram a explicação certa. Nenhum repete um termo que já existia, nem ignorando maiúsculas. **`Boolean` não colide com nada**: só existe um termo "boolean" em minúsculas. O único par repetido continua sendo `map`/`Map`.
+  - Nenhum `[[` ou `]]` sobra no texto. Os únicos `[[` da página da 6.3 são os de `const casos = [["0", 0], …` dentro do código, que é JavaScript de verdade.
+- [x] O código aparece colorido. Há 8 exemplos com Rodar (2 em cada aula), com 14, 9, 9, 7, 11, 8, 4 e 15 linhas. Todos têm até 15 linhas e não dependem do código da Agenda.
+- [x] O Linha por linha está ligado a cada exemplo e cita as linhas certas:
+  - 6.1: L1, 2, 3, 4–5, 6, 7, 9–12, 13, 14 e L1–4, 5, 6, 7, 8, 9;
+  - 6.2: L2, 3, 4, 6, 7, 8, 9 e L3, 4, 5, 6, 7;
+  - 6.3: L1–4, 5–8, 9, 10, 11 e L1–2, 3–5, 6, 7, 8;
+  - 6.4: L1, 2, 3, 4 e L1, 2–6, 7, 8–13, 14, 15. As posições da frase "dentista na clínica amanhã levar RG" (9 a 18, 20 a 25 e 27 a 34, com o `fim` uma posição depois) conferem.
+- [x] O Rodar mostra exatamente o que o texto diz, linha por linha (igual no Node):
+  - 6.1 (exemplo 1): `90`, `120`, `45`, `30`, `120` e `null`;
+  - 6.1 (exemplo 2): `false`, `true`, `600 690`, `90` e `1439`;
+  - 6.2 (exemplo 1): `["RG","carteirinha","exames"]`, `["RG","exames"]`, `["vitamina E"]` e `["caderno","estojo"]`;
+  - 6.2 (exemplo 2): `["RG","exames","carteirinha"] 2`, `["RG"]` e `5`;
+  - 6.3 (exemplo 1): `duração 90 min | duração 90 min`, `sem duração | duração 0 min` e `sem duração | sem duração`;
+  - 6.3 (exemplo 2): as 8 linhas da tabela (`0 -> false` … `lista vazia [] -> true`), `2` e `[3,5]`;
+  - 6.4 (exemplo 1): `[1,10,9]`, `[1,9,10]`, `[10,9,1]` e `["B","a","b","á"]`;
+  - 6.4 (exemplo 2): `local, data, levar` e `"dentista"`.
+- [x] Editar abre o código num campo de texto, o código editado roda, e Restaurar volta ao original (nos 8 exemplos).
+- [x] Quizzes: 3 em cada aula. Todos têm 3 alternativas, menos o primeiro da 6.3, que tem 4. Cada um tem **exatamente uma certa**: a B em todos, menos o terceiro da 6.2 (C) e o primeiro da 6.3 (C).
+  - Testei cada quiz duas vezes, em páginas limpas: clique na certa ("Certa!") e Enter numa errada ("Errada. A resposta certa é a …"). Nos dois casos, todas as explicações aparecem e o quiz trava. O "Tentar de novo" limpa a resposta.
+  - Conferi as respostas certas:
+    - "2h15" = 135; `"9:00" < "10:00"` é `false` por comparar texto; sem o `|| 0`, `emMinutos("2h")` dá `NaN` (rodei: `NaN`);
+    - `"a,,b".split(",")` dá `["a", "", "b"]`; o `map` vem antes do `filter` por causa do pedaço só de espaços; 23 − 20 = 3;
+    - `"0"` entra no `if`; o `!== null` é por causa da duração 0; `[3, 0, 5].filter(Boolean)` dá `[3, 5]`;
+    - `[10, 9, 1].sort()` dá `[1, 10, 9]`; positivo põe `b` antes; sem o `sort`, o título sai `"dentista na clínica  amanhã"` (rodei), com "na clínica" e "amanhã" de volta, como a resposta diz.
+
+**3. Navegação**
+- [x] A 5.4 agora leva à 6.1, a 6.1 volta para a 5.4, e a 6.4 não tem "próxima".
+
+**4. Links fixos** (18 links, todos com o hash completo `82a924620f02ffdf84c28af3ecfb5a9103c676d2` e nenhum com `/blob/main/`)
+- [x] Aula 1:
+  - `frase.js#L439-L463`: o comentário e a `lerTempo` inteira ("meia hora", "1h30", "2 horas", "45 min"), que devolve `{ minutos, fim }` (ou `null`);
+  - `#L465-L488`: a `duracaoEm` e a `sairEm`, as duas chamando a `lerTempo`;
+  - `#L414-L427`: o intervalo com "da tarde" e o `primeiro.horas * 60 + primeiro.minutos <= …` (linha 422);
+  - `#L682-L687`: o comentário da `entenderFrase` sobre `fim`, `duracaoMin` ("Pode estar fora do limite (0, mais de 1439…)") e `antecedenciaMin` (ver problema 3).
+- [x] Aula 2:
+  - `frase.js#L658-L667`: o comentário e a `separarItens`, com a mesma regex do exemplo e a `limparTexto(item, MAXIMO_DO_TEXTO_DO_ITEM, false)`. As constantes ficam no `armazenamento.js` (linhas 124 e 125): `MAXIMO_DE_ITENS = 20` e `MAXIMO_DO_TEXTO_DO_ITEM = 60`, como a aula diz;
+  - `#L749-L758`: o `slice(0, MAXIMO_DE_ITENS)` e o `itensDeFora`;
+  - `#L828-L833`: o `slice(0, ITENS_NA_LINHA_COM_RESUMO)`. Com `ITENS_NA_LINHA_SEM_RESUMO = 4` e `ITENS_NA_LINHA_COM_RESUMO = 3` (linhas 786 e 787), "só os 3 primeiros quando há 5 itens ou mais" está certo;
+  - `#L576-L584`: o comentário do "e" minúsculo, com o hífen ("e-mail") e as regex `E_NO_COMECO` e `E_NO_FIM`.
+- [x] Aula 3:
+  - `frase.js#L813-L822`: o comentário "(decisão 4)" e os dois `!== null` (duração e "sair");
+  - `#L682-L687`: "Pode estar fora do limite (0, …)";
+  - `#L734`: `[pecaData, pecaHora, pecaDuracao, pecaSair].filter(Boolean)`;
+  - `#L736-L745`: o local com `if (limpo !== "")`;
+  - `#L713-L715`: o `hora && !intervalo ? …` (linha 714). A `hora` é mesmo `"HH:MM"` ou `null` (linha 708).
+- [x] Aula 4:
+  - `frase.js#L760-L761`: o comentário "Só sai do título o que virou campo" e o `usadas.sort(function (a, b) { return a.inicio - b.inicio; })`;
+  - `#L734`: a lista com data, hora, duração e "sair";
+  - `#L736-L758`: o local e o "levar", com os dois `usadas.push`;
+  - `#L592-L606`: a `tirarPecas`, com `frase.slice(posicao, peca.inicio)` (linha 597);
+  - `#L519-L521`: o `forEach` que guarda a peça com o maior `fim`.
+
+**5. Conteúdo**
+- [x] As afirmações batem com o código da Agenda no commit `82a9246`, menos as dos problemas 2 e 3. Conferi no Node, com a `entenderFrase` de verdade e o "agora" de quinta, 12/11/2026, 14:00:
+  - "reunião 10h por 13h" dá `duracaoMin` 780 (a `lerTempo` não barra);
+  - "dentista na clínica amanhã levar RG" dá o título "Dentista" e o item "RG";
+  - "dentista amanhã levar e-mail impresso" dá um item só, "e-mail impresso";
+  - "dentista amanhã levar vitamina E" dá o item "vitamina E".
+- [x] As aulas citadas existem: 5.1 (regex), 5.3 (lookahead) e 6.1 (minutos), que é deste módulo.
+- [x] **Nenhum exercício manda mexer no código da Agenda ou da Labs.** Todos os itens de "Para praticar" (3 por aula) mexem no exemplo da aba Aulas. Rodei cada um no editor do próprio exemplo:
+  - 6.1: o caso "1 hora e meia" dá `90`; o caso "2 horas" (com uma regex nova antes da L6) dá `120`; de 08:45 a 12:00 dá `195`. O Erro comum também confere: sem os `Number`, "1h30" dá `"6030"`;
+  - 6.2: com `|\sou(?=\s)`, "RG ou CNH, exames" dá `["RG","CNH","exames"]`; sem o `filter`, mudam só as linhas 7 e 9 (`["RG","","exames",""]` e `["caderno","estojo",""]`); com `MAXIMO = 10`, a L5 mostra os 5 itens e `0`. O Erro comum também confere: sem o `return`, os itens saem `undefined` (o `JSON.stringify` mostra `null`);
+  - 6.3: `{}` dá `true` e `false` dá `false`; com o teste `n !== null`, `[3, 0, null, 5]` dá `[3,0,5]`; `textoDaDuracaoCerto(undefined)` dá `duração undefined min`, que é o que a pergunta quer mostrar. O `0 || 30` dá `30` e o `0 ?? 30` dá `0`, como a Dica diz;
+  - 6.4: sem a L7, a L14 mostra `data, local, levar` e a L15 `"dentista na clínica  amanhã"` (igual à resposta do quiz); com `b.inicio - a.inicio`, a L14 mostra `levar, data, local`; `["10:00", "9:30", "08:15"].sort()` dá `["08:15","10:00","9:30"]`, fora de ordem, como a pergunta quer mostrar.
+- [x] Tamanho: de cerca de 770 a 830 palavras fora do código; `tempoLeitura` de 6 ou 7; 3 itens em "Para praticar" em cada aula; quiz nas 4 aulas.
+
+### Problemas encontrados
+
+**1. Aula 6.2: o termo `[[map]]` abre a explicação do `Map`** (gravidade: **alta**; status: pendente, volta para o professor)
+- **Onde:** `aula-02.md`, linha 12 (`2. **[[map]]** ("mapear"): …`).
+- **Passos:** abrir `aula.html?id=agenda-m6-aula-02`, ir até "O conceito" e clicar (ou dar Enter) no termo **map** do passo 2.
+- **Esperado:** o balão "mapear — Cria uma lista nova transformando cada item da lista original."
+- **Obtido:** o balão "**mapa** — Estrutura que guarda um valor para cada chave, como um id. Com get e set, acha e troca um item quase na hora." O `js/aula.js` guarda os termos num `Map` com a chave em minúsculas (linha 241), e o `Map` (posição 78 do `glossario.json`) vem depois do `map` (posição 13), então sobrescreve o `map`. É a observação B do relatório do Módulo 5 ("um `[[map]]` numa aula futura ainda mostraria 'mapa'"). Aqui ela ensina errado justamente um dos três passos da aula, logo depois do texto dizer "mapear". O leitor de tela lê a mesma explicação errada.
+- **Correção sugerida (só na aula):** na linha 12, tirar os colchetes e deixar `**map**` (o texto já traduz "mapear" e explica o que ele faz). **Não** trocar a ordem do `glossario.json`, porque isso quebraria o `[[Map]]` da aula 5.3. A correção de verdade (o `aula.js` preferir o termo com as mesmas maiúsculas) continua como pendência da Labs, para o dev numa etapa da Labs.
+
+**2. Aula 6.3: "por 0 min" sozinho não dá `duracaoMin` 0** (gravidade: baixa; status: pendente)
+- **Onde:** `aula-03.md`, linha 15 ("E se a pessoa escrever "por 0 min"? A resposta é `0`.") e o segundo quiz, linha 91 ("Porque "por 0 min" dá duracaoMin 0…").
+- **Passos:** rodar a `entenderFrase` do commit `82a9246` com "dentista por 0 min" e com "dentista às 10h por 0 min".
+- **Esperado:** o texto diz quando a duração é entendida.
+- **Obtido:** "dentista por 0 min" dá `duracaoMin: null` e o título "Dentista por 0 min", porque a duração só vale com hora (`frase.js`, linhas 710 a 714). Só "dentista às 10h por 0 min" dá `duracaoMin: 0`. A ideia da aula continua certa; só o exemplo está incompleto.
+- **Correção sugerida:** trocar "por 0 min" por "às 10h por 0 min" na linha 15 e no quiz (ou acrescentar "com uma hora, como em "às 10h por 0 min"").
+
+**3. Aula 6.1, Dica "Para ir além": "com a mensagem de sempre" não está no trecho do link** (gravidade: baixa; status: pendente)
+- **Onde:** `aula-01.md`, linha 79.
+- **Passos:** ler "O comentário da `entenderFrase` explica que quem mostra o erro é o formulário, com a mensagem de sempre" e abrir o link `frase.js#L682-L687`.
+- **Esperado:** o trecho do link diz isso sobre a duração.
+- **Obtido:** nas linhas 682 a 687, a duração só tem "Pode estar fora do limite (0, mais de 1439, ou passar de 23:59)". O "o formulário mostra o erro" está ali, mas na linha 683, sobre o `fim`. A frase "quem decide o erro é o formulário, que mostra a mensagem de sempre" está no comentário da `lerTempo` (linhas 441 e 442), que é o primeiro link da mesma aula.
+- **Correção sugerida:** "O comentário da `lerTempo` explica que quem decide o erro é o formulário, com a mensagem de sempre ([linhas 439 a 442](…#L439-L442)), e o da `entenderFrase` avisa que a duração pode estar fora do limite ([linhas 684 e 685](…#L684-L685))", com o mesmo commit `82a9246`.
+
+### Observações (gravidade baixa, nenhuma impede a aprovação depois da correção do problema 1)
+
+- **A. Foco no `body` no fim do Tab.** É o mesmo comportamento antigo das aulas dos Módulos 3 a 5, e não é destas aulas.
+- **B. Glossário `map`/`Map` no `js/aula.js`.** Agora apareceu de verdade (problema 1). Continua pendente para uma etapa da Labs; até lá, as aulas devem evitar `[[map]]`.
+- **Conferir à mão (João):** depois do commit da Labs, abrir a aula 6.1 no GitHub Pages e clicar num link fixo (por exemplo, `frase.js#L439-L463`), para ver se o GitHub abre com as linhas destacadas.
+
+### Como foi testado
+
+- **No navegador (Edge headless, por script):** 218 conferências automáticas, um roteiro curto de progresso e uma sonda dos balões da 6.2 a 1280px e a 360px (com print do balão errado do `map`). As 8 falhas do roteiro foram conferidas uma por uma:
+  - 4 vezes "foco sem contorno" em `modo-foco`: é o `body` depois que o Tab passa do fim da página (observação A);
+  - "console de `aulas.html` com 404": era o `/favicon.ico`;
+  - "Tab não achou glossário" na 6.1: a aula não tem termos;
+  - "sobrou `[[` na aula 6.3": era o `[["0", 0], …` do código, dentro do bloco de código;
+  - "balões da 6.2": o `map` com a explicação do `Map` (**problema 1**). Na mesma conferência, o "expressão regular" saiu vazio por um atraso do roteiro; na sonda, ele abre com a explicação certa.
+
+  Rodei os exercícios de "Para praticar" no editor do próprio exemplo e respondi cada quiz em páginas limpas, uma vez com clique na certa e outra com Enter numa errada.
+- **Em Node:** rodei os 8 exemplos fora do site, e a saída foi igual à do Rodar. Rodei a `entenderFrase` do commit `82a9246` com as frases citadas nas aulas. Contei as palavras, procurei os `[[termos]]` de cada aula no `glossario.json` e conferi os caracteres dos 4 `.md`.
+- **Só por leitura:** a conferência do conteúdo com o código da Agenda no commit `82a9246`.
+- Os scripts e os prints ficaram na pasta temporária, fora do projeto. Nenhum navegador nem servidor de teste ficou aberto no fim. Não mexi nas aulas, nos JSON nem no código da Agenda, e não fiz commit.
+
+### Rodada 2 — 2026-11-13
+
+- **O que foi testado de novo:** as correções do professor para os 3 problemas da rodada 1. Rodei de novo o roteiro inteiro das 4 aulas, com as mesmas 218 conferências. Ele está igual ao da rodada 1, só com os 2 links novos da aula 6.1 e sem o `map` na lista de termos da 6.2.
+
+**Resultado: Aprovado com pendências.** Os 3 problemas foram corrigidos, e nada mais quebrou. Ficam só as observações A e B da rodada 1, de gravidade baixa e anteriores a estas aulas.
+
+- [x] **Problema 1 (alta): corrigido.** A linha 12 da `aula-02.md` agora é `2. **map** ("mapear"): …`, sem colchetes. Na página, o "map" aparece em negrito, sem balão. Os 7 termos que sobraram na aula (split, array, expressão regular, filter, slice, trim e splice) abrem com Enter, com a explicação certa, e fecham com Esc. Nenhum `[[map]]` sobrou nas 4 aulas.
+- [x] **Problema 2 (baixa): corrigido.**
+  - A linha 15 da `aula-03.md` usa "dentista às 10h por 0 min" e explica que, sem hora, a duração fica `null`. Isso confere com a `entenderFrase` do commit `82a9246`: "dentista às 10h por 0 min" dá `duracaoMin: 0`, e "dentista por 0 min" dá `null`.
+  - O segundo quiz agora diz "às 10h por 0 min". Ele continua com a B certa e funciona com clique e com Enter.
+- [x] **Problema 3 (baixa): corrigido.**
+  - A Dica da `aula-01.md` (linha 79) atribui a frase do formulário ao comentário da `lerTempo`, com o link `frase.js#L439-L442`. Essas linhas têm "quem decide o erro é o formulário, que mostra a mensagem de sempre".
+  - A frase "a duração pode estar fora do limite" agora tem o link `#L684-L685`. Essas linhas têm "duracaoMin: … Pode estar fora do limite (0, mais de 1439, ou passar de 23:59)".
+  - Os 2 links usam o commit `82a924620f02ffdf84c28af3ecfb5a9103c676d2`. Agora a aula 6.1 tem 5 links fixos, e as aulas somam 19. Nenhum usa `/blob/main/`.
+- **O que não mudou:** os 8 exemplos dão a mesma saída e o mesmo anúncio da rodada 1, tanto no navegador quanto no Node. Os 12 quizzes, os exercícios de "Para praticar", a rolagem a 360px e 320px, o teclado, o contraste nos dois temas, o console, o progresso ("2 de 24") e a vitrine continuam passando. Os 4 `.md` continuam sem caracteres invisíveis. As 7 falhas do roteiro são todas do próprio roteiro, já explicadas na rodada 1:
+  - 4 vezes "foco sem contorno" no `body`;
+  - o `/favicon.ico`;
+  - "Tab não achou glossário" na 6.1, que não tem termos;
+  - o `[["0", 0], …` dentro do código da 6.3.
+- **Como foi testado:** no Edge headless, por script, e em Node para os exemplos e os caracteres. Os scripts ficaram na pasta temporária, nenhum navegador ficou aberto, não mexi nas aulas e não fiz commit.

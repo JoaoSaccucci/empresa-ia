@@ -62,6 +62,13 @@
       "numero": 5,
       "titulo": "Entrega 4a: criar compromisso por frase",
       "resumo": "Achar data e hora numa frase com expressões regulares, comparar sem acento e sem maiúsculas, procurar exatamente numa posição com a flag y e testar uma função pura que recebe o \"agora\"."
+    },
+    {
+      "id": "agenda-m6",
+      "projeto": "agenda",
+      "numero": 6,
+      "titulo": "Entrega 4b: a frase entende mais",
+      "resumo": "Converter todo tempo para minutos, quebrar um texto em lista com split, map e filter, saber quando o if (x) engana com 0 e \"\", e ordenar com sort e uma função de comparação."
     }
   ],
   "aulas": [
@@ -415,6 +422,42 @@
       "arquivo": "aulas/agenda/modulo-5/aula-04.md",
       "tempoLeitura": 7,
       "resumo": "Por que entenderFrase(frase, agora) recebe o momento atual, o laço de 0 a 7 que acha a próxima sexta com getDay e como testar com uma tabela de casos e um \"agora\" fixo."
+    },
+    {
+      "id": "agenda-m6-aula-01",
+      "titulo": "Tudo vira minutos: uma unidade só para fazer conta e comparar",
+      "modulo": "agenda-m6",
+      "numero": 1,
+      "arquivo": "aulas/agenda/modulo-6/aula-01.md",
+      "tempoLeitura": 6,
+      "resumo": "Por que \"1h30\", \"45 min\" e \"meia hora\" viram um número só, como comparar horários em minutos desde a meia-noite e por que \"9:00\" < \"10:00\" dá false."
+    },
+    {
+      "id": "agenda-m6-aula-02",
+      "titulo": "Quebrar um texto em lista: split, map e filter",
+      "modulo": "agenda-m6",
+      "numero": 2,
+      "arquivo": "aulas/agenda/modulo-6/aula-02.md",
+      "tempoLeitura": 7,
+      "resumo": "Como \"levar RG, carteirinha e exames\" vira o checklist: split com regex, map para limpar, filter para tirar os vazios e slice para o limite de itens."
+    },
+    {
+      "id": "agenda-m6-aula-03",
+      "titulo": "null, 0 e \"\": quando o if (x) engana",
+      "modulo": "agenda-m6",
+      "numero": 3,
+      "arquivo": "aulas/agenda/modulo-6/aula-03.md",
+      "tempoLeitura": 7,
+      "resumo": "Os valores falsy, por que a linha Entendi usa !== null para não esconder uma duração 0 e quando o filter(Boolean) é seguro."
+    },
+    {
+      "id": "agenda-m6-aula-04",
+      "titulo": "Ordenar com sort e uma função de comparação",
+      "modulo": "agenda-m6",
+      "numero": 4,
+      "arquivo": "aulas/agenda/modulo-6/aula-04.md",
+      "tempoLeitura": 7,
+      "resumo": "Por que [10, 9, 1].sort() dá [1, 10, 9], como a função de comparação decide a ordem e por que a Agenda ordena os pedaços da frase antes de montar o título."
     }
   ]
 }

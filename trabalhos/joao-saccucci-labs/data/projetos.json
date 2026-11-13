@@ -599,6 +599,15 @@
           { "titulo": "Relatório de teste — Entrega 4b", "url": "docs/projetos/agenda/testes/etapa-4b.md" }
         ],
         "imagens": []
+      },
+      {
+        "agente": "professor",
+        "resumo": "Etapa 4, Entrega 4b: 4 aulas curtas sobre o que a frase passou a entender: converter todo tempo para minutos para fazer conta e comparar horários, quebrar o \"levar\" em lista com split, map, filter e slice, os valores falsy e por que a Agenda usa !== null para não esconder uma duração 0, e ordenar com sort e uma função de comparação. Cada aula tem exemplo com Rodar e quiz, e cita o código da Agenda por link fixo.",
+        "entregaveis": [
+          { "titulo": "Aulas — Agenda, Módulo 6", "url": "aulas.html#agenda-m6" },
+          { "titulo": "Glossário", "url": "data/glossario.json" }
+        ],
+        "imagens": []
       }
     ],
     "linhaDoTempo": [
@@ -643,7 +652,8 @@
       { "data": "2026-11-11", "agente": "product-owner", "descricao": "Decisões do João depois do teste da 4b: \"e\" minúsculo, ano inválido e intervalo com período." },
       { "data": "2026-11-11", "agente": "dev", "descricao": "Implementação da Entrega 4b, com as correções da 4a." },
       { "data": "2026-11-11", "agente": "testador", "descricao": "Entrega 4b reprovada na rodada 2 (\"e-mail\" cortado) e aprovada na rodada 3, com pendências baixas." },
-      { "data": "2026-11-11", "agente": "dev", "descricao": "Entrega 4b publicada no repositório agenda e no GitHub Pages." }
+      { "data": "2026-11-11", "agente": "dev", "descricao": "Entrega 4b publicada no repositório agenda e no GitHub Pages." },
+      { "data": "2026-11-13", "agente": "professor", "descricao": "4 aulas da Entrega 4b, com exemplo Rodar e quiz, no Módulo 6 da Agenda." }
     ]
   }
 ]

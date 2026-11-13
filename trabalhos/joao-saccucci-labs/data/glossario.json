@@ -127,5 +127,8 @@
   { "termo": "lastIndex", "traducao": "último índice", "explicacao": "Posição em que uma regex com a flag g ou y começa a próxima busca. Ela muda sozinha depois de cada exec ou test; por isso, ao reusar a mesma regex, acerte o lastIndex antes." },
   { "termo": "lookahead", "traducao": "olhar à frente", "explicacao": "Parte de uma regex que confere o que vem depois sem incluir no pedaço achado. (?![a-z]) quer dizer \"aqui não pode vir uma letra\"." },
   { "termo": "função pura", "traducao": "pure function", "explicacao": "Função que, com as mesmas entradas, devolve sempre o mesmo resultado e não mexe em nada fora dela (tela, localStorage, relógio). É a mais fácil de testar." },
-  { "termo": "getDay", "traducao": "pegar o dia (da semana)", "explicacao": "data.getDay() devolve o dia da semana de uma Date, de 0 (domingo) a 6 (sábado). Não confunda com getDate(), que devolve o dia do mês." }
+  { "termo": "getDay", "traducao": "pegar o dia (da semana)", "explicacao": "data.getDay() devolve o dia da semana de uma Date, de 0 (domingo) a 6 (sábado). Não confunda com getDate(), que devolve o dia do mês." },
+  { "termo": "falsy", "traducao": "que vira falso", "explicacao": "Valor que conta como falso dentro de um if: false, 0, \"\" (texto vazio), null, undefined e NaN. Todo o resto é verdadeiro, até \"0\", \" \" e a lista vazia []." },
+  { "termo": "Boolean", "traducao": "booleano (verdadeiro ou falso)", "explicacao": "Boolean(valor) converte qualquer valor em true ou false, do mesmo jeito que o if. Em lista.filter(Boolean), tira da lista os valores falsy, como null." },
+  { "termo": "função de comparação", "traducao": "compare function", "explicacao": "Função passada ao sort que recebe dois itens, a e b, e devolve um número: negativo (a vem antes), positivo (b vem antes) ou zero (tanto faz). Para números em ordem crescente: a - b." }
 ]
