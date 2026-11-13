@@ -130,5 +130,8 @@
   { "termo": "getDay", "traducao": "pegar o dia (da semana)", "explicacao": "data.getDay() devolve o dia da semana de uma Date, de 0 (domingo) a 6 (sábado). Não confunda com getDate(), que devolve o dia do mês." },
   { "termo": "falsy", "traducao": "que vira falso", "explicacao": "Valor que conta como falso dentro de um if: false, 0, \"\" (texto vazio), null, undefined e NaN. Todo o resto é verdadeiro, até \"0\", \" \" e a lista vazia []." },
   { "termo": "Boolean", "traducao": "booleano (verdadeiro ou falso)", "explicacao": "Boolean(valor) converte qualquer valor em true ou false, do mesmo jeito que o if. Em lista.filter(Boolean), tira da lista os valores falsy, como null." },
-  { "termo": "função de comparação", "traducao": "compare function", "explicacao": "Função passada ao sort que recebe dois itens, a e b, e devolve um número: negativo (a vem antes), positivo (b vem antes) ou zero (tanto faz). Para números em ordem crescente: a - b." }
+  { "termo": "função de comparação", "traducao": "compare function", "explicacao": "Função passada ao sort que recebe dois itens, a e b, e devolve um número: negativo (a vem antes), positivo (b vem antes) ou zero (tanto faz). Para números em ordem crescente: a - b." },
+  { "termo": "teste automático", "traducao": "automated test", "explicacao": "Código que roda uma função com entradas conhecidas e confere sozinho se o resultado bate com o esperado. Roda em segundos, quantas vezes você quiser." },
+  { "termo": "caso de teste", "traducao": "test case", "explicacao": "Uma entrada e o resultado esperado para ela. O teste roda a função com a entrada (obtido) e compara com o esperado." },
+  { "termo": "teste de regressão", "traducao": "regression test", "explicacao": "Rodar de novo os testes que já passavam, depois de uma mudança, para ver se algo que funcionava voltou a quebrar." }
 ]

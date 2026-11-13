@@ -642,6 +642,15 @@
           { "titulo": "Glossário", "url": "data/glossario.json" }
         ],
         "imagens": []
+      },
+      {
+        "agente": "professor",
+        "resumo": "Etapa 5: 3 aulas curtas sobre testes automáticos com a testes.html da Agenda: casos com entrada e esperado, comparação campo a campo (e por que [\"RG\"] === [\"RG\"] dá false), try/catch para um erro não parar os outros casos, teste de regressão, esperado tirado do requisito e o teste que precisa conseguir falhar. Cada aula tem exemplo com Rodar e quiz, e cita o código da Agenda por link fixo.",
+        "entregaveis": [
+          { "titulo": "Aulas — Agenda, Módulo 7", "url": "aulas.html#agenda-m7" },
+          { "titulo": "Glossário", "url": "data/glossario.json" }
+        ],
+        "imagens": []
       }
     ],
     "linhaDoTempo": [
@@ -692,7 +701,8 @@
       { "data": "2026-11-13", "agente": "artista", "descricao": "Design da Etapa 5: letra grande em telas pequenas, página de testes e print do README (seção 18)." },
       { "data": "2026-11-13", "agente": "dev", "descricao": "Implementação da Etapa 5, com a página testes.html (80 de 80)." },
       { "data": "2026-11-13", "agente": "testador", "descricao": "Etapa 5 aprovada na primeira rodada; o João conferiu o Esc rápido à mão (5 de 5)." },
-      { "data": "2026-11-13", "agente": "dev", "descricao": "Etapa 5 publicada no repositório agenda e no GitHub Pages." }
+      { "data": "2026-11-13", "agente": "dev", "descricao": "Etapa 5 publicada no repositório agenda e no GitHub Pages." },
+      { "data": "2026-11-13", "agente": "professor", "descricao": "3 aulas sobre testes automáticos, com exemplo Rodar e quiz, no Módulo 7 da Agenda." }
     ]
   }
 ]

@@ -69,6 +69,13 @@
       "numero": 6,
       "titulo": "Entrega 4b: a frase entende mais",
       "resumo": "Converter todo tempo para minutos, quebrar um texto em lista com split, map e filter, saber quando o if (x) engana com 0 e \"\", e ordenar com sort e uma função de comparação."
+    },
+    {
+      "id": "agenda-m7",
+      "projeto": "agenda",
+      "numero": 7,
+      "titulo": "Etapa 5: testes automáticos",
+      "resumo": "Montar casos com entrada e esperado, comparar esperado e obtido campo a campo, não deixar um erro parar os outros testes e usar os testes para proteger o código de regressões."
     }
   ],
   "aulas": [
@@ -458,6 +465,33 @@
       "arquivo": "aulas/agenda/modulo-6/aula-04.md",
       "tempoLeitura": 7,
       "resumo": "Por que [10, 9, 1].sort() dá [1, 10, 9], como a função de comparação decide a ordem e por que a Agenda ordena os pedaços da frase antes de montar o título."
+    },
+    {
+      "id": "agenda-m7-aula-01",
+      "titulo": "Caso, esperado e obtido: um teste conferido campo a campo",
+      "modulo": "agenda-m7",
+      "numero": 1,
+      "arquivo": "aulas/agenda/modulo-7/aula-01.md",
+      "tempoLeitura": 6,
+      "resumo": "Um teste automático roda cada caso, compara o esperado com o obtido campo a campo e usa JSON.stringify para comparar listas."
+    },
+    {
+      "id": "agenda-m7-aula-02",
+      "titulo": "Um erro não pode parar os outros testes: try/catch no executor",
+      "modulo": "agenda-m7",
+      "numero": 2,
+      "arquivo": "aulas/agenda/modulo-7/aula-02.md",
+      "tempoLeitura": 6,
+      "resumo": "Um try/catch em volta de cada caso transforma o erro numa falha visível, e as outras frases continuam rodando."
+    },
+    {
+      "id": "agenda-m7-aula-03",
+      "titulo": "Testes que protegem: regressão, esperado do requisito e o teste que precisa falhar",
+      "modulo": "agenda-m7",
+      "numero": 3,
+      "arquivo": "aulas/agenda/modulo-7/aula-03.md",
+      "tempoLeitura": 7,
+      "resumo": "Esperados tirados do requisito, testes que já provaram que conseguem falhar e os mesmos casos rodados a cada mudança protegem o código contra regressões."
     }
   ]
 }
