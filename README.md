@@ -6,7 +6,7 @@ Ele simula uma empresa em que trabalho com uma equipe de agentes de IA para tran
 
 ### 🌐 Veja o site: **https://joaosaccucci.github.io/empresa-ia/**
 
-O site da **João Saccucci Labs** é a vitrine da empresa: mostra os projetos, o que cada agente fez em cada um, a linha do tempo do trabalho e as aulas do professor. Ele foi o primeiro projeto e continua neste repositório. Os projetos novos, como a [Agenda](https://github.com/JoaoSaccucci/agenda), têm **repositório, site e README próprios** e aparecem na aba Projetos da Labs com o trabalho de cada agente.
+O site da **João Saccucci Labs** é a vitrine da empresa: mostra os projetos, o que cada agente fez em cada um, a linha do tempo do trabalho e as aulas do professor. Ele foi o primeiro projeto e continua neste repositório. Os projetos novos, como a [Agenda](https://github.com/JoaoSaccucci/agenda) e o [Portfólio](https://github.com/JoaoSaccucci/portfolio), têm **repositório, site e README próprios** e aparecem na aba Projetos da Labs com o trabalho de cada agente.
 
 ---
 
@@ -26,7 +26,7 @@ Os agentes rodam no [Claude Code](https://claude.com/claude-code). As regras da 
 ## Como o trabalho acontece
 
 ```text
-Ideia do chefe → Product Owner → Artista → Dev → Testador → Professor
+Minha ideia → Product Owner → Artista → Dev → Testador → Professor
                  (requisitos)    (visual)   (código)  (relatório)  (aula + exercício)
 ```
 
@@ -46,6 +46,7 @@ Cada entrega vira um commit, e o site no GitHub Pages se atualiza sozinho. Num p
 |---|---|---|---|
 | **Site João Saccucci Labs** | A vitrine: Início, Projetos (com linha do tempo e os botões Ver site e Ver código), Equipe, Aulas (46 aulas curtas em módulos, separadas por projeto, com exemplos que rodam na própria página, quiz, sumário, glossário e código colorido) e Sobre | Este repositório, em [`trabalhos/joao-saccucci-labs`](trabalhos/joao-saccucci-labs/) | [joaosaccucci.github.io/empresa-ia](https://joaosaccucci.github.io/empresa-ia/) |
 | **Agenda** | Agenda online para anotar compromissos: lista por dia, criar, editar e excluir, hora de fim, "Sair às...", aviso de conflito e de aperto, checklist "O que levar", marcar como feito, faixa "Próximos 7 dias", tema claro e letra grande, criar escrevendo uma frase ("dentista amanhã das 10h às 11h na clínica, sair 30 min antes, levar RG"), seções "Ficou pendente", "Sem data" e "Anteriores", dados salvos no navegador, cópia em arquivo .json para levar a outro aparelho e uma página de testes automáticos da frase (80 casos) | [github.com/JoaoSaccucci/agenda](https://github.com/JoaoSaccucci/agenda) | [joaosaccucci.github.io/agenda](https://joaosaccucci.github.io/agenda/) |
+| **Portfólio** | Meu site pessoal para conseguir um estágio: Sobre mim, projetos em destaque, certificados com link para conferir e contato, em português e inglês. A foto fica num crachá pendurado por uma fita, que dá para arrastar e balança como um pêndulo (física 2D em JavaScript puro), e tem manchas de luz no fundo, elementos que surgem ao rolar, versão com movimento reduzido, página que funciona sem JavaScript e uma página de testes do idioma | [github.com/JoaoSaccucci/portfolio](https://github.com/JoaoSaccucci/portfolio) | [joaosaccucci.github.io/portfolio](https://joaosaccucci.github.io/portfolio/) |
 
 Os requisitos, o design e os relatórios de teste de cada projeto novo ficam aqui, em [`trabalhos/joao-saccucci-labs/docs/projetos/`](trabalhos/joao-saccucci-labs/docs/projetos/). O repositório do projeto guarda só o produto (código e README).
 
@@ -68,12 +69,13 @@ empresa-ia/
     │   ├── README.md          Detalhes do site e como rodar
     │   ├── docs/              Requisitos (PO), design (artista) e testes (testador) da Labs
     │   │   ├── guias/         Guias comuns da equipe (relatório de teste, aulas, criar repositório)
-    │   │   └── projetos/      Requisitos, design e testes de cada projeto novo (ex.: agenda/)
+    │   │   └── projetos/      Requisitos, design e testes de cada projeto novo (agenda/, portfolio/)
     │   ├── aulas/             Aulas do professor, em Markdown
     │   ├── data/              Projetos, agentes, aulas e glossário (JSON)
     │   ├── css/ · js/ · img/
     │   └── *.html             As páginas do site
-    └── agenda/                Código da Agenda: fica FORA deste repositório
+    ├── agenda/                Código da Agenda: fica FORA deste repositório
+    └── portfolio/             Código do Portfólio: fica FORA deste repositório
 ```
 
 Cada projeto novo fica em `trabalhos/<projeto>/` no computador, com o próprio Git e o próprio repositório no GitHub. O `.gitignore` deste repositório ignora essas pastas (só a Labs entra aqui), e não há submódulos. Os docs desses projetos ficam na Labs, em `docs/projetos/<projeto>/`.
@@ -86,13 +88,14 @@ Cada projeto novo fica em `trabalhos/<projeto>/` no computador, com o próprio G
 
 O site precisa de um servidor local porque lê os arquivos JSON com `fetch`, e o navegador bloqueia isso quando a página é aberta direto do disco (`file://`).
 
-**Os projetos novos não vêm junto.** Clonar o `empresa-ia` traz só a Labs. Para ter o código de um projeto novo, clone o repositório dele dentro de `trabalhos/`, com o nome do projeto. Exemplo com a Agenda, a partir da pasta `empresa-ia`:
+**Os projetos novos não vêm junto.** Clonar o `empresa-ia` traz só a Labs. Para ter o código de um projeto novo, clone o repositório dele dentro de `trabalhos/`, com o nome do projeto. Exemplo com a Agenda e o Portfólio, a partir da pasta `empresa-ia`:
 
 ```bash
 git clone https://github.com/JoaoSaccucci/agenda.git trabalhos/agenda
+git clone https://github.com/JoaoSaccucci/portfolio.git trabalhos/portfolio
 ```
 
-Cada projeto explica como rodar no próprio README (a Agenda abre com dois cliques no `index.html`).
+Cada projeto explica como rodar no próprio README (a Agenda e o Portfólio abrem com dois cliques no `index.html`).
 
 ## Sobre mim
 
@@ -108,7 +111,7 @@ I'm an IT student, and **João Saccucci Labs** is my project lab. It simulates a
 
 Its first project is its own website (the showcase, kept in this repository), built with **plain HTML, CSS and JavaScript** (no framework, no build step) and data in JSON. It shows each project, what each agent did, a project timeline, and an interactive lesson reader with table of contents, glossary tooltips, syntax highlighting and saved exercise checklists.
 
-New projects have their own repository, site and README. The first one is a calendar app called **Agenda**: [code](https://github.com/JoaoSaccucci/agenda) · [live site](https://joaosaccucci.github.io/agenda/).
+New projects have their own repository, site and README. The first one is a calendar app called **Agenda**: [code](https://github.com/JoaoSaccucci/agenda) · [live site](https://joaosaccucci.github.io/agenda/). The second one is my personal **Portfolio**, in Portuguese and English, with a draggable hanging ID badge built with a small 2D physics simulation in plain JavaScript: [code](https://github.com/JoaoSaccucci/portfolio) · [live site](https://joaosaccucci.github.io/portfolio/).
 
 **Live site:** https://joaosaccucci.github.io/empresa-ia/
 

@@ -2,7 +2,7 @@
   {
     "id": "joao-saccucci-labs",
     "nome": "João Saccucci Labs",
-    "descricao": "Site da própria empresa: painel de projetos e futuro portfólio.",
+    "descricao": "Site da própria empresa: painel de projetos, equipe de agentes e aulas sobre o código.",
     "status": "em andamento",
     "dataInicio": "2026-11-02",
     "dataFim": null,
@@ -703,6 +703,67 @@
       { "data": "2026-11-13", "agente": "testador", "descricao": "Etapa 5 aprovada na primeira rodada; o João conferiu o Esc rápido à mão (5 de 5)." },
       { "data": "2026-11-13", "agente": "dev", "descricao": "Etapa 5 publicada no repositório agenda e no GitHub Pages." },
       { "data": "2026-11-13", "agente": "professor", "descricao": "3 aulas sobre testes automáticos, com exemplo Rodar e quiz, no Módulo 7 da Agenda." }
+    ]
+  },
+  {
+    "id": "portfolio",
+    "nome": "Portfólio",
+    "descricao": "Site pessoal do João para conseguir um estágio: quem ele é, projetos, certificados e contato, em português e inglês.",
+    "status": "em andamento",
+    "dataInicio": "2026-11-14",
+    "dataFim": null,
+    "tecnologias": ["HTML", "CSS", "JavaScript"],
+    "repositorio": "https://github.com/JoaoSaccucci/portfolio",
+    "site": "https://joaosaccucci.github.io/portfolio/",
+    "trabalhos": [
+      {
+        "agente": "product-owner",
+        "resumo": "Conversou com o João sobre o portfólio (público, idiomas, seções, cores, foto, textos, projetos, certificados, contato e efeitos) e escreveu os requisitos da Etapa 1 em 15 user stories, com o texto do Sobre mim, os 4 projetos em destaque e os 11 certificados aprovados.",
+        "entregaveis": [
+          { "titulo": "Requisitos", "url": "docs/projetos/portfolio/requisitos.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "artista",
+        "resumo": "Criou o conceito \"o escritório, à noite\", com as cores da Agenda (azul-noite, âmbar e lilás): manchas de luz no fundo, cartões de vidro, a foto num crachá pendurado por uma fita que dá para arrastar, o organograma da equipe no Sobre mim, as telas que \"acendem\" nos projetos e o contraste conferido no pior ponto das manchas. O João tomou as 8 decisões de design.",
+        "entregaveis": [
+          { "titulo": "Design", "url": "docs/projetos/portfolio/design.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "dev",
+        "resumo": "Programou o portfólio em uma página só, com HTML, CSS e JavaScript puros: menu fixo, troca entre português e inglês (o inglês fica ao lado de cada texto, em data-en), crachá com física 2D em canvas, elementos que surgem ao rolar, cartões que inclinam com o mouse, terminais com a saída real dos projetos Java, movimento reduzido e página que funciona sem JavaScript. Fontes e imagens ficam no próprio projeto, e a página de testes confere as funções do idioma (31 de 31).",
+        "entregaveis": [
+          { "titulo": "Site publicado", "url": "https://joaosaccucci.github.io/portfolio/" },
+          { "titulo": "Página (HTML)", "url": "https://github.com/JoaoSaccucci/portfolio/blob/c0b8f54/index.html" },
+          { "titulo": "Folha de estilo", "url": "https://github.com/JoaoSaccucci/portfolio/blob/c0b8f54/css/style.css" },
+          { "titulo": "Idioma (JS)", "url": "https://github.com/JoaoSaccucci/portfolio/blob/c0b8f54/js/idioma.js" },
+          { "titulo": "Efeitos (JS)", "url": "https://github.com/JoaoSaccucci/portfolio/blob/c0b8f54/js/efeitos.js" },
+          { "titulo": "Crachá (JS)", "url": "https://github.com/JoaoSaccucci/portfolio/blob/c0b8f54/js/cracha.js" },
+          { "titulo": "Início (JS)", "url": "https://github.com/JoaoSaccucci/portfolio/blob/c0b8f54/js/main.js" },
+          { "titulo": "Página de testes", "url": "https://joaosaccucci.github.io/portfolio/testes.html" },
+          { "titulo": "README", "url": "https://github.com/JoaoSaccucci/portfolio/blob/c0b8f54/README.md" }
+        ],
+        "imagens": []
+      },
+      {
+        "agente": "testador",
+        "resumo": "Etapa 1: testou de 320 a 1920px nos dois idiomas, com teclado, toque simulado, movimento reduzido, sem JavaScript, axe, Lighthouse e um \"conta-gotas\" automático do contraste por cima das manchas. Rodada 1 reprovada (foco escondido atrás do menu fixo com Shift+Tab); Rodada 2 aprovada com pendências, depois que o dev corrigiu o foco, o crachá na borda da tela, o tempo para ele parar e o lang dos nomes dos cursos.",
+        "entregaveis": [
+          { "titulo": "Relatório de teste — Etapa 1", "url": "docs/projetos/portfolio/testes/etapa-1.md" }
+        ],
+        "imagens": []
+      }
+    ],
+    "linhaDoTempo": [
+      { "data": "2026-11-14", "agente": "product-owner", "descricao": "Conversa com o João sobre o portfólio e requisitos da Etapa 1, com 15 user stories, em docs/projetos/portfolio/requisitos.md." },
+      { "data": "2026-11-14", "agente": "artista", "descricao": "Visual \"o escritório, à noite\", com o crachá pendurado, definido em docs/projetos/portfolio/design.md (8 decisões do João)." },
+      { "data": "2026-11-14", "agente": "dev", "descricao": "Implementação da Etapa 1: página única em português e inglês, crachá com física, efeitos e página de testes (31 de 31)." },
+      { "data": "2026-11-14", "agente": "testador", "descricao": "Etapa 1 reprovada na rodada 1: foco do teclado escondido atrás do menu fixo." },
+      { "data": "2026-11-14", "agente": "testador", "descricao": "Etapa 1 aprovada na rodada 2, com pendências baixas." },
+      { "data": "2026-11-14", "agente": "dev", "descricao": "Etapa 1 publicada no repositório portfolio e no GitHub Pages." }
     ]
   }
 ]

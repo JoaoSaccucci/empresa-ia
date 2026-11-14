@@ -228,7 +228,7 @@ Como João, quero que o Portfólio apareça na Labs como os outros projetos, par
 
 ### 3.1 Sobre mim (português, texto final)
 
-> Estou no 3º semestre de Análise e Desenvolvimento de Sistemas na USCS e estudo os dois lados do desenvolvimento: Java, Spring Boot e PostgreSQL no back-end, e HTML, CSS e JavaScript no front-end.
+> Estou no 4º semestre de Análise e Desenvolvimento de Sistemas na USCS e estudo os dois lados do desenvolvimento: Java, Spring Boot e PostgreSQL no back-end, e HTML, CSS e JavaScript no front-end.
 >
 > Aprendo construindo. Montei uma empresa em que os funcionários são agentes de IA e eu coordeno a equipe: eles levantam requisitos, desenham, programam e testam. Eu decido, reviso, aprovo e estudo o código que foi escrito, até entender como funciona.
 >
@@ -236,7 +236,15 @@ Como João, quero que o Portfólio apareça na Labs como os outros projetos, par
 >
 > Estudando agora: JavaScript e Java.
 
-**Inglês:** traduzido a partir deste texto e aprovado pelo João antes da entrega (registrar aqui o texto aprovado).
+**Inglês (aprovado pelo João em 2026-11-14):**
+
+> I'm in the 4th semester of Systems Analysis and Development at USCS, and I study both sides of development: Java, Spring Boot and PostgreSQL on the back end, and HTML, CSS and JavaScript on the front end.
+>
+> I learn by building. I set up a company where the employees are AI agents and I coordinate the team: they gather requirements, design, code and test. I decide, review, approve and study the code that was written, until I understand how it works.
+>
+> What drives me is a mix of three things: seeing an idea turn into something useful, wrestling with a problem until I solve it, and using AI as a team without giving up on understanding the code.
+>
+> Studying now: JavaScript and Java.
 
 ### 3.2 Projetos
 
